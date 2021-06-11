@@ -27,8 +27,8 @@ $(function () {
 	});
 	
 	
-
-	$("tr.row").on("click", "svg", function(){
+	// 待修正
+	$("table").on("click", "svg", function(){
 		var stepOrderElements = $("table").find("tr").find("td").find("span");
 		var stepOrderInput = $("table").find("tr").find("td").find("input[name='recipeStepOrders']");
 		var stepOrderUpload = $("table").find("tr").find("td").find("input[type='file']");
