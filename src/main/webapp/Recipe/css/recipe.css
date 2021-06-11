@@ -30,6 +30,9 @@ div.breadcrumbs  ol.breadcrumb  {
     background-color: #fffce8;  
 }
 
+div.recipe-full {
+	font-size: 18px;
+}
 div.recipe-full .title svg, div.recipe-full .sub-title svg {
 	margin-right: 5px;
 	color: #FFCB9D;
@@ -64,23 +67,6 @@ div.recipe-full div.time {
 
 
 
-div.recipe-full div.intro {
-	font-size: 36px;
-	padding: 0;
-	background: #FFFCE8;
-	padding: 20px;
-	display: table;
-	width: 100%;
-}
-
-div.recipe-full div.intro-text {
-	font-size: 18px;
-	width: 100%;
-	display: table-cell;
-	vertical-align: middle;
-}
-
-
 div.recipe-full div.pic div.img-outer {
     position: relative;
     height: 385px;
@@ -110,3 +96,62 @@ div.recipe-full div.count {
 div.recipe-full div.count span svg {
 	margin-right: 10px;
 }
+
+
+
+div.recipe-full div.intro {
+	font-size: 36px;
+	padding: 0;
+	background: #FFFCE8;
+	padding: 20px;
+	display: table;
+	width: 100%;
+}
+
+div.recipe-full div.intro-text {
+	font-size: 18px;
+	width: 100%;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+
+div.recipe-full div.info, div.recipe-full div.category {
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.head {
+	padding: 7px;
+	background: #;
+}
+
+.head h3 {
+	color: #F3722C;
+	font-size: 24px; 
+}
+
+.ingredient-unit .head h3 {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.list {
+	background: #FFFCE8;
+	padding: 10px;
+}
+
+
+div.recipe-full div.category span {
+	display: inline-block;
+	background: #eee;
+	padding: 7px;
+	margin-right: 5px;
+}
+
+.data {
+	line-height: 2;
+}
+
