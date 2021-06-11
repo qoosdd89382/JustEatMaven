@@ -71,6 +71,7 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>" target="_blank">Just Eat 揪食</a></li>
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp" target="_blank">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp" target="_blank">食譜列表</a></li>
 					<li class="breadcrumb-item active" aria-current="page">${recipeVO.recipeName}</li>
 				</ol>
 			</div> 
@@ -102,27 +103,35 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 					</div>
 				</div>
 				
-				<div class="info col-12">
+				<div class="info col-12 col-lg-8 margin-top">
+					<div class="head"><h3>食譜介紹</h3></div>
 					<div class="intro">
-						<div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
+						<div class="intro-text">${recipeVO.recipeIntroduction}</div>
 					</div>
 				</div>
 	
 				
-				<div class="steps col-12">
-					<ul>
-					<c:forEach var="recipeCatVO" items="${recipeCatList}">
-						<li>${CategorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</li>
-					</c:forEach>
-					</ul>
+				<div class="category col-12 col-lg-4 margin-top">
+					<div class="head"><h3>食譜料理分類</h3></div>
+					<div class="list">
+						<c:forEach var="recipeCatVO" items="${recipeCatList}">
+							<span>${CategorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
+						</c:forEach>
+					</div>
 				</div>	
-		
-				<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
-					-${IngredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName} 
-					${recipeIngUnitVO.unitAmount} 
-					${UnitSvc.getOneUnit(recipeIngUnitVO.unitID).unitName}<br>
-				</c:forEach>
 				
+				<div class="ingredient-unit col-12 margin-top">
+					<div class="head"><h3>食譜食材</h3>本食譜可供 <span> ${recipeVO.recipeServe} </span> 人享用</div>
+					<div class="list">
+						<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
+						<div class="data row">
+							<div class="col-6">${IngredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div> 
+							<div class="col-3">${recipeIngUnitVO.unitAmount} </div>
+							<div class="col-3">${UnitSvc.getOneUnit(recipeIngUnitVO.unitID).unitName}</div>
+						</div>
+						</c:forEach>
+					</div>
+				</div>
 				==========<br>
 		
 				<c:forEach var="RecipeStepVO" items="${RecipeStepList}">
