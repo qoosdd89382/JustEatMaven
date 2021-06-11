@@ -162,7 +162,76 @@ public class EventInfoActionServlet extends HttpServlet {
 		}
 
 		if ("新增菜色".equals(action)) {
-			RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
+			EventInfoVO eventInfoVO = new EventInfoVO();
+			String groupType = request.getParameter("choose_type");
+			String eventName = request.getParameter("event_name");
+			String eventMember = request.getParameter("event_member");
+			String eventStart = request.getParameter("event_start");
+			String eventEnd = request.getParameter("event_end");
+			String eventRegStart = request.getParameter("event_reg_start");
+			String eventRegEnd = request.getParameter("event_reg_end");
+			String groupCity = request.getParameter("city");
+			String groupAddress = request.getParameter("address");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
+
+			} else {
+				eventInfoVO.setGroupType(Integer.parseInt(groupType));
+			}
+
+			if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
+
+			} else {
+				eventInfoVO.setEventName(eventName);
+			}
+
+			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+
+			} else if (eventMember.equals("0")) {
+
+			} else {
+				eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
+			}
+			if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty()
+					|| eventStart.trim() == "") {
+
+			}else {
+				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
+				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
+			}
+			if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd.trim() == "") {
+				
+			}else {
+				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
+			}
+			if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty()
+					|| eventRegStart.trim() == "") {
+				
+			}else {
+				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
+				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
+			}
+			if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty()
+					|| eventRegEnd.trim() == "") {
+				
+			}else {
+				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
+			}
+			if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
+				
+			} else {
+				eventInfoVO.setGroupCity(groupCity);
+			}
+
+			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
+			} else {
+				eventInfoVO.setGroupAddress(groupAddress);
+			}
+			request.setAttribute("eventInfoVO", eventInfoVO);
+			RequestDispatcher notfullView = request.getRequestDispatcher("/Event/InsertDish.jsp");
 			notfullView.forward(request, response);
 		}
 		if ("邀請好友".equals(action)) {
@@ -188,83 +257,95 @@ public class EventInfoActionServlet extends HttpServlet {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 			System.out.println(eventStart);
-				if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
-					errorMsgs.put("GroupTypeIsNull", "請選擇其中一項類型");
-				} else {
-					eventInfoVO.setGroupType(Integer.parseInt(groupType));
-				}
+			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
+				errorMsgs.put("GroupTypeIsNull", "請選擇其中一項類型");
+			} else {
+				eventInfoVO.setGroupType(Integer.parseInt(groupType));
+			}
 
-				if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
-					errorMsgs.put("EventNameIsNull", "請輸入活動名稱");
-				} else {
-					eventInfoVO.setEventName(eventName);
-				}
+			if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
+				errorMsgs.put("EventNameIsNull", "請輸入活動名稱");
+			} else {
+				eventInfoVO.setEventName(eventName);
+			}
 
-				if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
-					errorMsgs.put("EventMemberIsNull", "請輸入活動人數");
-				} else if (eventMember.equals("0")) {
-					errorMsgs.put("EventMemberMustBeGreaterThanZero", "活動人數必須大於0");
-				} else {
-					eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
-				}
+			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+				errorMsgs.put("EventMemberIsNull", "請輸入活動人數");
+			} else if (eventMember.equals("0")) {
+				errorMsgs.put("EventMemberMustBeGreaterThanZero", "活動人數必須大於0");
+			} else {
+				eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
+			}
 
-				if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty() || eventStart.trim() =="") {
-					errorMsgs.put("EventStartTimeIsNull", "活動開始時間必須選擇");
-				} else if (!eventStart.matches(TimeRegex)) {
-					errorMsgs.put("EventStartTimeNotConform", "請輸入正確的活動開始時間");
-				} else {
-					LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
-					eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
-				}
+			if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty()
+					|| eventStart.trim() == "") {
+				errorMsgs.put("EventStartTimeIsNull", "活動開始時間必須選擇");
+			} else if (!eventStart.matches(TimeRegex)) {
+				errorMsgs.put("EventStartTimeNotConform", "請輸入正確的活動開始時間");
+			} else {
+				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
+				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
+			}
 
-				if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd=="") {
-					errorMsgs.put("EventEndTimeIsNull", "活動結束時間必須選擇");
-				} else if (!eventEnd.matches(TimeRegex)) {
-					errorMsgs.put("EventEndTimeNotConform", "請輸入正確的活動結束時間");
-				} else {
-					LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
-					eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
-				}
+			if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd.trim() == "") {
+				errorMsgs.put("EventEndTimeIsNull", "活動結束時間必須選擇");
+			} else if (!eventEnd.matches(TimeRegex)) {
+				errorMsgs.put("EventEndTimeNotConform", "請輸入正確的活動結束時間");
+			} else {
+				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
+			}
 
-				if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty() || eventRegStart=="") {
-					errorMsgs.put("EventRegStartTimeIsNull", "活動報名開始時間必須選擇");
-				} else if (!eventRegStart.matches(TimeRegex)) {
-					errorMsgs.put("EventRegStartTimeNotConform", "請輸入正確的活動報名開始時間");
-				} else {
-					LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
-					eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
-				}
+			if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty()
+					|| eventRegStart.trim() == "") {
+				errorMsgs.put("EventRegStartTimeIsNull", "活動報名開始時間必須選擇");
+			} else if (!eventRegStart.matches(TimeRegex)) {
+				errorMsgs.put("EventRegStartTimeNotConform", "請輸入正確的活動報名開始時間");
+			} else {
+				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
+				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
+			}
 
-				if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty() || eventRegEnd.equals("")) {
-					errorMsgs.put("EventRegEndTimeIsNull", "活動報名結束時間必須選擇");
-				} else if (!eventRegEnd.matches(TimeRegex)) {
-					errorMsgs.put("EventRegEndTimeNotConform", "請輸入正確的活動報名結束時間");
-				} else {
-					LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
-					eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
-				}
+			if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty()
+					|| eventRegEnd.trim() == "") {
+				errorMsgs.put("EventRegEndTimeIsNull", "活動報名結束時間必須選擇");
+			} else if (!eventRegEnd.matches(TimeRegex)) {
+				errorMsgs.put("EventRegEndTimeNotConform", "請輸入正確的活動報名結束時間");
+			} else {
+				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
+			}
 
-				if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
-					errorMsgs.put("GroupCityIsNull", "不知道你怎麼弄到Null的????");
-				} else {
-					eventInfoVO.setGroupCity(groupCity);
-				}
+			if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
+				errorMsgs.put("GroupCityIsNull", "不知道你怎麼弄到Null的????");
+			} else {
+				eventInfoVO.setGroupCity(groupCity);
+			}
 
-				if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
-					errorMsgs.put("GroupAddressIsNull", "請輸入地址");
-				} else {
-					eventInfoVO.setGroupAddress(groupAddress);
-				} 
-						
+			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
+				errorMsgs.put("GroupAddressIsNull", "請輸入地址");
+			} else {
+				eventInfoVO.setGroupAddress(groupAddress);
+			}
+
 			if (errorMsgs != null) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
 				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
 				notfullView.forward(request, response);
 			}
-//			request.setAttribute("eventInfoVO",eventInfoVO);
-//			RequestDispatcher findView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
-//			findView.forward(request, response);			
 		}
+		if ("上一頁".equals(action)) {
+			
+			RequestDispatcher returnView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
+			returnView.forward(request, response);
+		}
+		if ("邀請好友".equals(action)) {
+
+		}
+		if ("邀請好友".equals(action)) {
+
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
