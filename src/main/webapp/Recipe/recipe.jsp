@@ -9,7 +9,7 @@
 <%@ page import="com.recipeingredientunit.model.*"%>
 <%@ page import="com.recipestep.model.*"%>
 
-<%
+<%			
 int recipeID = new Integer(request.getParameter("id"));
 
 RecipeService recipeSvc = new RecipeService();
