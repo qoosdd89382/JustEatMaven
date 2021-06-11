@@ -1,0 +1,112 @@
+* {
+	box-sizing: border-box!important;
+}
+div {
+	margin: 0;
+	padding: 0;
+} 
+.row {
+    margin: 0px;
+}
+.clearfix:after {
+    content:'';
+    display:block;
+    clear:both;
+}
+
+.content {
+	padding: 0 15px;
+}
+
+
+.sidebar {
+}
+
+div.breadcrumbs {
+    margin-bottom: 40px;
+}
+
+div.breadcrumbs  ol.breadcrumb  {
+    background-color: #fffce8;  
+}
+
+div.recipe-full .title svg, div.recipe-full .sub-title svg {
+	margin-right: 5px;
+	color: #FFCB9D;
+}
+
+div.recipe-full div.sub-title {
+	margin-bottom: 20px;
+}
+
+div.recipe-full div.title {
+	font-size: 26px;
+}
+
+div.recipe-full div.title h4 {
+	display: inline-block;
+	font-size: 26px;
+}
+
+div.recipe-full div.title h4 a {
+	font-weight: bold;
+}
+
+div.recipe-full div.time, div.author {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+div.recipe-full div.time {
+	letter-spacing: 1px;
+}
+
+
+
+
+div.recipe-full div.intro {
+	font-size: 36px;
+	padding: 0;
+	background: #FFFCE8;
+	padding: 20px;
+	display: table;
+	width: 100%;
+}
+
+div.recipe-full div.intro-text {
+	font-size: 18px;
+	width: 100%;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+
+div.recipe-full div.pic div.img-outer {
+    position: relative;
+    height: 385px;
+    overflow: hidden;	   /* 無法用偽類解決 */
+    background: #eee;
+}
+
+div.recipe-full div.pic div.img-outer > img {
+    position: absolute;
+    width: 120%;
+    top: 50%;
+    transform: translateY(-50%);
+	left: -10%;
+}
+
+
+div.recipe-full div.count {
+    position: absolute;
+    bottom: 10px;
+    margin-left: 15px;
+    font-size: 20px;
+    color: black;
+    background: #F3722C;
+    padding: 10px;
+}
+
+div.recipe-full div.count span svg {
+	margin-right: 10px;
+}
