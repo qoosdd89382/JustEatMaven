@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+.row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.catAutoOutput ul, div.ingAutoOutput ul {
+	background: #efefef;
+	width: 500px;
+	min-height:55px;
+	padding: 5px;
+}
+
+div.catAutoOutput ul > li {
+	display: inline-block;
+	margin: 10px 3px;
+	padding: 3px;
+	border: 1px solid gray;
+	background: #fff;
+}  
+  
+div.ingAutoOutput ul > li {
+	margin: 10px 3px;
+	padding: 3px;
+	border: 1px solid gray;
+	background: #fff;
+	display: flex;
+	justify-content: space-between;
+	position:relative;
+}  
+
+div.ingAutoOutput ul > li svg {
+/*         position: absolute; */
+/*         top: 50%; */
+/*         right: 5px; */
+/*         transform: translateY(-50%); */
+	margin-top: 5px;
+}
+
+div.ingAutoOutput .col-2, div.ingAutoOutput .col-3, div.ingAutoOutput .col-4 {
+	padding: 0;
+}
+
+div.addStepBtn {
+	border: 1px solid gray;
+	padding: 10px;
+	width: 150px;
+	text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
