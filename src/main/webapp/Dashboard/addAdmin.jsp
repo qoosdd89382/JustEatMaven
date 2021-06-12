@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<%@ page import="com.admininfo.model.*" %>
+
+<%
+	AdminInfoVO adminVO = (AdminInfoVO) request.getAttribute("adminVO");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,21 +19,6 @@ label {
 </style>
 </head>
 <body>
-	<table border=1>
-			<tr>
-				<th>test</th>
-				<th>test</th>
-			</tr>
-			<tr>
-				<td>111</td>
-				<td>帳號不可為空白</td>
-			</tr>
-	</table>
-	
-	<ul>
-		<li>1</li>
-		<li>2</li>
-	</ul>
 	
 	<c:if test="${not empty errorMsgs}">
 		<ul>
@@ -40,25 +31,25 @@ label {
 	<form method="post" action="admin.do">
 		<label>
 			e-mail：
-			<input type="text" name="adminMail">
+			<input type="text" name="adminMail" value="<%= (adminVO==null) ? "" : adminVO.getAdminMail() %>" placeholder="123">
 		</label>
 		
 		<label>
 			password：
-			<input type="password" name="adminPassword">
+			<input type="password" name="adminPassword" value="<%= (adminVO==null) ? "" : adminVO.getAdminPassword() %>">
 		</label>
 		
 		<label>
 			管理員暱稱：
-			<input type="text" name="adminNickname">
+			<input type="text" name="adminNickname" value="<%= (adminVO==null) ? "" : adminVO.getAdminNickname() %>">
 		</label>
 		
 		<label>
 			個人頭像：
-			<input type="file" name="adminPic">
+			<input type="file" accept="image/*" name="adminPic">
 		</label>
 		
-		<input type="hidden" name="action" value="addAdminInfo">
+		<input type="hidden" name="action" value="insert">
 		<button type="submit">送出</button>
 	</form>
 
