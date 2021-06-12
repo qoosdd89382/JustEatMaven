@@ -136,11 +136,11 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 				<div class="step col-12 margin-top">
 					<div class="head"><h3>食譜製作步驟</h3></div>
 					<c:forEach var="RecipeStepVO" items="${RecipeStepList}">
-					<div class="recipe row" data-id="${RecipeStepVO.recipeStepID}">
-						<div class="order col-3 col-xl-2"><span>${RecipeStepVO.recipeStepOrder}</span></div>
-						<div class="text col-9 col-xl-4">${RecipeStepVO.recipeStepText}</div>
-						<div class="img col-12 col-xl-6"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${RecipeStepVO.recipeStepID}"></div>
-					</div>
+						<div class="recipe row" data-id="${RecipeStepVO.recipeStepID}">
+							<div class="order col-3 col-xl-2 vertical-container"><span>${RecipeStepVO.recipeStepOrder}</span></div>
+							<div class="text col-9 col-xl-4 vertical-container">${RecipeStepVO.recipeStepText}</div>
+							<div class="img col-12 col-xl-6"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${RecipeStepVO.recipeStepID}"></div>
+						</div>
 					</c:forEach>
 				</div>
 				
