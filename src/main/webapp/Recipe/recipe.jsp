@@ -9,7 +9,7 @@
 <%@ page import="com.recipeingredientunit.model.*"%>
 <%@ page import="com.recipestep.model.*"%>
 
-<%
+<%			
 int recipeID = new Integer(request.getParameter("id"));
 
 RecipeService recipeSvc = new RecipeService();
@@ -132,15 +132,18 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 						</c:forEach>
 					</div>
 				</div>
-				==========<br>
-		
-				<c:forEach var="RecipeStepVO" items="${RecipeStepList}">
-					${RecipeStepVO.recipeStepID} <br>
-					${RecipeStepVO.recipeStepOrder} <br>
-					${RecipeStepVO.recipeStepText} <br>
-					<img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${RecipeStepVO.recipeStepID}"> <br>
-					---<br>
-				</c:forEach>
+				
+				<div class="step col-12 margin-top">
+					<div class="head"><h3>食譜製作步驟</h3></div>
+					<c:forEach var="RecipeStepVO" items="${RecipeStepList}">
+					<div class="recipe row" data-id="${RecipeStepVO.recipeStepID}">
+						<div class="order col-3 col-xl-2"><span>${RecipeStepVO.recipeStepOrder}</span></div>
+						<div class="text col-9 col-xl-4">${RecipeStepVO.recipeStepText}</div>
+						<div class="img col-12 col-xl-6"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${RecipeStepVO.recipeStepID}"></div>
+					</div>
+					</c:forEach>
+				</div>
+				
 			</div>
 
 		</div>
