@@ -3,12 +3,18 @@ package com.accountinfo.controller;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.hibernate.Session;
 
 import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
@@ -23,6 +29,7 @@ public class AccountInfoServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
+		//設定編碼與確認回應
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
 		
@@ -51,30 +58,48 @@ public class AccountInfoServlet extends HttpServlet {
 				{
 					errorMsgs.add("請輸入驗證碼");
 				}
+				
 				//有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
 				
+				//帳號密碼正則表達式規範
+				//帳號規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
+				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
+				//判斷使用者帳號輸入是否符合，回傳boolean值
+				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
+				//密碼規範:至少8碼任意大小寫英文數字
+				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,}$");
+				//判斷使用者密碼輸入是否符合，回傳boolean值
+				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+				
+				//準備回傳的值
 				String accountMail = null;
 				String accountPassword = null;
 
-//格式待修
-				//檢查輸入格式是否正確
+				//帳號密碼輸入格式驗證
 				try {
-					accountMail = new String(accountMailInput);
+					if (accountMailMatcher.matches()) {
+						accountMail = new String(accountMailInput);
+					}
 				} catch (Exception e) {
-					errorMsgs.add("會員信箱輸入錯誤");
+					errorMsgs.add("會員信箱格式錯誤");
 				}
 				try {
-					accountPassword = new String(accountPasswordInput);
+					if (accountPasswordMatcher.matches()) {
+						accountPassword = new String(accountPasswordInput);
+					}
 				} catch (Exception e) {
-					errorMsgs.add("會員密碼輸入錯誤");
+					errorMsgs.add("會員密碼格式錯誤");
 				}
-				String CorrectNumber = req.getParameter("RandomNumber");
+//驗證碼放在SESSION
+				//驗證碼存取
+				HttpSession session = req.getSession(false);
+				Object CorrectNumber = ((ServletRequest) session).getParameter("RandomNumber");
 				System.out.println("======");
 				System.out.println(CorrectNumber);
 
@@ -84,6 +109,7 @@ public class AccountInfoServlet extends HttpServlet {
 				}catch(Exception e) {
 					errorMsgs.add("驗證碼可能輸入錯誤");
 				}
+				
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
@@ -101,7 +127,7 @@ public class AccountInfoServlet extends HttpServlet {
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}

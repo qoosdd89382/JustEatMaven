@@ -21,8 +21,8 @@
 	Random rnd = new Random();
 	int randNum = rnd.nextInt(8999) + 1000;
 	String randStr = String.valueOf(randNum);
-	//將驗證碼存入req
-	request.setAttribute("RandomNumber", randStr);
+	//將驗證碼存入session
+	session.setAttribute("RandomNumber", randStr);
 	//將驗證碼顯示到影象中
 	g.setColor(Color.black);
 	g.setFont(new Font("", Font.PLAIN, 20));

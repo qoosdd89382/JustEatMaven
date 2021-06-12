@@ -52,6 +52,15 @@ border:none;
 	
 	
 	<li id="login">
+		<%-- 錯誤表列 --%>
+		<c:if test="${not empty errorMsgs}">
+			<font style="color: red">請修正以下錯誤:</font>
+			<ul>
+				<c:forEach var="message" items="${requestScope.errorMsgs}">
+					<li style="color: red">${message}</li>
+				</c:forEach>
+			</ul>
+		</c:if>
 		<b>您好，歡迎登入</b>
 		<form method="post" action="accountInfo.do">
 			<b>請輸入會員信箱 (如JerryMouse@gmail.com):</b> <br>
