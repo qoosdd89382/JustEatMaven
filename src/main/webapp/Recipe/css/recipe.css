@@ -33,13 +33,6 @@ div {
 .sidebar {
 }
 
-div.breadcrumbs {
-    margin-bottom: 40px;
-}
-
-div.breadcrumbs  ol.breadcrumb  {
-    background-color: #fffce8;  
-}
 
 div.recipe-full {
 	font-size: 18px;
