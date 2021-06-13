@@ -52,6 +52,7 @@ border:none;
 	
 	
 	<li id="login">
+	
 		<%-- 錯誤表列 --%>
 		<c:if test="${not empty errorMsgs}">
 			<font style="color: red">請修正以下錯誤:</font>
@@ -61,27 +62,33 @@ border:none;
 				</c:forEach>
 			</ul>
 		</c:if>
+		
 		<b>您好，歡迎登入</b>
-		<form method="post" action="accountInfo.do">
+		
+		<form method="post" action="accountInfo.do" name="LoginInfo">
 			<b>請輸入會員信箱 (如JerryMouse@gmail.com):</b> <br>
 			<input type="text" name="accountMail"> <br>
+			<b>記得改TYPE</b>
 			<b>請輸入會員密碼 (如1q2w3e4r5t):</b> <br>
 			<input type="text" name="accountPassword"><br>
 <!-- 			<input type="hidden" name="action" value="getOne_For_Display"> -->
+
 	    <%--點選圖片可進行驗證碼重新整理--%>
 	    ===${RandomNumber}===
 	    <input type="text" name="RandomNumberInput">
+	    
 	    <img name="imgValidate" src = "RandomNumber.jsp" onclick="refresh()" ><br>
     
 			<input type="hidden" name="action" value="getAccountInfo_For_Login">
 			<input type="submit" value="登入">
 			<input type="reset" value="重置">
 		</form>
+		
 		<form method="post" action="accountInfo.do">
 			<input type="hidden" name="action" value="getAccountInfo_For_Login">
 			<u><b><input name="test" type="submit" value="忘記密碼了嗎?"></b></u>
-		
 		</form>
+		
 		<form method="post" action="accountInfo.do">
 			<input type="hidden" name="action" value="setAccountInfo_For_Register">
 			<u><b><input name="test" type="submit" value="還不是會員?"></b></u>
@@ -98,9 +105,10 @@ border:none;
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	
-	<script>
+	<script type="text/javascript">
+	
 	    function refresh() {
-	        login.imgValidate.src="index.jsp?id="+Math.random();
+	    	LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
 	    }
 	
 	

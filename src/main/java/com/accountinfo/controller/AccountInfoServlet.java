@@ -33,8 +33,9 @@ public class AccountInfoServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
 		
-//會員登入處理
+//<--會員登入處理-->
 		if ("getAccountInfo_For_Login".equals(action)) {
+			//已取得回傳之accountMail、accountPassword資料
 			
 			//儲存錯誤訊息
 			List<String> errorMsgs = new LinkedList<String>();
@@ -96,29 +97,29 @@ public class AccountInfoServlet extends HttpServlet {
 				} catch (Exception e) {
 					errorMsgs.add("會員密碼格式錯誤");
 				}
+				
 //驗證碼放在SESSION
 				//驗證碼存取
-				HttpSession session = req.getSession(false);
-				Object CorrectNumber = ((ServletRequest) session).getParameter("RandomNumber");
+				HttpSession session = req.getSession();
+				String CorrectNumber = (String)session.getAttribute("RandomNumber");
 				System.out.println("======");
 				System.out.println(CorrectNumber);
 
-				try {
-					if(accountRandomNumberInput.equals(CorrectNumber)) {
-					}
-				}catch(Exception e) {
+				//如果驗證碼輸入錯誤就給錯誤訊息
+				if(!accountRandomNumberInput.equals(CorrectNumber)) {
 					errorMsgs.add("驗證碼可能輸入錯誤");
+					return;//程式中斷
 				}
-				
+
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
 				
-				//2.開始進行登入
+				//2.開始進行登入驗證
 				AccountInfoService accountInfoSvc = new AccountInfoService();
 				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountInfo(accountMail,accountPassword);
 				if (accountInfoVO == null) {
@@ -131,6 +132,7 @@ public class AccountInfoServlet extends HttpServlet {
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
+				
 				//3.查詢完成,準備轉交(Send the Success view)
 				// 資料庫取出的accountVO物件,存入req
 				req.setAttribute("accountInfoVO", accountInfoVO); 
