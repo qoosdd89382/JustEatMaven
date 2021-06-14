@@ -108,7 +108,6 @@ public class AccountInfoServlet extends HttpServlet {
 				//如果驗證碼輸入錯誤就給錯誤訊息
 				if(!accountRandomNumberInput.equals(CorrectNumber)) {
 					errorMsgs.add("驗證碼可能輸入錯誤");
-					return;//程式中斷
 				}
 
 				// 有錯誤就返回總表，顯示錯誤訊息
@@ -134,9 +133,9 @@ public class AccountInfoServlet extends HttpServlet {
 				}
 				
 				//3.查詢完成,準備轉交(Send the Success view)
-				// 資料庫取出的accountVO物件,存入req
+				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				req.setAttribute("accountInfoVO", accountInfoVO); 
-				String url = "/Account/ListOneAccountInfo.jsp";
+				String url = "/Account/AccountInfoPage.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneEmp.jsp
 				successView.forward(req, res);
 				
