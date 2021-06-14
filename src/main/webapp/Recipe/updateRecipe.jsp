@@ -105,41 +105,41 @@
 
 				</div>
 
-<!-- 				<div class="form-group"> -->
-<!-- 					<label for="recipeIngredientNames">食材標籤與單位：</label> -->
-<%-- 					<span>${errorMsgs.get("recipeIngredientIDErrNull")} --%>
-<%-- 						${errorMsgs.get("recipeUnitIDErrNull")} --%>
-<%-- 						${errorMsgs.get("recipeUnitAmountErrNull")} --%>
-<%-- 						${errorMsgs.get("recipeunitAmountErrNumber")}</span><br> --%>
-<!-- 						<span class="ui-widget"> -->
-<!-- 						<input id="ingAutoCompl" class="form-control" name="recipeIngredientNames" placeholder="請輸入並選擇食材標籤"><br> -->
-<!-- 					</span> -->
-<!-- 					<div class="ingAutoOutput"> -->
-<!-- 						<ul> -->
+				<div class="form-group">
+					<label for="recipeIngredientNames">食材標籤與單位：</label>
+					<span>${errorMsgs.get("recipeIngredientIDErrNull")}
+						${errorMsgs.get("recipeUnitIDErrNull")}
+						${errorMsgs.get("recipeUnitAmountErrNull")}
+						${errorMsgs.get("recipeunitAmountErrNumber")}</span><br>
+						<span class="ui-widget">
+						<input id="ingAutoCompl" class="form-control" name="recipeIngredientNames" placeholder="請輸入並選擇食材標籤"><br>
+					</span>
+					<div class="ingAutoOutput">
+						<ul>
 <%-- 							<c:if test="${not empty recipeIngUnitVOs}"> --%>
-<%-- 								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitVOs}"> --%>
-<%-- 									<li class='row' data-id='${recipeIngUnitVO.ingredientID}'> --%>
-<%-- 										<div class='col-4 vertical-container'>${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div> --%>
-<%-- 										<input class='form-control unitAmounts col-2' name='unitAmounts' type='number' step='0.01' value='${recipeIngUnitVO.unitAmount}'> --%>
-<!-- 										<select class='form-control unitIDs col-3' name='unitIDs'> -->
-<!-- 											<option value='0'>選擇單位</option> -->
-<%-- 											<c:forEach var="unitOne" items="${unitSvc.all}"> --%>
-<%-- 												<c:if test="${unitOne.unitID != recipeIngUnitVO.unitID}"> --%>
-<%-- 													<option value='${unitOne.unitID}'>${unitOne.unitName}</option> --%>
-<%-- 												</c:if> --%>
-<%-- 												<c:if test="${unitOne.unitID == recipeIngUnitVO.unitID}"> --%>
-<%-- 													<option value='${unitOne.unitID}' selected>${unitOne.unitName}</option> --%>
-<%-- 												</c:if> --%>
-<%-- 											</c:forEach> --%>
-<!-- 										</select> -->
-<!-- 										<div class="vertical-container"><i class='fas fa-times'></i></div> -->
-<!-- 									</li> -->
-<%-- 								</c:forEach> --%>
+								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
+									<li class='row' data-id='${recipeIngUnitVO.ingredientID}'>
+										<div class='col-4 vertical-container'>${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div>
+										<input class='form-control unitAmounts col-2' name='unitAmounts' type='number' min="0.01" max="9999.99" step='0.01' value='${recipeIngUnitVO.unitAmount}'>
+										<select class='form-control unitIDs col-3' name='unitIDs'>
+											<option value='0'>選擇單位</option>
+											<c:forEach var="unitOne" items="${unitSvc.all}">
+												<c:if test="${unitOne.unitID != recipeIngUnitVO.unitID}">
+													<option value='${unitOne.unitID}'>${unitOne.unitName}</option>
+												</c:if>
+												<c:if test="${unitOne.unitID == recipeIngUnitVO.unitID}">
+													<option value='${unitOne.unitID}' selected>${unitOne.unitName}</option>
+												</c:if>
+											</c:forEach>
+										</select>
+										<div class="vertical-container"><i class='fas fa-times'></i></div>
+									</li>
+								</c:forEach>
 <%-- 							</c:if> --%>
-<!-- 						</ul> -->
-<%-- 						<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<%=(recipeIngredientIDs == null) ? "" : recipeIngredientIDs%>"> --%>
-<!-- 					</div> -->
-<!-- 				</div> -->
+						</ul>
+						<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">${recipeIngUnitVO.recipeIngredientUnitID} </c:forEach>">
+					</div>
+				</div>
 
 <!-- 				<div class="form-group"> -->
 <!-- 					<label for="recipeIntroduction">食譜介紹：</label> -->
@@ -148,12 +148,12 @@
 <%-- 					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50"><%=(recipeVO == null) ? "" : recipeVO.getRecipeIntroduction()%></textarea> --%>
 <!-- 				</div> -->
 
-<!-- 				<div class="form-group"> -->
-<!-- 					<label for="recipeServe">享用人數：</label> -->
-<%-- 						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeServe()%>"><br> --%>
-<%-- 					${errorMsgs.get("recipeServeErrWrong")} --%>
-<%-- 					${errorMsgs.get("recipeServeErrRange")} --%>
-<!-- 				</div> -->
+				<div class="form-group">
+					<label for="recipeServe">享用人數：</label>
+						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="${recipeVO.recipeServe}"><br>
+					${errorMsgs.get("recipeServeErrWrong")}
+					${errorMsgs.get("recipeServeErrRange")}
+				</div>
 
 <!-- 				<div class="form-group"> -->
 <!-- 					<label for="recipePicTop">食譜完成照：</label> -->
@@ -295,11 +295,6 @@
 
 
 			$("#catAutoCompl")
-// 			    .on("keydown", function (event) {
-// 			        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
-// 			            event.preventDefault();
-// 			        }
-// 			    })
 			    .autocomplete({
 			        minLength: 0,
 			        source: categoryArr,
