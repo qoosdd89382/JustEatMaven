@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+
+<!-- 食譜料理分類用 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+	
+	var categoryArr = new Array();
+	
+	<c:forEach var="catOne" items="${categorySvc.all}">
+		var catObj = new Object();
+		catObj.id = ${catOne.cuisineCategoryID};
+		catObj.value = "${catOne.cuisineCategoryName}";
+		categoryArr.push(catObj);
+	</c:forEach>
+
+<%  if (recipeCategoryIDs != null) {
+		String[] orgList = recipeCategoryIDs.trim().split(" ");
+		for (String one : orgList) {
+%>
+			var tempCat = "<%= one %>";
+			if (tempCat != "") { 
+				categoryArr.forEach(function(item, index, array){
+		        	if (tempCat == array[index].id) {
+		        		array.splice(index, 1);
+		        	}
+	        	});
+			}
+				
+<%		}
+	}
+%>
+	
+	function putCatInIDs(id, value) {
+		var tempCatHtml = "<li data-id='" + id + "'><span>" + value + "</span><i class='fas fa-times'></i></li>";
+		$(".catAutoOutput").find("ul").append(tempCatHtml);
+		
+        if ($(".catAutoInput").val() == "") {
+            $(".catAutoInput").val(" " + id);
+        } else {
+            var tempCatStr = $(".catAutoInput").val();
+            tempCatStr += " " + id;
+            $(".catAutoInput").val(tempCatStr);
+        }
+	}
+
+
+	$("#catAutoCompl")
+	    // don't navigate away from the field on tab when selecting an item
+	    .on("keydown", function (event) {
+	        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+	            event.preventDefault();
+	        }
+	    })
+	    .autocomplete({
+	        minLength: 0,
+	        source: categoryArr,
+	        select: function (event, ui) {
+		        categoryArr.forEach(function(item, index, array){
+        		  if (ui.item.value == array[index].value) {
+        			  array.splice(index, 1);
+        		  }
+        		});
+	        	
+	            putCatInIDs(ui.item.id, ui.item.value);
+				$("#catAutoCompl").val("");
+	            return false;
+	        }
+	    });
+	
+	
+	$(".catAutoOutput").on("click", "svg", function(e) {
+		
+		var selectStr = $(this).parent().attr("data-id");
+		var selectName = $(this).parent().find("span").html();
+		console.log(selectStr + "," + selectName)
+		
+        var tempStr = $(".catAutoInput").val();
+        var newStr = tempStr.replace(" " + selectStr, "");
+        
+        $(".catAutoInput").val(newStr);
+        
+        var addBackCatObj = new Object();
+		addBackCatObj.id = selectStr;
+		addBackCatObj.value = selectName;
+		categoryArr.push(addBackCatObj);
+
+		$(this).closest("li").remove();		
+	});
+	
+<!-- 食譜料理分類用 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ -->
