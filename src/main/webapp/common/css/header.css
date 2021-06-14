@@ -12,6 +12,38 @@ html, body {
 }
 
 
+select.custom-select, select.form-control, input.form-control, textarea.form-control {
+    border-color: #FFDBC0;
+}
+
+select.form-control:focus,
+select.custom-select:focus, 
+input.form-control:focus, button.btn:focus, button.btn:active,
+textarea.form-control:focus {
+	border-color: #FFDBC0;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(252, 146, 76, 0.6);
+}
+
+button.btn, button.btn:focus {
+    background-color:#F3722C;
+    border-color: #F3722C;
+    color: black;
+    z-index: 0!important;
+}
+
+button.btn:hover, button.btn:active {
+    background-color:#F8961E;
+    border-color: #F8961E;
+    color: black;
+}
+
+input:-internal-autofill-selected {
+    appearance: menulist-button;
+/*     background-color: rgb(232, 240, 254) !important; */
+    background-color: white!important;
+    background-image: none !important;
+    color: -internal-light-dark(black, white) !important;
+}
 div.breadcrumbs {
     margin-bottom: 40px;
 }
