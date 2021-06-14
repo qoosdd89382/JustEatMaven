@@ -46,7 +46,6 @@ public class AccountInfoServlet extends HttpServlet {
 				String accountMailInput = req.getParameter("accountMail");
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountRandomNumberInput = req.getParameter("RandomNumberInput");
-				System.out.println(accountRandomNumberInput);
 				
 				//檢查會員信箱跟會員密碼，還有驗證碼是否無輸入
 				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
@@ -102,8 +101,6 @@ public class AccountInfoServlet extends HttpServlet {
 				//驗證碼存取
 				HttpSession session = req.getSession();
 				String CorrectNumber = (String)session.getAttribute("RandomNumber");
-				System.out.println("======");
-				System.out.println(CorrectNumber);
 
 				//如果驗證碼輸入錯誤就給錯誤訊息
 				if(!accountRandomNumberInput.equals(CorrectNumber)) {
@@ -119,11 +116,21 @@ public class AccountInfoServlet extends HttpServlet {
 				}
 				
 				//2.開始進行登入驗證
-				AccountInfoService accountInfoSvc = new AccountInfoService();
-				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountInfo(accountMail,accountPassword);
-				if (accountInfoVO == null) {
-					errorMsgs.add("查無此會員資料");
+				if(session.getAttribute("accountMail")!=null) {
+					System.out.println("這裡有人");
 				}
+				
+				AccountInfoService accountInfoSvc = new AccountInfoService();
+				//資料庫找不到該位會員
+				if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
+					errorMsgs.add("查無此會員資料");
+				} 
+
+				//資料庫有該會員，但輸入密碼跟資料庫不符合
+				if(!((accountInfoSvc.getAccountPassword(accountMailInput)).getAccountPassword()).equals(accountPassword)) {
+					errorMsgs.add("密碼輸入錯誤");
+				}
+				
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
@@ -132,6 +139,9 @@ public class AccountInfoServlet extends HttpServlet {
 					return;//程式中斷
 				}
 				
+				//檢查完成，取得資料庫內的帳號密碼資料
+				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountInfo(accountMail,accountPassword);
+					
 				//3.查詢完成,準備轉交(Send the Success view)
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				req.setAttribute("accountInfoVO", accountInfoVO); 
