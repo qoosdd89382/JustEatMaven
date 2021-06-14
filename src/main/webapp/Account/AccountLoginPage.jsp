@@ -30,7 +30,6 @@ div#login {
 }
 
 
-
 input#account_login_btn,
 input#account_reset_btn {
 	margin:5px;
@@ -103,17 +102,21 @@ input#account_register_info {
 						<input id="account_reset_btn" type="reset" value="重置">
 					</form>
 					
-					<form method="post" action="accountInfo.do">
-						<input type="hidden" name="action" value="getAccountInfo_For_Login">
-						<input id="account_forget_code" type="submit" value="忘記密碼了嗎?">
-						<p>連結到寄送信箱頁面(還沒做)</p>
-					</form>
+<!-- 					<form method="post" action="accountInfo.do"> -->
+<!-- 						<input type="hidden" name="action" value="getAccountInfo_For_Login"> -->
+<!-- 						<input id="account_forget_code" type="submit" value="忘記密碼了嗎?"> -->
+<!-- 						<p>連結到寄送信箱頁面(還沒做)</p> -->
+<!-- 					</form> -->
 					
-					<form method="post" action="accountInfo.do">
-						<input type="hidden" name="action" value="setAccountInfo_For_Register">
-						<input id="account_register_info" type="submit" value="還不是會員?">
-						<p>連結到註冊會員資料頁面(施工中)</p>
-					</form>
+					<h3><a id="account_forget_code" href='#'>忘記密碼了嗎?</a></h3>
+					
+<!-- 					<form method="post" action="accountInfo.do"> -->
+<!-- 						<input type="hidden" name="action" value="gotoAccountInfo_For_Register"> -->
+<!-- 						<input id="account_register_info" type="submit" value="還不是會員?"> -->
+<!-- 						<p>連結到註冊會員資料頁面(施工中)</p> -->
+<!-- 					</form> -->
+					
+					<h3><a id="account_register_info" href='AccountRegisterPage.jsp'>還不是會員?</a></h3>
 					
 					<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 					
