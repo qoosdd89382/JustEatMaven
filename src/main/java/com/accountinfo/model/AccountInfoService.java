@@ -100,6 +100,13 @@ public class AccountInfoService {
 		return dao.getAccountLogin(accountMail,accountPassword);
 	}
 	
+	public AccountInfoVO getAccountMail(String accountMail) {
+		return dao.getAccountMail(accountMail);
+	}
+	public AccountInfoVO getAccountPassword(String accountMail) {
+		return dao.getAccountPassword(accountMail);
+	}
+	
 	
 	
 }
