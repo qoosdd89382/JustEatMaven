@@ -46,8 +46,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static final String Select_Key_Stmt = "Select * From JustEat.AccountInfo Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.AccountInfo";
 	//登入用
-	private static final String Select_Account_Login= "Select * From JustEat.AccountInfo Where account_mail=? && account_password=?";
-	
+	private static final String Select_Account_Login = "Select * From JustEat.AccountInfo Where account_mail=? && account_password=?";
+	private static final String Select_Account_Mail = "Select * From JustEat.AccountInfo Where account_mail=?";
+	private static final String Select_Account_Password_By_AccoutMail = "Select account_password From JustEat.AccountInfo Where account_mail=?";
 	
 	static {
 		try {
@@ -403,8 +404,101 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		return accountInfoVO;
 	}
 	
+	@Override
+	public AccountInfoVO getAccountMail(String accountMail) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO accountInfoVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_Mail);
+			
+			pstmt.setString(1, accountMail);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				accountInfoVO = new AccountInfoVO();
+				
+				accountInfoVO.setAccountMail(rs.getString("account_mail"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return accountInfoVO;
+	}
 	
-	
+	@Override
+	public AccountInfoVO getAccountPassword(String accountMail) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO accountInfoVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_Password_By_AccoutMail);
+			
+			pstmt.setString(1, accountMail);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				accountInfoVO = new AccountInfoVO();
+				
+				accountInfoVO.setAccountPassword(rs.getString("account_password"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return accountInfoVO;
+	}
 	
 	
 	

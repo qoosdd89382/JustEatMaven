@@ -11,14 +11,22 @@
 	overflow-x: hidden;
 }
 
-div.catAutoOutput ul, div.ingAutoOutput ul {
+.vertical-container {
+  display: -webkit-flex;
+  display:         flex;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+}
+
+.catAutoOutput ul, .ingAutoOutput ul {
 	background: #efefef;
-	width: 500px;
 	min-height:55px;
 	padding: 5px;
 }
 
-div.catAutoOutput ul > li {
+.catAutoOutput ul > li {
 	display: inline-block;
 	margin: 10px 3px;
 	padding: 3px;
@@ -26,7 +34,7 @@ div.catAutoOutput ul > li {
 	background: #fff;
 }  
   
-div.ingAutoOutput ul > li {
+.ingAutoOutput ul > li {
 	margin: 10px 3px;
 	padding: 3px;
 	border: 1px solid gray;
@@ -36,35 +44,71 @@ div.ingAutoOutput ul > li {
 	position:relative;
 }  
 
-div.ingAutoOutput ul > li svg {
+.ingAutoOutput ul > li svg {
 /*         position: absolute; */
 /*         top: 50%; */
 /*         right: 5px; */
 /*         transform: translateY(-50%); */
-	margin-top: 5px;
+/* 	margin-top: 5px; */
 }
 
-div.ingAutoOutput .col-2, div.ingAutoOutput .col-3, div.ingAutoOutput .col-4 {
-	padding: 0;
+/* .ingAutoOutput .col-2, div.ingAutoOutput .col-3, div.ingAutoOutput .col-4 { */
+/* 	padding: 0; */
+/* } */
+
+#addStepBtn, #picTopUploadBtn {
+/* 	border: 1px solid gray; */
+/* 	border-radius: .25rem; */
+/* 	padding: 10px; */
+/* 	width: 150px; */
+/* 	text-align: center; */
+	margin-bottom: 20px;
+	background: #FBA95D!important;
+	border: 1px solid #FBA95D!important;
 }
 
-div.addStepBtn {
-	border: 1px solid gray;
-	padding: 10px;
-	width: 150px;
-	text-align: center;
+#addStepBtn {
+	display: block;
 }
 
+#picTopUploadBtn, #picTopUploadName {
+	display: block;
+	margin-bottom: 0!important;
+}
 
+#picTopUploadName {
+	padding: 6px;
+}
 
+#addStepBtn:hover, #picTopUploadBtn:hover {
+	background: #F6CAA2!important;
+	border: 1px solid #F6CAA2!important;
+	cursor: pointer;
+}
 
+#btnSubmit {
+	display: block;
+	margin: 0 auto;
+}
 
+.recipe td:last-child {
+	text-align: right;
+}
 
+.form-group {
+	margin-bottom: 20px!important;
+}
+.table td, .table th {
+    border-top: 0!important;
+}
+.recipe {
+	border: 1px solid lightgray;
+	border-radius: 5px;
+}
 
-
-
-
-
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+	background: #FFFCE8;
+}
 
 
 

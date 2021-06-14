@@ -3,12 +3,18 @@ package com.accountinfo.controller;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.hibernate.Session;
 
 import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
@@ -23,11 +29,13 @@ public class AccountInfoServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
+		//設定編碼與確認回應
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
 		
-//會員登入處理
+//<--會員登入處理-->
 		if ("getAccountInfo_For_Login".equals(action)) {
+			//已取得回傳之accountMail、accountPassword資料
 			
 			//儲存錯誤訊息
 			List<String> errorMsgs = new LinkedList<String>();
@@ -38,7 +46,6 @@ public class AccountInfoServlet extends HttpServlet {
 				String accountMailInput = req.getParameter("accountMail");
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountRandomNumberInput = req.getParameter("RandomNumberInput");
-				System.out.println(accountRandomNumberInput);
 				
 				//檢查會員信箱跟會員密碼，還有驗證碼是否無輸入
 				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
@@ -51,64 +58,94 @@ public class AccountInfoServlet extends HttpServlet {
 				{
 					errorMsgs.add("請輸入驗證碼");
 				}
+				
 				//有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
 				
+				//帳號密碼正則表達式規範
+				//帳號規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
+				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
+				//判斷使用者帳號輸入是否符合，回傳boolean值
+				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
+				//密碼規範:至少8碼任意大小寫英文數字
+				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,}$");
+				//判斷使用者密碼輸入是否符合，回傳boolean值
+				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+				
+				//準備回傳的值
 				String accountMail = null;
 				String accountPassword = null;
 
-//格式待修
-				//檢查輸入格式是否正確
+				//帳號密碼輸入格式驗證
 				try {
-					accountMail = new String(accountMailInput);
-				} catch (Exception e) {
-					errorMsgs.add("會員信箱輸入錯誤");
-				}
-				try {
-					accountPassword = new String(accountPasswordInput);
-				} catch (Exception e) {
-					errorMsgs.add("會員密碼輸入錯誤");
-				}
-				String CorrectNumber = req.getParameter("RandomNumber");
-				System.out.println("======");
-				System.out.println(CorrectNumber);
-
-				try {
-					if(accountRandomNumberInput.equals(CorrectNumber)) {
+					if (accountMailMatcher.matches()) {
+						accountMail = new String(accountMailInput);
 					}
-				}catch(Exception e) {
+				} catch (Exception e) {
+					errorMsgs.add("會員信箱格式錯誤");
+				}
+				try {
+					if (accountPasswordMatcher.matches()) {
+						accountPassword = new String(accountPasswordInput);
+					}
+				} catch (Exception e) {
+					errorMsgs.add("會員密碼格式錯誤");
+				}
+				
+//驗證碼放在SESSION
+				//驗證碼存取
+				HttpSession session = req.getSession();
+				String CorrectNumber = (String)session.getAttribute("RandomNumber");
+
+				//如果驗證碼輸入錯誤就給錯誤訊息
+				if(!accountRandomNumberInput.equals(CorrectNumber)) {
 					errorMsgs.add("驗證碼可能輸入錯誤");
 				}
+
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
 				
-				//2.開始進行登入
-				AccountInfoService accountInfoSvc = new AccountInfoService();
-				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountInfo(accountMail,accountPassword);
-				if (accountInfoVO == null) {
-					errorMsgs.add("查無此會員資料");
+				//2.開始進行登入驗證
+				if(session.getAttribute("accountMail")!=null) {
+					System.out.println("這裡有人");
 				}
+				
+				AccountInfoService accountInfoSvc = new AccountInfoService();
+				//資料庫找不到該位會員
+				if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
+					errorMsgs.add("查無此會員資料");
+				} 
+
+				//資料庫有該會員，但輸入密碼跟資料庫不符合
+				if(!((accountInfoSvc.getAccountPassword(accountMailInput)).getAccountPassword()).equals(accountPassword)) {
+					errorMsgs.add("密碼輸入錯誤");
+				}
+				
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
+				
+				//檢查完成，取得資料庫內的帳號密碼資料
+				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountInfo(accountMail,accountPassword);
+					
 				//3.查詢完成,準備轉交(Send the Success view)
-				// 資料庫取出的accountVO物件,存入req
+				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				req.setAttribute("accountInfoVO", accountInfoVO); 
-				String url = "/Account/ListOneAccountInfo.jsp";
+				String url = "/Account/AccountInfoPage.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneEmp.jsp
 				successView.forward(req, res);
 				

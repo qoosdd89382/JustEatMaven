@@ -24,23 +24,43 @@
 </head>
 
 <style>
-li#login{ 
- margin:200px; 
- list-style:none;
-} 
-input#test{ 
+div#login {
+	margin: 200px;
+	list-style: none;
+}
 
-border:none;
 
-  width：200px;  height:80px;
 
-  box-radius:25%;
+input#account_login_btn,
+input#account_reset_btn {
+	margin:5px;
+	border:none;
+	-webkit-border-radius: 20;
+	-moz-border-radius: 20;
+	border-radius: 20px;
+	color: #ffffff;
+	font-size: 15px;
+	background: 	#FF8800;
+	padding: 5px 15px 5px 15px;
+	text-decoration: none;
+}
 
-  outline:medium;
+input#account_login_btn:hover,
+input#account_reset_btn:hover {
+	background:#FFAA33;
+	text-decoration: none;
+}
 
-  text-align:center;
-
-  }
+input#account_forget_code,
+input#account_register_info {
+	border:none;
+	font-family: Arial;
+	color:#0000FF;
+	font-size: 20px;
+	padding: 10px 20px 10px 20px;
+	background: #FFFFFF;
+	text-decoration: underline;
+}
 
 </style>
 
@@ -50,48 +70,67 @@ border:none;
 		<%@ include file="/common/header.jsp"%>
 	</header>
 	
-	
-	<li id="login">
-		<b>您好，歡迎登入</b>
-		<form method="post" action="accountInfo.do">
-			<b>請輸入會員信箱 (如JerryMouse@gmail.com):</b> <br>
-			<input type="text" name="accountMail"> <br>
-			<b>請輸入會員密碼 (如1q2w3e4r5t):</b> <br>
-			<input type="text" name="accountPassword"><br>
-<!-- 			<input type="hidden" name="action" value="getOne_For_Display"> -->
-	    <%--點選圖片可進行驗證碼重新整理--%>
-	    ===${RandomNumber}===
-	    <input type="text" name="RandomNumberInput">
-	    <img name="imgValidate" src = "RandomNumber.jsp" onclick="refresh()" ><br>
-    
-			<input type="hidden" name="action" value="getAccountInfo_For_Login">
-			<input type="submit" value="登入">
-			<input type="reset" value="重置">
-		</form>
-		<form method="post" action="accountInfo.do">
-			<input type="hidden" name="action" value="getAccountInfo_For_Login">
-			<u><b><input name="test" type="submit" value="忘記密碼了嗎?"></b></u>
-		
-		</form>
-		<form method="post" action="accountInfo.do">
-			<input type="hidden" name="action" value="setAccountInfo_For_Register">
-			<u><b><input name="test" type="submit" value="還不是會員?"></b></u>
-		</form>
-		
-		<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
-		
-	</li>
-
-	
-	
+	<div class="container">
+		<div class="row">
+			<div id="login" class="col">
+				
+					<%-- 錯誤表列 --%>
+					<c:if test="${not empty errorMsgs}">
+						<font style="color: red">請修正以下錯誤:</font>
+						<ul>
+							<c:forEach var="message" items="${requestScope.errorMsgs}">
+								<li style="color: red">${message}</li>
+							</c:forEach>
+						</ul>
+					</c:if>
+					
+					<b>您好，歡迎登入</b>
+					
+					<form method="post" action="accountInfo.do" name="LoginInfo">
+						<b>請輸入會員信箱 (如JerryMouse@gmail.com):</b> <br>
+						<input type="text" name="accountMail"> <br>
+						<b>請輸入會員密碼 (如1q2w3e4r5t):(記得改TYPE))</b> <br>
+						<input type="text" name="accountPassword"><br>
+			
+					    <%--點選圖片可進行驗證碼重新整理--%>
+					    <b>請輸入驗證碼 (點擊圖片可刷新):</b> <br>
+					    <input type="text" name="RandomNumberInput">
+					    
+					    <img name="imgValidate" src = "RandomNumber.jsp" onclick="refresh()"><br>
+			    
+						<input type="hidden" name="action" value="getAccountInfo_For_Login">
+						<input id="account_login_btn" type="submit" value="登入">
+						<input id="account_reset_btn" type="reset" value="重置">
+					</form>
+					
+					<form method="post" action="accountInfo.do">
+						<input type="hidden" name="action" value="getAccountInfo_For_Login">
+						<input id="account_forget_code" type="submit" value="忘記密碼了嗎?">
+						<p>連結到寄送信箱頁面(還沒做)</p>
+					</form>
+					
+					<form method="post" action="accountInfo.do">
+						<input type="hidden" name="action" value="setAccountInfo_For_Register">
+						<input id="account_register_info" type="submit" value="還不是會員?">
+						<p>連結到註冊會員資料頁面(施工中)</p>
+					</form>
+					
+					<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
+					
+			</div>
+		</div>
+		<p>待修問題</p>
+		<p>無</p>
+	</div>
 	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	
-	<script>
+	<script type="text/javascript">
+	
 	    function refresh() {
-	        login.imgValidate.src="index.jsp?id="+Math.random();
+	    	LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
 	    }
 	
 	

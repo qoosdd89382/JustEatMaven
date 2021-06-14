@@ -38,7 +38,7 @@ public class RecipeServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 
 		String action = req.getParameter("action");
-
+		
 		if ("insert".equals(action)) { // 來自addRecipe.jsp的請求
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
@@ -78,7 +78,12 @@ public class RecipeServlet extends HttpServlet {
 					Part part = req.getPart("recipePicTop");
 	
 					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
-						System.err.println("使用者沒有上傳圖片");
+						System.out.println("使用者沒有上傳置頂圖片");
+						
+						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
+						
 					} else if (!part.getContentType().startsWith("image")) { 
 						errorMsgs.put("recipePicTopErrType", "請上傳image類型之圖檔。2");
 					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
@@ -88,6 +93,8 @@ public class RecipeServlet extends HttpServlet {
 						recipePicTopBuffer = new byte[in.available()];
 						in.read(recipePicTopBuffer); // 順利的話把picBuffer放進VO，然後傳回去顯示在畫面上
 						in.close();
+						req.getSession().setAttribute("recipePicTopBuffer", recipePicTopBuffer);
+						req.getSession().setAttribute("recipePicTopName", part.getSubmittedFileName());
 					}
 				} catch (Exception e) {
 					System.err.println("使用者操作時發生其他例外");
@@ -196,13 +203,20 @@ public class RecipeServlet extends HttpServlet {
 					recipeStepVO.setRecipeStepText(recipeStepTexts[index]);
 				}
 				
-				for(int index = 0; index < recipeStepCount; index++) {
+				Collection<Part> collection = req.getParts();
+				List<Part> parts = new ArrayList<Part>();
+				for (Part part : collection) {
+					if ("recipeStepPic".equals(part.getName())){
+						parts.add(part);
+					}
+				}
+				for(int index = 0; index < parts.size(); index++) {
 					byte[] recipeStepPicBuffer = null;
 					try {
-						Part part = req.getPart("recipeStepPic" + (index + 1));
+						Part part = parts.get(index);
 		
 						if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
-							System.err.println("使用者沒有上傳圖片");
+							System.out.println("使用者沒有上傳步驟" + (index + 1) + "之圖片");
 						} else if (!"image".equals(part.getContentType().substring(0, part.getContentType().lastIndexOf("/")))) { 
 							errorMsgs.put("recipeStepPicErrType", "請上傳image類型之圖檔。");
 						} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
@@ -222,7 +236,6 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				RecipeVO recipeVO = new RecipeVO();
-//				RecipeStepVO recipeStepVO = new RecipeStepVO();
 				recipeVO.setRecipeName(recipeName);
 				recipeVO.setRecipeIntroduction(recipeIntroduction);
 				recipeVO.setRecipeServe(recipeServe);
@@ -248,7 +261,12 @@ public class RecipeServlet extends HttpServlet {
 										recipeName, recipeIntroduction, 
 										recipePicTopBuffer, recipeServe, 
 										100001, recipeCatVOs, recipeIngUnitVOs, recipeStepVOs);
-				if (recipeVO != null) {System.out.println("新增成功");}
+				if (recipeVO != null) {
+					System.out.println("新增成功");
+					req.getSession().removeAttribute("recipePicTopBuffer");
+					RequestDispatcher successView = req.getRequestDispatcher("/Recipe/recipe.jsp?id=" + recipeVO.getRecipeID());
+					successView.forward(req, res);
+				}
 				
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
@@ -256,7 +274,33 @@ public class RecipeServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
+		
+		
 
+		if ("getOneForUpdate".equals(action)) { // 來自listAllRecipe.jsp的請求
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				Integer recipeID = new Integer(req.getParameter("recipeID"));
+				
+				RecipeService recipeSvc = new RecipeService();
+				RecipeVO recipeVO = recipeSvc.getOneRecipe(recipeID);
+				
+				req.setAttribute("recipeVO", recipeVO);
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+				successView.forward(req, res);
+			} catch (Exception e) {
+				e.printStackTrace();
+				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+			}
+		}
+
+		
+		
+		
 	}
 
 }

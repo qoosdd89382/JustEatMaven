@@ -32,6 +32,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
   table#table-1 h4 {
     color: red;
     display: block;
+    margin-top: 50px;
     margin-bottom: 1px;
   }
   h4 {
@@ -112,6 +113,8 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
 			<td><%=accountInfoVO.getAccountRegistTime()%></td>
 		</tr>
 	</table>
+	
+	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

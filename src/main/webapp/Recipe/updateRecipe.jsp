@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
@@ -8,23 +7,24 @@
 <%@ page import="com.cuisinecategory.model.*"%>
 <%@ page import="com.recipecuisinecategory.model.*"%>
 <%@ page import="com.recipestep.model.*"%>
+<%@ page import="com.recipeingredientunit.model.*"%>
 
-<%
-	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
-	List<RecipeStepVO> recipeStepVOs = (List<RecipeStepVO>) request.getAttribute("recipeStepVOs");
-	String recipeCategoryIDs = request.getParameter("recipeCategoryIDs");
-	String recipeIngredientIDs = request.getParameter("recipeIngredientIDs");
-	String[] unitIDs = request.getParameterValues("unitIDs");
-	String[] recipeUnitAmounts = (String[]) request.getAttribute("recipeUnitAmounts");
-	String[] recipeStepText = request.getParameterValues("recipeStepText");
-	// 	String[] recipeUnitIDs = request.getParameterValues("recipeUnitIDs");
-	// 	RecipeCuisineCategoryVO recipeCatVO = (RecipeCuisineCategoryVO) request.getAttribute("racipeCatVO");
-// 	if (session.getAttribute("recipePicTopBuffer") != null) { System.out.println(session.getAttribute("recipePicTopName")); }
-%>
-
+<jsp:useBean id="recipeCategorySvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
+<jsp:useBean id="recipeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" />
+<jsp:useBean id="recipeStepSvc" scope="page" class="com.recipestep.model.RecipeStepService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
+
+<%
+	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
+	List<RecipeCuisineCategoryVO> recipeCatList = recipeCategorySvc.getAllByRecipe(recipeVO.getRecipeID());
+	List<RecipeIngredientUnitVO> recipeIngUnitList = recipeIngUnitSvc.getAllByRecipe(recipeVO.getRecipeID());
+	List<RecipeStepVO> recipeStepList = recipeStepSvc.getAllByRecipe(recipeVO.getRecipeID());
+	request.setAttribute("recipeCatList", recipeCatList);
+	request.setAttribute("recipeIngUnitList", recipeIngUnitList);
+	request.setAttribute("recipeStepList", recipeStepList);
+%>
 
 <!DOCTYPE html>
 <html>
@@ -41,6 +41,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
+<title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
 <style>
         #preview {
             border: 1px solid lightgray;
@@ -67,11 +68,9 @@
         }
         
 </style>
-
-<title>食譜列表 | 食譜 | Just Eat 揪食</title>
 </head>
 <body>
-
+	
 	<%-- include header --%>
 	<header>
 		<%@ include file="/common/header.jsp"%>
@@ -87,11 +86,11 @@
 			<%-- breadcrumbs --%>
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a
-						href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a
-						href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
-					<li class="breadcrumb-item active" aria-current="page">新增食譜</li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp">食譜列表</a></li>
+					<li class="breadcrumb-item active" aria-current="page">${recipeVO.recipeName} [編輯]</li>
+
 				</ol>
 			</div>
 
@@ -104,7 +103,7 @@
 
 				<div class="form-group">
 					<label for="recipeName">食譜名稱：</label>
-					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeName()%>">
+					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="${recipeVO.recipeName}">
 					${errorMsgs.get(recipeNameErrNull)}
 					${errorMsgs.get("recipeNameErrNull")}
 					${errorMsgs.get("recipeNameErrReg")}
@@ -117,16 +116,16 @@
 					</span>
 					<div class="catAutoOutput">
 						<ul>
-							<c:if test="${not empty recipeCatVOs}">
-								<c:forEach var="recipeCatVO" items="${recipeCatVOs}">
+<%-- 							<c:if test="${not empty recipeCatVOs}"> --%>
+								<c:forEach var="recipeCatVO" items="${recipeCatList}">
 									<li data-id='${recipeCatVO.cuisineCategoryID}'>
 										<span>${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
 										<i class='fas fa-times'></i>
 									</li>
 								</c:forEach>
-							</c:if>
+<%-- 							</c:if> --%>
 						</ul>
-						<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<%=(recipeCategoryIDs == null) ? "" : recipeCategoryIDs%>">
+						<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${recipeCatList}">${recipeCatVO.cuisineCategoryID} </c:forEach>">
 					</div>
 
 				</div>
@@ -142,8 +141,8 @@
 					</span>
 					<div class="ingAutoOutput">
 						<ul>
-							<c:if test="${not empty recipeIngUnitVOs}">
-								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitVOs}">
+<%-- 							<c:if test="${not empty recipeIngUnitVOs}"> --%>
+								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
 									<li class='row' data-id='${recipeIngUnitVO.ingredientID}'>
 										<div class='col-4 vertical-container'>${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div>
 										<input class='form-control unitAmounts col-2' name='unitAmounts' type='number' min="0.01" max="9999.99" step='0.01' value='${recipeIngUnitVO.unitAmount}'>
@@ -161,9 +160,9 @@
 										<div class="vertical-container"><i class='fas fa-times'></i></div>
 									</li>
 								</c:forEach>
-							</c:if>
+<%-- 							</c:if> --%>
 						</ul>
-						<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<%=(recipeIngredientIDs == null) ? "" : recipeIngredientIDs%>">
+						<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">${recipeIngUnitVO.recipeIngredientUnitID} </c:forEach>">
 					</div>
 				</div>
 
@@ -171,12 +170,12 @@
 					<label for="recipeIntroduction">食譜介紹：</label>
 						<span>${errorMsgs.get("recipeIntroductionErrNull")}
 						${errorMsgs.get("recipeIntroductionErrReg")}</span><br>
-					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50"><%=(recipeVO == null) ? "" : recipeVO.getRecipeIntroduction()%></textarea>
+					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50">${recipeVO.recipeIntroduction}</textarea>
 				</div>
 
 				<div class="form-group">
 					<label for="recipeServe">享用人數：</label>
-						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeServe()%>"><br>
+						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="${recipeVO.recipeServe}"><br>
 					${errorMsgs.get("recipeServeErrWrong")}
 					${errorMsgs.get("recipeServeErrRange")}
 				</div>
@@ -186,7 +185,7 @@
 					${errorMsgs.get("recipePicTopErrType")} ${errorMsgs.get("recipePicTopErrSize")} <br>
 						<div id="picTopUploadBtn" class="btn btn-primary col-6">上傳檔案</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
-						<div id="preview" class="col-6"><span id="preview_text" class="text">預覽圖</span></div>
+						<div id="preview" class="col-6"><img id="p_img" class="preview_img" src="<%= request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}"></img></div>
 						<div id="picTopUploadName">${recipePicTopName}</div>
 				</div>
 
@@ -196,29 +195,8 @@
 				${errorMsgs.get("recipeStepPicErrSize")}
 				<table class="recipeStepsTable table table-hover">
 					<tbody>
-
-						<c:if test="${empty recipeStepVOs}">
-							<tr class="form-group recipe row">
-								<td class="col-6 order-1 col-lg-1 order-lg-1">
-									<span>1</span>
-									<input name="recipeStepIDs" type="hidden" value="">
-									<input name="recipeStepOrders" type="hidden" value="1">
-								</td>
-								<td class="col-12 order-3 col-lg-6 order-lg-2">
-									<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea>
-								</td>
-								<td class="col-12 order-4 col-lg-4 order-lg-3">
-<!-- 									<input class="form-control-file" type="file" name="recipeStepPic"> -->
-									<input class="form-control-file" type="file" name="recipeStepPic" multiple="multiple">
-								</td>
-								<td class="col-6 order-2 col-lg-1 order-lg-4">
-									<font color="gray"><i class='fas fa-times'></i></font>
-								</td>
-							</tr>
-						</c:if>
-
-						<c:if test="${not empty recipeStepVOs}">
-							<c:forEach var="recipeStepVO" items="${recipeStepVOs}">
+<%-- 						<c:if test="${not empty recipeStepVOs}"> --%>
+							<c:forEach var="recipeStepVO" items="${recipeStepList}">
 								<tr class="form-group recipe row">
 									<td class="col-6 order-1 col-lg-1 order-lg-1">
 										<span>${recipeStepVO.recipeStepOrder}</span>
@@ -230,7 +208,6 @@
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
 										<input class="form-control-file" type="file" name="recipeStepPic">	
-<%-- 										<input class="form-control-file" type="file" name="recipeStepPic${recipeStepVO.recipeStepOrder}">	 --%>
 									</td>
 									<td class="col-6 order-2 col-lg-1 order-lg-4">
 										<c:if test="${fn:length(recipeStepVOs) == 1}">
@@ -242,7 +219,7 @@
 									</td>
 								</tr>
 							</c:forEach>
-						</c:if>
+<%-- 						</c:if> --%>
 						
 					</tbody>
 				</table>
@@ -267,6 +244,7 @@
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 
+	
 
 	<%-- body 結束標籤之前，載入Bootstrap 的 JS 及其相依性安裝(jQuery、Popper) --%>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
@@ -280,71 +258,78 @@
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
 		$(function() {
-			<%@ include file="/Recipe/autoComplCat.file"%>
-			<%@ include file="/Recipe/autoComplIng.file"%>
+
+			var categoryArr = new Array();
 			
-			var isNewRecipe = "${recipeVO}";
-			if (isNewRecipe == "") {
-				sessionStorage.clear();
-				 picTopUploadName.innerHTML = "";		// ${recipePicTopName}
+			<c:forEach var="catOne" items="${categorySvc.all}">
+				var catObj = new Object();
+				catObj.id = ${catOne.cuisineCategoryID};
+				catObj.value = "${catOne.cuisineCategoryName}";
+				categoryArr.push(catObj);
+			</c:forEach>
+
+			<c:forEach var="recipeCatVO" items="${recipeCatList}">
+				var tempCat = "${recipeCatVO.cuisineCategoryID}";
+				if (tempCat != "") { 
+					categoryArr.forEach(function(item, index, array){
+				       	if (tempCat == array[index].id) {
+				       		array.splice(index, 1);
+				       	}
+			       	});
+				}
+			</c:forEach>	
+			
+			function putCatInIDs(id, value) {
+				var tempCatHtml = "<li data-id='" + id + "'><span>" + value + "</span><i class='fas fa-times'></i></li>";
+				$(".catAutoOutput").find("ul").append(tempCatHtml);
+				
+		        if ($(".catAutoInput").val() == "") {
+		            $(".catAutoInput").val(" " + id);
+		        } else {
+		            var tempCatStr = $(".catAutoInput").val();
+		            tempCatStr += " " + id;
+		            $(".catAutoInput").val(tempCatStr);
+		        }
 			}
 
-            var preview_html = `<span id="preview_text" class="text">預覽圖</span>`;
-            var p_img_html = `<img id="p_img" class="preview_img" src="#"></img>`;
 
-            if (sessionStorage.getItem("form_data") != null) {
-                p_info = JSON.parse(sessionStorage.getItem("form_data"));
+			$("#catAutoCompl")
+			    .autocomplete({
+			        minLength: 0,
+			        source: categoryArr,
+			        select: function (event, ui) {
+				        categoryArr.forEach(function(item, index, array){
+		        		  if (ui.item.value == array[index].value) {
+		        			  array.splice(index, 1);
+		        		  }
+		        		});
+			        	
+			            putCatInIDs(ui.item.id, ui.item.value);
+						$("#catAutoCompl").val("");
+			            return false;
+			        }
+			    });
+			
+			
+			$(".catAutoOutput").on("click", "svg", function(e) {
+				
+				var selectStr = $(this).parent().attr("data-id");
+				var selectName = $(this).parent().find("span").html();
+				console.log(selectStr + "," + selectName)
+				
+		        var tempStr = $(".catAutoInput").val();
+		        var newStr = tempStr.replace(" " + selectStr, "");
+		        
+		        $(".catAutoInput").val(newStr);
+		        
+		        var addBackCatObj = new Object();
+				addBackCatObj.id = selectStr;
+				addBackCatObj.value = selectName;
+				categoryArr.push(addBackCatObj);
 
-                preview.innerHTML = null;
-                preview.insertAdjacentHTML('afterbegin', p_img_html);
-
-                document.querySelector("#p_img").src = p_info.p_img;
-                img_base64 = p_info.p_img;
-            }
-            
-			const file_reader = new FileReader();
-            function previewer(file) {
-                file_reader.readAsDataURL(file);
-                
-                file_reader.addEventListener("load", function (e) {
-                    // load事件用target
-                    var preview_text = document.querySelector('#preview_text');
-                    var p_img = document.querySelector('#p_img');
-                    
-                    var img_ele = document.createElement('img');
-                    img_ele.id = 'p_img';
-                    img_ele.src = e.target.result;
-                    img_ele.setAttribute('class', 'preview_img');
-                    
-                    picTopUploadName.innerHTML = file.name;	// 這裡的file跟onload事件無關
-
-                    if ((img_ele == null && preview_text != null) || preview_text != null) {
-                        preview.replaceChild(img_ele, preview_text);
-                    } else {
-                        preview.replaceChild(img_ele, p_img);
-                    }
-                });
-            };
-            
-            document.querySelector("input[name='recipePicTop']").addEventListener("change", function (e) {
-                // change事件用target
-                previewer(e.target.files[0]);
-            });
-
-
-            btnSubmit.addEventListener("click", function() {
-            	p_info = {};
-                if (document.querySelector('#p_img') != null) {
-                    p_info.p_img = document.querySelector('#p_img').getAttribute("src");
-                }
-                sessionStorage.setItem("form_data", JSON.stringify(p_info));
-            });
-            
-            $('#picTopUploadBtn').on("click", function() {
-            	$('input[name="recipePicTop"]').trigger("click");
-            });
-            
-            
+				$(this).closest("li").remove();		
+			});
+		
 		});
 	</script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/addRecipe.js"></script>

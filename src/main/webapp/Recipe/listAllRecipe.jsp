@@ -46,8 +46,8 @@
 			<%-- breadcrumbs --%>
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>" target="_blank">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp" target="_blank">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
 					<li class="breadcrumb-item active" aria-current="page">食譜列表</li>
 				</ol>
 			</div> 
@@ -76,9 +76,26 @@
 						
 						<div class="info col-12 col-lg-7">
 							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
+<!-- 							<div class="row"> -->
 							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.getAccountID(recipeVO.accountID).accountNickname}</a></div>
+<!-- 							<div class="col-6">test</div> -->
+<!-- 							</div> -->
 							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
-							<div class="readmore"><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a></div>
+							<div class="change form-group">
+								<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+									<input type="hidden" name="action" value="getOneForUpdate">
+									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+									<button class="btn btn-primary" type="submit">編輯</button>
+								</form>
+								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+									<input type="hidden" name="action" value="getOneForDelete">
+									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+									<button class="btn btn-primary" type="submit">刪除</button>
+								</form>
+							</div>
+							<div class="readmore">
+								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
+							</div>
 						</div>
 						
 					</div>

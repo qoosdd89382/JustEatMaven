@@ -1,12 +1,16 @@
 <script type="text/javascript">
-	function refresh() {
 
+	function refresh() {
 		src = "RandomNumber.jsp?id=" + Math.random();
 	}
 </script>
-<%@ page contentType="charset=UTF-8" language="java" import="java.awt.*"
-	import="java.awt.image.BufferedImage" import="java.util.*"
-	import="javax.imageio.ImageIO" pageEncoding="UTF-8"%>
+
+<%@ page contentType="charset=UTF-8" language="java" 
+	import="java.awt.*"
+	import="java.awt.image.BufferedImage" 
+	import="java.util.*"
+	import="javax.imageio.ImageIO" 
+	pageEncoding="UTF-8"%>
 <%
 	response.setHeader("Cache-Control", "no-cache");
 	//在記憶體中建立影像
@@ -21,8 +25,8 @@
 	Random rnd = new Random();
 	int randNum = rnd.nextInt(8999) + 1000;
 	String randStr = String.valueOf(randNum);
-	//將驗證碼存入req
-	request.setAttribute("RandomNumber", randStr);
+	//將驗證碼存入session
+	session.setAttribute("RandomNumber", randStr);
 	//將驗證碼顯示到影象中
 	g.setColor(Color.black);
 	g.setFont(new Font("", Font.PLAIN, 20));
