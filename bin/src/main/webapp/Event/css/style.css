@@ -1,0 +1,165 @@
+/*活動列表 */
+
+.event_list_content {
+    margin: 20px 0 0 0;
+    overflow: hidden;
+}
+
+.event_list_content.row {
+    margin: 0 0 0 0;
+    overflow: hidden;
+}
+
+div.Create_or_Join_Event {
+    margin: 0 auto 5px auto;
+    padding: 0 0px 0 0px;
+}
+
+div.Create_or_Join_Event button {
+    background-color: #F8961E;
+    color: #212e3a;
+}
+
+.center_content {
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
+.filter {
+    border-bottom: 1px solid black;
+    width: 100%;
+}
+
+
+/* 
+.filter th,
+.filter td {
+
+} */
+
+.event_list {
+    width: 100%;
+}
+
+.event_list th,
+.event_list td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.small {
+    display: none;
+}
+
+
+/* @media screen and (max-width:575px) {
+    .event_list th {
+        display: none;
+    }
+    .event_list td.normal {
+        display: none;
+    }
+    .small {
+        display: block;
+    }
+} */
+
+img {
+    max-width: 100%;
+}
+
+
+/*建立活動 */
+
+.title h2 {
+    margin: 20px 0 0 10px;
+}
+
+
+/* .event_content {} */
+
+.title_separate {
+    margin: 10px 0 0 0;
+}
+
+.title_separate label {
+    margin: 5px 0 0 0;
+    display: block;
+}
+
+.info div {
+    margin: 10px 0 0 20px;
+}
+
+.overflow{
+	 overflow: hidden;
+}
+
+.info {
+    margin: 0 20px 0 0;
+    float: left;
+}
+
+.inputAddress{
+	width: 300px;
+}
+/* .event_description {} */
+
+textarea {
+    resize: none;
+}
+
+.error{
+	color: red;
+}
+
+/*活動詳情 */
+
+.border {
+    padding: 0 5px;
+    border: 1px solid black;
+}
+
+
+/*新增菜色 */
+
+.ingredient_zone {
+    width: 300px;
+    height: 200px;
+    border: 1px solid black;
+}
+
+.ingredient_name {
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+
+.ingredient_tag {
+    border: 1px solid black;
+    margin: 0 0 0 5px;
+}
+
+.ingredient_cancel_icon {
+    margin: 0 5px 0 0;
+}
+
+.insert_dish_list {
+    border: 1px solid black;
+    width: 400px;
+    text-align: center;
+}
+
+.insert_dish_list tr td,th {
+	border-bottom:1px solid black;
+	border-right:1px solid black;
+}
+
+.insert_content {
+    margin: 0 auto !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn_margin {
+    margin: 10px 0 0 0;
+}
