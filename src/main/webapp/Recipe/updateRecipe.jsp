@@ -42,7 +42,32 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
 <title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
+<style>
+        #preview {
+            border: 1px solid lightgray;
+            display: inline-block; 
+            position: relative;
+            min-height: 40px;
+            border-radius: .25rem!important;
+            margin-top:10px;
+            padding: 3px;
+        }
 
+        #preview span.text {
+            position: absolute;
+            display: inline-block;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            color: lightgray;
+        }
+        
+        #p_img {
+        	width: 100%;
+        }
+        
+</style>
 </head>
 <body>
 	
@@ -141,12 +166,12 @@
 					</div>
 				</div>
 
-<!-- 				<div class="form-group"> -->
-<!-- 					<label for="recipeIntroduction">食譜介紹：</label> -->
-<%-- 						<span>${errorMsgs.get("recipeIntroductionErrNull")} --%>
-<%-- 						${errorMsgs.get("recipeIntroductionErrReg")}</span><br> --%>
-<%-- 					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50"><%=(recipeVO == null) ? "" : recipeVO.getRecipeIntroduction()%></textarea> --%>
-<!-- 				</div> -->
+				<div class="form-group">
+					<label for="recipeIntroduction">食譜介紹：</label>
+						<span>${errorMsgs.get("recipeIntroductionErrNull")}
+						${errorMsgs.get("recipeIntroductionErrReg")}</span><br>
+					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50">${recipeVO.recipeIntroduction}</textarea>
+				</div>
 
 				<div class="form-group">
 					<label for="recipeServe">享用人數：</label>
@@ -155,84 +180,58 @@
 					${errorMsgs.get("recipeServeErrRange")}
 				</div>
 
-<!-- 				<div class="form-group"> -->
-<!-- 					<label for="recipePicTop">食譜完成照：</label> -->
-<!-- 						<input type="file" name="recipePicTop" class="form-control-file"> -->
-<%-- 					${errorMsgs.get("recipePicTopErrType")} --%>
-<%-- 					${errorMsgs.get("recipePicTopErrSize")} <br> --%>
-<!-- 				</div> -->
+				<div class="form-group">
+					<label for="recipePicTop row">食譜完成照：</label>
+					${errorMsgs.get("recipePicTopErrType")} ${errorMsgs.get("recipePicTopErrSize")} <br>
+						<div id="picTopUploadBtn" class="btn btn-primary col-6">上傳檔案</div>
+						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
+						<div id="preview" class="col-6"><img id="p_img" class="preview_img" src="<%= request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}"></img></div>
+						<div id="picTopUploadName">${recipePicTopName}</div>
+				</div>
 
-<!-- 				<h2>食譜步驟</h2> -->
-<%-- 				${errorMsgs.get("recipeStepErrNull")} --%>
-<%-- 				${errorMsgs.get("recipeStepPicErrType")} --%>
-<%-- 				${errorMsgs.get("recipeStepPicErrSize")} --%>
-<!-- 				<table class="recipeStepsTable table table-hover"> -->
-<!-- 					<tbody> -->
-<!-- 												<tr class="row"> -->
-<!-- 													<th class="col-lg-1">步驟</th> -->
-<!-- 													<th class="col-lg-6">步驟說明</th> -->
-<!-- 													<th class="col-lg-4">圖片上傳</th> -->
-<!-- 													<th class="col-lg-1">刪除</th> -->
-<!-- 												<tr> -->
-
-<%-- 						<c:if test="${empty recipeStepVOs}"> --%>
-<!-- 							<tr class="form-group recipe row"> -->
-<!-- 								<td class="col-6 order-1 col-lg-1 order-lg-1"> -->
-<!-- 									<span>1</span> -->
-<!-- 									<input name="recipeStepIDs" type="hidden" value=""> -->
-<!-- 									<input name="recipeStepOrders" type="hidden" value="1"> -->
-<!-- 								</td> -->
-<!-- 								<td class="col-12 order-3 col-lg-6 order-lg-2"> -->
-<!-- 									<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea> -->
-<!-- 								</td> -->
-<!-- 								<td class="col-12 order-4 col-lg-4 order-lg-3"> -->
-<!-- 									<input class="form-control-file" type="file" name="recipeStepPic1"> -->
-<!-- 								</td> -->
-<!-- 								<td class="col-6 order-2 col-lg-1 order-lg-4"> -->
-<!-- 									<font color="gray"><i class='fas fa-times'></i></font> -->
-<!-- 								</td> -->
-<!-- 							</tr> -->
-<%-- 						</c:if> --%>
-
+				<h2>食譜步驟</h2>
+				${errorMsgs.get("recipeStepErrNull")}
+				${errorMsgs.get("recipeStepPicErrType")}
+				${errorMsgs.get("recipeStepPicErrSize")}
+				<table class="recipeStepsTable table table-hover">
+					<tbody>
 <%-- 						<c:if test="${not empty recipeStepVOs}"> --%>
-<%-- 							<c:forEach var="recipeStepVO" items="${recipeStepVOs}"> --%>
-<!-- 								<tr class="form-group recipe row"> -->
-<!-- 									<td class="col-6 order-1 col-lg-1 order-lg-1"> -->
-<%-- 										<span>${recipeStepVO.recipeStepOrder}</span> --%>
-<!-- 										<input name="recipeStepIDs" type="hidden" value=""> -->
-<%-- 										<input name="recipeStepOrders" type="hidden" value="${recipeStepVO.recipeStepOrder}"> --%>
-<!-- 									</td> -->
-<!-- 									<td class="col-12 order-3 col-lg-6 order-lg-2"> -->
-<!-- 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"> -->
-<%-- 											${recipeStepVO.recipeStepText} --%>
-<!-- 										</textarea> -->
-<!-- 									</td> -->
-<!-- 									<td class="col-12 order-4 col-lg-4 order-lg-3"> -->
-<%-- 										<input class="form-control-file" type="file" name="recipeStepPic${recipeStepVO.recipeStepOrder}"> --%>
-<!-- 									</td> -->
-<!-- 									<td class="col-6 order-2 col-lg-1 order-lg-4"> -->
-<%-- 										<c:if test="${fn:length(recipeStepVOs) == 1}"> --%>
-<!-- 											<font color="gray"><i class='fas fa-times'></i></font> -->
-<%-- 										</c:if> --%>
-<%-- 										<c:if test="${fn:length(recipeStepVOs) >= 2}"> --%>
-<!-- 											<i class='fas fa-times'></i> -->
-<%-- 										</c:if> --%>
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<%-- 							</c:forEach> --%>
+							<c:forEach var="recipeStepVO" items="${recipeStepList}">
+								<tr class="form-group recipe row">
+									<td class="col-6 order-1 col-lg-1 order-lg-1">
+										<span>${recipeStepVO.recipeStepOrder}</span>
+										<input name="recipeStepIDs" type="hidden" value="">
+										<input name="recipeStepOrders" type="hidden" value="${recipeStepVO.recipeStepOrder}">
+									</td>
+									<td class="col-12 order-3 col-lg-6 order-lg-2">
+										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
+									</td>
+									<td class="col-12 order-4 col-lg-4 order-lg-3">
+										<input class="form-control-file" type="file" name="recipeStepPic">	
+									</td>
+									<td class="col-6 order-2 col-lg-1 order-lg-4">
+										<c:if test="${fn:length(recipeStepVOs) == 1}">
+											<font color="gray"><i class='fas fa-times'></i></font>
+										</c:if>
+										<c:if test="${fn:length(recipeStepVOs) >= 2}">
+											<i class='fas fa-times'></i>
+										</c:if>
+									</td>
+								</tr>
+							</c:forEach>
 <%-- 						</c:if> --%>
 						
-<!-- 					</tbody> -->
-<!-- 				</table> -->
+					</tbody>
+				</table>
 
-<!-- 				<div class="addStepBtn">增加一個步驟</div> -->
+				<div id="addStepBtn" class="btn btn-primary">增加一個步驟</div>
 
-<!-- 				<div> -->
-<!-- 					<p> -->
-<!-- 						(同意協議才送出)<input type="hidden" name="action" value="insert"> -->
-<!-- 					</p> -->
-<!-- 				</div> -->
-				<button class="btn btn-primary" type="submit">送出</button>
+				<div class="form-check">
+						<input type="checkbox" name="agreement" class="form-check-input">
+						<label class="form-check-label" for="agreement">同意使用本網站之條款及隱私權政策</label>
+						<input type="hidden" name="action" value="insert">
+				</div>
+				<button id="btnSubmit" class="btn btn-primary" type="submit">送出</button>
 			</form>
 
 		</div>

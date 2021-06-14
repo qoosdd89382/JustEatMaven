@@ -196,12 +196,6 @@
 				${errorMsgs.get("recipeStepPicErrSize")}
 				<table class="recipeStepsTable table table-hover">
 					<tbody>
-						<!-- 						<tr class="row"> -->
-						<!-- 							<th class="col-lg-1">步驟</th> -->
-						<!-- 							<th class="col-lg-6">步驟說明</th> -->
-						<!-- 							<th class="col-lg-4">圖片上傳</th> -->
-						<!-- 							<th class="col-lg-1">刪除</th> -->
-						<!-- 						<tr> -->
 
 						<c:if test="${empty recipeStepVOs}">
 							<tr class="form-group recipe row">
