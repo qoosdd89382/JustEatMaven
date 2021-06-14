@@ -125,6 +125,14 @@ public class AccountInfoServlet extends HttpServlet {
 				if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
 					errorMsgs.add("查無此會員資料");
 				} 
+				
+				// 有錯誤就返回總表，顯示錯誤訊息
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = req
+							.getRequestDispatcher("/Account/AccountLoginPage.jsp");
+					failureView.forward(req, res);
+					return;//程式中斷
+				}
 
 				//資料庫有該會員，但輸入密碼跟資料庫不符合
 				if(!((accountInfoSvc.getAccountPassword(accountMailInput)).getAccountPassword()).equals(accountPassword)) {

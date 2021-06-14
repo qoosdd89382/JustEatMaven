@@ -101,11 +101,13 @@ margin:15px;
 					<!--儲存用戶資料在session -->
 					<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
 					<p>借我標記一下session==${accountMail}</p>
+					
 				</ul>
 			</div>
 		</div>	
 	</div>
-
+	<p>會員中心:更改密碼、修改密碼、更改資料</p>
+	<p>我的好友頁面施工中</p>
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>
