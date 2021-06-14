@@ -69,9 +69,9 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 			<%-- breadcrumbs --%>
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>" target="_blank">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp" target="_blank">食譜</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp" target="_blank">食譜列表</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp">食譜列表</a></li>
 					<li class="breadcrumb-item active" aria-current="page">${recipeVO.recipeName}</li>
 				</ol>
 			</div> 

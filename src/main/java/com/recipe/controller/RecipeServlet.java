@@ -38,7 +38,7 @@ public class RecipeServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 
 		String action = req.getParameter("action");
-
+		
 		if ("insert".equals(action)) { // 來自addRecipe.jsp的請求
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
@@ -222,7 +222,6 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				RecipeVO recipeVO = new RecipeVO();
-//				RecipeStepVO recipeStepVO = new RecipeStepVO();
 				recipeVO.setRecipeName(recipeName);
 				recipeVO.setRecipeIntroduction(recipeIntroduction);
 				recipeVO.setRecipeServe(recipeServe);
@@ -256,7 +255,33 @@ public class RecipeServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
+		
+		
 
+		if ("getOneForUpdate".equals(action)) { // 來自listAllRecipe.jsp的請求
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				Integer recipeID = new Integer(req.getParameter("recipeID"));
+				
+				RecipeService recipeSvc = new RecipeService();
+				RecipeVO recipeVO = recipeSvc.getOneRecipe(recipeID);
+				
+				req.setAttribute("recipeVO", recipeVO);
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+				successView.forward(req, res);
+			} catch (Exception e) {
+				e.printStackTrace();
+				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+			}
+		}
+
+		
+		
+		
 	}
 
 }
