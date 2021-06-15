@@ -26,6 +26,9 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 	private static final String Select_Key_Stmt = "Select * From JustEat.Friendship Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.Friendship";
 	
+//好友頁面用
+	private static final String Select_Account_Friendship = "Select * From JustEat.Friendship Where account_id=?";
+	
 	static {
 		try {
 			Class.forName(driver);
@@ -240,7 +243,56 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 		}
 		return list;
 	}
+	
+//好友頁面用
+	public FriendshipVO getAccountFriendship(Integer account_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		FriendshipVO friendshipVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Key_Stmt);
+			
+			pstmt.setInt(1, account_id);
+			rs = pstmt.executeQuery();
 
+			while (rs.next()) {
+				friendshipVO = new FriendshipVO();
+				friendshipVO.setAccountID(rs.getInt("account_id"));
+				friendshipVO.setFriendID(rs.getInt("friend_id"));
+				friendshipVO.setFriendshipState(rs.getInt("friendship_state"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return friendshipVO;
+	}
+	
+	
 	public static void main(String[] args) {
 		FriendshipJDBCDAO friendshipJDBCDAO = new FriendshipJDBCDAO();
 		
