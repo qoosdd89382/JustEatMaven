@@ -20,7 +20,7 @@ $(function () {
 				'<td class="col-12 order-4 col-lg-4 order-lg-3">' + 
 					'<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>' + 
 					'<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">' + 
-					'<div class="preview col-12"><span class="text">預覽圖</span></div>' + 
+					'<div class="picStepPreview preview col-12"><span class="text">預覽圖</span></div>' + 
 				'<td class="col-6 order-2 col-lg-1 order-lg-4">' + 
 					'<i class="fas fa-times"></i></td>' + 
 			'</tr>';
@@ -33,14 +33,14 @@ $(function () {
 		if ($("table").find("tr.recipe").length != 1) {
 			$(this).closest("tr.recipe").remove();
 			var stepOrderSpan = $("table").find("tr.recipe").find("td").find("span.order");
-//			var stepOrderInput = $("table").find("tr.recipe").find("td").find("input[name='recipeStepOrders']");
+			var stepOrderInput = $("table").find("tr.recipe").find("td").find("input[name='recipeStepOrders']");
 //			var stepOrderUpload = $("table").find("tr.recipe").find("td").find("input[type='file']");
 			$(stepOrderSpan).each(function(index, element) {
 				$(element).html(index + 1);
 			});
-//			$(stepOrderInput).each(function(index, element) {
-//				$(element).val(index + 1);
-//			});
+			$(stepOrderInput).each(function(index, element) {
+				$(element).val(index + 1);
+			});
 //			$(stepOrderUpload).each(function(index, element) {
 //				$(element).attr('name', "recipeStepPic");
 //			});
