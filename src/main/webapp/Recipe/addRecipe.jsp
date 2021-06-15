@@ -62,7 +62,7 @@
             color: lightgray;
         }
         
-        #top_img {
+        .preview_img {
         	width: 100%;
         }
         
@@ -187,20 +187,20 @@
 						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳圖片</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
-						<div id="picTopUploadName" class="uploadName">${recipePicTopName}</div>
+						<div id="picTopUploadName" class="uploadName col-6">${recipePicTopName}</div>
 				</div>
 
 				<h2>食譜步驟</h2>
 				${errorMsgs.get("recipeStepErrNull")}
 				${errorMsgs.get("recipeStepPicErrType")}
 				${errorMsgs.get("recipeStepPicErrSize")}
-				<table class="recipeStepsTable table table-hover">
+				<table class="recipeStepsTable table">
 					<tbody>
 
 						<c:if test="${empty recipeStepVOs}">
 							<tr class="form-group recipe row">
 								<td class="col-6 order-1 col-lg-1 order-lg-1">
-									<span>1</span>
+									<span class="order">1</span>
 									<input name="recipeStepIDs" type="hidden" value="">
 									<input name="recipeStepOrders" type="hidden" value="1">
 								</td>
@@ -208,10 +208,10 @@
 									<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea>
 								</td>
 								<td class="col-12 order-4 col-lg-4 order-lg-3">
-						<div class="uploadBtn btn btn-primary col-6">上傳圖片</div>
-									<input type="file" class="form-control-file col-6" name="recipeStepPic" style="display:none" multiple="multiple">
-						<div class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
-						<div class="uploadName">${recipePicTopName}</div>
+						<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+									<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
+						<div class="preview col-12"><span class="text">預覽圖</span></div>
+<%-- 						<div class="uploadName col-12">${recipePicTopName}</div> --%>
 								</td>
 								<td class="col-6 order-2 col-lg-1 order-lg-4">
 									<font color="gray"><i class='fas fa-times'></i></font>
@@ -303,8 +303,9 @@
                 img_base64 = p_info.top_img;
             }
             
-			const file_reader = new FileReader();
-            function previewer(file) {
+			
+            function previewerTopPic(file) {
+    			let file_reader = new FileReader();
                 file_reader.readAsDataURL(file);
                 
                 file_reader.addEventListener("load", function (e) {
@@ -326,12 +327,48 @@
                     }
                 });
             };
-            
+
+
             document.querySelector("input[name='recipePicTop']").addEventListener("change", function (e) {
                 // change事件用target
-                previewer(e.target.files[0]);
+                previewerTopPic(e.target.files[0]);
             });
-
+            
+            $('#picTopUploadBtn').on("click", function() {
+            	$('input[name="recipePicTop"]').trigger("click");
+            });
+            
+            function previewerStepPic(event, file) {
+            	let file_reader = new FileReader();
+                file_reader.readAsDataURL(file);
+                
+                file_reader.addEventListener("load", function (e) {
+                    // load事件用target
+                    
+//                     let img_ele = document.createElement('img');
+//                     img_ele.src = e.target.result;
+//                     img_ele.setAttribute('class', 'step_img preview_img');
+                    
+//                     $(event).closest('td').find('.preview').empty().append(img_ele);
+                    $(event).closest('td').find('.preview').empty().append('<img src="'+ e.target.result +'" class="step_img preview_img">');
+                    
+//                     if ((img_ele == null && step_preview_text != null) || step_preview_text != null) {
+//                     	picTopUploadPreview.replaceChild(img_ele, step_preview_text);
+//                     } else {
+//                     	picTopUploadPreview.replaceChild(img_ele, step_img);
+//                     }
+                });
+            };
+            
+            $(document).on("change", "input[name='recipeStepPic']", function (e) {
+                // change事件用target
+                previewerStepPic(this, e.target.files[0]);
+            });
+            
+            $(document).on("click", '.picStepUploadBtn', function() {
+            	$(this).closest('td').find('input[name="recipeStepPic"]').trigger("click");
+            });
+            
 
             btnSubmit.addEventListener("click", function() {
             	p_info = {};
@@ -341,9 +378,6 @@
                 sessionStorage.setItem("form_data", JSON.stringify(p_info));
             });
             
-            $('#picTopUploadBtn').on("click", function() {
-            	$('input[name="recipePicTop"]').trigger("click");
-            });
             
             
 		});
