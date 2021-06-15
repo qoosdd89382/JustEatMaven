@@ -121,7 +121,7 @@ public class AccountInfoServlet extends HttpServlet {
 				}
 				
 				AccountInfoService accountInfoSvc = new AccountInfoService();
-				//資料庫找不到該位會員
+				//資料庫找不到該會員
 				if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
 					errorMsgs.add("查無此會員資料");
 				} 
