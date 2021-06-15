@@ -37,6 +37,7 @@
 			<li class="breadcrumb-item active" aria-current="page">活動列表</li>
 		</ol>
 	</nav>
+
 	<div class="add_Event">
 		<div class="Create_or_Join_Event col-10">
 			<button type="button" class="col-12 col-sm-3 col-md-2 col-lg-1">建立活動</button>
@@ -143,11 +144,7 @@
 	<script src="<%=request.getContextPath()%>/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
 	<script>
-		$(function() {
-			$(".header").load("header.html");
-			$(".footer").load("footer.html");
-		});
-		
+
 		$("[name=position]").on("change",function(){
 			if($(this).is(":checked")){
 				$(".positionSubmit").submit();
