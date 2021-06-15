@@ -208,7 +208,6 @@
 									<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea>
 								</td>
 								<td class="col-12 order-4 col-lg-4 order-lg-3">
-<!-- 									<input class="form-control-file" type="file" name="recipeStepPic"> -->
 									<input class="form-control-file" type="file" name="recipeStepPic" multiple="multiple">
 								</td>
 								<td class="col-6 order-2 col-lg-1 order-lg-4">
@@ -230,7 +229,6 @@
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
 										<input class="form-control-file" type="file" name="recipeStepPic">	
-<%-- 										<input class="form-control-file" type="file" name="recipeStepPic${recipeStepVO.recipeStepOrder}">	 --%>
 									</td>
 									<td class="col-6 order-2 col-lg-1 order-lg-4">
 										<c:if test="${fn:length(recipeStepVOs) == 1}">
