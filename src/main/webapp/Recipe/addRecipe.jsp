@@ -187,7 +187,6 @@
 						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳圖片</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
-						<div id="picTopUploadName" class="uploadName col-6">${recipePicTopName}</div>
 				</div>
 
 				<h2>食譜步驟</h2>
@@ -208,10 +207,9 @@
 									<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea>
 								</td>
 								<td class="col-12 order-4 col-lg-4 order-lg-3">
-						<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+									<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
 									<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
-						<div class="preview col-12"><span class="text">預覽圖</span></div>
-<%-- 						<div class="uploadName col-12">${recipePicTopName}</div> --%>
+									<div class="picStepPreview preview col-12"><span class="text">預覽圖</span></div>
 								</td>
 								<td class="col-6 order-2 col-lg-1 order-lg-4">
 									<font color="gray"><i class='fas fa-times'></i></font>
@@ -223,7 +221,7 @@
 							<c:forEach var="recipeStepVO" items="${recipeStepVOs}">
 								<tr class="form-group recipe row">
 									<td class="col-6 order-1 col-lg-1 order-lg-1">
-										<span>${recipeStepVO.recipeStepOrder}</span>
+										<span class="order">${recipeStepVO.recipeStepOrder}</span>
 										<input name="recipeStepIDs" type="hidden" value="">
 										<input name="recipeStepOrders" type="hidden" value="${recipeStepVO.recipeStepOrder}">
 									</td>
@@ -231,7 +229,9 @@
 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
-										<input class="form-control-file" type="file" name="recipeStepPic">	
+										<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
+										<div class="picStepPreview preview col-12"><span class="text">預覽圖</span></div>
 									</td>
 									<td class="col-6 order-2 col-lg-1 order-lg-4">
 										<c:if test="${fn:length(recipeStepVOs) == 1}">
@@ -287,20 +287,29 @@
 			var isNewRecipe = "${recipeVO}";
 			if (isNewRecipe == "") {
 				sessionStorage.clear();
-				 picTopUploadName.innerHTML = "";		// ${recipePicTopName}
 			}
 
             var preview_html = `<span id="preview_text" class="text">預覽圖</span>`;
             var top_img_html = `<img id="top_img" class="preview_img" src="#"></img>`;
 
             if (sessionStorage.getItem("form_data") != null) {
-                p_info = JSON.parse(sessionStorage.getItem("form_data"));
-
-                picTopUploadPreview.innerHTML = null;
-                picTopUploadPreview.insertAdjacentHTML('afterbegin', top_img_html);
-
-                document.querySelector("#top_img").src = p_info.top_img;
-                img_base64 = p_info.top_img;
+            	session_history = JSON.parse(sessionStorage.getItem("form_data"));
+				
+            	if (session_history.top_img != null) {
+	                picTopUploadPreview.innerHTML = null;
+	                picTopUploadPreview.insertAdjacentHTML('afterbegin', top_img_html);
+	
+	                document.querySelector("#top_img").src = session_history.top_img;
+	                img_base64 = session_history.top_img;
+            	}
+            	
+            	if (session_history.step_pic != null) {
+            		session_history.step_pic.forEach(function(element, index) {
+            			if (element != null) {
+            				$($('.picStepPreview')[index]).empty().append('<img src="'+ element +'" class="step_img preview_img">');
+            			}
+                	});
+            	}
             }
             
 			
@@ -318,7 +327,7 @@
                     img_ele.src = e.target.result;
                     img_ele.setAttribute('class', 'preview_img');
                     
-                    picTopUploadName.innerHTML = file.name;	// 這裡的file跟onload事件無關
+//                     picTopUploadName.innerHTML = file.name;	// 這裡的file跟onload事件無關
 
                     if ((img_ele == null && top_preview_text != null) || top_preview_text != null) {
                     	picTopUploadPreview.replaceChild(img_ele, top_preview_text);
@@ -371,11 +380,19 @@
             
 
             btnSubmit.addEventListener("click", function() {
-            	p_info = {};
+            	var session_history = new Object();
+            	var step_pic = new Array();
+            	
                 if (document.querySelector('#top_img') != null) {
-                    p_info.top_img = document.querySelector('#top_img').getAttribute("src");
+                    session_history['top_img'] = document.querySelector('#top_img').getAttribute("src");
                 }
-                sessionStorage.setItem("form_data", JSON.stringify(p_info));
+                if (document.querySelectorAll('.step_img') != null) {
+                	document.querySelectorAll('.picStepPreview').forEach(function(element, index) {
+                		step_pic.push($(element).find('img.step_img').attr("src"));
+                	});
+                	session_history.step_pic = step_pic;
+                }
+                sessionStorage.setItem("form_data", JSON.stringify(session_history));
             });
             
             
