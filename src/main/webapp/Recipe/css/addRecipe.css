@@ -106,9 +106,9 @@
 	border-radius: 5px;
 }
 
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-	background: #FFFCE8;
-}
+/* .table-hover tbody tr:hover td, .table-hover tbody tr:hover th { */
+/* 	background: #FFFCE8; */
+/* } */
 
 
 
