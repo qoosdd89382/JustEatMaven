@@ -73,6 +73,7 @@ public class RecipeServlet extends HttpServlet {
 					errorMsgs.put("recipeServeErrWrong", "享用人數填寫格式錯誤，請勿空白，並請填寫1至20人份之數字。");
 				}
 	
+
 				byte[] recipePicTopBuffer = null;
 				try {
 					Part part = req.getPart("recipePicTop");
@@ -86,12 +87,22 @@ public class RecipeServlet extends HttpServlet {
 						
 					} else if (!part.getContentType().startsWith("image")) { 
 						errorMsgs.put("recipePicTopErrType", "請上傳image類型之圖檔。2");
+						
+						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
+						
 					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
 						errorMsgs.put("recipePicTopErrSize", "請注意檔案尺寸過大。");
+
+						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
+						
 					} else {
 						InputStream in = part.getInputStream();
 						recipePicTopBuffer = new byte[in.available()];
-						in.read(recipePicTopBuffer); // 順利的話把picBuffer放進VO，然後傳回去顯示在畫面上
+						in.read(recipePicTopBuffer);
 						in.close();
 						req.getSession().setAttribute("recipePicTopBuffer", recipePicTopBuffer);
 						req.getSession().setAttribute("recipePicTopName", part.getSubmittedFileName());

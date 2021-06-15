@@ -42,17 +42,17 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
 <style>
-        #preview {
+        .preview {
             border: 1px solid lightgray;
             display: inline-block; 
             position: relative;
-            min-height: 40px;
+            min-height: 80px;	/* 40px */
             border-radius: .25rem!important;
             margin-top:10px;
             padding: 3px;
         }
 
-        #preview span.text {
+        .preview span.text {
             position: absolute;
             display: inline-block;
             left: 50%;
@@ -62,7 +62,7 @@
             color: lightgray;
         }
         
-        #p_img {
+        #top_img {
         	width: 100%;
         }
         
@@ -184,10 +184,10 @@
 				<div class="form-group">
 					<label for="recipePicTop row">食譜完成照：</label>
 					${errorMsgs.get("recipePicTopErrType")} ${errorMsgs.get("recipePicTopErrSize")} <br>
-						<div id="picTopUploadBtn" class="btn btn-primary col-6">上傳檔案</div>
+						<div id="picTopUploadBtn" class="btn btn-primary col-6">上傳圖片</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
-						<div id="preview" class="col-6"><span id="preview_text" class="text">預覽圖</span></div>
-						<div id="picTopUploadName">${recipePicTopName}</div>
+						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
+						<div id="picTopUploadName" class="">${recipePicTopName}</div>
 				</div>
 
 				<h2>食譜步驟</h2>
@@ -290,16 +290,16 @@
 			}
 
             var preview_html = `<span id="preview_text" class="text">預覽圖</span>`;
-            var p_img_html = `<img id="p_img" class="preview_img" src="#"></img>`;
+            var top_img_html = `<img id="top_img" class="preview_img" src="#"></img>`;
 
             if (sessionStorage.getItem("form_data") != null) {
                 p_info = JSON.parse(sessionStorage.getItem("form_data"));
 
-                preview.innerHTML = null;
-                preview.insertAdjacentHTML('afterbegin', p_img_html);
+                picTopUploadPreview.innerHTML = null;
+                picTopUploadPreview.insertAdjacentHTML('afterbegin', top_img_html);
 
-                document.querySelector("#p_img").src = p_info.p_img;
-                img_base64 = p_info.p_img;
+                document.querySelector("#top_img").src = p_info.top_img;
+                img_base64 = p_info.top_img;
             }
             
 			const file_reader = new FileReader();
@@ -308,20 +308,20 @@
                 
                 file_reader.addEventListener("load", function (e) {
                     // load事件用target
-                    var preview_text = document.querySelector('#preview_text');
-                    var p_img = document.querySelector('#p_img');
+                    var top_preview_text = document.querySelector('#picTopUploadText');
+                    var top_img = document.querySelector('#top_img');
                     
                     var img_ele = document.createElement('img');
-                    img_ele.id = 'p_img';
+                    img_ele.id = 'top_img';
                     img_ele.src = e.target.result;
                     img_ele.setAttribute('class', 'preview_img');
                     
                     picTopUploadName.innerHTML = file.name;	// 這裡的file跟onload事件無關
 
-                    if ((img_ele == null && preview_text != null) || preview_text != null) {
-                        preview.replaceChild(img_ele, preview_text);
+                    if ((img_ele == null && top_preview_text != null) || top_preview_text != null) {
+                    	picTopUploadPreview.replaceChild(img_ele, top_preview_text);
                     } else {
-                        preview.replaceChild(img_ele, p_img);
+                    	picTopUploadPreview.replaceChild(img_ele, top_img);
                     }
                 });
             };
@@ -334,8 +334,8 @@
 
             btnSubmit.addEventListener("click", function() {
             	p_info = {};
-                if (document.querySelector('#p_img') != null) {
-                    p_info.p_img = document.querySelector('#p_img').getAttribute("src");
+                if (document.querySelector('#top_img') != null) {
+                    p_info.top_img = document.querySelector('#top_img').getAttribute("src");
                 }
                 sessionStorage.setItem("form_data", JSON.stringify(p_info));
             });

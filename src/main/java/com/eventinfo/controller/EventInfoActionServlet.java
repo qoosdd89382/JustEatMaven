@@ -23,6 +23,7 @@ import javax.swing.text.DateFormatter;
 
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
+import com.ingredient.model.IngredientVO;
 
 public class EventInfoActionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -335,16 +336,170 @@ public class EventInfoActionServlet extends HttpServlet {
 			}
 		}
 		if ("上一頁".equals(action)) {
+			EventInfoVO eventInfoVO = new EventInfoVO();
+			String groupType = request.getParameter("choose_type");
+			String eventName = request.getParameter("event_name");
+			String eventMember = request.getParameter("event_member");
+			String eventStart = request.getParameter("event_start");
+			String eventEnd = request.getParameter("event_end");
+			String eventRegStart = request.getParameter("event_reg_start");
+			String eventRegEnd = request.getParameter("event_reg_end");
+			String groupCity = request.getParameter("city");
+			String groupAddress = request.getParameter("address");
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 			
+			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
+
+			} else {
+				eventInfoVO.setGroupType(Integer.parseInt(groupType));
+			}
+
+			if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
+
+			} else {
+				eventInfoVO.setEventName(eventName);
+			}
+
+			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+
+			} else if (eventMember.equals("0")) {
+
+			} else {
+				eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
+			}
+			if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty()
+					|| eventStart.trim() == "") {
+
+			}else {
+				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
+				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
+			}
+			if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd.trim() == "") {
+				
+			}else {
+				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
+			}
+			if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty()
+					|| eventRegStart.trim() == "") {
+				
+			}else {
+				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
+				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
+			}
+			if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty()
+					|| eventRegEnd.trim() == "") {
+				
+			}else {
+				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
+			}
+			if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
+				
+			} else {
+				eventInfoVO.setGroupCity(groupCity);
+			}
+
+			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
+			} else {
+				eventInfoVO.setGroupAddress(groupAddress);
+			}
+			
+			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
-			returnView.forward(request, response);
+			returnView.forward(request, response);	
 		}
 		if ("邀請好友".equals(action)) {
 
 		}
-		if ("邀請好友".equals(action)) {
+		if ("菜色確認".equals(action)) {
+			Map<String,String> errorMsgs = new HashMap<String, String>();
+			List<IngredientVO> ingredientList = new ArrayList<IngredientVO>();
+			String ingredientIDStr = request.getParameter("ingredientID");
+			if(ingredientIDStr ==null ||ingredientIDStr.trim().length()==0) {
+				errorMsgs.put("IngredientIDIsNull","請至少輸入一種食材");
+			}
+			
+			EventInfoVO eventInfoVO = new EventInfoVO();
+			String groupType = request.getParameter("choose_type");
+			String eventName = request.getParameter("event_name");
+			String eventMember = request.getParameter("event_member");
+			String eventStart = request.getParameter("event_start");
+			String eventEnd = request.getParameter("event_end");
+			String eventRegStart = request.getParameter("event_reg_start");
+			String eventRegEnd = request.getParameter("event_reg_end");
+			String groupCity = request.getParameter("city");
+			String groupAddress = request.getParameter("address");
 
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
+			
+			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
+
+			} else {
+				eventInfoVO.setGroupType(Integer.parseInt(groupType));
+			}
+
+			if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
+
+			} else {
+				eventInfoVO.setEventName(eventName);
+			}
+
+			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+
+			} else if (eventMember.equals("0")) {
+
+			} else {
+				eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
+			}
+			if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty()
+					|| eventStart.trim() == "") {
+
+			}else {
+				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
+				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
+			}
+			if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd.trim() == "") {
+				
+			}else {
+				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
+			}
+			if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty()
+					|| eventRegStart.trim() == "") {
+				
+			}else {
+				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
+				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
+			}
+			if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty()
+					|| eventRegEnd.trim() == "") {
+				
+			}else {
+				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
+			}
+			if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
+				
+			} else {
+				eventInfoVO.setGroupCity(groupCity);
+			}
+
+			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
+			} else {
+				eventInfoVO.setGroupAddress(groupAddress);
+			}
+			
+//			String dishAndIngJson = request.getParameter("dishAndIngJson");
+//			System.out.println(request.getParameter("dishAndIngJson"));
+			
+			
+			request.setAttribute("eventInfoVO", eventInfoVO);
+			RequestDispatcher returnView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
+			returnView.forward(request, response);	
 		}
+		
 
 	}
 
