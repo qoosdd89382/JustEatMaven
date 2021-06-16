@@ -1,12 +1,16 @@
 <script type="text/javascript">
-	function refresh() {
 
+	function refresh() {
 		src = "RandomNumber.jsp?id=" + Math.random();
 	}
 </script>
-<%@ page contentType="charset=UTF-8" language="java" import="java.awt.*"
-	import="java.awt.image.BufferedImage" import="java.util.*"
-	import="javax.imageio.ImageIO" pageEncoding="UTF-8"%>
+
+<%@ page contentType="charset=UTF-8" language="java" 
+	import="java.awt.*"
+	import="java.awt.image.BufferedImage" 
+	import="java.util.*"
+	import="javax.imageio.ImageIO" 
+	pageEncoding="UTF-8"%>
 <%
 	response.setHeader("Cache-Control", "no-cache");
 	//在記憶體中建立影像

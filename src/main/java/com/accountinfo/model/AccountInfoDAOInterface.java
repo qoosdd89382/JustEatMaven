@@ -12,5 +12,6 @@ public interface AccountInfoDAOInterface {
     
 //登入用
     public AccountInfoVO getAccountLogin(String accountMail,String accountPassword);
-   
+    public AccountInfoVO getAccountMail(String accountMail);
+    public AccountInfoVO getAccountPassword(String accountPassword);
 }

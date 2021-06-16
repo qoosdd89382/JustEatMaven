@@ -79,22 +79,28 @@ public class RecipeServlet extends HttpServlet {
 	
 					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
 						System.out.println("使用者沒有上傳置頂圖片");
-						
+						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+//							recipePicTopBuffer = (byte[]) req.getAttribute("recipePicTopBuffer");
+						}
+					} else if (!part.getContentType().startsWith("image")) { 
+						errorMsgs.put("recipePicTopErrType", "請上傳image類型之圖檔。2");
 						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
 							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
 						}
-						
-					} else if (!part.getContentType().startsWith("image")) { 
-						errorMsgs.put("recipePicTopErrType", "請上傳image類型之圖檔。2");
 					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
 						errorMsgs.put("recipePicTopErrSize", "請注意檔案尺寸過大。");
+						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
 					} else {
 						InputStream in = part.getInputStream();
 						recipePicTopBuffer = new byte[in.available()];
 						in.read(recipePicTopBuffer); // 順利的話把picBuffer放進VO，然後傳回去顯示在畫面上
 						in.close();
 						req.getSession().setAttribute("recipePicTopBuffer", recipePicTopBuffer);
-						req.getSession().setAttribute("recipePicTopName", part.getSubmittedFileName());
+//						req.setAttribute("recipePicTopBuffer", recipePicTopBuffer);
+//						req.setAttribute("recipePicTopName", part.getSubmittedFileName());
 					}
 				} catch (Exception e) {
 					System.err.println("使用者操作時發生其他例外");
@@ -210,6 +216,8 @@ public class RecipeServlet extends HttpServlet {
 						parts.add(part);
 					}
 				}
+				List<byte[]> recipeStepPicBuffers = new ArrayList<byte[]>();
+				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
 				for(int index = 0; index < parts.size(); index++) {
 					byte[] recipeStepPicBuffer = null;
 					try {
@@ -229,6 +237,7 @@ public class RecipeServlet extends HttpServlet {
 							System.out.println(index + 1 + ": "+ recipeStepPicBuffer.length);
 							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
 							recipeStepVO.setRecipeStepPic(recipeStepPicBuffer);
+							recipeStepPicBuffers.add(recipeStepPicBuffer);
 						}
 					} catch (Exception e) {
 						System.err.println("使用者操作時發生其他例外");
