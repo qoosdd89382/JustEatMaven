@@ -69,7 +69,7 @@ margin-top:100px;
 			</div>
 			<div class="col">
 				<p>我是好友頁面</p>
-				<p>借我標記一下session==${accountMail}</p>	
+				<p>借我標記一下session=>${accountMail}</p>	
 				<p>我是你的好友集合${friendshipVO}</p>
 				<p>以下是你的好友</p>
 

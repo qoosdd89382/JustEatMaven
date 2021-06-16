@@ -118,7 +118,7 @@ public class AccountInfoServlet extends HttpServlet {
 				
 				//2.開始進行登入驗證
 				if(session.getAttribute("accountMail")!=null) {
-					System.out.println("這裡有人");
+					System.out.println("這裡有信箱SESSION");
 				}
 				
 				AccountInfoService accountInfoSvc = new AccountInfoService();
@@ -173,18 +173,31 @@ public class AccountInfoServlet extends HttpServlet {
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}
-//在AccountLoginPage.jsp收到"修改會員資料"的請求
+//在AccountInfoPage.jsp收到"修改會員資料"的請求
+		if("Account_Change_Info".equals(action)) {
+			HttpSession session = req.getSession();
+			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+			req.setAttribute("accountMail", accountInfoVO.getAccountMail());
+			
+			String url = "/Account/AccountChangePage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+//在AccountChangePage.jsp收到"確認修改資料"的請求
+		if("setAccountInfo_For_Change".equals(action)) {
+			
+			
+		}
 		
-//在AccountLoginPage.jsp收到登出的請求
+//在AccountInfoPage.jsp收到登出的請求
 		if("Account_Logout".equals(action)) {
 			HttpSession session = req.getSession();
 			session.removeAttribute("accountInfoVO");
 			session.removeAttribute("accountMail");
-			System.out.println("收到登出請求1");
+
 			String url = "/Account/AccountLoginPage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
-			System.out.println("收到登出請求2");
 		}
 		
 		

@@ -30,7 +30,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/index.css">
 
-<title>AccountRegisterPage</title>
+<title>AccountChangePage</title>
 
 <style>
 div.container{
@@ -106,7 +106,7 @@ div#register {
 					<!-- 			<b>請輸入會員註冊時間</b> -->
 					<!-- 			<input type="text" name="accountPhone"><br> -->
 
-					<input type="hidden" name="action" value="setAccountInfo_For_Register"> 
+					<input type="hidden" name="action" value="setAccountInfo_For_Change"> 
 					<input type="submit" value="提交送出"> 
 					<input type="reset" value="重置">
 				</form>

@@ -1,7 +1,3 @@
-<!-- 
-//郭建巖
-//待修: 
--->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -9,7 +5,6 @@
 
 <%
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
-//EmpServlet.java(Concroller), 存入req的VO物件
 %>
 
 <!DOCTYPE html>
@@ -31,24 +26,22 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <title>AccountInfoPage</title>
 <style>
 h1#accountWelcom{
-margin-top:100px;
+	margin-top:100px;
 }
-
 ul#accountInfo{
-margin-top:40px;
+	margin-top:40px;
 }
 ul#accountInfo li{
-margin:20px;
+	margin:20px;
 }
 div#account_welcom{
-text-align:center;
+	text-align:center;
 }
 div#function_select_area li{
-border:1px ridge orange;
-font-size:25px;
-margin:15px;
+	border:1px ridge orange;
+	font-size:25px;
+	margin:15px;
 }
-
 input#account_change_info,
 input#account_logout {
 	margin:5px;
@@ -62,13 +55,11 @@ input#account_logout {
 	padding: 5px 15px 5px 15px;
 	text-decoration: none;
 }
-
 input#account_change_info:hover,
 input#account_logout:hover {
 	background:#FFAA33;
 	text-decoration: none;
 }
-
 
 </style>
 </head>
@@ -80,32 +71,32 @@ input#account_logout:hover {
 	<div class="container" id="main_block">
 		<div class="row" id="account_welcom">
 			<div class="col">
-			<h1 id="accountWelcom">歡迎，用戶<%=accountInfoVO.getAccountNickname()%></h1>
-			<h2>以下是您的資料</h2>
+				<h1 id="accountWelcom">歡迎，用戶<%=accountInfoVO.getAccountNickname()%></h1>
+				<h2>以下是您的資料</h2>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-4" id="function_select_area">
-					<ul>
-						<li>
-						<form method="post" action="accountInfo.do">
-								<input type="hidden" name="action" value="gotoAccountInfoPage">
-								<input type="submit" value="會員資料">
-						</form>
-						</li>
-						<li><a href='#'>我的活動</a></li>
-						<li><a href='#'>我的評價</a></li>
-						<li>
-						<form method="post" action="friendship.do">
-								<input type="hidden" name="action" value="getAccount_Friendship">
-								<input type="submit" value="我的好友">
-						</form>
-						</li>
-						<li><a href='#'>我的文章</a></li>
-						<li><a href='#'>我的收藏</a></li>
-						<li><a href='#'>我的訂單</a></li>
-						<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
-					</ul>
+				<ul>
+					<li>
+					<form method="post" action="accountInfo.do">
+							<input type="hidden" name="action" value="gotoAccountInfoPage">
+							<input type="submit" value="會員資料">
+					</form>
+					</li>
+					<li><a href='#'>我的活動</a></li>
+					<li><a href='#'>我的評價</a></li>
+					<li>
+					<form method="post" action="friendship.do">
+							<input type="hidden" name="action" value="getAccount_Friendship">
+							<input type="submit" value="我的好友">
+					</form>
+					</li>
+					<li><a href='#'>我的文章</a></li>
+					<li><a href='#'>我的收藏</a></li>
+					<li><a href='#'>我的訂單</a></li>
+					<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
+				</ul>
 			</div>
 			
 			<div class="col-6" id="account_info_area">
@@ -131,7 +122,7 @@ input#account_logout:hover {
 					<li>
 						<form method="post" action="accountInfo.do">
 							<input type="hidden" name="action" value="Account_Change_Info">
-							<input id="account_change_info" type="button" value="修改我的會員資料">	
+							<input id="account_change_info" type="submit" value="修改我的會員資料">	
 						</form>					
 					</li>
 					<li>
@@ -149,9 +140,7 @@ input#account_logout:hover {
 			</div>
 		</div>	
 	</div>
-	<p>會員中心:更改密碼、修改密碼、更改資料</p>
-	<p>
-	<p>我的好友頁面施工中</p>
+
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>

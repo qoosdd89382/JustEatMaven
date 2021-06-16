@@ -83,7 +83,7 @@ input#account_register_info {
 					</c:if>
 					
 					<b>您好，歡迎登入</b>
-					<p>借我標記一下session==${accountMail}</p>
+					<p>借我標記一下session(EL)=>${accountMail}</p>
 					<form method="post" action="accountInfo.do" name="LoginInfo">
 						<b>請輸入會員信箱 (如JerryMouse@gmail.com):</b> <br>
 						<input type="text" name="accountMail"> <br>
@@ -121,8 +121,6 @@ input#account_register_info {
 					
 			</div>
 		</div>
-		<p>待修問題</p>
-		<p>無</p>
 	</div>
 	
 	<footer>
