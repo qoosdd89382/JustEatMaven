@@ -10,4 +10,6 @@ public interface FriendshipDAOInterface {
     public void delete(Integer friendshipID);
     public FriendshipVO findByPrimaryKey(Integer friendshipID);
     public List<FriendshipVO> getAll();
+//好友頁面用
+    public FriendshipVO getAccountFriendship(Integer accountID);
 }

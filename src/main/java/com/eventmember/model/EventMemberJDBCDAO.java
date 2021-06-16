@@ -21,6 +21,8 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	private static final String Update_Stmt = "Update EventMember Set participation_state = ? Where event_id = ? AND account_id = ?"; // 審核過就更新
 	private static final String Delete_Stmt = "Delete From EventMember Where event_id = ? AND account_id = ? ";
 	private static final String Select_All_Stmt = "Select * From EventMember";
+	private static final String Select_MemberID_Stmt = "Select * From EventMember Where account_id = ?";
+	private static final String Select_EventID_Stmt = "Select * From EventMember Where event_id = ?";
 
 	static {
 		try {
@@ -195,6 +197,115 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 		return list;
 	}
 
+	
+	@Override
+	public List<EventMemberVO> getAllByMemberID(Integer accountID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		EventMemberVO eventMemberVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_MemberID_Stmt);
+			pstmt.setInt(1, accountID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				eventMemberVO = new EventMemberVO();
+				eventMemberVO.setEventID(rs.getInt("event_id"));
+				eventMemberVO.setAccountID(rs.getInt("account_id"));
+				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
+				eventMemberVO.setTotalScore(rs.getInt("total_score"));
+				eventMemberVO.setTotalJudger(rs.getInt("total_judger"));
+				list.add(eventMemberVO);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public List<EventMemberVO> getAllByEventID(Integer eventID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		EventMemberVO eventMemberVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_EventID_Stmt);
+			pstmt.setInt(1, eventID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				eventMemberVO = new EventMemberVO();
+				eventMemberVO.setEventID(rs.getInt("event_id"));
+				eventMemberVO.setAccountID(rs.getInt("account_id"));
+				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
+				eventMemberVO.setTotalScore(rs.getInt("total_score"));
+				eventMemberVO.setTotalJudger(rs.getInt("total_judger"));
+				list.add(eventMemberVO);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
 	//被活動資訊 連鎖
 	@Override
 	public void insertByEventInfo(EventMemberVO eventMemberVO, Connection con) {
@@ -230,29 +341,40 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		EventMemberJDBCDAO eventMemberJDBCDAO = new EventMemberJDBCDAO();
 		// =====================新增用=========================
-		eventMemberVO.setEventID(300001);
-		eventMemberVO.setAccountID(100001);
-		eventMemberVO.setParticipationState(1);
-		eventMemberVO.setTotalScore(5);
-		eventMemberVO.setTotalJudger(1);
-		eventMemberJDBCDAO.insert(eventMemberVO);
+//		eventMemberVO.setEventID(300001);
+//		eventMemberVO.setAccountID(100001);
+//		eventMemberVO.setParticipationState(1);
+//		eventMemberVO.setTotalScore(5);
+//		eventMemberVO.setTotalJudger(1);
+//		eventMemberJDBCDAO.insert(eventMemberVO);
 		// =====================更新用=========================
-		eventMemberVO.setParticipationState(1);
-		eventMemberVO.setEventID(300001);
-		eventMemberVO.setAccountID(100001);
-		eventMemberJDBCDAO.update(eventMemberVO);
+//		eventMemberVO.setParticipationState(1);
+//		eventMemberVO.setEventID(300001);
+//		eventMemberVO.setAccountID(100001);
+//		eventMemberJDBCDAO.update(eventMemberVO);
 		// =====================刪除用=========================
 //		eventMemberJDBCDAO.delete(300001,100001);
 		// =====================查詢用=========================
-		List<EventMemberVO> list = eventMemberJDBCDAO.getAll();
-		for (EventMemberVO eventMemberVO_temp : list) {
-			System.out.println(eventMemberVO_temp.getEventID());
-			System.out.println(eventMemberVO_temp.getAccountID());
-			System.out.println(eventMemberVO_temp.getParticipationState());
-			System.out.println(eventMemberVO_temp.getTotalScore());
-			System.out.println(eventMemberVO_temp.getTotalJudger());
-			System.out.println("==================================");
-		}
+//		List<EventMemberVO> list = eventMemberJDBCDAO.getAll();
+//		for (EventMemberVO eventMemberVO_temp : list) {
+//			System.out.println(eventMemberVO_temp.getEventID());
+//			System.out.println(eventMemberVO_temp.getAccountID());
+//			System.out.println(eventMemberVO_temp.getParticipationState());
+//			System.out.println(eventMemberVO_temp.getTotalScore());
+//			System.out.println(eventMemberVO_temp.getTotalJudger());
+//			System.out.println("==================================");
+//		}
+		
+//		List<EventMemberVO> list2 = eventMemberJDBCDAO.getAllByMemberID(100001);
+//		for (EventMemberVO eventMemberVO_temp : list2) {
+//			System.out.println(eventMemberVO_temp.getEventID());
+//			System.out.println(eventMemberVO_temp.getAccountID());
+//			System.out.println(eventMemberVO_temp.getParticipationState());
+//			System.out.println(eventMemberVO_temp.getTotalScore());
+//			System.out.println(eventMemberVO_temp.getTotalJudger());
+//			System.out.println("==================================");
+//		}
+		
 	}
 
 }

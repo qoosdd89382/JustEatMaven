@@ -49,6 +49,26 @@ font-size:25px;
 margin:15px;
 }
 
+input#account_change_info,
+input#account_logout {
+	margin:5px;
+	border:none;
+	-webkit-border-radius: 20;
+	-moz-border-radius: 20;
+	border-radius: 20px;
+	color: #ffffff;
+	font-size: 15px;
+	background: 	#FF8800;
+	padding: 5px 15px 5px 15px;
+	text-decoration: none;
+}
+
+input#account_change_info:hover,
+input#account_logout:hover {
+	background:#FFAA33;
+	text-decoration: none;
+}
+
 
 </style>
 </head>
@@ -70,7 +90,7 @@ margin:15px;
 					<li><a href='#'>會員資料</a></li>
 					<li><a href='#'>我的活動</a></li>
 					<li><a href='#'>我的評價</a></li>
-					<li><a href='#'>我的好友</a></li>
+					<li><a href='AccountFriendPage.jsp'>我的好友</a></li>
 					<li><a href='#'>我的文章</a></li>
 					<li><a href='#'>我的收藏</a></li>
 					<li><a href='#'>我的訂單</a></li>
@@ -98,6 +118,15 @@ margin:15px;
 					<li>用戶身分證背面:<%=accountInfoVO.getAccountIDcardBack()%><img src="images/accountIDBTest.jpg" width="100" height="100" border="0"></li>
 					<li>用戶自我介紹:<%=accountInfoVO.getAccountText()%></li>
 					<li>用戶註冊時間:<%=accountInfoVO.getAccountRegistTime()%></li>
+					
+					<form>
+						<input type="hidden" name="action" value="">
+						<input id="account_change_info" type="button" value="修改我的會員資料">						
+
+						<input type="hidden" name="action" value="">
+						<input id="account_logout" type="button" value="登出帳戶">						
+					</form>
+					
 					<!--儲存用戶資料在session -->
 					<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
 					<p>借我標記一下session==${accountMail}</p>
@@ -107,6 +136,7 @@ margin:15px;
 		</div>	
 	</div>
 	<p>會員中心:更改密碼、修改密碼、更改資料</p>
+	<p>
 	<p>我的好友頁面施工中</p>
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
