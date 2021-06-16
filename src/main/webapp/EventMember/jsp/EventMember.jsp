@@ -9,8 +9,7 @@
 <%@ page import="com.eventmember.model.*"%>
 <%
 	EventMemberService eventMemberSvc = new EventMemberService();
-	EventMemberVO eventMemberVO = null;
-	List<EventMemberVO> list = eventMemberSvc.getAll();
+	List<EventMemberVO> list = eventMemberSvc.getAllByEventID();
 	pageContext.setAttribute("list", list);
 %>
 <!DOCTYPE html>
@@ -53,7 +52,7 @@
   </tr>
  
   <tr> 
-  <td>${AccountInfoVO.accountMail}</td> 
+  <td>${EventMemberVO.accountID}</td> 
    <td>${AccountInfoVO.accountGender}</td>
    <td>2</td> 
    <td>4</td> 
@@ -62,7 +61,7 @@
 <td button type="button">加入好友<button/td>
   </tr> 
   <tr> 
-  <td>${AccountInfoVO.accountMail}</td> 
+  <td>${EventMemberVO.accountID}</td> 
   <td>${AccountInfoVO.accountGender}</td> 
   <td>3</td> 
   <td>5</td> 
