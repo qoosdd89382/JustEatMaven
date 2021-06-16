@@ -29,7 +29,6 @@ div#login {
 	list-style: none;
 }
 
-
 input#account_login_btn,
 input#account_reset_btn {
 	margin:5px;
@@ -84,7 +83,7 @@ input#account_register_info {
 					</c:if>
 					
 					<b>您好，歡迎登入</b>
-					
+					<p>借我標記一下session==${accountMail}</p>
 					<form method="post" action="accountInfo.do" name="LoginInfo">
 						<b>請輸入會員信箱 (如JerryMouse@gmail.com):</b> <br>
 						<input type="text" name="accountMail"> <br>
@@ -131,12 +130,18 @@ input#account_register_info {
 	</footer>
 	
 	<script type="text/javascript">
+	//頁面載入執行
+// 		function window.onload(){
+// 			if(window.sessionStorage){
+// 				var 
+// 			}
+		
+// 		}
 	
+	//驗證碼點擊更新
 	    function refresh() {
 	    	LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
 	    }
-	
-	
 	</script>
 	
 	<%-- body 結束標籤之前，載入Bootstrap 的 JS 及其相依性安裝(jQuery、Popper) --%>
