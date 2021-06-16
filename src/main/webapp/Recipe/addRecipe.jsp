@@ -109,13 +109,12 @@
 				<div class="form-group">
 					<label for="recipeName">食譜名稱：</label>
 					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeName()%>">
-					${errorMsgs.get(recipeNameErrNull)}
-					${errorMsgs.get("recipeNameErrNull")}
-					${errorMsgs.get("recipeNameErrReg")}
+					<span class="errorSpan">${errorMsgs.get(recipeNameErr)}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="recipeCategoryNames">食譜分類：</label><span>${errorMsgs.get("recipeCategoryIDErrNull")}</span><br>
+					<label for="recipeCategoryNames">食譜分類：</label>
+					<span class="errorSpan">${errorMsgs.get("recipeCategoryIDErr")}</span><br>
 					<span class="ui-widget">
 						<input class="form-control" id="catAutoCompl" name="recipeCategoryNames" placeholder="請輸入並選擇料理分類"><br>
 					</span>
@@ -137,8 +136,8 @@
 
 				<div class="form-group">
 					<label for="recipeIngredientNames">食材標籤與單位：</label>
-					<span>${errorMsgs.get("recipeIngredientIDErrNull")}
-						${errorMsgs.get("recipeUnitIDErrNull")}
+					<span>${errorMsgs.get("recipeIngredientIDErr")}
+						${errorMsgs.get("recipeUnitIDErr")}
 						${errorMsgs.get("recipeUnitAmountErrNull")}
 						${errorMsgs.get("recipeunitAmountErrNumber")}</span><br>
 						<span class="ui-widget">
@@ -173,16 +172,14 @@
 
 				<div class="form-group">
 					<label for="recipeIntroduction">食譜介紹：</label>
-						<span>${errorMsgs.get("recipeIntroductionErrNull")}
-						${errorMsgs.get("recipeIntroductionErrReg")}</span><br>
+						<span>${errorMsgs.get("recipeIntroductionErr")}</span>
 					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50"><%=(recipeVO == null) ? "" : recipeVO.getRecipeIntroduction()%></textarea>
 				</div>
 
 				<div class="form-group">
 					<label for="recipeServe">享用人數：</label>
 						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeServe()%>"><br>
-					${errorMsgs.get("recipeServeErrWrong")}
-					${errorMsgs.get("recipeServeErrRange")}
+					${errorMsgs.get("recipeServeErr")}
 				</div>
 
 				<div class="form-group">
@@ -194,7 +191,7 @@
 				</div>
 
 				<h2>食譜步驟</h2>
-				${errorMsgs.get("recipeStepErrNull")}
+				${errorMsgs.get("recipeStepErr")}
 				${errorMsgs.get("recipeStepPicErr")}
 				<table class="recipeStepsTable table">
 					<tbody>
