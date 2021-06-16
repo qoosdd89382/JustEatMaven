@@ -48,29 +48,29 @@ public class RecipeServlet extends HttpServlet {
 				String recipeName = req.getParameter("recipeName");
 				String recipeNameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{2,30}$"; // 逗號後面不可以亂空白，REX的規定
 				if (recipeName == null || recipeName.trim().length() == 0) {
-					errorMsgs.put("recipeNameErrNull", "食譜名稱請勿空白！");
+					errorMsgs.put("recipeNameErr", "食譜名稱請勿空白！");
 				} else if (!recipeName.trim().matches(recipeNameReg)) {
-					errorMsgs.put("recipeNameErrReg", "食譜名稱只能是中、英字母、數字，長度為2至30字");
+					errorMsgs.put("recipeNameErr", "食譜名稱只能是中、英字母、數字，長度為2至30字");
 				}
 				
 				String recipeIntroduction = req.getParameter("recipeIntroduction");
 				String recipeIntroductionReg = "^.{3,450}$";
 				if (recipeName == null || recipeName.trim().length() == 0) {
 //					recipeIntroduction = "";
-					errorMsgs.put("recipeIntroductionErrNull", "食譜介紹請勿空白！");
+					errorMsgs.put("recipeIntroductionErr", "食譜介紹請勿空白！");
 				} else if (!recipeIntroduction.trim().matches(recipeIntroductionReg)) {
-					errorMsgs.put("recipeIntroductionErrReg", "食譜介紹長度須為1至150個字節。");
+					errorMsgs.put("recipeIntroductionErr", "食譜介紹長度須為1至150個字節。");
 				}
 	
 				Integer recipeServe = null;
 				try {
 					recipeServe = new Integer(req.getParameter("recipeServe"));
 					if (recipeServe < 1 || recipeServe > 20) {
-						errorMsgs.put("recipeServeErrRange", "享用人數請勿低於1人，或高於20人");
+						errorMsgs.put("recipeServeErr", "享用人數請勿低於1人，或高於20人");
 					}
 				} catch (NumberFormatException e) {
 					recipeServe = 1;
-					errorMsgs.put("recipeServeErrWrong", "享用人數填寫格式錯誤，請勿空白，並請填寫1至20人份之數字。");
+					errorMsgs.put("recipeServeErr", "享用人數填寫格式錯誤，請勿空白，並請填寫1至20人份之數字。");
 				}
 	
 				byte[] recipePicTopBuffer = null;
@@ -87,9 +87,14 @@ public class RecipeServlet extends HttpServlet {
 						}
 					} else if (!part.getContentType().startsWith("image")) { 
 						errorMsgs.put("recipePicTopErr", "請上傳image類型之圖檔。2");
-
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
 					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
 						errorMsgs.put("recipePicTopErr", "請注意檔案尺寸過大。");
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
 					} else {
 						InputStream in = part.getInputStream();
 						recipePicTopBuffer = new byte[in.available()];
@@ -108,7 +113,7 @@ public class RecipeServlet extends HttpServlet {
 				
 				String recipeCategoryIDStr = req.getParameter("recipeCategoryIDs");
 				if (recipeCategoryIDStr == null || recipeCategoryIDStr.trim().length() == 0) {
-					errorMsgs.put("recipeCategoryIDErrNull", "請至少選取一個料理分類");
+					errorMsgs.put("recipeCategoryIDErr", "請至少選取一個料理分類");
 				} else {
 					String[] recipeCategoryIDs = recipeCategoryIDStr.trim().split(" ");
 					for (String recipeCategoryID : recipeCategoryIDs) {
@@ -124,7 +129,7 @@ public class RecipeServlet extends HttpServlet {
 				String recipeIngredientIDStr = req.getParameter("recipeIngredientIDs");
 //				int recipeIngredientCount = 0;
 				if (recipeIngredientIDStr == null || recipeIngredientIDStr.trim().length() == 0) {
-					errorMsgs.put("recipeIngredientIDErrNull", "請至少選取一個食材。");
+					errorMsgs.put("recipeIngredientIDErr", "請至少選取一個食材。");
 				} else {
 					String[] recipeIngredientIDs = recipeIngredientIDStr.trim().split(" ");
 //					recipeIngredientCount = recipeIngredientIDs.length;
@@ -138,11 +143,11 @@ public class RecipeServlet extends HttpServlet {
 				String[] recipeUnitIDs = req.getParameterValues("unitIDs");
 				if (recipeIngredientIDStr.trim().length() > 0) {
 					if (recipeUnitIDs == null) {
-						errorMsgs.put("recipeUnitIDErrNull", "請為您的所有食材選擇單位！1");
+						errorMsgs.put("recipeUnitIDErr", "請為您的所有食材選擇單位！1");
 					} else {
 						for (int index = 0; index < recipeUnitIDs.length; index++) {
 							if (new Integer(recipeUnitIDs[index]) == 0) {
-								errorMsgs.put("recipeUnitIDErrNull", "請為您的所有食材選擇單位！2");
+								errorMsgs.put("recipeUnitIDErr", "請為您的所有食材選擇單位！2");
 							}
 							RecipeIngredientUnitVO recipeIngUnitVO = recipeIngUnitVOs.get(index);
 							recipeIngUnitVO.setUnitID(new Integer(recipeUnitIDs[index]));
@@ -200,7 +205,7 @@ public class RecipeServlet extends HttpServlet {
 //				} else {
 				for (int index = 0; index < recipeStepTexts.length; index++) {
 					if (recipeStepTexts[index].trim().length() == 0) {
-						errorMsgs.put("recipeStepErrNull", "請填寫所有食譜步驟之說明！");
+						errorMsgs.put("recipeStepErr", "請填寫所有食譜步驟之說明！");
 					}
 					RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
 					recipeStepVO.setRecipeStepText(recipeStepTexts[index]);
