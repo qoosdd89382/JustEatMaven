@@ -14,7 +14,8 @@ $(function () {
 				'<td class="col-6 order-1 col-lg-1 order-lg-1">' + 
 					'<span class="order">' + stepOrderNum + '</span>' + 
 					'<input name="recipeStepIDs" type="hidden" value="">' + 
-					'<input name="recipeStepOrders" type="hidden" value="' + stepOrderNum + '"></td>' + 
+					'<input name="recipeStepOrders" type="hidden" value="' + stepOrderNum + '">' + 
+					'<input name="oldFileIdentify" type="hidden" value="false"></td>' +
 				'<td class="col-12 order-3 col-lg-6 order-lg-2">' + 
 					'<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea></td>' + 
 				'<td class="col-12 order-4 col-lg-4 order-lg-3">' + 

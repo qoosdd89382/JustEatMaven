@@ -11,6 +11,10 @@
 
 <%
 	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
+	if (recipeVO == null) {
+		request.getSession().removeAttribute("recipePicTopBuffer");
+		request.getSession().removeAttribute("recipeStepPicBuffers");
+	}
 	List<RecipeStepVO> recipeStepVOs = (List<RecipeStepVO>) request.getAttribute("recipeStepVOs");
 	String recipeCategoryIDs = request.getParameter("recipeCategoryIDs");
 	String recipeIngredientIDs = request.getParameter("recipeIngredientIDs");
@@ -183,7 +187,7 @@
 
 				<div class="form-group">
 					<label for="recipePicTop row">食譜完成照：</label>
-					${errorMsgs.get("recipePicTopErrType")} ${errorMsgs.get("recipePicTopErrSize")} <br>
+					${errorMsgs.get("recipePicTopErr")}<br>
 						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳圖片</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
@@ -191,8 +195,7 @@
 
 				<h2>食譜步驟</h2>
 				${errorMsgs.get("recipeStepErrNull")}
-				${errorMsgs.get("recipeStepPicErrType")}
-				${errorMsgs.get("recipeStepPicErrSize")}
+				${errorMsgs.get("recipeStepPicErr")}
 				<table class="recipeStepsTable table">
 					<tbody>
 
@@ -202,6 +205,7 @@
 									<span class="order">1</span>
 									<input name="recipeStepIDs" type="hidden" value="">
 									<input name="recipeStepOrders" type="hidden" value="1">
+									<input name="oldFileIdentify" type="hidden" value="false">
 								</td>
 								<td class="col-12 order-3 col-lg-6 order-lg-2">
 									<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea>
@@ -217,14 +221,15 @@
 							</tr>
 						</c:if>
 
-						<c:if test="${not empty recipeStepVOs}">
+						<c:if test="${not empty recipeStepVOs}"> 
 							<c:forEach var="recipeStepVO" items="${recipeStepVOs}">
 								<tr class="form-group recipe row">
 									<td class="col-6 order-1 col-lg-1 order-lg-1">
 										<span class="order">${recipeStepVO.recipeStepOrder}</span>
 										<input name="recipeStepIDs" type="hidden" value="">
 										<input name="recipeStepOrders" type="hidden" value="${recipeStepVO.recipeStepOrder}">
-									</td>
+										<input name="oldFileIdentify" type="hidden" value="">
+									</td> 
 									<td class="col-12 order-3 col-lg-6 order-lg-2">
 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
 									</td>
@@ -284,6 +289,22 @@
 			<%@ include file="/Recipe/autoComplCat.file"%>
 			<%@ include file="/Recipe/autoComplIng.file"%>
 			
+			var oldFileIdentify = new Array();
+			<%
+			if (request.getAttribute("oldFileIdentify") != null) {
+				String[] oldFileIdentify = (String[])request.getAttribute("oldFileIdentify");
+				for (String one : oldFileIdentify ) {	%>
+					var tempOD = "<%= one %>";
+					if (tempOD != "") { 
+						oldFileIdentify.push(tempOD);
+					}
+			<%	}
+			} %>
+			
+			$('input[name="oldFileIdentify"]').each(function(index, item, array){
+				$(item).val(oldFileIdentify[index]);
+			});
+			
 			var isNewRecipe = "${recipeVO}";
 			if (isNewRecipe == "") {
 				sessionStorage.clear();
@@ -335,6 +356,13 @@
                     	picTopUploadPreview.replaceChild(img_ele, top_img);
                     }
                 });
+                
+
+//                 file_reader.readAsDataURL(file);
+//                 file_reader.addEventListener("loadend", function (e) {
+                	
+//                 });
+                
             };
 
 
