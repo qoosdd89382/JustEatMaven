@@ -405,6 +405,39 @@ public class DishAndIngredientJDBCDAO implements DishAndIngredientDAOinterface {
 		}
 	}
 	
+//	@Override
+//	public void insertbyMultiDish(List<DishAndIngredientVO> dishAndIngredientVOList, Connection con) {
+//		PreparedStatement pstmt = null;
+//
+//		try {
+//			pstmt = con.prepareStatement(Insert_Stmt);
+//			pstmt.setInt(1, dishAndIngredientVO.getDishID());
+//			pstmt.setInt(2, dishAndIngredientVO.getIngredientID());
+//
+//			pstmt.executeUpdate();
+//			System.out.println("新增菜色食材成功");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			if (con != null) {
+//				try {
+//					con.rollback();
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		} finally {
+//			if (pstmt != null) {
+//				try {
+//					pstmt.close();
+//				} catch (SQLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
+	
 	public static void main(String[] args) {
 		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
 		DishAndIngredientJDBCDAO dishAndIngredientJDBCDAO = new DishAndIngredientJDBCDAO();
