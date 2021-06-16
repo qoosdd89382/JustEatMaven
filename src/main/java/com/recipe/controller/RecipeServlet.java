@@ -79,20 +79,17 @@ public class RecipeServlet extends HttpServlet {
 	
 					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
 						System.out.println("使用者沒有上傳置頂圖片");
-						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
 							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
 //							recipePicTopBuffer = (byte[]) req.getAttribute("recipePicTopBuffer");
+						} else {
+							errorMsgs.put("recipePicTopErr", "請上傳置頂圖之圖檔。");
 						}
 					} else if (!part.getContentType().startsWith("image")) { 
-						errorMsgs.put("recipePicTopErrType", "請上傳image類型之圖檔。2");
-						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
-							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
-						}
+						errorMsgs.put("recipePicTopErr", "請上傳image類型之圖檔。2");
+
 					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
-						errorMsgs.put("recipePicTopErrSize", "請注意檔案尺寸過大。");
-						if(req.getSession().getAttribute("recipePicTopBuffer") != null) {
-							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
-						}
+						errorMsgs.put("recipePicTopErr", "請注意檔案尺寸過大。");
 					} else {
 						InputStream in = part.getInputStream();
 						recipePicTopBuffer = new byte[in.available()];
@@ -216,19 +213,33 @@ public class RecipeServlet extends HttpServlet {
 						parts.add(part);
 					}
 				}
-				List<byte[]> recipeStepPicBuffers = new ArrayList<byte[]>();
-				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
+				String[] oldFileIdentify = req.getParameterValues("oldFileIdentify");
+				Map<String, byte[]> recipeStepPicBuffers = null;
+				if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
+					recipeStepPicBuffers = (Map<String, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
+					System.out.println("session gets buffers OOOOOOOOOO");
+				} else {
+					recipeStepPicBuffers = new LinkedHashMap<String, byte[]>();
+					System.out.println("session doesn't get buffers XXXXXXXXXX");
+				}
 				for(int index = 0; index < parts.size(); index++) {
 					byte[] recipeStepPicBuffer = null;
 					try {
 						Part part = parts.get(index);
-		
 						if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
 							System.out.println("使用者沒有上傳步驟" + (index + 1) + "之圖片");
-						} else if (!"image".equals(part.getContentType().substring(0, part.getContentType().lastIndexOf("/")))) { 
-							errorMsgs.put("recipeStepPicErrType", "請上傳image類型之圖檔。");
+							if ("false".equals(oldFileIdentify[index])) {
+								recipeStepPicBuffers.remove(String.valueOf(index));
+								errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔！");
+							}
+//							if (recipeStepPicBuffers.get(String.valueOf(index)) == null) {
+//								errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔！");
+//								oldFileIdentify[index] = "false";
+//							}
+						} else if (!part.getContentType().startsWith("image")) { 
+							errorMsgs.put("recipeStepPicErr", "請上傳image類型之圖檔。");
 						} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
-							errorMsgs.put("recipeStepPicErrSize", "請注意檔案尺寸過大。");
+							errorMsgs.put("recipeStepPicErr", "請注意檔案尺寸過大。");
 						} else {
 							InputStream in = part.getInputStream();
 							recipeStepPicBuffer = new byte[in.available()];
@@ -237,12 +248,22 @@ public class RecipeServlet extends HttpServlet {
 							System.out.println(index + 1 + ": "+ recipeStepPicBuffer.length);
 							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
 							recipeStepVO.setRecipeStepPic(recipeStepPicBuffer);
-							recipeStepPicBuffers.add(recipeStepPicBuffer);
+							recipeStepPicBuffers.put(String.valueOf(index), recipeStepPicBuffer);
+							oldFileIdentify[index] = "true";
 						}
 					} catch (Exception e) {
 						System.err.println("使用者操作時發生其他例外");
 					}
 				}
+				int outOfRange = recipeStepPicBuffers.size() - parts.size();
+				System.out.println(outOfRange);
+				while(outOfRange > 0) {
+					recipeStepPicBuffers.remove(String.valueOf(outOfRange));
+					outOfRange--;
+				}
+				System.out.println(recipeStepPicBuffers.toString());
+				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
+				req.setAttribute("oldFileIdentify", oldFileIdentify);
 				
 				RecipeVO recipeVO = new RecipeVO();
 				recipeVO.setRecipeName(recipeName);
@@ -273,6 +294,7 @@ public class RecipeServlet extends HttpServlet {
 				if (recipeVO != null) {
 					System.out.println("新增成功");
 					req.getSession().removeAttribute("recipePicTopBuffer");
+					req.getSession().removeAttribute("recipeStepPicBuffers");
 					RequestDispatcher successView = req.getRequestDispatcher("/Recipe/recipe.jsp?id=" + recipeVO.getRecipeID());
 					successView.forward(req, res);
 				}
