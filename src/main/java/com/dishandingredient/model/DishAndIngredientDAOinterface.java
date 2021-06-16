@@ -16,5 +16,6 @@ public interface DishAndIngredientDAOinterface {
 
     //被菜色連鎖
     public void insertbyDish(DishAndIngredientVO dishAndIngredientVO,Connection con);
+    
 
 }

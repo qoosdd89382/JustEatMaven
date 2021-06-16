@@ -153,7 +153,7 @@ public class AccountInfoServlet extends HttpServlet {
 					
 				//3.查詢完成,準備轉交(Send the Success view)
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
-				req.setAttribute("accountInfoVO", accountInfoVO); 
+				session.setAttribute("accountInfoVO", accountInfoVO); 
 				String url = "/Account/AccountInfoPage.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneEmp.jsp
 				successView.forward(req, res);
@@ -170,6 +170,28 @@ public class AccountInfoServlet extends HttpServlet {
 		if ("setAccountInfo_For_Register".equals(action)) {
 			//轉到輸入會員資料的頁面
 			String url = "/Account/AccountRegisterPage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+//在AccountLoginPage.jsp收到"修改會員資料"的請求
+		
+//在AccountLoginPage.jsp收到登出的請求
+		if("Account_Logout".equals(action)) {
+			HttpSession session = req.getSession();
+			session.removeAttribute("accountInfoVO");
+			session.removeAttribute("accountMail");
+			System.out.println("收到登出請求1");
+			String url = "/Account/AccountLoginPage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+			System.out.println("收到登出請求2");
+		}
+		
+		
+		
+//收到查看會員資料的請求
+		if("gotoAccountInfoPage".equals(action)) {
+			String url = "/Account/AccountInfoPage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}

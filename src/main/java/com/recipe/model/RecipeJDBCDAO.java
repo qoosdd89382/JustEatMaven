@@ -710,17 +710,17 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 //		}
 
 		
-//		// 測試 get all 除圖片外成功
-//		List<RecipeVO> allRecipe = dao.getAll();
-//		for (RecipeVO rec : allRecipe) {
-//			System.out.println(rec.getRecipeID() + "\n" + rec.getRecipeName() + "\n===============");
-//		}
-		
-		// 測試 getSomeNew 除圖片外成功
-		List<RecipeVO> allRecipe = dao.getSomeNew();
+		// 測試 get all 除圖片外成功
+		List<RecipeVO> allRecipe = dao.getAll();
 		for (RecipeVO rec : allRecipe) {
 			System.out.println(rec.getRecipeID() + "\n" + rec.getRecipeName() + "\n===============");
 		}
+		
+//		// 測試 getSomeNew 除圖片外成功
+//		List<RecipeVO> allRecipe = dao.getSomeNew();
+//		for (RecipeVO rec : allRecipe) {
+//			System.out.println(rec.getRecipeID() + "\n" + rec.getRecipeName() + "\n===============");
+//		}
 		
 		// Hot、Best 狀況還很多，待測
 		

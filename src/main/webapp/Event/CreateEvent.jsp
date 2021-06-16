@@ -1,3 +1,6 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Arrays"%>
 <%@page import="org.json.JSONArray"%>
 <%@page import="org.json.JSONObject"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -32,8 +35,11 @@
 		}
 	}
 	request.getAttribute("errorMsgs");
+	
+	String dishAndIngJson = request.getParameter("dishAndIngJson");
+	String replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
 
-		
+	
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,6 +73,9 @@
 	        <h2>建立活動</h2>
 	    </div>
 	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
+	   	<div class="temp_data">
+	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson%>">
+	   	</div>
 	    <div class="event_content">
 	        <div class="info">
 	            <div class="title_separate">
@@ -150,7 +159,7 @@
 	                <input type="submit" name="action" value="新增菜色">
 	                <input type="submit" name="action" value="邀請好友">
 	                <input type="submit" name="action" value="取消建立">
-	                <input type="submit" name="action" value="確定建立">
+	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
 	            </div>
 	        </div>
 	        <div class="overflow">
@@ -193,6 +202,7 @@
 		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 		 });
+	  
 	</script>
 </body>
 </html>
