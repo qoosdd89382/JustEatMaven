@@ -39,4 +39,12 @@ public class EventMemberService {
 	public List<EventMemberVO> getAll() {
 		return dao.getAll();	
 	}
+	
+	public List<EventMemberVO> getAllByMemberID(Integer accountID) {
+		return dao.getAllByMemberID(accountID);
+	}
+	
+	public List<EventMemberVO> getAllByEventID(Integer eventID) {
+		return dao.getAllByEventID(eventID);
+	}
 }

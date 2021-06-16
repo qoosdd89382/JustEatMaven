@@ -20,6 +20,7 @@ import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
 
 public class AccountInfoServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {

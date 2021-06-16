@@ -69,7 +69,7 @@ img {
 }
 
 
-/*建立活動 */
+/*新增活動 */
 
 .title h2 {
     margin: 20px 0 0 10px;
@@ -113,7 +113,7 @@ textarea {
 	color: red;
 }
 
-/*活動詳情 */
+/*   */
 
 .border {
     padding: 0 5px;
@@ -121,7 +121,7 @@ textarea {
 }
 
 
-/*新增菜色 */
+/*新增菜色*/
 
 .ingredient_zone {
     width: 300px;
@@ -131,7 +131,6 @@ textarea {
 
 .ingredient_name {
     border-bottom: 1px solid black;
-    text-align: center;
 }
 
 .ingredient_tag {
@@ -162,4 +161,10 @@ textarea {
 
 .btn_margin {
     margin: 10px 0 0 0;
+}
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }

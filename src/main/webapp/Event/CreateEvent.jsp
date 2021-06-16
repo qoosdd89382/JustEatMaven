@@ -1,3 +1,5 @@
+<%@page import="org.json.JSONArray"%>
+<%@page import="org.json.JSONObject"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
 <%@	page import="com.eventinfo.model.EventInfoVO"%>
@@ -6,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
+
 	if(eventInfoVO!=null){
 		if(eventInfoVO.getEventStartTime()!=null){
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -29,6 +32,8 @@
 		}
 	}
 	request.getAttribute("errorMsgs");
+
+		
 %>
 <!DOCTYPE html>
 <html lang="en">
