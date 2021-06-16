@@ -1,11 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
+<%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.friendship.model.*"%>
 
 <%
-AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
-//EmpServlet.java(Concroller), 存入req的VO物件
+FriendshipService friendshipSvc = new FriendshipService();
+String accountMail = (String) session.getAttribute("accountMail");
+List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountMail(accountMail);
 %>
 
 <!DOCTYPE html>
@@ -40,9 +44,39 @@ margin-top:100px;
 	
 	<div class="container">
 		<div class="row">
+			<div class="col-4" id="function_select_area">
+					<ul>
+<!-- 						<li><a href='AccountInfoPage.jsp'>會員資料</a></li> -->
+						<li>
+						<form method="post" action="accountInfo.do">
+								<input type="hidden" name="action" value="gotoAccountInfoPage">
+								<input type="submit" value="會員資料">
+						</form>
+						</li>
+						<li><a href='#'>我的活動</a></li>
+						<li><a href='#'>我的評價</a></li>
+						<li>
+						<form method="post" action="friendship.do">
+								<input type="hidden" name="action" value="getAccount_Friendship">
+								<input type="submit" value="我的好友">
+						</form>
+						</li>
+						<li><a href='#'>我的文章</a></li>
+						<li><a href='#'>我的收藏</a></li>
+						<li><a href='#'>我的訂單</a></li>
+						<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
+					</ul>
+			</div>
 			<div class="col">
 				<p>我是好友頁面</p>
 				<p>借我標記一下session==${accountMail}</p>	
+				<p>我是你的好友集合${friendshipVO}</p>
+				<p>以下是你的好友</p>
+
+				<c:forEach var="accountInfoVO" items="${friendshipVO}">
+					<div>${accountInfoVO.accountNickname}</div>
+				</c:forEach>
+				
 			</div>
 		</div>
 	</div>

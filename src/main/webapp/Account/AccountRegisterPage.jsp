@@ -34,11 +34,11 @@ div#register {
 	font-size: 25px;
 }
 
-div#function_select_area li{
-border:1px ridge orange;
-font-size:25px;
-margin:15px;
-}
+/* div#function_select_area li{ */
+/* border:1px ridge orange; */
+/* font-size:25px; */
+/* margin:15px; */
+/* } */
 </style>
 
 </head>
@@ -49,18 +49,19 @@ margin:15px;
 
 	<div class="container">
 		<div class="row">
-			<div id="function_select_area" class="col-4">
-				<ul>
-					<li><a href='#'>會員資料</a></li>
-					<li><a href='#'>我的活動</a></li>
-					<li><a href='#'>我的評價</a></li>
-					<li><a href='#'>我的好友</a></li>
-					<li><a href='#'>我的文章</a></li>
-					<li><a href='#'>我的收藏</a></li>
-					<li><a href='#'>我的訂單</a></li>
-					<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
-				</ul>
-			</div>
+		
+<!-- 			<div id="function_select_area" class="col-4"> -->
+<!-- 				<ul> -->
+<!-- 					<li><a href='#'>會員資料</a></li> -->
+<!-- 					<li><a href='#'>我的活動</a></li> -->
+<!-- 					<li><a href='#'>我的評價</a></li> -->
+<!-- 					<li><a href='#'>我的好友</a></li> -->
+<!-- 					<li><a href='#'>我的文章</a></li> -->
+<!-- 					<li><a href='#'>我的收藏</a></li> -->
+<!-- 					<li><a href='#'>我的訂單</a></li> -->
+<!-- 					<li><a href='#'>成為商家(這裡記得要加判斷)</a></li> -->
+<!-- 				</ul> -->
+<!-- 			</div> -->
 		
 		
 			<div id="register" class="col-6">

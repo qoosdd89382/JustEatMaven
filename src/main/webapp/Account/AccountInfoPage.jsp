@@ -8,7 +8,7 @@
 <%@ page import="com.accountinfo.model.*"%>
 
 <%
-AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
+AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
 //EmpServlet.java(Concroller), 存入req的VO物件
 %>
 
@@ -86,16 +86,26 @@ input#account_logout:hover {
 		</div>
 		<div class="row">
 			<div class="col-4" id="function_select_area">
-				<ul>
-					<li><a href='#'>會員資料</a></li>
-					<li><a href='#'>我的活動</a></li>
-					<li><a href='#'>我的評價</a></li>
-					<li><a href='AccountFriendPage.jsp'>我的好友</a></li>
-					<li><a href='#'>我的文章</a></li>
-					<li><a href='#'>我的收藏</a></li>
-					<li><a href='#'>我的訂單</a></li>
-					<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
-				</ul>
+					<ul>
+						<li>
+						<form method="post" action="accountInfo.do">
+								<input type="hidden" name="action" value="gotoAccountInfoPage">
+								<input type="submit" value="會員資料">
+						</form>
+						</li>
+						<li><a href='#'>我的活動</a></li>
+						<li><a href='#'>我的評價</a></li>
+						<li>
+						<form method="post" action="friendship.do">
+								<input type="hidden" name="action" value="getAccount_Friendship">
+								<input type="submit" value="我的好友">
+						</form>
+						</li>
+						<li><a href='#'>我的文章</a></li>
+						<li><a href='#'>我的收藏</a></li>
+						<li><a href='#'>我的訂單</a></li>
+						<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
+					</ul>
 			</div>
 			
 			<div class="col-6" id="account_info_area">
@@ -118,15 +128,19 @@ input#account_logout:hover {
 					<li>用戶身分證背面:<%=accountInfoVO.getAccountIDcardBack()%><img src="images/accountIDBTest.jpg" width="100" height="100" border="0"></li>
 					<li>用戶自我介紹:<%=accountInfoVO.getAccountText()%></li>
 					<li>用戶註冊時間:<%=accountInfoVO.getAccountRegistTime()%></li>
-					
-					<form>
-						<input type="hidden" name="action" value="">
-						<input id="account_change_info" type="button" value="修改我的會員資料">						
+					<li>
+						<form method="post" action="accountInfo.do">
+							<input type="hidden" name="action" value="Account_Change_Info">
+							<input id="account_change_info" type="button" value="修改我的會員資料">	
+						</form>					
+					</li>
+					<li>
+						<form method="post" action="accountInfo.do">
+							<input type="hidden" name="action" value="Account_Logout">
+							<input id="account_logout" type="submit" value="登出帳戶">						
+						</form>
+					</li>
 
-						<input type="hidden" name="action" value="">
-						<input id="account_logout" type="button" value="登出帳戶">						
-					</form>
-					
 					<!--儲存用戶資料在session -->
 					<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
 					<p>借我標記一下session==${accountMail}</p>

@@ -86,11 +86,13 @@ font-size:20px;
 
 		<li>
 			<FORM METHOD="post" ACTION="accountInfo.do">
-				<b>選擇會員編號:</b> <select size="1" name="accountID">
+				<b>選擇會員編號:</b> 
+				<select size="1" name="accountID">
 					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
 						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountID}
 					</c:forEach>
-				</select> <input type="hidden" name="action" value="getOne_For_Display">
+				</select> 
+				<input type="hidden" name="action" value="getOne_For_Display">
 				<input type="submit" value="送出">
 			</FORM>
 		</li>
@@ -101,7 +103,8 @@ font-size:20px;
 					<c:forEach var="empVO" items="${accountInfoSvc.all}">
 						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
 					</c:forEach>
-				</select> <input type="hidden" name="action" value="getOne_For_Display">
+				</select>
+				<input type="hidden" name="action" value="getOne_For_Display">
 				<input type="submit" value="送出">
 			</FORM>
 		</li>
@@ -122,8 +125,8 @@ font-size:20px;
 	。記住我按鈕功能
 	</p>
 	<p>好友功能</p>
-	。基本頁面
-	。列出該帳號的好友
+	OK。基本頁面
+	OK。列出該帳號的好友
 	。好友搜尋
 	<p>公告功能</p>
 	。查詢公告
