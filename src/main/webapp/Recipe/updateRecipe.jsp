@@ -18,12 +18,21 @@
 
 <%
 	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
-	List<RecipeCuisineCategoryVO> recipeCatList = recipeCategorySvc.getAllByRecipe(recipeVO.getRecipeID());
-	List<RecipeIngredientUnitVO> recipeIngUnitList = recipeIngUnitSvc.getAllByRecipe(recipeVO.getRecipeID());
-	List<RecipeStepVO> recipeStepList = recipeStepSvc.getAllByRecipe(recipeVO.getRecipeID());
-	request.setAttribute("recipeCatList", recipeCatList);
-	request.setAttribute("recipeIngUnitList", recipeIngUnitList);
-	request.setAttribute("recipeStepList", recipeStepList);
+// 	if (recipeVO != null) {
+		byte[] recipePicTopBuffer = recipeVO.getRecipePicTop();
+// 		List<RecipeCuisineCategoryVO> recipeCatList = recipeCategorySvc.getAllByRecipe(recipeVO.getRecipeID());
+// 		List<RecipeIngredientUnitVO> recipeIngUnitList = recipeIngUnitSvc.getAllByRecipe(recipeVO.getRecipeID());
+// 		List<RecipeStepVO> recipeStepList = recipeStepSvc.getAllByRecipe(recipeVO.getRecipeID());
+		request.setAttribute("recipePicTopBuffer", recipePicTopBuffer);
+// 		request.setAttribute("recipeCatList", recipeCatList);
+// 		request.setAttribute("recipeIngUnitList", recipeIngUnitList);
+// 		request.setAttribute("recipeStepList", recipeStepList);
+// 	}
+	// 驗證新資料帶回
+// 	String recipeCategoryIDs = request.getParameter("recipeCategoryIDs");
+// 	String recipeIngredientIDs = request.getParameter("recipeIngredientIDs");
+	String[] unitIDs = request.getParameterValues("unitIDs");
+	String[] recipeUnitAmounts = (String[]) request.getAttribute("recipeUnitAmounts");
 %>
 
 <!DOCTYPE html>
@@ -35,38 +44,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap 的 CSS -->
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick.css" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick-theme.css" />
+<%-- <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick.css" /> --%>
+<%-- <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick-theme.css" /> --%>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
 <title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
 <style>
-        #preview {
-            border: 1px solid lightgray;
-            display: inline-block; 
-            position: relative;
-            min-height: 40px;
-            border-radius: .25rem!important;
-            margin-top:10px;
-            padding: 3px;
-        }
-
-        #preview span.text {
-            position: absolute;
-            display: inline-block;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            color: lightgray;
-        }
-        
-        #p_img {
-        	width: 100%;
-        }
-        
 </style>
 </head>
 <body>
@@ -90,59 +75,53 @@
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp">食譜列表</a></li>
 					<li class="breadcrumb-item active" aria-current="page">${recipeVO.recipeName} [編輯]</li>
-
 				</ol>
 			</div>
 
-
-
-			<form method="post"
-				action="<%=request.getContextPath()%>/Recipe/recipe.do"
-				enctype="multipart/form-data">
-				<h2>食譜基本資訊</h2>
+			<form method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do" enctype="multipart/form-data">
+				<h3>食譜基本資訊</h3>
 
 				<div class="form-group">
 					<label for="recipeName">食譜名稱：</label>
+					<span class="errorSpan">${errorMsgs.get("recipeNameErr")}</span>
 					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="${recipeVO.recipeName}">
-					${errorMsgs.get(recipeNameErrNull)}
-					${errorMsgs.get("recipeNameErrNull")}
-					${errorMsgs.get("recipeNameErrReg")}
+					<input type="hidden" name="recipeID" value="${recipeVO.recipeID}">
 				</div>
 
 				<div class="form-group">
-					<label for="recipeCategoryNames">食譜分類：</label><span>${errorMsgs.get("recipeCategoryIDErrNull")}</span><br>
-					<span class="ui-widget">
-						<input class="form-control" id="catAutoCompl" name="recipeCategoryNames" placeholder="請輸入並選擇料理分類"><br>
-					</span>
+					<label for="recipeCategoryNames">食譜分類：</label>
+					<span class="errorSpan">${errorMsgs.get("recipeCategoryIDErr")}</span>
+					<div class="ui-widget">
+						<input class="form-control" id="catAutoCompl" name="recipeCategoryNames" placeholder="請輸入並選擇料理分類">
+					</div>
 					<div class="catAutoOutput">
 						<ul>
-<%-- 							<c:if test="${not empty recipeCatVOs}"> --%>
-								<c:forEach var="recipeCatVO" items="${recipeCatList}">
+							<c:if test="${empty recipeCatVOs}">
+								<c:forEach var="recipeCatVO" items="${recipeCategorySvc.getAllByRecipe(recipeVO.recipeID)}">
 									<li data-id='${recipeCatVO.cuisineCategoryID}'>
 										<span>${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
 										<i class='fas fa-times'></i>
 									</li>
 								</c:forEach>
-<%-- 							</c:if> --%>
+							</c:if>
 						</ul>
-						<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${recipeCatList}">${recipeCatVO.cuisineCategoryID} </c:forEach>">
+						<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value=" <c:forEach var="recipeCatVO" items="${recipeCatList}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>">
 					</div>
-
 				</div>
 
 				<div class="form-group">
 					<label for="recipeIngredientNames">食材標籤與單位：</label>
-					<span>${errorMsgs.get("recipeIngredientIDErrNull")}
-						${errorMsgs.get("recipeUnitIDErrNull")}
-						${errorMsgs.get("recipeUnitAmountErrNull")}
-						${errorMsgs.get("recipeunitAmountErrNumber")}</span><br>
-						<span class="ui-widget">
-						<input id="ingAutoCompl" class="form-control" name="recipeIngredientNames" placeholder="請輸入並選擇食材標籤"><br>
-					</span>
+					<span class="errorSpan">${errorMsgs.get("recipeIngredientIDErr")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeUnitIDErr")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeUnitAmountErrNull")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeunitAmountErrNumber")}</span>
+					<div class="ui-widget">
+						<input id="ingAutoCompl" class="form-control" name="recipeIngredientNames" placeholder="請輸入並選擇食材標籤">
+					</div>
 					<div class="ingAutoOutput">
 						<ul>
 <%-- 							<c:if test="${not empty recipeIngUnitVOs}"> --%>
-								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
+								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitSvc.getAllByRecipe(recipeVO.recipeID)}">
 									<li class='row' data-id='${recipeIngUnitVO.ingredientID}'>
 										<div class='col-4 vertical-container'>${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div>
 										<input class='form-control unitAmounts col-2' name='unitAmounts' type='number' min="0.01" max="9999.99" step='0.01' value='${recipeIngUnitVO.unitAmount}'>
@@ -162,58 +141,55 @@
 								</c:forEach>
 <%-- 							</c:if> --%>
 						</ul>
-						<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">${recipeIngUnitVO.recipeIngredientUnitID} </c:forEach>">
+						<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}"> ${recipeIngUnitVO.ingredientID}</c:forEach>">
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="recipeIntroduction">食譜介紹：</label>
-						<span>${errorMsgs.get("recipeIntroductionErrNull")}
-						${errorMsgs.get("recipeIntroductionErrReg")}</span><br>
+					<span class="errorSpan">${errorMsgs.get("recipeIntroductionErr")}</span>
 					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50">${recipeVO.recipeIntroduction}</textarea>
 				</div>
 
 				<div class="form-group">
-					<label for="recipeServe">享用人數：</label>
-						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="${recipeVO.recipeServe}"><br>
-					${errorMsgs.get("recipeServeErrWrong")}
-					${errorMsgs.get("recipeServeErrRange")}
+					<label for="recipeServe">享用人數：</label><span class="errorSpan">${errorMsgs.get("recipeServeErr")}</span>
+					<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="${recipeVO.recipeServe}">
 				</div>
 
 				<div class="form-group">
-					<label for="recipePicTop row">食譜完成照：</label>
-					${errorMsgs.get("recipePicTopErrType")} ${errorMsgs.get("recipePicTopErrSize")} <br>
-						<div id="picTopUploadBtn" class="btn btn-primary col-6">上傳檔案</div>
+					<label for="recipePicTop row">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
+						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳檔案</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
-						<div id="preview" class="col-6"><img id="p_img" class="preview_img" src="<%= request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}"></img></div>
-						<div id="picTopUploadName">${recipePicTopName}</div>
+						<div id="picTopUploadPreview" class="preview col-6"><img id="top_img" src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}" class="preview_img"></div>
 				</div>
 
 				<h2>食譜步驟</h2>
-				${errorMsgs.get("recipeStepErrNull")}
-				${errorMsgs.get("recipeStepPicErrType")}
-				${errorMsgs.get("recipeStepPicErrSize")}
-				<table class="recipeStepsTable table table-hover">
+				<span class="errorSpan">${errorMsgs.get("recipeStepErr")}</span>
+				<span class="errorSpan" style="margin-left: 10px;">${errorMsgs.get("recipeStepPicErr")}</span>
+				<table class="recipeStepsTable table">
 					<tbody>
 <%-- 						<c:if test="${not empty recipeStepVOs}"> --%>
-							<c:forEach var="recipeStepVO" items="${recipeStepList}">
+							<c:forEach var="recipeStepVO" items="${recipeStepSvc.getAllByRecipe(recipeVO.recipeID)}">
 								<tr class="form-group recipe row">
 									<td class="col-6 order-1 col-lg-1 order-lg-1">
-										<span>${recipeStepVO.recipeStepOrder}</span>
-										<input name="recipeStepIDs" type="hidden" value="">
+										<span class="order">${recipeStepVO.recipeStepOrder}</span>
+										<input name="recipeStepIDs" type="hidden" value="${recipeStepVO.recipeStepID}">
 										<input name="recipeStepOrders" type="hidden" value="${recipeStepVO.recipeStepOrder}">
+										<input name="oldFileIdentify" type="hidden" value="true">
 									</td>
 									<td class="col-12 order-3 col-lg-6 order-lg-2">
 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
-										<input class="form-control-file" type="file" name="recipeStepPic">	
+										<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
+										<div class="picStepPreview preview col-12"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${recipeStepVO.recipeStepID}" class="step_img preview_img"></div>
 									</td>
 									<td class="col-6 order-2 col-lg-1 order-lg-4">
-										<c:if test="${fn:length(recipeStepVOs) == 1}">
+										<c:if test="${fn:length(recipeStepList) == 1}">
 											<font color="gray"><i class='fas fa-times'></i></font>
 										</c:if>
-										<c:if test="${fn:length(recipeStepVOs) >= 2}">
+										<c:if test="${fn:length(recipeStepList) >= 2}">
 											<i class='fas fa-times'></i>
 										</c:if>
 									</td>
@@ -226,11 +202,12 @@
 
 				<div id="addStepBtn" class="btn btn-primary">增加一個步驟</div>
 
-				<div class="form-check">
-						<input type="checkbox" name="agreement" class="form-check-input">
-						<label class="form-check-label" for="agreement">同意使用本網站之條款及隱私權政策</label>
-						<input type="hidden" name="action" value="insert">
-				</div>
+				<label>
+					<input type="checkbox" name="agreement" class="styled-checkbox" value="agree">
+						同意使用本網站之條款及隱私權政策
+				</label>
+				<span class="errorSpan">${errorMsgs.get("agreementErr")}</span>
+				<input type="hidden" name="action" value="update">
 				<button id="btnSubmit" class="btn btn-primary" type="submit">送出</button>
 			</form>
 
@@ -243,7 +220,6 @@
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
-
 	
 
 	<%-- body 結束標籤之前，載入Bootstrap 的 JS 及其相依性安裝(jQuery、Popper) --%>
@@ -259,77 +235,58 @@
 	<script>
 		$(function() {
 
-			var categoryArr = new Array();
+			<%@ include file="/Recipe/autoComplCat.file"%>
+			<%@ include file="/Recipe/autoComplIng.file"%>
 			
-			<c:forEach var="catOne" items="${categorySvc.all}">
-				var catObj = new Object();
-				catObj.id = ${catOne.cuisineCategoryID};
-				catObj.value = "${catOne.cuisineCategoryName}";
-				categoryArr.push(catObj);
-			</c:forEach>
-
-			<c:forEach var="recipeCatVO" items="${recipeCatList}">
-				var tempCat = "${recipeCatVO.cuisineCategoryID}";
-				if (tempCat != "") { 
-					categoryArr.forEach(function(item, index, array){
-				       	if (tempCat == array[index].id) {
-				       		array.splice(index, 1);
-				       	}
-			       	});
-				}
-			</c:forEach>	
+			var oldFileIdentify = new Array();
+			<%
+			if (request.getAttribute("oldFileIdentify") != null) {
+				String[] oldFileIdentify = (String[])request.getAttribute("oldFileIdentify");
+				for (String one : oldFileIdentify ) {	%>
+					var tempOD = "<%= one %>";
+					if (tempOD != "") { 
+						oldFileIdentify.push(tempOD);
+					}
+			<%	}
+			} %>
 			
-			function putCatInIDs(id, value) {
-				var tempCatHtml = "<li data-id='" + id + "'><span>" + value + "</span><i class='fas fa-times'></i></li>";
-				$(".catAutoOutput").find("ul").append(tempCatHtml);
-				
-		        if ($(".catAutoInput").val() == "") {
-		            $(".catAutoInput").val(" " + id);
-		        } else {
-		            var tempCatStr = $(".catAutoInput").val();
-		            tempCatStr += " " + id;
-		            $(".catAutoInput").val(tempCatStr);
-		        }
-			}
-
-
-			$("#catAutoCompl")
-			    .autocomplete({
-			        minLength: 0,
-			        source: categoryArr,
-			        select: function (event, ui) {
-				        categoryArr.forEach(function(item, index, array){
-		        		  if (ui.item.value == array[index].value) {
-		        			  array.splice(index, 1);
-		        		  }
-		        		});
-			        	
-			            putCatInIDs(ui.item.id, ui.item.value);
-						$("#catAutoCompl").val("");
-			            return false;
-			        }
-			    });
-			
-			
-			$(".catAutoOutput").on("click", "svg", function(e) {
-				
-				var selectStr = $(this).parent().attr("data-id");
-				var selectName = $(this).parent().find("span").html();
-				console.log(selectStr + "," + selectName)
-				
-		        var tempStr = $(".catAutoInput").val();
-		        var newStr = tempStr.replace(" " + selectStr, "");
-		        
-		        $(".catAutoInput").val(newStr);
-		        
-		        var addBackCatObj = new Object();
-				addBackCatObj.id = selectStr;
-				addBackCatObj.value = selectName;
-				categoryArr.push(addBackCatObj);
-
-				$(this).closest("li").remove();		
+			$('input[name="oldFileIdentify"]').each(function(index, item, array){
+				$(item).val(oldFileIdentify[index]);
 			});
-		
+			
+			var isNewRecipe = "${recipeVO}";
+			if (isNewRecipe == "") {
+				sessionStorage.clear();
+			}
+	
+			$("table").on("click", "svg", function(){
+				if ($("table").find("tr.recipe").length != 1) {
+					var that = this;
+					var delOrder = $(this).closest("tr.recipe").find("span.order").html();
+					$.ajax({
+						  url: "recipe.do?delOrder=" + delOrder.toString(),
+						  type: "GET",
+						  success: function(data){
+						    console.log(data);
+							
+							$(that).closest("tr.recipe").remove();
+							var stepOrderSpan = $("table").find("tr.recipe").find("td").find("span.order");
+							var stepOrderInput = $("table").find("tr.recipe").find("td").find("input[name='recipeStepOrders']");
+							$(stepOrderSpan).each(function(index, element) {
+								$(element).html(index + 1);
+							});
+							$(stepOrderInput).each(function(index, element) {
+								$(element).val(index + 1);
+							});
+							if ($("table").find("tr.recipe").length == 1) {
+								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
+								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+							}
+						  },
+						});
+	
+				}
+			});
 		});
 	</script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/addRecipe.js"></script>
