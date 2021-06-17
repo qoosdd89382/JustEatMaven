@@ -54,11 +54,7 @@ import com.friendship.model.FriendshipVO;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-			
-			
-			
-			
+		}	
 			
 		}
 }
