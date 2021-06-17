@@ -46,30 +46,62 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
 <style>
-        .preview {
-            border: 1px solid lightgray;
-            display: inline-block; 
-            position: relative;
-            min-height: 80px;	/* 40px */
-            border-radius: .25rem!important;
-            margin-top:10px;
-            padding: 3px;
-        }
+.loader3{
+	margin:20px auto;
+	font-size:10px;
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+	transform: translate(-50%, -50%);
+	text-indent:-9999em;
+	border-top:1.1em solid rgba(64,128,128,.2);
+	border-right:1.1em solid rgba(64,128,128,.2);
+	border-bottom:1.1em solid rgba(64,128,128,.2);
+	border-left:1.1em solid #408080;
+	-webkit-transform:translateZ(0);
+	-ms-transform:translateZ(0);
+	transform:translateZ(0);
+	-webkit-animation:loader3 1.1s infinite linear;
+	animation:loader3 1.1s infinite linear
+	}
+.loader3,.loader3:after{
+	border-radius:50%;
+	width:10em;
+	height:10em
+}
+@-webkit-keyframes loader3{
+	0%{
+		-webkit-transform:rotate(0);
+		transform:rotate(0)
+	}
+	100%{
+		-webkit-transform:rotate(360deg);
+		transform:rotate(360deg)
+	}
+}
+@keyframes loader3{
+	0%{
+		-webkit-transform:rotate(0);
+		transform:rotate(0)
+	}
+	100%{
+		-webkit-transform:rotate(360deg);
+		transform:rotate(360deg)
+	}
+}
 
-        .preview span.text {
-            position: absolute;
-            display: inline-block;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            color: lightgray;
-        }
-        
-        .preview_img {
-        	width: 100%;
-        }
-        
+div.temp_loading{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: hsla(0, 0%, 0%, .1);
+  text-align: center;
+  z-index: 2;
+  color: white;
+}
 </style>
 
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
@@ -101,23 +133,21 @@
 
 
 
-			<form method="post"
-				action="<%=request.getContextPath()%>/Recipe/recipe.do"
-				enctype="multipart/form-data">
-				<h2>食譜基本資訊</h2>
+			<form method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do" enctype="multipart/form-data">
+				<h3>食譜基本資訊</h3>
 
 				<div class="form-group">
 					<label for="recipeName">食譜名稱：</label>
+					<span class="errorSpan">${errorMsgs.get("recipeNameErr")}</span>
 					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeName()%>">
-					<span class="errorSpan">${errorMsgs.get(recipeNameErr)}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="recipeCategoryNames">食譜分類：</label>
-					<span class="errorSpan">${errorMsgs.get("recipeCategoryIDErr")}</span><br>
-					<span class="ui-widget">
-						<input class="form-control" id="catAutoCompl" name="recipeCategoryNames" placeholder="請輸入並選擇料理分類"><br>
-					</span>
+					<span class="errorSpan">${errorMsgs.get("recipeCategoryIDErr")}</span>
+					<div class="ui-widget">
+						<input class="form-control" id="catAutoCompl" name="recipeCategoryNames" placeholder="請輸入並選擇料理分類">
+					</div>
 					<div class="catAutoOutput">
 						<ul>
 							<c:if test="${not empty recipeCatVOs}">
@@ -136,13 +166,13 @@
 
 				<div class="form-group">
 					<label for="recipeIngredientNames">食材標籤與單位：</label>
-					<span>${errorMsgs.get("recipeIngredientIDErr")}
-						${errorMsgs.get("recipeUnitIDErr")}
-						${errorMsgs.get("recipeUnitAmountErrNull")}
-						${errorMsgs.get("recipeunitAmountErrNumber")}</span><br>
-						<span class="ui-widget">
-						<input id="ingAutoCompl" class="form-control" name="recipeIngredientNames" placeholder="請輸入並選擇食材標籤"><br>
-					</span>
+					<span class="errorSpan">${errorMsgs.get("recipeIngredientIDErr")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeUnitIDErr")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeUnitAmountErrNull")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeunitAmountErrNumber")}</span>
+					<div class="ui-widget">
+						<input id="ingAutoCompl" class="form-control" name="recipeIngredientNames" placeholder="請輸入並選擇食材標籤">
+					</div>
 					<div class="ingAutoOutput">
 						<ul>
 							<c:if test="${not empty recipeIngUnitVOs}">
@@ -172,27 +202,25 @@
 
 				<div class="form-group">
 					<label for="recipeIntroduction">食譜介紹：</label>
-						<span>${errorMsgs.get("recipeIntroductionErr")}</span>
+					<span class="errorSpan">${errorMsgs.get("recipeIntroductionErr")}</span>
 					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50"><%=(recipeVO == null) ? "" : recipeVO.getRecipeIntroduction()%></textarea>
 				</div>
 
 				<div class="form-group">
-					<label for="recipeServe">享用人數：</label>
+					<label for="recipeServe">享用人數：</label><span class="errorSpan">${errorMsgs.get("recipeServeErr")}</span>
 						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeServe()%>"><br>
-					${errorMsgs.get("recipeServeErr")}
 				</div>
 
 				<div class="form-group">
-					<label for="recipePicTop row">食譜完成照：</label>
-					${errorMsgs.get("recipePicTopErr")}<br>
+					<label for="recipePicTop row">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}<span class="errorSpan">
 						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳圖片</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
 				</div>
 
-				<h2>食譜步驟</h2>
-				${errorMsgs.get("recipeStepErr")}
-				${errorMsgs.get("recipeStepPicErr")}
+				<h3>食譜步驟</h3>
+				<span class="errorSpan">${errorMsgs.get("recipeStepErr")}</span>
+				<span class="errorSpan" style="margin-left: 10px;">${errorMsgs.get("recipeStepPicErr")}</span>
 				<table class="recipeStepsTable table">
 					<tbody>
 
@@ -252,11 +280,12 @@
 
 				<div id="addStepBtn" class="btn btn-primary">增加一個步驟</div>
 
-				<div class="form-check">
-						<input type="checkbox" name="agreement" class="form-check-input">
-						<label class="form-check-label" for="agreement">同意使用本網站之條款及隱私權政策</label>
-						<input type="hidden" name="action" value="insert">
-				</div>
+				<label>
+					<input type="checkbox" name="agreement" class="styled-checkbox" value="agree">
+						同意使用本網站之條款及隱私權政策
+				</label>
+				<span class="errorSpan">${errorMsgs.get("agreementErr")}</span>
+				<input type="hidden" name="action" value="insert">
 				<button id="btnSubmit" class="btn btn-primary" type="submit">送出</button>
 			</form>
 
@@ -306,122 +335,58 @@
 			if (isNewRecipe == "") {
 				sessionStorage.clear();
 			}
-
-            var preview_html = `<span id="preview_text" class="text">預覽圖</span>`;
-            var top_img_html = `<img id="top_img" class="preview_img" src="#"></img>`;
-
-            if (sessionStorage.getItem("form_data") != null) {
-            	session_history = JSON.parse(sessionStorage.getItem("form_data"));
-				
-            	if (session_history.top_img != null) {
-	                picTopUploadPreview.innerHTML = null;
-	                picTopUploadPreview.insertAdjacentHTML('afterbegin', top_img_html);
 	
-	                document.querySelector("#top_img").src = session_history.top_img;
-	                img_base64 = session_history.top_img;
-            	}
-            	
-            	if (session_history.step_pic != null) {
-            		session_history.step_pic.forEach(function(element, index) {
-            			if (element != null) {
-            				$($('.picStepPreview')[index]).empty().append('<img src="'+ element +'" class="step_img preview_img">');
-            			}
-                	});
-            	}
-            }
-            
-			
-            function previewerTopPic(file) {
-    			let file_reader = new FileReader();
-                file_reader.readAsDataURL(file);
-                
-                file_reader.addEventListener("load", function (e) {
-                    // load事件用target
-                    var top_preview_text = document.querySelector('#picTopUploadText');
-                    var top_img = document.querySelector('#top_img');
-                    
-                    var img_ele = document.createElement('img');
-                    img_ele.id = 'top_img';
-                    img_ele.src = e.target.result;
-                    img_ele.setAttribute('class', 'preview_img');
-                    
-//                     picTopUploadName.innerHTML = file.name;	// 這裡的file跟onload事件無關
+// 			var delOrder = "";
+			$("table").on("click", "svg", function(){
+				if ($("table").find("tr.recipe").length != 1) {
+					var that = this;
+					var delOrder = $(this).closest("tr.recipe").find("span.order").html();
+// 					if ($('input[name="delOrder"]').val() == "") {
+// 						var delOrder = $(this).closest("tr.recipe").find("span.order").html();
+// 						$('input[name="delOrder"]').val(delOrder);
+// 					} else {
+// 						var tempString = $('input[name="delOrder"]').val();
+// 						var delOrder = $(this).closest("tr.recipe").find("span.order").html();
+// 						tempString.forEach(function(index, ele){
+// 						});
+// 						$('input[name="delOrder"]').val(tempString.concat(' ', delOrder));
+						
+// 					}
+					$.ajax({
+						  url: "recipe.do?delOrder=" + delOrder.toString(),           // 資料請求的網址
+						  type: "GET",                  // GET | POST | PUT | DELETE | PATCH
+// 						  beforeSend: function(){       // 在 request 發送之前執行
+// 							  $("table").append(`<div class="temp_loading"><div class="loader3"></div></div>`);
+// 						  },
+						  success: function(data){      // request 成功取得回應後執行
+						    console.log(data);
+							
+							$(that).closest("tr.recipe").remove();
+							var stepOrderSpan = $("table").find("tr.recipe").find("td").find("span.order");
+							var stepOrderInput = $("table").find("tr.recipe").find("td").find("input[name='recipeStepOrders']");
+//							var stepOrderUpload = $("table").find("tr.recipe").find("td").find("input[type='file']");
+							$(stepOrderSpan).each(function(index, element) {
+								$(element).html(index + 1);
+							});
+							$(stepOrderInput).each(function(index, element) {
+								$(element).val(index + 1);
+							});
+//							$(stepOrderUpload).each(function(index, element) {
+//								$(element).attr('name', "recipeStepPic");
+//							});
+							if ($("table").find("tr.recipe").length == 1) {
+								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
+								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+							}
+						  },
+// 						  complete: function(xhr){      // request 完成之後執行(在 success / error 事件之後執行)
+// 							    console.log(xhr);
+// 							    $("table").find("div.temp_loading").remove();
+// 						  }
+						});
 
-                    if ((img_ele == null && top_preview_text != null) || top_preview_text != null) {
-                    	picTopUploadPreview.replaceChild(img_ele, top_preview_text);
-                    } else {
-                    	picTopUploadPreview.replaceChild(img_ele, top_img);
-                    }
-                });
-                
-
-//                 file_reader.readAsDataURL(file);
-//                 file_reader.addEventListener("loadend", function (e) {
-                	
-//                 });
-                
-            };
-
-
-            document.querySelector("input[name='recipePicTop']").addEventListener("change", function (e) {
-                // change事件用target
-                previewerTopPic(e.target.files[0]);
-            });
-            
-            $('#picTopUploadBtn').on("click", function() {
-            	$('input[name="recipePicTop"]').trigger("click");
-            });
-            
-            function previewerStepPic(event, file) {
-            	let file_reader = new FileReader();
-                file_reader.readAsDataURL(file);
-                
-                file_reader.addEventListener("load", function (e) {
-                    // load事件用target
-                    
-//                     let img_ele = document.createElement('img');
-//                     img_ele.src = e.target.result;
-//                     img_ele.setAttribute('class', 'step_img preview_img');
-                    
-//                     $(event).closest('td').find('.preview').empty().append(img_ele);
-                    $(event).closest('td').find('.preview').empty().append('<img src="'+ e.target.result +'" class="step_img preview_img">');
-                    
-//                     if ((img_ele == null && step_preview_text != null) || step_preview_text != null) {
-//                     	picTopUploadPreview.replaceChild(img_ele, step_preview_text);
-//                     } else {
-//                     	picTopUploadPreview.replaceChild(img_ele, step_img);
-//                     }
-                });
-            };
-            
-            $(document).on("change", "input[name='recipeStepPic']", function (e) {
-                // change事件用target
-                previewerStepPic(this, e.target.files[0]);
-            });
-            
-            $(document).on("click", '.picStepUploadBtn', function() {
-            	$(this).closest('td').find('input[name="recipeStepPic"]').trigger("click");
-            });
-            
-
-            btnSubmit.addEventListener("click", function() {
-            	var session_history = new Object();
-            	var step_pic = new Array();
-            	
-                if (document.querySelector('#top_img') != null) {
-                    session_history['top_img'] = document.querySelector('#top_img').getAttribute("src");
-                }
-                if (document.querySelectorAll('.step_img') != null) {
-                	document.querySelectorAll('.picStepPreview').forEach(function(element, index) {
-                		step_pic.push($(element).find('img.step_img').attr("src"));
-                	});
-                	session_history.step_pic = step_pic;
-                }
-                sessionStorage.setItem("form_data", JSON.stringify(session_history));
-            });
-            
-            
-            
+				}
+			});
 		});
 	</script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/addRecipe.js"></script>
