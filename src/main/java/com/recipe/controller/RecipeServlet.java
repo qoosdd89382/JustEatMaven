@@ -38,6 +38,7 @@ public class RecipeServlet extends HttpServlet {
 		// 不需要 res.setContentType，這邊不負責輸出到螢幕上
 		req.setCharacterEncoding("UTF-8");
 
+//		res.setContentType("text/html; charset=UTF-8");		// 參數是數字，其實可以不用設...
 		String delOrder = req.getParameter("delOrder");
 		Map<Integer, byte[]> recipeStepPicBuffers = null;
 //		List<byte[]> recipeStepPicBuffers = null;
@@ -82,7 +83,6 @@ public class RecipeServlet extends HttpServlet {
 			req.setAttribute("errorMsgs", errorMsgs);
 
 			try {
-				/***********************1.接收請求參數 - 輸入格式的錯誤處理*************************/
 				String recipeName = req.getParameter("recipeName");
 				String recipeNameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{3,45}$"; // 逗號後面不可以亂空白，REX的規定
 				if (recipeName == null || recipeName.trim().length() == 0) {
@@ -376,6 +376,274 @@ public class RecipeServlet extends HttpServlet {
 		}
 
 		
+
+		if ("update".equals(action)) { // 來自updateRecipe.jsp的請求
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+			try {
+				Integer recipeID = new Integer(req.getParameter("recipeID"));
+				
+				String recipeName = req.getParameter("recipeName");
+				String recipeNameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{3,45}$"; // 逗號後面不可以亂空白，REX的規定
+				if (recipeName == null || recipeName.trim().length() == 0) {
+					errorMsgs.put("recipeNameErr", "食譜名稱請勿空白");
+				} else if (!recipeName.trim().matches(recipeNameReg)) {
+					errorMsgs.put("recipeNameErr", "食譜名稱只能是中、英字母、數字，英數3至45字、中文1至15字");
+				}
+				
+				String recipeIntroduction = req.getParameter("recipeIntroduction");
+				String recipeIntroductionReg = "^.{3,450}$";
+				if (recipeName == null || recipeName.trim().length() == 0) {
+					errorMsgs.put("recipeIntroductionErr", "食譜介紹請勿空白");
+				} else if (!recipeIntroduction.trim().matches(recipeIntroductionReg)) {
+					errorMsgs.put("recipeIntroductionErr", "食譜介紹長度需介於英數3至450字、中文1至150字");
+				}
+	
+				Integer recipeServe = null;
+				try {
+					recipeServe = new Integer(req.getParameter("recipeServe"));
+					if (recipeServe < 1 || recipeServe > 20) {
+						errorMsgs.put("recipeServeErr", "享用人數請勿低於1人，或高於20人");
+					}
+				} catch (NumberFormatException e) {
+					recipeServe = 1;
+					errorMsgs.put("recipeServeErr", "享用人數填寫格式錯誤，請勿空白，並請填寫1至20人份之數字");
+				}
+	
+				byte[] recipePicTopBuffer = null;
+				try {
+					Part part = req.getPart("recipePicTop");
+	
+					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+						System.out.println("使用者沒有上傳置頂圖片");
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						} else {
+							recipePicTopBuffer = (byte[]) req.getAttribute("recipePicTopBuffer");
+//							errorMsgs.put("recipePicTopErr", "請上傳置頂圖之圖檔");
+						}
+					} else if (!part.getContentType().startsWith("image")) { 
+						errorMsgs.put("recipePicTopErr", "請上傳image類型之圖檔");
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
+					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
+						errorMsgs.put("recipePicTopErr", "請注意檔案尺寸過大");
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							recipePicTopBuffer = (byte[]) req.getSession().getAttribute("recipePicTopBuffer");
+						}
+					} else {
+						InputStream in = part.getInputStream();
+						recipePicTopBuffer = new byte[in.available()];
+						in.read(recipePicTopBuffer);
+						in.close();
+						req.getSession().setAttribute("recipePicTopBuffer", recipePicTopBuffer);
+					}
+				} catch (Exception e) {
+					System.err.println("使用者操作時發生其他例外");
+				}
+
+				// ------------------------食譜料理分類------------------------
+				List<RecipeCuisineCategoryVO> orgRecipeCatVos = (List<RecipeCuisineCategoryVO>)req.getAttribute("recipeCatList");
+				List<RecipeCuisineCategoryVO> recipeCatVOs = new ArrayList<RecipeCuisineCategoryVO>();
+				
+				String recipeCategoryIDStr = req.getParameter("recipeCategoryIDs");
+				if (recipeCategoryIDStr == null || recipeCategoryIDStr.trim().length() == 0) {
+					errorMsgs.put("recipeCategoryIDErr", "請至少選取一個料理分類");
+				} else {
+					String[] recipeCategoryIDs = recipeCategoryIDStr.trim().split(" ");
+					for (String recipeCategoryID : recipeCategoryIDs) {
+						RecipeCuisineCategoryVO recipeCatVO = new RecipeCuisineCategoryVO();
+						recipeCatVO.setCuisineCategoryID(new Integer(recipeCategoryID));
+						recipeCatVOs.add(recipeCatVO);
+					}
+				}
+				
+				// ------------------------食譜食材單位------------------------
+				List<RecipeIngredientUnitVO> recipeIngUnitVOs = new ArrayList<RecipeIngredientUnitVO>();
+				
+				String recipeIngredientIDStr = req.getParameter("recipeIngredientIDs");
+				if (recipeIngredientIDStr == null || recipeIngredientIDStr.trim().length() == 0) {
+					errorMsgs.put("recipeIngredientIDErr", "請至少選取一個食材");
+				} else {
+					String[] recipeIngredientIDs = recipeIngredientIDStr.trim().split(" ");
+					for (String recipeIngredientID : recipeIngredientIDs) {
+						RecipeIngredientUnitVO recipeIngUnitVO = new RecipeIngredientUnitVO();
+						recipeIngUnitVO.setIngredientID(new Integer(recipeIngredientID));
+						recipeIngUnitVOs.add(recipeIngUnitVO);
+					}
+				}
+	
+				String[] recipeUnitIDs = req.getParameterValues("unitIDs");
+				if (recipeIngredientIDStr.trim().length() > 0) {
+					if (recipeUnitIDs == null) {
+						errorMsgs.put("recipeUnitIDErr", "請為您的所有食材選擇單位");
+					} else {
+						for (int index = 0; index < recipeUnitIDs.length; index++) {
+							if (new Integer(recipeUnitIDs[index]) == 0) {
+								errorMsgs.put("recipeUnitIDErr", "請為您的所有食材選擇單位");
+							}
+							RecipeIngredientUnitVO recipeIngUnitVO = recipeIngUnitVOs.get(index);
+							recipeIngUnitVO.setUnitID(new Integer(recipeUnitIDs[index]));
+						}
+					}
+				}
+					
+				String[] recipeUnitAmounts = req.getParameterValues("unitAmounts");
+				if (recipeIngredientIDStr.trim().length() > 0 && recipeUnitIDs != null) {
+					if (recipeUnitAmounts == null || recipeUnitAmounts.length == 0) { 
+						errorMsgs.put("recipeunitAmountErrNull", "請為您的所有食材填寫單位數量");
+					} else {
+						for (int index = 0; index < recipeUnitAmounts.length; index++) {
+							if (recipeUnitAmounts[index].trim().length() == 0) {
+								errorMsgs.put("recipeUnitAmountErrNull", "請為您的所有食材填寫單位數量");
+							}
+
+							String recipeAmoutReg = "^[(0-9)]{1,4}.[(0-9)]{1,2}$";
+							try {
+								double amoutDouble = Double.parseDouble(recipeUnitAmounts[index].trim());
+								if (amoutDouble <= 0) {
+									recipeUnitAmounts[index] = "1";
+									errorMsgs.put("recipeunitAmountErrNumber", "單位數量不可小於0");
+								} else if (!BigDecimal.valueOf(amoutDouble).toString().trim().matches(recipeAmoutReg)) {
+									BigDecimal amoutDCM = BigDecimal.valueOf(amoutDouble);
+									recipeUnitAmounts[index] = amoutDCM.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+									errorMsgs.put("recipeunitAmountErrNumber", "單位數量必須符合個位數4位、小數2位之格式");
+								}
+							} catch (NumberFormatException nfe) {
+								recipeUnitAmounts[index] = "1";
+								errorMsgs.put("recipeunitAmountErrNumber", "請填寫數字");
+							}
+							RecipeIngredientUnitVO recipeIngUnitVO = recipeIngUnitVOs.get(index);
+							recipeIngUnitVO.setUnitAmount(BigDecimal.valueOf(new Double(recipeUnitAmounts[index])));
+						}
+					}
+				}
+				
+				// ------------------------食譜步驟------------------------
+				List<RecipeStepVO> recipeStepVOs = new ArrayList<RecipeStepVO>();
+
+				int recipeStepCount = req.getParameterValues("recipeStepOrders").length;
+				String[] recipeStepOrders = req.getParameterValues("recipeStepOrders");
+				for (String recipeStepOrder : recipeStepOrders) {
+					RecipeStepVO recipeStepVO = new RecipeStepVO();
+					recipeStepVO.setRecipeStepOrder(new Integer(recipeStepOrder));
+					recipeStepVOs.add(recipeStepVO);
+				}
+				
+				String[] recipeStepTexts = req.getParameterValues("recipeStepTexts");
+				for (int index = 0; index < recipeStepTexts.length; index++) {
+					if (recipeStepTexts[index].trim().length() == 0) {
+						errorMsgs.put("recipeStepErr", "請填寫所有食譜步驟之說明");
+					}
+					RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+					recipeStepVO.setRecipeStepText(recipeStepTexts[index]);
+				}
+				
+				Collection<Part> collection = req.getParts();
+				List<Part> parts = new ArrayList<Part>();
+				for (Part part : collection) {
+					if ("recipeStepPic".equals(part.getName())){
+						parts.add(part);
+					}
+				}
+
+				List<RecipeStepVO> orgRecipeStepVOs = (List<RecipeStepVO>)req.getAttribute("recipeStepList");
+				System.out.println(orgRecipeStepVOs);
+//				Map<Integer, byte[]> orgRecipeStepPicBuffers = new LinkedHashMap<Integer, byte[]>();
+//				for (RecipeStepVO recipeStepVO : orgRecipeStepVOs) {
+//					orgRecipeStepPicBuffers.put(new Integer(recipeStepVO.getRecipeStepOrder()), recipeStepVO.getRecipeStepPic());
+//				}
+				String[] oldFileIdentify = req.getParameterValues("oldFileIdentify");
+				if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
+					recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
+					System.out.println("session gets buffers OOOOOOOOOO");
+				} else {
+//					recipeStepPicBuffers = orgRecipeStepPicBuffers;
+//					req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
+					recipeStepPicBuffers = new LinkedHashMap<Integer, byte[]>();
+					System.out.println("session doesn't get buffers XXXXXXXXXX");
+				}
+				for(int index = 0; index < parts.size(); index++) {
+					
+					byte[] recipeStepPicBuffer = null;
+					try {
+						Part part = parts.get(index);
+						if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+							System.out.println("使用者沒有上傳步驟" + (index + 1) + "之圖片");
+							if ("false".equals(oldFileIdentify[index])) {
+								recipeStepPicBuffers.remove(index);
+								errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔");
+							}
+						} else if (!part.getContentType().startsWith("image")) { 
+							errorMsgs.put("recipeStepPicErr", "請上傳image類型之圖檔");
+						} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
+							errorMsgs.put("recipeStepPicErr", "請注意檔案尺寸過大");
+						} else {
+							InputStream in = part.getInputStream();
+							recipeStepPicBuffer = new byte[in.available()];
+							in.read(recipeStepPicBuffer);
+							in.close();
+							System.out.println(index + 1 + ": "+ recipeStepPicBuffer.length);
+							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+							recipeStepVO.setRecipeStepPic(recipeStepPicBuffer);
+							recipeStepPicBuffers.put(index, recipeStepPicBuffer);
+							oldFileIdentify[index] = "true";
+						}
+					} catch (Exception e) {
+						System.err.println("使用者操作時發生其他例外");
+					}
+				}
+				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
+				req.setAttribute("oldFileIdentify", oldFileIdentify);
+				
+				String agreement = req.getParameter("agreement");
+				if (agreement == null || agreement.trim().length() == 0) {
+					errorMsgs.put("agreementErr", "未勾選同意本站之使用規範與協議");
+				} else if ("agree".equals(agreement.trim())) {
+					errorMsgs.put("agreementErr", "未勾選同意本站之使用規範與協議");
+				}
+				
+				RecipeVO recipeVO = new RecipeVO();
+				recipeVO.setRecipeID(recipeID);
+				recipeVO.setRecipeName(recipeName);
+				recipeVO.setRecipeIntroduction(recipeIntroduction);
+				recipeVO.setRecipeServe(recipeServe);
+				if (recipePicTopBuffer != null) recipeVO.setRecipePicTop(recipePicTopBuffer);
+				
+	
+				// Send the use back to the form, if there were errors ==========================
+				if (!errorMsgs.isEmpty()) {
+					req.setAttribute("recipeVO", recipeVO); // 含有輸入格式錯誤的VO物件,也存入req
+					req.setAttribute("recipeCatList", recipeCatVOs);
+					req.setAttribute("recipeIngUnitList", recipeIngUnitVOs);
+					req.setAttribute("recipeStepList", recipeStepVOs);
+					RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+					failureView.forward(req, res);
+					return;
+				}
+								
+//				RecipeService recipeSvc = new RecipeService();
+//				recipeVO = recipeSvc.addRecipeWithDetails(
+//										recipeName, recipeIntroduction, 
+//										recipePicTopBuffer, recipeServe, 
+//										100001, recipeCatVOs, recipeIngUnitVOs, recipeStepVOs);
+//				
+//				if (recipeVO != null) {
+//					req.getSession().removeAttribute("recipePicTopBuffer");
+//					req.getSession().removeAttribute("recipeStepPicBuffers");
+//					RequestDispatcher successView = req.getRequestDispatcher("/Recipe/recipe.jsp?id=" + recipeVO.getRecipeID());
+//					successView.forward(req, res);
+//				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+				failureView.forward(req, res);
+			}
+		}
 		
 		
 	}
