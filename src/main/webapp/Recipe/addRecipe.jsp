@@ -49,10 +49,10 @@
 .loader3{
 	margin:20px auto;
 	font-size:10px;
-  display: inline-block;
-  position: absolute;
-  left: 50%;
-  top: 50%;
+	display: inline-block;
+	position: absolute;
+	left: 50%;
+	top: 50%;
 	transform: translate(-50%, -50%);
 	text-indent:-9999em;
 	border-top:1.1em solid rgba(64,128,128,.2);
@@ -92,15 +92,15 @@
 }
 
 div.temp_loading{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: hsla(0, 0%, 0%, .1);
-  text-align: center;
-  z-index: 2;
-  color: white;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: hsla(0, 0%, 0%, .1);
+	text-align: center;
+	z-index: 2;
+	color: white;
 }
 </style>
 
@@ -123,16 +123,12 @@ div.temp_loading{
 			<%-- breadcrumbs --%>
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a
-						href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a
-						href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
 					<li class="breadcrumb-item active" aria-current="page">新增食譜</li>
 				</ol>
 			</div>
-
-
-
+			
 			<form method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do" enctype="multipart/form-data">
 				<h3>食譜基本資訊</h3>
 
@@ -141,7 +137,7 @@ div.temp_loading{
 					<span class="errorSpan">${errorMsgs.get("recipeNameErr")}</span>
 					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeName()%>">
 				</div>
-
+				
 				<div class="form-group">
 					<label for="recipeCategoryNames">食譜分類：</label>
 					<span class="errorSpan">${errorMsgs.get("recipeCategoryIDErr")}</span>
@@ -158,12 +154,12 @@ div.temp_loading{
 									</li>
 								</c:forEach>
 							</c:if>
+							
 						</ul>
 						<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<%=(recipeCategoryIDs == null) ? "" : recipeCategoryIDs%>">
 					</div>
-
-				</div>
-
+			    </div>
+				
 				<div class="form-group">
 					<label for="recipeIngredientNames">食材標籤與單位：</label>
 					<span class="errorSpan">${errorMsgs.get("recipeIngredientIDErr")}</span>
@@ -208,11 +204,11 @@ div.temp_loading{
 
 				<div class="form-group">
 					<label for="recipeServe">享用人數：</label><span class="errorSpan">${errorMsgs.get("recipeServeErr")}</span>
-						<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeServe()%>"><br>
+					<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="<%=(recipeVO == null) ? "" : recipeVO.getRecipeServe()%>">
 				</div>
 
 				<div class="form-group">
-					<label for="recipePicTop row">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}<span class="errorSpan">
+					<label for="recipePicTop row">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
 						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳圖片</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
@@ -223,8 +219,7 @@ div.temp_loading{
 				<span class="errorSpan" style="margin-left: 10px;">${errorMsgs.get("recipeStepPicErr")}</span>
 				<table class="recipeStepsTable table">
 					<tbody>
-
-						<c:if test="${empty recipeStepVOs}">
+					    <c:if test="${empty recipeStepVOs}">
 							<tr class="form-group recipe row">
 								<td class="col-6 order-1 col-lg-1 order-lg-1">
 									<span class="order">1</span>

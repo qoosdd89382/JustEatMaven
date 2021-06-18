@@ -16,23 +16,22 @@
 		unitArr.push(${unitOne.unitID});
 	</c:forEach>
 	
-<%  if (recipeIngredientIDs != null) {
-		String[] orgList = recipeIngredientIDs.trim().split(" ");
-		for (String one : orgList) {
-%>
-				var tempIng = "<%= one %>";
-				if (tempIng != "") { 
-			        ingredientArr.forEach(function(item, index, array){
-	        		  if (tempIng == array[index].id) {
-	        				array.splice(index, 1);
-	        		  }
-	        		});
+
+
+				var recipeIngredientIDsEle = $('input[name="recipeIngredientIDs"]').val().trim();
+				if (recipeIngredientIDsEle != "") {
+					console.log(recipeIngredientIDsEle);
+					var recipeIngredientIDs = recipeIngredientIDsEle.split(" ");
+					console.log(recipeIngredientIDs);
+					recipeIngredientIDs.forEach(function(itm, ind, arr){
+						ingredientArr.forEach(function(item, index, array){
+				        	if (parseInt(recipeIngredientIDs[ind]) == ingredientArr[index].id) {
+				        		ingredientArr.splice(index, 1);
+				        	}
+				    	});
+				    });
 				}
 				
-<%		}
-	}
-%>
-		
 	
 
 	var bringBackUnits = new Array();
@@ -109,8 +108,8 @@
 	
 	$(".ingAutoOutput").on("click", "svg", function(e) {
 		
-		var selectStr = $(this).parent().attr("data-id");
-		var selectName = $(this).parent().find("div").html();
+		var selectStr = $(this).closest("li.row").attr("data-id");
+		var selectName = $(this).closest("li.row").find("div").html();
 		console.log(selectStr + "," + selectName)
 		
         var tempStr = $(".ingAutoInput").val();
