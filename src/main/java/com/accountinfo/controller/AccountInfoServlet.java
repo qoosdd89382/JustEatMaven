@@ -194,27 +194,27 @@ public class AccountInfoServlet extends HttpServlet {
 				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
 					errorMsgs.put("accountMailError","請輸入會員信箱");
 				}
-				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+				if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
 					errorMsgs.put("accountNicknameError","請輸入會員暱稱");
 				}
 				if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
 					errorMsgs.put("accountPasswordError","請輸入會員密碼");
 				}
 				if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
-					errorMsgs.put("accountError","請輸入名稱");
+					errorMsgs.put("accountNameError","請輸入名稱");
 				}
 				if (accountGenderInput == null || (accountGenderInput.trim()).length() == 0) {
-					errorMsgs.put("accountError","請輸入性別");
+					errorMsgs.put("accountGenderError","請輸入性別");
 				}
 				if (accountBirthInput == null || (accountBirthInput.trim()).length() == 0) {
-					errorMsgs.put("accountError","請輸入生日");
+					errorMsgs.put("accountBirthError","請輸入生日");
 				}
 				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
-					errorMsgs.put("accountError","請輸入電話");
+					errorMsgs.put("accountPhoneError","請輸入電話");
 				}
 				//照片檢查
 				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
-					errorMsgs.put("accountError","請輸入自我介紹");
+					errorMsgs.put("accountTextError","請輸入自我介紹");
 				}
 				
 				

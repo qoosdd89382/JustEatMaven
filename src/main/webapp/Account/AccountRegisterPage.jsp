@@ -29,7 +29,31 @@
 <style>
 div#register_area{
 	margin-top:150px;
+	border:1px solid gray;
+	margin-right:300px;
 }
+
+input#register_submit_btn,
+input#register_reset_btn {
+	margin:5px;
+	border:none;
+	-webkit-border-radius: 20;
+	-moz-border-radius: 20;
+	border-radius: 20px;
+	color: #ffffff;
+	font-size: 15px;
+	background: 	#FF8800;
+	padding: 5px 15px 5px 15px;
+	text-decoration: none;
+
+}
+
+input#register_submit_btn:hover,
+input#register_reset_btn:hover {
+	background:#FFAA33;
+	text-decoration: none;
+}
+
 </style>
 
 </head>
@@ -42,7 +66,7 @@ div#register_area{
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col">
+			<div id="register_area" class="col offset-3">
 			
 				<strong>請輸入您的會員資料</strong>
 				
@@ -66,30 +90,32 @@ div#register_area{
 					
 					<span>請輸入會員性別 :""""還要改"""</span>
 					<input type="radio" name="accountGender" value="1">男
-					<input type="radio" name="accountGender" value="2">女 <br>
+					<input type="radio" name="accountGender" value="2">女 
+					<span style="color:red">${errorMsgs.get("accountGenderError")}</span>
+					<br>
 					
 					<span>請輸入會員生日</span> 
-					<input type="date" name="accountBirth" value="${accountInfoVO.accountBirth}"> <br>
+					<input type="date" name="accountBirth"><span style="color:red">${errorMsgs.get("accountBirthError")}</span><br>
 					
-					<span>請輸入會員電話 (如0912345678):</span> 
-					<input type="text" name="accountPhone" value="${accountInfoVO.accountPhone}"><br> 
+					<span>請輸入會員電話 (如0912345678):</span><br>
+					<input type="text" name="accountPhone"><span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
 					
 					<span>如要進行活動，則需上傳照片</span><br>
 					<span>請輸入會員照片 :照片要用JSP照片要用JSP照片要用JSP</span><br> 
-					<input type="file" name="accountPic" value="${accountInfoVO.accountPic}"><br> 
-					<span>請輸入會員身分證正面:</span>
+					<input type="file" name="accountPic"><br> 
+					<span>請輸入會員身分證正面:</span><br>
 					<input type="file" name="accountIDcardFront"><br> 
-					<span>請輸入會員身分證背面:</span>
+					<span>請輸入會員身分證背面:</span><br>
 					<input type="file" name="accountIDcardBack"><br> 
 					
-					<span>請輸入會員自我介紹:</span>
-					<input type="text" name="accountText" value="${accountInfoVO.accountText}"><br>
+					<span>請輸入會員自我介紹:</span><br>
+					<input type="text" name="accountText"><span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
 					<!-- 			<b>請輸入會員註冊時間</b> -->
 					<!-- 			<input type="text" name="accountPhone"><br> -->
 
 					<input type="hidden" name="action" value="setAccountInfo_For_Register"> 
-					<input type="submit" value="提交送出"> 
-					<input type="reset" value="重置">
+					<input id="register_submit_btn" type="submit" value="提交送出"> 
+					<input id="register_reset_btn" type="reset" value="重置">
 				</form>
 			</div>
 		</div>
