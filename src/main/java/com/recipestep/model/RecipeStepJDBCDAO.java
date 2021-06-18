@@ -24,6 +24,7 @@ public class RecipeStepJDBCDAO implements RecipeStepDAOInterface {
 	private static final String UPDATE = "UPDATE RecipeStep SET recipe_step_text = ?, recipe_step_pic = ? WHERE recipe_step_id = ?";
 	private static final String UPDATE_ORDER = "UPDATE RecipeStep SET recipe_step_order = ? WHERE recipe_step_id = ?";
 	private static final String DELETE = "DELETE FROM RecipeStep WHERE recipe_step_id = ?";
+	private static final String DELETE_BY_PK_ORDER = "DELETE FROM RecipeStep WHERE recipe_id = ? and recipe_step_order = ?";
 	private static final String SELECT_ONE_BY_ID = "SELECT * FROM RecipeStep WHERE recipe_step_id = ?";
 	// 順序必須由指令直接決定
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM RecipeStep WHERE recipe_id = ? ORDER BY recipe_step_order";
@@ -448,6 +449,42 @@ public class RecipeStepJDBCDAO implements RecipeStepDAOInterface {
 //		}
 		
 
+	}
+
+	@Override
+	public void deleteByRecipe(RecipeStepVO recipeStep, Connection con) {
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = con.prepareStatement(DELETE_BY_PK_ORDER);
+
+			pstmt.setInt(1, recipeStep.getRecipeID());
+			pstmt.setInt(2, recipeStep.getRecipeStepOrder());
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			if (con != null) {
+				try {
+					System.err.print("Transaction is being rolled back by RecipeStep.");
+					// don't forget ---------------------------------------------------
+					con.rollback();
+				} catch (SQLException excep) {
+					throw new RuntimeException("rollback error occured. "
+							+ excep.getMessage());
+				}
+			}
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+		}
 	}
 
 }

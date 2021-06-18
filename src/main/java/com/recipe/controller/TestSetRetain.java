@@ -48,8 +48,10 @@ public class TestSetRetain {
 		list1.add(vo5);
 		
 		list1 = new ArrayList<RecipeCuisineCategoryVO>(new HashSet<RecipeCuisineCategoryVO>(list1));
-		System.out.println(list1);
-
+		for(RecipeCuisineCategoryVO one : list1) {
+			System.out.println(one.getCuisineCategoryID());
+		}
+		
 	}
 
 }

@@ -774,5 +774,99 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 		return topPicIn;
 	}
 
+	@Override
+	public void updateWithDetails(RecipeVO recipe,
+									List<RecipeCuisineCategoryVO> delCatList, List<RecipeCuisineCategoryVO> addCatList, 
+									List<RecipeIngredientUnitVO> delIngUnitList, List<RecipeIngredientUnitVO> addIngUnitList, 
+									List<RecipeStepVO> delStepList, List<RecipeStepVO> addStepList) {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			
+    		// before ---------------------------------------------------
+    		con.setAutoCommit(false);
+    		
+    		// step 1 ---------------------------------------------------
+			pstmt = con.prepareStatement(UPDATE);
+			pstmt.setString(1, recipe.getRecipeName());
+			pstmt.setString(2, recipe.getRecipeIntroduction());
+			pstmt.setBytes(3, recipe.getRecipePicTop());
+			pstmt.setInt(4, recipe.getRecipeServe());
+			pstmt.setInt(5, recipe.getRecipeID());
+
+			pstmt.executeUpdate();
+
+			// step 2 ---------------------------------------------------
+			
+				// (1) RecipeCuisineCategoryVO delete
+			RecipeCuisineCategoryJDBCDAO catDao = new RecipeCuisineCategoryJDBCDAO();
+			for (RecipeCuisineCategoryVO cat : delCatList) {
+				catDao.deleteByRecipe(cat, con);
+			}
+			
+				// (2) RecipeCuisineCategoryVO insert
+			for (RecipeCuisineCategoryVO cat : addCatList) {
+				catDao.insertByRecipe(cat, con);
+			}
+
+				// (3) RecipeIngredientUnitVO delete
+			RecipeIngredientUnitJDBCDAO ingUnitDao = new RecipeIngredientUnitJDBCDAO();
+			for (RecipeIngredientUnitVO ingUnit : delIngUnitList) {
+				ingUnitDao.deleteByRecipe(ingUnit, con);
+			}
+				// (4) RecipeIngredientUnitVO insert
+			for (RecipeIngredientUnitVO ingUnit : addIngUnitList) {
+				ingUnitDao.insertByRecipe(ingUnit, con);
+			}
+
+				// (5) RecipeStepVO delete
+			RecipeStepJDBCDAO stepDao = new RecipeStepJDBCDAO();
+			for (RecipeStepVO step : delStepList) {
+				stepDao.deleteByRecipe(step, con);
+			}
+			
+				// (6) RecipeStepVO insert
+			for (RecipeStepVO step : addStepList) {
+				stepDao.insertByRecipe(step, con);
+			}
+			
+			// after ---------------------------------------------------
+			con.commit();
+			con.setAutoCommit(true);
+			
+		} catch (SQLException se) {		// Handle any SQL errors
+			if (con != null) {
+				try {
+					System.err.print("Transaction is being rolled back by Recipe.");
+					// don't forget ---------------------------------------------------
+					con.rollback();
+				} catch (SQLException excep) {
+					throw new RuntimeException("rollback error occured. "
+							+ excep.getMessage());
+				}
+			}
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {		// Clean up JDBC resources
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+	}
+
 
 }
