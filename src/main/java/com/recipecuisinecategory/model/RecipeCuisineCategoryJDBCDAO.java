@@ -68,6 +68,7 @@ public class RecipeCuisineCategoryJDBCDAO implements RecipeCuisineCategoryDAOInt
 			}
 			return insertRow;
 	}
+	
 	@Override
 	public int insert(RecipeCuisineCategoryVO recipeCuisineCategory) {
 //	public int insert(int recipeID, int cuisineCategoryID) {
@@ -369,11 +370,11 @@ public class RecipeCuisineCategoryJDBCDAO implements RecipeCuisineCategoryDAOInt
 //			System.out.println("刪除成功!");
 //		}
 
-//		// 測試 get all by recipe 成功
-//		all = dao.getAllByRecipe(200002);
-//		for (RecipeCuisineCategoryVO one : all) {
-//			System.out.println("食譜編號：" + one.getRecipeID() + "\n料理分類編號：" + one.getCuisineCategoryID() + "\n==================");
-//		}
+		// 測試 get all by recipe 成功
+		all = dao.getAllByRecipe(200007);
+		for (RecipeCuisineCategoryVO one : all) {
+			System.out.println("食譜編號：" + one.getRecipeID() + "\n料理分類編號：" + one.getCuisineCategoryID() + "\n==================");
+		}
 //		
 //		// 測試 get all by cuisine category 成功
 //		all = dao.getAllByCuisineCategory(250001);
@@ -381,12 +382,49 @@ public class RecipeCuisineCategoryJDBCDAO implements RecipeCuisineCategoryDAOInt
 //			System.out.println("料理分類編號：" + one.getCuisineCategoryID() + "\n食譜編號：" + one.getRecipeID() + "\n==================");
 //		}
 		
-		// 測試 isExist 成功
-		vo.setRecipeID(200001);
-		vo.setCuisineCategoryID(250001);
-		System.out.println(dao.isExist(vo));
+//		// 測試 isExist 成功
+//		vo.setRecipeID(200001);
+//		vo.setCuisineCategoryID(250001);
+//		System.out.println(dao.isExist(vo));
 		
 		
+	}
+	@Override
+	public int deleteByRecipe(RecipeCuisineCategoryVO recipeCuisineCategory, Connection con) {
+		PreparedStatement pstmt = null;
+		int deleteRow = 0;
+
+		try {
+			pstmt = con.prepareStatement(DELETE);
+
+			pstmt.setInt(1, recipeCuisineCategory.getRecipeID());
+			pstmt.setInt(2, recipeCuisineCategory.getCuisineCategoryID());
+
+			deleteRow = pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			if (con != null) {
+				try {
+					System.err.print("Transaction is being rolled back by RecipeCuisineCategory.");
+					// don't forget ---------------------------------------------------
+					con.rollback();
+				} catch (SQLException excep) {
+					throw new RuntimeException("rollback error occured. "
+							+ excep.getMessage());
+				}
+			}
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+		}
+		return deleteRow;
 	}
 
 }

@@ -26,8 +26,10 @@ public class RecipeIngredientUnitJDBCDAO implements RecipeIngredientUnitDAOInter
 	}
 
 	private static final String INSERT = "INSERT INTO RecipeIngredientUnit(recipe_id, ingredient_id, unit_id, unit_amount) VALUES(?, ?, ?, ?)";
-	private static final String UPDATE = "UPDATE RecipeIngredientUnit SET recipe_id = ?, ingredient_id = ?, unit_id = ?, unit_amount = ? WHERE recipeIngredientUnit_id = ?";
+//	private static final String UPDATE = "UPDATE RecipeIngredientUnit SET recipe_id = ?, ingredient_id = ?, unit_id = ?, unit_amount = ? WHERE recipeIngredientUnit_id = ?";
+	private static final String UPDATE = "UPDATE RecipeIngredientUnit SET unit_id = ?, unit_amount = ? WHERE recipe_id = ? and ingredient_id = ?";
 	private static final String DELETE = "DELETE FROM RecipeIngredientUnit WHERE recipeIngredientUnit_id = ?";
+	private static final String DELETE_BY_FK = "DELETE FROM RecipeIngredientUnit WHERE recipe_id and ingredient_id = ?";
 	private static final String SELECT_ONE_BY_ID = "SELECT * FROM RecipeIngredientUnit WHERE recipeIngredientUnit_id = ?";
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM RecipeIngredientUnit WHERE recipe_id = ?";
 	private static final String SELECT_ALL_BY_INGREDIENT = "SELECT * FROM RecipeIngredientUnit WHERE ingredient_id = ?";
@@ -143,11 +145,11 @@ public class RecipeIngredientUnitJDBCDAO implements RecipeIngredientUnitDAOInter
 			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(UPDATE);
 
-			pstmt.setInt(1, recipeIngredientUnit.getRecipeID());
-			pstmt.setInt(2, recipeIngredientUnit.getIngredientID());
-			pstmt.setInt(3, recipeIngredientUnit.getUnitID());
-			pstmt.setBigDecimal(4, recipeIngredientUnit.getUnitAmount()); // 在外面包裝之前要先處理成BigDecimal
-			pstmt.setInt(5, recipeIngredientUnit.getRecipeIngredientUnitID());
+			pstmt.setInt(1, recipeIngredientUnit.getUnitID());
+			pstmt.setBigDecimal(2, recipeIngredientUnit.getUnitAmount()); // 在外面包裝之前要先處理成BigDecimal
+			pstmt.setInt(3,  recipeIngredientUnit.getRecipeID());
+			pstmt.setInt(4, recipeIngredientUnit.getIngredientID());
+//			pstmt.setInt(5, recipeIngredientUnit.getRecipeIngredientUnitID());
 			updateRow = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -405,6 +407,83 @@ public class RecipeIngredientUnitJDBCDAO implements RecipeIngredientUnitDAOInter
 
 		}
 		return allRecipeIngredientUnit;
+	}
+
+	@Override
+	public int delete(RecipeIngredientUnitVO recipeIngredientUnit) {
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int deleteRow = 0;
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(DELETE_BY_FK);
+
+			pstmt.setInt(1, recipeIngredientUnit.getRecipeID());
+			pstmt.setInt(2, recipeIngredientUnit.getIngredientID());
+
+			deleteRow = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return deleteRow;
+	}
+
+	@Override
+	public int deleteByRecipe(RecipeIngredientUnitVO recipeIngredientUnit, Connection con) {
+		PreparedStatement pstmt = null;
+		int deleteRow = 0;
+
+		try {
+			pstmt = con.prepareStatement(DELETE);
+
+			pstmt.setInt(1, recipeIngredientUnit.getRecipeID());
+			pstmt.setInt(2, recipeIngredientUnit.getIngredientID());
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			if (con != null) {
+				try {
+					System.err.print("Transaction is being rolled back by RecipeIngredientUnit.");
+					// don't forget ---------------------------------------------------
+					con.rollback();
+				} catch (SQLException excep) {
+					throw new RuntimeException("rollback error occured. "
+							+ excep.getMessage());
+				}
+			}
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+		}
+		return deleteRow;
 	}
 
 }

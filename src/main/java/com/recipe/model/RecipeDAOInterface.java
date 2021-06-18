@@ -15,6 +15,9 @@ public interface RecipeDAOInterface {
 	public int insertWithDetails(RecipeVO recipe, List<RecipeCuisineCategoryVO> catList,
 												  List<RecipeIngredientUnitVO> ingUnitList,
 												  List<RecipeStepVO> stepList);
+	public void updateWithDetails(RecipeVO recipe, List<RecipeCuisineCategoryVO> delCatList, List<RecipeCuisineCategoryVO> addCatList, 
+												   List<RecipeIngredientUnitVO> delIngUnitList, List<RecipeIngredientUnitVO> addIngUnitList,
+											       List<RecipeStepVO> delStepList, List<RecipeStepVO> addStepList);
 	
 	public int delete(int recipeID);
 	public int delete(int[] recipeIDs);			// 後臺用
