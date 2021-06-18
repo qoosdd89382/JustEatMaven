@@ -1,7 +1,3 @@
-<!-- 
-//郭建巖
-//待修: 
--->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
@@ -24,9 +20,19 @@
 </head>
 
 <style>
-div#login {
-	margin: 200px;
+div#main_area{
+	margin-top:150px;
+}
+div#intro_area{
+
+}
+div#login_area {
+	background-color:white;
 	list-style: none;
+	border:1px solid gray;
+}
+strong#login_area_title{
+	font-size:30px;
 }
 
 input#account_login_btn,
@@ -60,10 +66,6 @@ input#account_register_info {
 	text-decoration: underline;
 }
 
-form div p{
-margin-bottom:0px;
-}
-
 </style>
 
 <body>
@@ -73,27 +75,39 @@ margin-bottom:0px;
 	</header>
 	
 	<div class="container">
-		<div class="row">
-			<div id="login" class="col-12">
-				
-				<b>您好，歡迎登入</b>
-				<p>借我標記一下session(EL)=>${accountMail}</p>
-				<form method="post" action="accountInfo.do" name="LoginInfo">
-					<div><b>請輸入會員信箱 (如JerryMouse@gmail.com):</b><p style="color:red">${errorMsgs.get("accountMailError")}</p></div>
-					<input type="text" name="accountMail"> <br>
-					<div><b>請輸入會員密碼 (如1q2w3e4r5t):(記得改TYPE))</b><p style="color:red">${errorMsgs.get("accountPasswordError")}</p></div>
-					<input type="text" name="accountPassword"><br>
+
 		
-				    <%--點選圖片可進行驗證碼重新整理--%>
-				    <div><b>請輸入驗證碼 (點擊圖片可刷新):</b><p style="color:red">${errorMsgs.get("randomNumberError")}</p></div>
-				    <input type="text" name="RandomNumberInput"><br>
-				    
-				    <img name="imgValidate" src = "RandomNumber.jsp" onclick="refresh()"><br>
-		    
-					<input type="hidden" name="action" value="getAccountInfo_For_Login">
-					<input id="account_login_btn" type="submit" value="登入">
-					<input id="account_reset_btn" type="reset" value="重置">
-				</form>
+		<div id="main_area"class="row">
+			<div id="intro_area" class="col col-sm-8">
+				<img src="images/loginTest.jpg" width="730" height="435" border="0">
+
+			</div>
+
+			<div id="login_area" class="col col-sm-4">
+			
+				<strong id="login_area_title">您好，歡迎登入</strong>
+				
+				<div id="login_area_input"></div>
+				
+					<form method="post" action="accountInfo.do" name="LoginInfo">
+						<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br>
+						<input id="account_mail_input" type="text" name="accountMail">
+						<span style="color:red">${errorMsgs.get("accountMailError")}</span><br>
+						
+						<span>請輸入會員密碼 (如1q2w3e4r5t):</span><br>
+						<input id="account_password_input" type="text" name="accountPassword">
+						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
+			
+					    <span>請輸入驗證碼 (點擊圖片可刷新):</span><br>
+					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput">
+					    <span style="color:red">${errorMsgs.get("randomNumberError")}</span><br>
+					    
+					    <img id="login_area_randomnumber_pic" name="imgValidate" src="RandomNumber.jsp" onclick="refresh()"><br>
+			    
+						<input type="hidden" name="action" value="getAccountInfo_For_Login">
+						<input id="account_login_btn" type="submit" value="登入">
+						<input id="account_reset_btn" type="reset" value="重置">
+					</form>
 				
 <!-- 					<form method="post" action="accountInfo.do"> -->
 <!-- 						<input type="hidden" name="action" value="getAccountInfo_For_Login"> -->
@@ -101,7 +115,7 @@ margin-bottom:0px;
 <!-- 						<p>連結到寄送信箱頁面(還沒做)</p> -->
 <!-- 					</form> -->
 				
-				<h3><a id="account_forget_code" href='#'>忘記密碼了嗎?</a></h3>
+				<h3><a id="account_forget_code" href='#'>忘記密碼了嗎?(X)</a></h3>
 				
 <!-- 					<form method="post" action="accountInfo.do"> -->
 <!-- 						<input type="hidden" name="action" value="gotoAccountInfo_For_Register"> -->
@@ -117,25 +131,34 @@ margin-bottom:0px;
 		</div>
 	</div>
 	
+	<p>備忘區</p>
+	<p>借我標記一下session(EL)=>${accountMail}</p>
+	<p>記得改type password</p>
+	<p>重新整理帶入資料</p>
+	<p>切到這個頁面檢查登入狀態直接到會員中心</p>
+	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	
 	<script type="text/javascript">
-	//頁面載入執行
+	//互動區
+	$("#login_area_randomnumber_pic").on("click",function(){
+		LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
+	})
+
+	//功能區
+		//頁面載入執行
 // 		function window.onload(){
 // 			if(window.sessionStorage){
 // 				var 
 // 			}
-		
 // 		}
 	
-	//驗證碼點擊更新
+		//驗證碼圖片更新
 	    function refresh() {
 	    	LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
 	    }
-	
-	
 	</script>
 	
 	<%-- body 結束標籤之前，載入Bootstrap 的 JS 及其相依性安裝(jQuery、Popper) --%>
@@ -148,5 +171,6 @@ margin-bottom:0px;
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/js/index.js"></script>
+	
 </body>
 </html>

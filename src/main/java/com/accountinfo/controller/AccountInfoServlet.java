@@ -169,13 +169,69 @@ public class AccountInfoServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
-//在AccountLoginPage.jsp收到加入會員的請求
+//在AccountRegisterPage.jsp收到加入會員的請求
 		if ("setAccountInfo_For_Register".equals(action)) {
-			//轉到輸入會員資料的頁面
-			String url = "/Account/AccountRegisterPage.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);
-			successView.forward(req, res);
+			
+			//儲存註冊錯誤的訊息
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				//接收頁面使用者輸入的參數
+				String accountMailInput = req.getParameter("accountMail");
+				String accountNicknameInput = req.getParameter("accountNickname");
+				String accountPasswordInput = req.getParameter("accountPassword");
+				String accountNameInput = req.getParameter("accountName");
+				String accountGenderInput = req.getParameter("accountGender");
+				String accountBirthInput = req.getParameter("accountBirth");
+				String accountPhoneInput = req.getParameter("accountPhone");
+				String accountPicInput = req.getParameter("accountPic");
+				String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
+				String accountIDcardBackInput = req.getParameter("accountIDcardBack");
+				String accountTextInput = req.getParameter("accountText");
+				
+				//檢查各項輸入
+				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+					errorMsgs.put("accountMailError","請輸入會員信箱");
+				}
+				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+					errorMsgs.put("accountNicknameError","請輸入會員暱稱");
+				}
+				if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
+					errorMsgs.put("accountPasswordError","請輸入會員密碼");
+				}
+				if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
+					errorMsgs.put("accountError","請輸入名稱");
+				}
+				if (accountGenderInput == null || (accountGenderInput.trim()).length() == 0) {
+					errorMsgs.put("accountError","請輸入性別");
+				}
+				if (accountBirthInput == null || (accountBirthInput.trim()).length() == 0) {
+					errorMsgs.put("accountError","請輸入生日");
+				}
+				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
+					errorMsgs.put("accountError","請輸入電話");
+				}
+				//照片檢查
+				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
+					errorMsgs.put("accountError","請輸入自我介紹");
+				}
+				
+				
+				//註冊成功就可以到登入畫面登入看自己的資料
+				String url = "/Account/AccountInfoPage.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+				
+			}catch(Exception e) {
+				errorMsgs.put("UnexceptionError","無法取得資料");
+				RequestDispatcher failureView = req
+						.getRequestDispatcher("/Account/AccountRegisterPage.jsp");
+				failureView.forward(req, res);
+			}
 		}
+		
+		
 //在AccountInfoPage.jsp收到"修改會員資料"的請求
 		if("Account_Change_Info".equals(action)) {
 			HttpSession session = req.getSession();

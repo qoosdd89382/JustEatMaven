@@ -65,6 +65,18 @@ margin-top:100px;
 						<li><a href='#'>我的收藏</a></li>
 						<li><a href='#'>我的訂單</a></li>
 						<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
+					<li>
+						<form method="post" action="notice.do">
+							<input type="hidden" name="action" value="getAccount_Notice">
+							<input type="submit" value="查看我的通知">
+						</form>
+					</li>
+					<li>
+						<form method="post" action="announce.do">
+							<input type="hidden" name="action" value="getAccount_Announce">
+							<input type="submit" value="查看我的公告">
+						</form>
+					</li>	
 					</ul>
 			</div>
 			<div class="col">
