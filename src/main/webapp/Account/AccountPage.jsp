@@ -68,6 +68,7 @@ font-size:20px;
 
 	<ul>
 		<li><h3><a id="AccountLogin" href='AccountLoginPage.jsp'>會員登入</a></h3><br></li>
+		<li><h3><a id="AccountLogin" href='/justeat-maven/index.jsp'>首頁</a></h3><br></li>
 
 		<p>=============</p>
 		<h3>會員資料管理:</h3>
@@ -101,7 +102,7 @@ font-size:20px;
 		<li>
 			<FORM METHOD="post" ACTION="accountInfo.do">
 				<b>選擇會員姓名:</b> <select size="1" name="accountID">
-					<c:forEach var="empVO" items="${accountInfoSvc.all}">
+					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
 						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
 					</c:forEach>
 				</select>
@@ -118,6 +119,9 @@ font-size:20px;
 	
 	<p>=============</p>
 	<h3><p>=====各頁面施工進度=====</p></h3>
+	<p>===緊急開發中===</p>
+	。COOKIE驗證<br>
+	。註冊驗證功能(圖片預覽)<br>
 	<p>===會員功能===</p>
 	<p>
 	OK。基本登入功能:檢測帳號密碼驗證碼<br>
@@ -134,11 +138,11 @@ font-size:20px;
 	。刪除好友功能<br>
 	。好友搜尋<br>
 	<p>===公告功能===</p>
-	。查詢公告<br>
+	OK。查詢公告<br>
 	<p>===通知功能===</p>
-	。查看通知<br>
+	OK。查看通知<br>
 	<p>===瀏覽紀錄功能===</p>	
-	。查看瀏覽紀錄<br>
+	。查看瀏覽紀錄放在COOKIE，並給後台紀錄<br>
 	
 	</div>
 	

@@ -29,6 +29,9 @@ public class AnnounceJDBCDAO implements AnnounceDAOInterface{
 	private static final String Select_All_Stmt = 
 			"Select * From JustEat.Announce";
 	
+	private static final String Select_Announce = 
+			"Select * From JustEat.Announce";
+	
 	static {
 		try {
 			Class.forName(driver);
@@ -252,6 +255,60 @@ public class AnnounceJDBCDAO implements AnnounceDAOInterface{
 		}
 		return list;
 	}
+	
+	@Override
+	public List<AnnounceVO> getAnnounce() {
+		List<AnnounceVO> list = new ArrayList<AnnounceVO>();
+		AnnounceVO announceVO = null;
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Announce);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				announceVO = new AnnounceVO();
+
+				announceVO.setAnnounceText(rs.getString("announce_text"));
+				announceVO.setAnnounceTime(rs.getTimestamp("announce_time"));
+				list.add(announceVO);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return list;
+	}
+	
+	
+	
+	
 	public static void main(String[] args) {
 		String date = "2021-02-03 14:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

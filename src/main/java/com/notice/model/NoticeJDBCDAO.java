@@ -31,6 +31,14 @@ public class NoticeJDBCDAO implements NoticeDAOInterface {
 	private static final String Select_All_Stmt = 
 			"Select * From JustEat.Notice";
 	
+	//透過session裡面的accountmail找他相關的通知
+	private static final String Select_Account_Notice_By_AccountMail = 
+			"select * From JustEat.Notice where "
+			+ "account_id in (Select account_id From JustEat.AccountInfo Where "
+			+ "account_mail=?)";
+
+	
+	
 	static {
 		try {
 			Class.forName(driver);
@@ -225,6 +233,7 @@ public class NoticeJDBCDAO implements NoticeDAOInterface {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
+		
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, userid, password);
@@ -268,6 +277,63 @@ public class NoticeJDBCDAO implements NoticeDAOInterface {
 		}
 		return list;
 	}
+	//查看通知內容
+	public List<NoticeVO> getAccountNoticeByAccountMail(String accountMail){
+		List<NoticeVO> list = new ArrayList<NoticeVO>();
+		NoticeVO noticeVO = null;
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_Notice_By_AccountMail);
+			pstmt.setString(1,accountMail);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				noticeVO = new NoticeVO();
+//				noticeVO.setNoticeID(rs.getInt("notice_id"));
+//				noticeVO.setAccountID(rs.getInt("account_id"));
+				noticeVO.setNoticeType(rs.getInt("notice_type"));
+				noticeVO.setNoticeText(rs.getString("notice_text"));
+				noticeVO.setNoticeTime(rs.getTimestamp("notice_time"));
+//				noticeVO.setNoticeState(rs.getInt("notice_state"));
+				list.add(noticeVO);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return list;
+	}
+	
+	
+	
+	
+	
 	public static void main(String[] args) {
 		String date = "2021-02-03 14:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

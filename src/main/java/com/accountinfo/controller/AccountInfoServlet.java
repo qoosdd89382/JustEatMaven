@@ -1,8 +1,10 @@
 package com.accountinfo.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,12 +36,13 @@ public class AccountInfoServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
 		
-//<--會員登入處理-->
+//<--會員登入處理-->來自AccountLoginPage的登入請求
 		if ("getAccountInfo_For_Login".equals(action)) {
 			//已取得回傳之accountMail、accountPassword資料
 			
-			//儲存錯誤訊息
-			List<String> errorMsgs = new LinkedList<String>();
+			//利用map儲存錯誤訊,用put將錯誤資料塞到值，之後到jsp就可以取出鍵顯示值，可以在顯示位置更彈性
+			//用list有順序性，在顯示錯誤使用上不彈性
+			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 			
 			try {
@@ -48,16 +51,16 @@ public class AccountInfoServlet extends HttpServlet {
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountRandomNumberInput = req.getParameter("RandomNumberInput");
 				
-				//檢查會員信箱跟會員密碼，還有驗證碼是否無輸入
+				//檢查會員信箱跟會員密碼，還有驗證碼是否輸入
 				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
-					errorMsgs.add("請輸入會員信箱");
+					errorMsgs.put("accountMailError","請輸入會員信箱");
 				}
 				if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
-					errorMsgs.add("請輸入會員密碼");
+					errorMsgs.put("accountPasswordError","請輸入會員密碼");
 				}
 				if (accountRandomNumberInput == null || (accountRandomNumberInput.trim()).length() == 0) 
 				{
-					errorMsgs.add("請輸入驗證碼");
+					errorMsgs.put("randomNumberError","請輸入驗證碼");
 				}
 				
 				//有錯誤就返回總表，顯示錯誤訊息
@@ -88,14 +91,14 @@ public class AccountInfoServlet extends HttpServlet {
 						accountMail = new String(accountMailInput);
 					}
 				} catch (Exception e) {
-					errorMsgs.add("會員信箱格式錯誤");
+					errorMsgs.put("accountMailError","會員信箱格式錯誤");
 				}
 				try {
 					if (accountPasswordMatcher.matches()) {
 						accountPassword = new String(accountPasswordInput);
 					}
 				} catch (Exception e) {
-					errorMsgs.add("會員密碼格式錯誤");
+					errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
 				}
 				
 //驗證碼放在SESSION
@@ -105,7 +108,7 @@ public class AccountInfoServlet extends HttpServlet {
 
 				//如果驗證碼輸入錯誤就給錯誤訊息
 				if(!accountRandomNumberInput.equals(CorrectNumber)) {
-					errorMsgs.add("驗證碼可能輸入錯誤");
+					errorMsgs.put("randomNumberError","驗證碼可能輸入錯誤");
 				}
 
 				// 有錯誤就返回總表，顯示錯誤訊息
@@ -124,7 +127,7 @@ public class AccountInfoServlet extends HttpServlet {
 				AccountInfoService accountInfoSvc = new AccountInfoService();
 				//資料庫找不到該會員
 				if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
-					errorMsgs.add("查無此會員資料");
+					errorMsgs.put("accountMailError","查無此會員資料");
 				} 
 				
 				// 有錯誤就返回總表，顯示錯誤訊息
@@ -137,7 +140,7 @@ public class AccountInfoServlet extends HttpServlet {
 
 				//資料庫有該會員，但輸入密碼跟資料庫不符合
 				if(!((accountInfoSvc.getAccountPassword(accountMailInput)).getAccountPassword()).equals(accountPassword)) {
-					errorMsgs.add("密碼輸入錯誤");
+					errorMsgs.put("accountPasswordError","密碼輸入錯誤");
 				}
 				
 				// 有錯誤就返回總表，顯示錯誤訊息
@@ -160,19 +163,75 @@ public class AccountInfoServlet extends HttpServlet {
 				
 			//其他例外
 			}catch(Exception e) {
-				errorMsgs.add("無法取得資料:" + e.getMessage());
+				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
 						.getRequestDispatcher("/Account/AccountPage.jsp");
 				failureView.forward(req, res);
 			}
 		}
-//在AccountLoginPage.jsp收到加入會員的請求
+//在AccountRegisterPage.jsp收到加入會員的請求
 		if ("setAccountInfo_For_Register".equals(action)) {
-			//轉到輸入會員資料的頁面
-			String url = "/Account/AccountRegisterPage.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);
-			successView.forward(req, res);
+			
+			//儲存註冊錯誤的訊息
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				//接收頁面使用者輸入的參數
+				String accountMailInput = req.getParameter("accountMail");
+				String accountNicknameInput = req.getParameter("accountNickname");
+				String accountPasswordInput = req.getParameter("accountPassword");
+				String accountNameInput = req.getParameter("accountName");
+				String accountGenderInput = req.getParameter("accountGender");
+				String accountBirthInput = req.getParameter("accountBirth");
+				String accountPhoneInput = req.getParameter("accountPhone");
+				String accountPicInput = req.getParameter("accountPic");
+				String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
+				String accountIDcardBackInput = req.getParameter("accountIDcardBack");
+				String accountTextInput = req.getParameter("accountText");
+				
+				//檢查各項輸入
+				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+					errorMsgs.put("accountMailError","請輸入會員信箱");
+				}
+				if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
+					errorMsgs.put("accountNicknameError","請輸入會員暱稱");
+				}
+				if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
+					errorMsgs.put("accountPasswordError","請輸入會員密碼");
+				}
+				if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
+					errorMsgs.put("accountNameError","請輸入名稱");
+				}
+				if (accountGenderInput == null || (accountGenderInput.trim()).length() == 0) {
+					errorMsgs.put("accountGenderError","請輸入性別");
+				}
+				if (accountBirthInput == null || (accountBirthInput.trim()).length() == 0) {
+					errorMsgs.put("accountBirthError","請輸入生日");
+				}
+				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
+					errorMsgs.put("accountPhoneError","請輸入電話");
+				}
+				//照片檢查
+				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
+					errorMsgs.put("accountTextError","請輸入自我介紹");
+				}
+				
+				
+				//註冊成功就可以到登入畫面登入看自己的資料
+				String url = "/Account/AccountInfoPage.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+				
+			}catch(Exception e) {
+				errorMsgs.put("UnexceptionError","無法取得資料");
+				RequestDispatcher failureView = req
+						.getRequestDispatcher("/Account/AccountRegisterPage.jsp");
+				failureView.forward(req, res);
+			}
 		}
+		
+		
 //在AccountInfoPage.jsp收到"修改會員資料"的請求
 		if("Account_Change_Info".equals(action)) {
 			HttpSession session = req.getSession();
