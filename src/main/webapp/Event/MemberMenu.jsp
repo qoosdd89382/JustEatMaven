@@ -23,11 +23,14 @@
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
 			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
-			<li class="breadcrumb-item active" aria-current="page">活動詳情</li>
+			<li class="breadcrumb-item"><a href=" # ">活動詳情</a></li>
+			<li class="breadcrumb-item active" aria-current="page">成員菜單</li>
 		</ol>
 	</nav>
 	<form action="<%=request.getContextPath()%>/Event/EventInfo.do" method="POST" id="formID">
-		
+		<div>
+			<ul></ul>
+		</div>
     </form>
     <footer>
 		<%@ include file="/common/footer.jsp"%>
