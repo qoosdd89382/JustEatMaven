@@ -7,18 +7,21 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.*"%>
 <%@ page import="com.eventmember.model.*"%>
+<%@ page import="com.accountinfo.model.*"%>
 <%
 	EventMemberService eventMemberSvc = new EventMemberService();
-	List<EventMemberVO> list = eventMemberSvc.getAllByEventID();
+	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300001);
 	pageContext.setAttribute("list", list);
 %>
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>活動列表</title>
+<title>成員列表</title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/EventMember/css/style.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
@@ -39,38 +42,35 @@
 			<li class="breadcrumb-item active" aria-current="page">成員列表</li>
 		</ol>
 	</nav>
+	
+<%-- 錯誤表列 --%>
+
+	
 	<table> 
-  <tr> 
-   <th>帳號</th> 
-   <th>性別</th>
-   <th>平均星數</th>
-    <th>總活動次數</th>
-    <th>出席次數</th>
-    <th>狀態</th>
-    <th>社交</th>
-  </tr> 
-  </tr>
- 
-  <tr> 
-  <td>${EventMemberVO.accountID}</td> 
-   <td>${AccountInfoVO.accountGender}</td>
-   <td>2</td> 
-   <td>4</td> 
-   <td>2</td> 
-   <td>參與中</td> 
-<td button type="button">加入好友<button/td>
-  </tr> 
-  <tr> 
-  <td>${EventMemberVO.accountID}</td> 
-  <td>${AccountInfoVO.accountGender}</td> 
-  <td>3</td> 
-  <td>5</td> 
-  <td>3</td> 
-  <td>參與中</td> 
-<td button type="button">加入好友<button/td>
-  </tr> 
-</table>
-		
+	<tr> 
+		<th>帳號</th> 
+		<th>性別</th>
+		<th>平均星數</th>
+		<th>總活動次數</th>
+		<th>出席次數</th>
+		<th>狀態</th>
+		<th>社交</th>
+	</tr>
+		<c:forEach var="eventMemberVO" items="${list}" >
+			<tr> 
+				<td>${eventMemberVO.accountID}</td> 
+				<td>
+					<c:if test="${accountSvc.getAccountID(eventMemberVO.accountID).accountGender == 1}">男</c:if>
+					<c:if test="${accountSvc.getAccountID(eventMemberVO.accountID).accountGender == 2}">女</c:if>
+				</td>
+				
+					<td>${evaluatedMemberVO.giveScore}</td> 
+					
+				
+			</tr> 
+		</c:forEach>
+	</table>
+	
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
