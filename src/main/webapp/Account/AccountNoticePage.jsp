@@ -4,12 +4,12 @@
 
 <%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.friendship.model.*"%>
+<%@ page import="com.notice.model.*"%>
 
 <%
-FriendshipService friendshipSvc = new FriendshipService();
+NoticeService noticeSvc = new NoticeService();
 String accountMail = (String) session.getAttribute("accountMail");
-List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountMail(accountMail);
+List<NoticeVO> noticeVO =  noticeSvc.getAccountNoticeByAccountMail(accountMail);
 %>
 
 <!DOCTYPE html>
@@ -28,7 +28,7 @@ List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountMail(
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>AccountFriendPage</title>
+<title>AccountNoticePage</title>
 <style>
 div.container{
 margin-top:100px;
@@ -65,7 +65,7 @@ margin-top:100px;
 						<li><a href='#'>我的收藏</a></li>
 						<li><a href='#'>我的訂單</a></li>
 						<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
-					<li>
+						<li>
 						<form method="post" action="notice.do">
 							<input type="hidden" name="action" value="getAccount_Notice">
 							<input type="submit" value="查看我的通知">
@@ -80,13 +80,19 @@ margin-top:100px;
 					</ul>
 			</div>
 			<div class="col">
-				<p>我是好友頁面</p>
+				<p>我是通知頁面</p>
 				<p>借我標記一下session=>${accountMail}</p>	
-				<p>我是你的好友集合${friendshipVO}</p>
-				<p>以下是你的好友</p>
+				<p>我是你的通知集合${noticeVO}</p>
+				<p>以下是你的通知</p>
 
-				<c:forEach var="accountInfoVO" items="${friendshipVO}">
-					<div>${accountInfoVO.accountNickname}</div>
+				<c:forEach var="noticeVO" items="${noticeVO}" varStatus="i">
+					<div>
+						<tr>
+							<td>${noticeVO.noticeType}</td>
+							<td>${noticeVO.noticeText}</td>
+							<td>${noticeVO.noticeTime}</td>
+						</tr>
+					</div>
 				</c:forEach>
 				
 			</div>

@@ -33,6 +33,15 @@ public class RecipeService {
 		return recipeVO;
 	}
 	
+
+	public void updateRecipeWithDetails(RecipeVO recipeVO, 
+							List<RecipeCuisineCategoryVO> delCatList, List<RecipeCuisineCategoryVO> addCatList, 
+							List<RecipeIngredientUnitVO> delIngUnitList, List<RecipeIngredientUnitVO> addIngUnitList,
+							List<RecipeStepVO> delStepList, List<RecipeStepVO> addStepList) {
+
+		recipeDAO.updateWithDetails(recipeVO, delCatList, addCatList, delIngUnitList, addIngUnitList, delStepList, addStepList);
+	}
+	
 //	public RecipeVO addRecipe(
 //			String recipeName, String recipeIntroduction, byte[] recipePicTop,
 //			Integer recipeServe, Integer accountID) {

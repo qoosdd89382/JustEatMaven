@@ -4,12 +4,12 @@
 
 <%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.friendship.model.*"%>
+<%@ page import="com.announce.model.*"%>
 
 <%
-FriendshipService friendshipSvc = new FriendshipService();
+AnnounceService announceSvc = new AnnounceService();
 String accountMail = (String) session.getAttribute("accountMail");
-List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountMail(accountMail);
+List<AnnounceVO> announceVO =  announceSvc.getAnnounce();
 %>
 
 <!DOCTYPE html>
@@ -28,7 +28,7 @@ List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountMail(
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>AccountFriendPage</title>
+<title>AccountAnnouncePage</title>
 <style>
 div.container{
 margin-top:100px;
@@ -80,13 +80,18 @@ margin-top:100px;
 					</ul>
 			</div>
 			<div class="col">
-				<p>我是好友頁面</p>
+				<p>我是公告頁面</p>
 				<p>借我標記一下session=>${accountMail}</p>	
-				<p>我是你的好友集合${friendshipVO}</p>
-				<p>以下是你的好友</p>
+				<p>我是你的公告集合${announceVO}</p>
+				<p>以下是你的公告</p>
 
-				<c:forEach var="accountInfoVO" items="${friendshipVO}">
-					<div>${accountInfoVO.accountNickname}</div>
+				<c:forEach var="announceVO" items="${announceVO}" varStatus="i">
+					<div>
+						<tr>
+							<td>${announceVO.announceText}</td>
+							<td>${announceVO.announceTime}</td>
+						</tr>
+					</div>
 				</c:forEach>
 				
 			</div>

@@ -68,7 +68,9 @@ font-size:20px;
 
 	<ul>
 		<li><h3><a id="AccountLogin" href='AccountLoginPage.jsp'>會員登入</a></h3><br></li>
+		<li><h3><a id="AccountLogin" href='/justeat-maven/index.jsp'>首頁</a></h3><br></li>
 
+		<p>=============</p>
 		<h3>會員資料管理:</h3>
 		<li>
 			<FORM METHOD="post" ACTION="accountInfo.do">
@@ -100,7 +102,7 @@ font-size:20px;
 		<li>
 			<FORM METHOD="post" ACTION="accountInfo.do">
 				<b>選擇會員姓名:</b> <select size="1" name="accountID">
-					<c:forEach var="empVO" items="${accountInfoSvc.all}">
+					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
 						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
 					</c:forEach>
 				</select>
@@ -115,25 +117,32 @@ font-size:20px;
 		<li><a href='addAccountInfo.jsp'>Add</a> a new AccountInfo.</li>
 	</ul>
 	
-	<p>各頁面施工進度</p>
-	<p>會員功能</p>
+	<p>=============</p>
+	<h3><p>=====各頁面施工進度=====</p></h3>
+	<p>===緊急開發中===</p>
+	。COOKIE驗證<br>
+	。註冊驗證功能(圖片預覽)<br>
+	<p>===會員功能===</p>
 	<p>
-	OK。基本登入功能:檢測帳號密碼驗證碼
-	OK。轉接到註冊會員頁面
-	。忘記密碼轉接到確認信箱頁面
-	。做FILTER驗證此帳號是否登入過
-	。記住我按鈕功能
+	OK。基本登入功能:檢測帳號密碼驗證碼<br>
+	OK。轉接到註冊會員頁面<br>
+	。會員中心按鈕新增<br>
+	。忘記密碼轉接到確認信箱頁面<br>
+	。做FILTER驗證此帳號是否登入過<br>
+	。記住我按鈕功能<br>
+	。會員註冊跟修改資料驗證<br>
 	</p>
-	<p>好友功能</p>
-	OK。基本頁面
-	OK。列出該帳號的好友
-	。好友搜尋
-	<p>公告功能</p>
-	。查詢公告
-	<p>通知功能</p>
-	。查看通知
-	<p>瀏覽紀錄功能</p>	
-	。查看瀏覽紀錄
+	<p>===好友功能===</p>
+	OK。基本頁面<br>
+	OK。列出該帳號的好友<br>
+	。刪除好友功能<br>
+	。好友搜尋<br>
+	<p>===公告功能===</p>
+	OK。查詢公告<br>
+	<p>===通知功能===</p>
+	OK。查看通知<br>
+	<p>===瀏覽紀錄功能===</p>	
+	。查看瀏覽紀錄放在COOKIE，並給後台紀錄<br>
 	
 	</div>
 	

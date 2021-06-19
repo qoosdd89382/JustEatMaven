@@ -30,13 +30,13 @@ import com.friendship.model.FriendshipVO;
 	
 		public void doPost(HttpServletRequest req, HttpServletResponse res)
 				throws ServletException, IOException {
-			System.out.println("1");
+
 			//設定編碼與確認回應
 			req.setCharacterEncoding("UTF-8");
 			String action = req.getParameter("action");
 			
 		if("getAccount_Friendship".equals(action)) {
-			System.out.println("2");
+
 			try {
 				HttpSession session = req.getSession();
 				String accountFriend = (String) session.getAttribute("accountMail");
@@ -51,15 +51,10 @@ import com.friendship.model.FriendshipVO;
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-			
-			
-			
-			
+		}	
 			
 		}
 }

@@ -10,4 +10,6 @@ public interface AnnounceDAOInterface {
     public void delete(Integer announceID);
     public AnnounceVO findByPrimaryKey(Integer announceID);
     public List<AnnounceVO> getAll();
+    
+    public List<AnnounceVO> getAnnounce();
 }
