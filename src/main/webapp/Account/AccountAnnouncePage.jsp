@@ -33,7 +33,12 @@ List<AnnounceVO> announceVO =  announceSvc.getAnnounce();
 div.container{
 margin-top:100px;
 }
-
+div#function_select_area form,
+div#function_select_area a {
+	border:1px ridge orange;
+	font-size:25px;
+	margin:15px;
+}
 
 </style>
 </head>
@@ -43,48 +48,40 @@ margin-top:100px;
 	</header>
 	
 	<div class="container">
+		
 		<div class="row">
+			
 			<div class="col-4" id="function_select_area">
-					<ul>
-<!-- 						<li><a href='AccountInfoPage.jsp'>會員資料</a></li> -->
-						<li>
-						<form method="post" action="accountInfo.do">
-								<input type="hidden" name="action" value="gotoAccountInfoPage">
-								<input type="submit" value="會員資料">
-						</form>
-						</li>
-						<li><a href='#'>我的活動</a></li>
-						<li><a href='#'>我的評價</a></li>
-						<li>
-						<form method="post" action="friendship.do">
-								<input type="hidden" name="action" value="getAccount_Friendship">
-								<input type="submit" value="我的好友">
-						</form>
-						</li>
-						<li><a href='#'>我的文章</a></li>
-						<li><a href='#'>我的收藏</a></li>
-						<li><a href='#'>我的訂單</a></li>
-						<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
-					<li>
-						<form method="post" action="notice.do">
-							<input type="hidden" name="action" value="getAccount_Notice">
-							<input type="submit" value="查看我的通知">
-						</form>
-					</li>
-					<li>
-						<form method="post" action="announce.do">
-							<input type="hidden" name="action" value="getAccount_Announce">
-							<input type="submit" value="查看我的公告">
-						</form>
-					</li>	
-					</ul>
+				<form method="post" action="accountInfo.do">
+					<input type="hidden" name="action" value="gotoAccountInfoPage">
+					<input type="submit" value="會員資料">
+				</form>
+				<a href='#'>我的活動</a><br>
+				<a href='#'>我的評價</a><br>
+				<form method="post" action="friendship.do">
+						<input type="hidden" name="action" value="getAccount_Friendship">
+						<input type="submit" value="我的好友">
+				</form>
+				<a href='#'>我的文章</a><br>
+				<a href='#'>我的收藏</a><br>
+				<a href='#'>我的訂單</a><br>
+				<a href='#'>成為商家(這裡記得要加判斷)</a><br>
+				<form method="post" action="notice.do">
+					<input type="hidden" name="action" value="getAccount_Notice">
+					<input type="submit" value="查看我的通知">
+				</form>
+				<form method="post" action="announce.do">
+					<input type="hidden" name="action" value="getAccount_Announce">
+					<input type="submit" value="查看我的公告">
+				</form>
 			</div>
-			<div class="col">
+
+			<div class="col-6">
 				<p>我是公告頁面</p>
 				<p>借我標記一下session=>${accountMail}</p>	
 				<p>我是你的公告集合${announceVO}</p>
 				<p>以下是你的公告</p>
-
+	
 				<c:forEach var="announceVO" items="${announceVO}" varStatus="i">
 					<div>
 						<tr>
@@ -93,7 +90,6 @@ margin-top:100px;
 						</tr>
 					</div>
 				</c:forEach>
-				
 			</div>
 		</div>
 	</div>

@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
-<%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.notice.model.*"%>
-
-<%
-NoticeService noticeSvc = new NoticeService();
-String accountMail = (String) session.getAttribute("accountMail");
-List<NoticeVO> noticeVO =  noticeSvc.getAccountNoticeByAccountMail(accountMail);
-%>
-
 <!DOCTYPE html>
 
 <html>
@@ -28,77 +18,71 @@ List<NoticeVO> noticeVO =  noticeSvc.getAccountNoticeByAccountMail(accountMail);
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>AccountNoticePage</title>
+<title>AccountChangePage</title>
+</head>
 <style>
-div.container{
-margin-top:100px;
-}
-div#function_select_area form,
-div#function_select_area a {
-	border:1px ridge orange;
-	font-size:25px;
-	margin:15px;
-}
-
 </style>
 </head>
 <body>
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-	
-	<div class="container">
-	
-		<div class="row">
-		
-			<div class="col-4" id="function_select_area">
-				<form method="post" action="accountInfo.do">
-					<input type="hidden" name="action" value="gotoAccountInfoPage">
-					<input type="submit" value="會員資料">
-				</form>
-				<a href='#'>我的活動</a><br>
-				<a href='#'>我的評價</a><br>
-				<form method="post" action="friendship.do">
-						<input type="hidden" name="action" value="getAccount_Friendship">
-						<input type="submit" value="我的好友">
-				</form>
-				<a href='#'>我的文章</a><br>
-				<a href='#'>我的收藏</a><br>
-				<a href='#'>我的訂單</a><br>
-				<a href='#'>成為商家(這裡記得要加判斷)</a><br>
-				<form method="post" action="notice.do">
-					<input type="hidden" name="action" value="getAccount_Notice">
-					<input type="submit" value="查看我的通知">
-				</form>
-				<form method="post" action="announce.do">
-					<input type="hidden" name="action" value="getAccount_Announce">
-					<input type="submit" value="查看我的公告">
-				</form>
-			</div>
-			
-			<div class="col">
-				<p>我是通知頁面</p>
-				<p>借我標記一下session=>${accountMail}</p>	
-				<p>我是你的通知集合${noticeVO}</p>
-				<p>以下是你的通知</p>
 
-				<c:forEach var="noticeVO" items="${noticeVO}" varStatus="i">
-					<div>
-						<tr>
-							<td>${noticeVO.noticeType}</td>
-							<td>${noticeVO.noticeText}</td>
-							<td>${noticeVO.noticeTime}</td>
-						</tr>
-					</div>
-				</c:forEach>
-			</div>
-		</div>
-	</div>
-	
+<p>=============</p>
+		<h3>會員資料管理:</h3>
+		<li>
+			<FORM METHOD="post" ACTION="accountInfo.do">
+				<b>輸入會員編號 (如100001):</b> <input type="text" name="accountID">
+				<input type="hidden" name="action" value="getOne_For_Display">
+				<input type="submit" value="送出">
+			</FORM>
+		</li>
+
+		<jsp:useBean id="accountInfoSvc" scope="page"
+			class="com.accountinfo.model.AccountInfoService" />
+		<%--    <% com.emp.model.EmpService dao =new com.emp.model.EmpService(); --%>
+		<!-- //    		pageContext.setAttribute("dao",dao); -->
+		<%--    %> --%>
+
+		<li>
+			<FORM METHOD="post" ACTION="accountInfo.do">
+				<b>選擇會員編號:</b> 
+				<select size="1" name="accountID">
+					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
+						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountID}
+					</c:forEach>
+				</select> 
+				<input type="hidden" name="action" value="getOne_For_Display">
+				<input type="submit" value="送出">
+			</FORM>
+		</li>
+
+		<li>
+			<FORM METHOD="post" ACTION="accountInfo.do">
+				<b>選擇會員姓名:</b> <select size="1" name="accountID">
+					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
+						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
+					</c:forEach>
+				</select>
+				<input type="hidden" name="action" value="getOne_For_Display">
+				<input type="submit" value="送出">
+			</FORM>
+		</li>
+		
+		<li><a href='listAllAccountinfo.jsp'>List</a> all AccountInfo.</li>
+	</ul>
+	<ul>
+		<li><a href='addAccountInfo.jsp'>Add</a> a new AccountInfo.</li>
+	</ul>
+
+
+
+
+
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
-
+	
 	<%-- body 結束標籤之前，載入Bootstrap 的 JS 及其相依性安裝(jQuery、Popper) --%>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
@@ -109,5 +93,6 @@ div#function_select_area a {
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/js/index.js"></script>
+
 </body>
 </html>

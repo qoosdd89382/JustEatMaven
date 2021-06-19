@@ -69,59 +69,16 @@ font-size:20px;
 	<ul>
 		<li><h3><a id="AccountLogin" href='AccountLoginPage.jsp'>會員登入</a></h3><br></li>
 		<li><h3><a id="AccountLogin" href='/justeat-maven/index.jsp'>首頁</a></h3><br></li>
-
-		<p>=============</p>
-		<h3>會員資料管理:</h3>
-		<li>
-			<FORM METHOD="post" ACTION="accountInfo.do">
-				<b>輸入會員編號 (如100001):</b> <input type="text" name="accountID">
-				<input type="hidden" name="action" value="getOne_For_Display">
-				<input type="submit" value="送出">
-			</FORM>
-		</li>
-
-		<jsp:useBean id="accountInfoSvc" scope="page"
-			class="com.accountinfo.model.AccountInfoService" />
-		<%--    <% com.emp.model.EmpService dao =new com.emp.model.EmpService(); --%>
-		<!-- //    		pageContext.setAttribute("dao",dao); -->
-		<%--    %> --%>
-
-		<li>
-			<FORM METHOD="post" ACTION="accountInfo.do">
-				<b>選擇會員編號:</b> 
-				<select size="1" name="accountID">
-					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
-						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountID}
-					</c:forEach>
-				</select> 
-				<input type="hidden" name="action" value="getOne_For_Display">
-				<input type="submit" value="送出">
-			</FORM>
-		</li>
-
-		<li>
-			<FORM METHOD="post" ACTION="accountInfo.do">
-				<b>選擇會員姓名:</b> <select size="1" name="accountID">
-					<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
-						<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
-					</c:forEach>
-				</select>
-				<input type="hidden" name="action" value="getOne_For_Display">
-				<input type="submit" value="送出">
-			</FORM>
-		</li>
+	</ul>
 		
-		<li><a href='listAllAccountinfo.jsp'>List</a> all AccountInfo.</li>
-	</ul>
-	<ul>
-		<li><a href='addAccountInfo.jsp'>Add</a> a new AccountInfo.</li>
-	</ul>
 	
 	<p>=============</p>
 	<h3><p>=====各頁面施工進度=====</p></h3>
 	<p>===緊急開發中===</p>
 	。COOKIE驗證<br>
 	。註冊驗證功能(圖片預覽)<br>
+	。基本後臺頁面
+	。商家頁面
 	<p>===會員功能===</p>
 	<p>
 	OK。基本登入功能:檢測帳號密碼驗證碼<br>
