@@ -29,9 +29,13 @@ public class CuisineCategoryService {
 	public void deleteCategory(int cuisineCategoryID) {
 		dao.delete(cuisineCategoryID);
 	}
-	
+
 	public List<CuisineCategoryVO> getAll() {
 		return dao.getAll();
+	}
+	
+	public List<CuisineCategoryVO> getAll(String sqlStatement) {
+		return dao.getAll(sqlStatement);
 	}
 	
 	public CuisineCategoryVO getOneCategory(int cuisineCategoryID) {

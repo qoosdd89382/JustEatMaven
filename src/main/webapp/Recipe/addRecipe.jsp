@@ -26,6 +26,7 @@
 // 	if (session.getAttribute("recipePicTopBuffer") != null) { System.out.println(session.getAttribute("recipePicTopName")); }
 %>
 
+<jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
@@ -45,6 +46,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <style>
 .loader3{
 	margin:20px auto;
@@ -210,7 +212,7 @@ div.temp_loading{
 				<div class="form-group">
 					<label for="recipePicTop row">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
 						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳圖片</div>
-						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
+						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none" accept="image/*">
 						<div id="picTopUploadPreview" class="preview col-6"><span id="picTopUploadText" class="text">預覽圖</span></div>
 				</div>
 
@@ -232,7 +234,7 @@ div.temp_loading{
 								</td>
 								<td class="col-12 order-4 col-lg-4 order-lg-3">
 									<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
-									<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
+									<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple" accept="image/*">
 									<div class="picStepPreview preview col-12"><span class="text">預覽圖</span></div>
 								</td>
 								<td class="col-6 order-2 col-lg-1 order-lg-4">
@@ -255,7 +257,7 @@ div.temp_loading{
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
 										<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
-										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
+										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple" accept="image/*">
 										<div class="picStepPreview preview col-12"><span class="text">預覽圖</span></div>
 									</td>
 									<td class="col-6 order-2 col-lg-1 order-lg-4">
@@ -286,7 +288,9 @@ div.temp_loading{
 
 		</div>
 
-		<div class="sidebar col-md-3 col-12">目前沒東西</div>
+		<div class="sidebar col-md-3 col-12">
+			<%@ include file="/Recipe/recipeSidebar.bar"%>
+		</div>
 	</main>
 
 	<%-- include footer --%>
