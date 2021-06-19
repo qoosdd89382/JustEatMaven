@@ -16,8 +16,8 @@ public class DishAndIngredientJDBCDAO implements DishAndIngredientDAOinterface {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost:3306/JustEat?serverTimezone=Asia/Taipei";
-	private static String user = "root";
-	private static String password = "831204jeff";
+	private static String user = "DBAdmin";
+	private static String password = "justeat";
 	
 	private static final String Insert_Stmt = "Insert into DishAndIngredient(dish_id,ingredient_id)Values(?,?)";
   //private static final String Update_Stmt = "Update DishAndIngredient Set dish_id = ? Where ingredient_id = ?";

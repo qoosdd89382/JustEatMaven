@@ -39,8 +39,7 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 	private static final String INSERT = "INSERT INTO CuisineCategory(cuisinecategory_name) VALUES(?)";
 	private static final String UPDATE = "UPDATE CuisineCategory SET cuisinecategory_name = ? WHERE cuisinecategory_id = ?";
 	private static final String DELETE = "DELETE FROM CuisineCategory WHERE cuisinecategory_id = ?";
-	// 順序寫死
-	private static final String SELECT_ALL = "SELECT * FROM CuisineCategory ORDER BY cuisinecategory_id DESC";
+	private static final String SELECT_ALL = "SELECT * FROM CuisineCategory "; 
 	private static final String SELECT_ONE_BY_ID = "SELECT * FROM CuisineCategory WHERE cuisinecategory_id = ? ORDER BY cuisinecategory_id DESC"; // SELECT * 擇不能用欄位名set ?
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM CuisineCategory WHERE cuisinecategory_name = ?";
 	
@@ -230,7 +229,7 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 
 		try {
 			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(SELECT_ALL);
+			pstmt = con.prepareStatement(SELECT_ALL + "ORDER BY cuisinecategory_id DESC");
 
 			rs = pstmt.executeQuery();
 			allCuisineCategory = new ArrayList<CuisineCategoryVO>();
@@ -407,6 +406,58 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 //		System.out.println("編號：" + cuisineCategoryVO.getCuisineCategoryID()
 //				+ "\n分類名稱：" + cuisineCategoryVO.getCuisineCategoryName() + "\n=====================");
 
+	}
+
+	@Override
+	public List<CuisineCategoryVO> getAll(String sqlStatement) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<CuisineCategoryVO> allCuisineCategory = null;
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(SELECT_ALL + sqlStatement);
+
+			rs = pstmt.executeQuery();
+			allCuisineCategory = new ArrayList<CuisineCategoryVO>();
+
+			while (rs.next()) {
+				CuisineCategoryVO cuisineCategory = new CuisineCategoryVO();
+				cuisineCategory.setCuisineCategoryID(rs.getInt("CuisineCategory_id"));
+				cuisineCategory.setCuisineCategoryName(rs.getString("CuisineCategory_name"));
+				allCuisineCategory.add(cuisineCategory);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (rs != null)
+				try {
+					rs.close();
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return allCuisineCategory;
 	}
 
 }

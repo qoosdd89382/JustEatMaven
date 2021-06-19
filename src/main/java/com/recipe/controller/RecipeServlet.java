@@ -38,7 +38,6 @@ public class RecipeServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// 不需要 res.setContentType，這邊不負責輸出到螢幕上
 		req.setCharacterEncoding("UTF-8");
 //		res.setContentType("text/html; charset=UTF-8");		// for ajax，但輸出的參數是數字，其實可以不用設...
 		
@@ -46,7 +45,6 @@ public class RecipeServlet extends HttpServlet {
 		String delOrder = req.getParameter("delOrder");
 		String recipeIDforUpdate = req.getParameter("update");
 		Map<Integer, byte[]> recipeStepPicBuffers = null;
-//		List<byte[]> recipeStepPicBuffers = null;
 		if (delOrder != null) {
 			System.out.println(delOrder);
 			System.out.println(recipeIDforUpdate);
@@ -63,9 +61,6 @@ public class RecipeServlet extends HttpServlet {
 			if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
 				recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
 				Map<Integer, byte[]> deepCopy = new LinkedHashMap<Integer, byte[]>(recipeStepPicBuffers);
-//				recipeStepPicBuffers = (List<byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
-//				recipeStepPicBuffers.remove((new Integer(delOrder)-1));
-//				recipeStepPicBuffers.remove(String.valueOf((new Integer(delOrder)-1)));
 				System.out.println(recipeStepPicBuffers.size());
 				System.out.println(delOrder);
 				System.out.println(Integer.parseInt(delOrder) == recipeStepPicBuffers.size());
@@ -242,7 +237,7 @@ public class RecipeServlet extends HttpServlet {
 				// ------------------------食譜步驟------------------------
 				List<RecipeStepVO> recipeStepVOs = new ArrayList<RecipeStepVO>();
 
-				int recipeStepCount = req.getParameterValues("recipeStepOrders").length;
+//				int recipeStepCount = req.getParameterValues("recipeStepOrders").length;
 				String[] recipeStepOrders = req.getParameterValues("recipeStepOrders");
 				for (String recipeStepOrder : recipeStepOrders) {
 					RecipeStepVO recipeStepVO = new RecipeStepVO();
@@ -368,9 +363,25 @@ public class RecipeServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
-		
-		
 
+		/**********************刪除食譜**********************/
+		if("delete".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				Integer recipeID = new Integer(req.getParameter("recipeID"));
+				
+				RecipeService recipeSvc = new RecipeService();
+				recipeSvc.deleteRecipe(recipeID);
+			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
+				e.printStackTrace();
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+			}
+		}
+		
 		/**********************取得一個食譜，轉交給updateRecipe.jsp**********************/
 		if ("getOneForUpdate".equals(action)) { // 來自listAllRecipe.jsp的請求
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -386,8 +397,8 @@ public class RecipeServlet extends HttpServlet {
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
 				successView.forward(req, res);
 			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
 				e.printStackTrace();
-				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
 				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
 			}
@@ -762,8 +773,8 @@ public class RecipeServlet extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-//				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
-//				failureView.forward(req, res);
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+				failureView.forward(req, res);
 			}
 		}
 		
