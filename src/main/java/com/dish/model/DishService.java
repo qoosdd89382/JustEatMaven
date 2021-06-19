@@ -33,6 +33,10 @@ public class DishService {
 		return dao.findByPrimaryKey(dishID);
 	}
 	
+	public List<DishVO> getEventID(int eventID) {
+		return dao.findByEventID(eventID);
+	}
+	
 	public List<DishVO> getAll(){
 		return dao.getAll();
 	}

@@ -49,16 +49,7 @@
     </c:forEach>
     </p>
 	<form method="post" action="<%=request.getContextPath()%>/Event/EventInfo.do">
-		<input type="hidden" name="eventID" value="${eventInfoVO.eventID}">
-		<input type="hidden" name="choose_type" value="${eventInfoVO.groupType}">
-		<input type="hidden" name="event_name" value="${eventInfoVO.eventName}">
-		<input type="hidden" name="event_member" value="${eventInfoVO.eventCurrentCount}">
-		<input type="hidden" name="event_start" value="${eventInfoVO.eventStartTime}">
-		<input type="hidden" name="event_end" value="${eventInfoVO.eventEndTime}">
-		<input type="hidden" name="event_reg_start" value="${eventInfoVO.eventRegistartionStartTime}">
-		<input type="hidden" name="event_reg_end" value="${eventInfoVO.eventRegistartionEndTime}">
-		<input type="hidden" name="city" value="${eventInfoVO.groupCity}">
-		<input type="hidden" name="address" value="${eventInfoVO.groupAddress}">
+		<input type="hidden" name="eventID" value="${param.eventID}">
 		
 	    <main class="insert_content col-11 col-lg-11 row">
 	        <div class="insert_content_left col-6 col-lg-6">
@@ -90,9 +81,9 @@
 		        	</div>
 	            </div>
 	            <div class="btn_margin">
-	                <input type="submit" name="action" value="上一頁">
+	                <input type="submit" name="actionInsert" value="上一頁">
 	                <input type="button" class="dishInsert" name="" value="菜色新增">
-	                <input type="submit" name="action" value="菜色確認" class="dishConfirm">
+	                <input type="submit" name="actionInsert" value="菜色確認" class="dishConfirm">
 	            </div>
 	            <div class="temp_data">
 	            </div>

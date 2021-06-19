@@ -95,7 +95,7 @@
 						<c:forEach var="eventInfoVO" items="${listfind}" varStatus="i">
 							<tr class="row">
 								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-								<td class="col-sm-2 col-2">${eventInfoVO.eventName}</td>
+								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a></td>
 								<c:if test="${eventInfoVO.groupType == 1}">
 									<td class="col-sm-2 col-2">一人一菜</td>
 								</c:if>
@@ -117,7 +117,7 @@
 						<c:forEach var="eventInfoVO" items="${list}" varStatus="i">
 							<tr class="row">
 								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-								<td class="col-sm-2 col-2">${eventInfoVO.eventName}</td>
+								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a></td>
 								<c:if test="${eventInfoVO.groupType == 1}">
 									<td class="col-sm-2 col-2">一人一菜</td>
 								</c:if>
@@ -141,8 +141,8 @@
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
-	<script src="<%=request.getContextPath()%>/js/header.js"></script>
-	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
 
 		$("[name=position]").on("change",function(){

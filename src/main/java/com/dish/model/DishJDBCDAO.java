@@ -25,6 +25,7 @@ public class DishJDBCDAO implements DishDAOinterface {
 	private static final String Update_Stmt = "Update Dish Set dish_name = ? Where dish_id = ?";
 	private static final String Delete_Stmt = "Delete from Dish Where dish_id = ?";
 	private static final String Select_Key_Stmt = "Select * From Dish Where dish_id=?";
+	private static final String Select_Event_Stmt = "Select * From Dish Where event_id=?";
 	private static final String Select_All_Stmt = "Select * From Dish";
 
 	static {
@@ -199,6 +200,61 @@ public class DishJDBCDAO implements DishDAOinterface {
 		return dishVO;
 	}
 
+	@Override
+	public List<DishVO> findByEventID(Integer eventID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DishVO dishVO = null;
+		List<DishVO> list = new ArrayList<DishVO>();
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Event_Stmt);
+			pstmt.setInt(1, eventID);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				dishVO = new DishVO();
+				dishVO.setDishID(rs.getInt("dish_id"));
+				dishVO.setDishName(rs.getString("dish_name"));
+				dishVO.setAccountID(rs.getInt("account_id"));
+				dishVO.setEventID(rs.getInt("event_id"));
+				list.add(dishVO);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
 	@Override
 	public List<DishVO> getAll() {
 		Connection con = null;
@@ -405,14 +461,14 @@ public class DishJDBCDAO implements DishDAOinterface {
 		DishVO dishVO = new DishVO();
 		DishJDBCDAO dishJDBCDAO = new DishJDBCDAO();
 		// ===================新增用================
-		dishVO.setDishName("紅燒牛頭");
-		dishVO.setAccountID(100001); //暫時表示
-		dishVO.setEventID(300001); //暫時表示
-		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
-		List<DishAndIngredientVO> dishAndIngredientList = new ArrayList<DishAndIngredientVO>();
-		dishAndIngredientVO.setIngredientID(220001);
-		dishAndIngredientList.add(dishAndIngredientVO);
-		dishJDBCDAO.insertWithDishAndIngredient(dishVO, dishAndIngredientList);
+//		dishVO.setDishName("紅燒牛頭");
+//		dishVO.setAccountID(100001); //暫時表示
+//		dishVO.setEventID(300001); //暫時表示
+//		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
+//		List<DishAndIngredientVO> dishAndIngredientList = new ArrayList<DishAndIngredientVO>();
+//		dishAndIngredientVO.setIngredientID(220001);
+//		dishAndIngredientList.add(dishAndIngredientVO);
+//		dishJDBCDAO.insertWithDishAndIngredient(dishVO, dishAndIngredientList);
 //		dishJDBCDAO.insert(dishVO);
 		// ===================更新用================
 //		dishVO.setDishName("清蒸牛頭");
@@ -432,9 +488,18 @@ public class DishJDBCDAO implements DishDAOinterface {
 //			System.out.println(dish.getDishID());
 //			System.out.println(dish.getDishName());
 //			System.out.println(dish.getAccountID());
-//			System.out.println(dish.getEvent());
+//			System.out.println(dish.getEventID());
 //			System.out.println("=======================");
 //		}
+		
+		List<DishVO> list = dishJDBCDAO.findByEventID(300001);
+		for (DishVO dish : list) {
+			System.out.println(dish.getDishID());
+			System.out.println(dish.getDishName());
+			System.out.println(dish.getAccountID());
+			System.out.println(dish.getEventID());
+			System.out.println("=======================");
+		}
 	}
 
 
