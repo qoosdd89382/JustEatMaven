@@ -9,25 +9,25 @@ public class EventMemberService {
 		dao = new EventMemberJDBCDAO();
 	}
 	
-	public EventMemberVO addEventMember(int eventID , int accountID,int participationState,int totalScore,int totalJudger) {
+	public EventMemberVO addEventMember(int eventID , int accountID,int participationState,boolean isHostIdentifier) {
 		
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setEventID(eventID);
 		eventMemberVO.setAccountID(accountID);
 		eventMemberVO.setParticipationState(participationState);
-		eventMemberVO.setTotalScore(totalScore);
-		eventMemberVO.setTotalJudger(totalJudger);
+		eventMemberVO.setHostIdentifier(isHostIdentifier);
 		dao.insert(eventMemberVO);
 		
 		return eventMemberVO;
 	}
 	
-	public EventMemberVO updateEventMember(int participationState,int eventID,int accountID) {
+	public EventMemberVO updateEventMember(int participationState,int eventID,int accountID,boolean isHostIdentifier) {
 		
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setParticipationState(participationState);
 		eventMemberVO.setEventID(eventID);
 		eventMemberVO.setAccountID(accountID);
+		eventMemberVO.setHostIdentifier(isHostIdentifier);
 		dao.update(eventMemberVO);
 		return eventMemberVO;
 	}

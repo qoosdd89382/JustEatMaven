@@ -63,7 +63,7 @@
 	                <span class="dish_name"></span>
 	            </div>
 	            <div>
-	                <input type="button" value="成員菜單">
+	                <input type="submit" name="action" value="成員菜單">
 	            </div>
 	            <div>
 	                <input type="button" value="上一頁" class="returnList">
@@ -86,9 +86,7 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
-	<%
-	System.out.println(request.getParameter("eventID"));
-	%>
+
 	$(function(){
 		$.ajax({
 			type:"POST",
