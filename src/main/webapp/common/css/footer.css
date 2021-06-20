@@ -43,6 +43,9 @@ footer {
     font-weight: bold;
 }
 
+.web_map h1, .web_map h2, .web_map h3, .web_map h4 {
+	color: #000;
+}
 
 .web_map a {
     color: black;

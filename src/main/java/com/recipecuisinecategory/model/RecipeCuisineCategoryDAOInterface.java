@@ -11,6 +11,7 @@ public interface RecipeCuisineCategoryDAOInterface {
 	
 //	public int update(RecipeCuisineCategoryVO recipeCuisineCategory);	// 回傳筆數表示成功	// 用不到
 	public int delete(RecipeCuisineCategoryVO recipeCuisineCategory);	// 回傳筆數表示成功
+	public int deleteByRecipe(RecipeCuisineCategoryVO recipeCuisineCategory, Connection con);	// 回傳筆數表示成功
 	public boolean isExist(RecipeCuisineCategoryVO recipeCuisineCategory);	// 檢查時可能會用到
 
 //	// 傳2個參數進去？

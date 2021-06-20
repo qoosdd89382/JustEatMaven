@@ -28,6 +28,33 @@
 		<servlet-name>AccountInfoServlet</servlet-name>
 		<url-pattern>/Account/accountInfo.do</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>FriendshipServlet</servlet-name>
+		<servlet-class>com.friendship.controller.FriendshipServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FriendshipServlet</servlet-name>
+		<url-pattern>/Account/friendship.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>NoticeServlet</servlet-name>
+		<servlet-class>com.notice.controller.NoticeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NoticeServlet</servlet-name>
+		<url-pattern>/Account/notice.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AnnounceServlet</servlet-name>
+		<servlet-class>com.announce.controller.AnnounceServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AnnounceServlet</servlet-name>
+		<url-pattern>/Account/announce.do</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>EventInfoActionServlet</servlet-name>

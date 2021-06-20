@@ -11,78 +11,69 @@
 	overflow-x: hidden;
 }
 
+.display-block {
+	display: block;
+}
 .vertical-container {
-  display: -webkit-flex;
-  display:         flex;
-  -webkit-align-items: center;
-          align-items: center;
-  -webkit-justify-content: center;
-          justify-content: center;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
 }
 
 .catAutoOutput ul, .ingAutoOutput ul {
-	background: #efefef;
-	min-height:55px;
+	background: #FFFCE8;
+	min-height: 55px;
 	padding: 5px;
+	margin-top: 10px;
 }
 
-.catAutoOutput ul > li {
+.catAutoOutput ul>li {
 	display: inline-block;
 	margin: 10px 3px;
-	padding: 3px;
+	padding: 5px;
 	border: 1px solid gray;
 	background: #fff;
-}  
-  
-.ingAutoOutput ul > li {
+}
+.catAutoOutput ul>li span{
+	margin-right: 3px;
+}
+
+
+.ingAutoOutput ul>li {
 	margin: 10px 3px;
 	padding: 3px;
 	border: 1px solid gray;
 	background: #fff;
 	display: flex;
 	justify-content: space-between;
-	position:relative;
-}  
-
-.ingAutoOutput ul > li svg {
-/*         position: absolute; */
-/*         top: 50%; */
-/*         right: 5px; */
-/*         transform: translateY(-50%); */
-/* 	margin-top: 5px; */
+	position: relative;
 }
 
-/* .ingAutoOutput .col-2, div.ingAutoOutput .col-3, div.ingAutoOutput .col-4 { */
-/* 	padding: 0; */
-/* } */
-
-#addStepBtn, #picTopUploadBtn {
-/* 	border: 1px solid gray; */
-/* 	border-radius: .25rem; */
-/* 	padding: 10px; */
-/* 	width: 150px; */
-/* 	text-align: center; */
+#addStepBtn, .uploadBtn {
 	margin-bottom: 20px;
-	background: #FBA95D!important;
-	border: 1px solid #FBA95D!important;
+	background: #FBA95D !important;
+	border: 1px solid #FBA95D !important;
 }
 
 #addStepBtn {
 	display: block;
 }
 
-#picTopUploadBtn, #picTopUploadName {
+.uploadBtn, .uploadName {
 	display: block;
-	margin-bottom: 0!important;
+	margin-bottom: 0 !important;
 }
 
-#picTopUploadName {
+.uploadName {
 	padding: 6px;
 }
 
-#addStepBtn:hover, #picTopUploadBtn:hover {
-	background: #F6CAA2!important;
-	border: 1px solid #F6CAA2!important;
+#addStepBtn:hover, .uploadBtn:hover {
+	background: #F6CAA2 !important;
+	border: 1px solid #F6CAA2 !important;
 	cursor: pointer;
 }
 
@@ -91,25 +82,60 @@
 	margin: 0 auto;
 }
 
+.preview {
+	border: 1px solid lightgray;
+	display: inline-block;
+	position: relative;
+	min-height: 80px; /* 40px */
+	border-radius: .25rem !important;
+	margin-top: 10px;
+	padding: 3px;
+}
+
+.preview span.text {
+	position: absolute;
+	display: inline-block;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	color: lightgray;
+}
+
+.preview_img {
+	width: 100%;
+}
+
 .recipe td:last-child {
 	text-align: right;
 }
 
 .form-group {
-	margin-bottom: 20px!important;
+	margin-bottom: 20px !important;
 }
+
 .table td, .table th {
-    border-top: 0!important;
+	border-top: 0 !important;
 }
+
 .recipe {
 	border: 1px solid lightgray;
 	border-radius: 5px;
 }
 
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-	background: #FFFCE8;
+label {
+	font-size: 20px;
+	color: #F3722C;
+	padding: 5px; 
 }
 
+.errorSpan {
+	color: red;
+	font-weight: bold;
+}
 
+/* .table-hover tbody tr:hover td, .table-hover tbody tr:hover th { */
+/* 	background: #FFFCE8; */
+/* } */
 
 

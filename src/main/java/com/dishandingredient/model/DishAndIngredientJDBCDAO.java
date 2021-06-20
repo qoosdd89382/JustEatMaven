@@ -16,8 +16,8 @@ public class DishAndIngredientJDBCDAO implements DishAndIngredientDAOinterface {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost:3306/JustEat?serverTimezone=Asia/Taipei";
-	private static String user = "root";
-	private static String password = "831204jeff";
+	private static String user = "DBAdmin";
+	private static String password = "justeat";
 	
 	private static final String Insert_Stmt = "Insert into DishAndIngredient(dish_id,ingredient_id)Values(?,?)";
   //private static final String Update_Stmt = "Update DishAndIngredient Set dish_id = ? Where ingredient_id = ?";
@@ -404,6 +404,39 @@ public class DishAndIngredientJDBCDAO implements DishAndIngredientDAOinterface {
 			}
 		}
 	}
+	
+//	@Override
+//	public void insertbyMultiDish(List<DishAndIngredientVO> dishAndIngredientVOList, Connection con) {
+//		PreparedStatement pstmt = null;
+//
+//		try {
+//			pstmt = con.prepareStatement(Insert_Stmt);
+//			pstmt.setInt(1, dishAndIngredientVO.getDishID());
+//			pstmt.setInt(2, dishAndIngredientVO.getIngredientID());
+//
+//			pstmt.executeUpdate();
+//			System.out.println("新增菜色食材成功");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			if (con != null) {
+//				try {
+//					con.rollback();
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		} finally {
+//			if (pstmt != null) {
+//				try {
+//					pstmt.close();
+//				} catch (SQLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
 	
 	public static void main(String[] args) {
 		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();

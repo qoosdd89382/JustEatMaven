@@ -1,3 +1,8 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Arrays"%>
+<%@page import="org.json.JSONArray"%>
+<%@page import="org.json.JSONObject"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
 <%@	page import="com.eventinfo.model.EventInfoVO"%>
@@ -6,6 +11,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
+
 	if(eventInfoVO!=null){
 		if(eventInfoVO.getEventStartTime()!=null){
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -29,6 +35,13 @@
 		}
 	}
 	request.getAttribute("errorMsgs");
+	
+	String dishAndIngJson = request.getParameter("dishAndIngJson");
+	String replaceDishAndIngJson = null;
+	if(dishAndIngJson!=null){
+		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
+	}
+	
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,8 +75,12 @@
 	        <h2>建立活動</h2>
 	    </div>
 	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
-	    <div class="event_content">
-	        <div class="info">
+	   	<div class="temp_data">
+	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
+	   	</div>
+	    <div class="event_content col-12 col-lg-12 row">
+	        <div class="info col-6 col-lg-6">
+	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")}</span>
 	            <div class="title_separate">
 	                請選擇揪團類型
 	                <label>
@@ -145,16 +162,14 @@
 	                <input type="submit" name="action" value="新增菜色">
 	                <input type="submit" name="action" value="邀請好友">
 	                <input type="submit" name="action" value="取消建立">
-	                <input type="submit" name="action" value="確定建立">
+	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
 	            </div>
 	        </div>
-	        <div class="overflow">
-		        <div class="info">
-		            <div class="event_description">
-		                <textarea name="event_description" cols="60" rows="20" placeholder="活動說明"></textarea>
-		            </div>
+		    <div class="info col-6 col-lg-6">
+		        <div class="event_description">
+		            <textarea name="event_description" cols="60" rows="20" placeholder="活動說明"></textarea>
 		        </div>
-	        </div>
+		    </div>
 	    </div>
 	    </form>
 	<footer>
@@ -162,6 +177,8 @@
 	</footer>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/datetimepicker/js/jquery.datetimepicker.full.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
 		 $.datetimepicker.setLocale('zh'); // kr ko ja en
 	     $('#eventStart').datetimepicker({
@@ -188,6 +205,7 @@
 		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 		 });
+	  
 	</script>
 </body>
 </html>

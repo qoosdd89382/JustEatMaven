@@ -26,6 +26,16 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 	private static final String Select_Key_Stmt = "Select * From JustEat.Friendship Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.Friendship";
 	
+//好友頁面用
+	private static final String Select_Account_Friendship = "Select * From JustEat.Friendship Where account_id=?";
+	
+	//透過session裡面的accountmail找他相關的好友暱稱
+	private static final String Select_Account_Friendship_By_AccountMail = 
+			"Select account_nickname From JustEat.AccountInfo where "//用ID找暱稱
+			+ "account_id in (SELECT friend_id From JustEat.Friendship where "//找那些符合條件FriendID
+			+ "account_id = (select account_id From JustEat.AccountInfo where "//找那些跟session的accountmail有好友關係的friendID
+			+ "account_mail=?) && friendship_state=1);";
+	
 	static {
 		try {
 			Class.forName(driver);
@@ -240,7 +250,103 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 		}
 		return list;
 	}
+	
+//好友頁面用
+	public FriendshipVO getAccountFriendship(Integer account_id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		FriendshipVO friendshipVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_Friendship);
+			
+			pstmt.setInt(1, account_id);
+			rs = pstmt.executeQuery();
 
+			while (rs.next()) {
+				friendshipVO = new FriendshipVO();
+				friendshipVO.setAccountID(rs.getInt("account_id"));
+				friendshipVO.setFriendID(rs.getInt("friend_id"));
+				friendshipVO.setFriendshipState(rs.getInt("friendship_state"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return friendshipVO;
+	}
+	
+	public List<AccountInfoVO> getAccountFriendByAccountMail(String account_mail) {
+		List<AccountInfoVO> list = new ArrayList<AccountInfoVO>();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO friendshipVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_Friendship_By_AccountMail);
+			
+			pstmt.setString(1, account_mail);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				friendshipVO = new AccountInfoVO();
+				friendshipVO.setAccountNickname(rs.getString("account_nickname"));
+				
+				list.add(friendshipVO);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return list;
+	}
+	
 	public static void main(String[] args) {
 		FriendshipJDBCDAO friendshipJDBCDAO = new FriendshipJDBCDAO();
 		

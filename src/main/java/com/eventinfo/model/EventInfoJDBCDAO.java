@@ -731,25 +731,25 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 //		eventInfoDAO.insertWithDish(eventInfoVO,dishList);
 		
 //===================連動菜色和菜色食材=====================
-		List<DishVO> dishList = new ArrayList<DishVO>();
-		DishVO dishVO = new DishVO();
-		dishVO.setDishName("紅燒牛頭");
-		dishVO.setAccountID(100001); //暫時表示
-		dishList.add(dishVO);
-		List<DishAndIngredientVO> dishAndIngredientList = new ArrayList<DishAndIngredientVO>();
-		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
-		dishAndIngredientVO.setIngredientID(220001);
-		dishAndIngredientList.add(dishAndIngredientVO);
+//		List<DishVO> dishList = new ArrayList<DishVO>();
+//		DishVO dishVO = new DishVO();
+//		dishVO.setDishName("紅燒牛頭");
+//		dishVO.setAccountID(100001); //暫時表示
+//		dishList.add(dishVO);
+//		List<DishAndIngredientVO> dishAndIngredientList = new ArrayList<DishAndIngredientVO>();
+//		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
+//		dishAndIngredientVO.setIngredientID(220001);
+//		dishAndIngredientList.add(dishAndIngredientVO);
 		
 //		eventInfoDAO.insertWithDishIngredient(eventInfoVO, dishList, dishAndIngredientList);
 		
-		List<EventMemberVO> eventMemberList = new ArrayList<EventMemberVO>();
-		EventMemberVO eventMemberVO = new EventMemberVO();
-		eventMemberVO.setAccountID(100001);
-		eventMemberVO.setParticipationState(1);
-		eventMemberList.add(eventMemberVO);
+//		List<EventMemberVO> eventMemberList = new ArrayList<EventMemberVO>();
+//		EventMemberVO eventMemberVO = new EventMemberVO();
+//		eventMemberVO.setAccountID(100001);
+//		eventMemberVO.setParticipationState(1);
+//		eventMemberList.add(eventMemberVO);
 		
-		eventInfoDAO.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList);
+//		eventInfoDAO.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList);
 		
 		// ==========================更新用================================
 //		eventInfoVO.setEventName("每天吃");
@@ -803,23 +803,23 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 //		}
 		
 		// =========================查詢全部======================================
-//		List<EventInfoVO> eventInfo_list = eventInfoDAO.getAll();
-//		for (EventInfoVO info : eventInfo_list) {
-//			System.out.println(info.getEventID() + ",");
-//			System.out.println(info.getEventName() + ",");
-//			System.out.println(info.getEventCurrentCount() + ",");
-//			System.out.println(info.getEventDescription() + ",");
-//			System.out.println(info.getGroupType() + ",");
-//			System.out.println(info.getGroupCity() + ",");
-//			System.out.println(info.getGroupAddress() + ",");
-//			System.out.println(info.getEventRegistartionStartTime() + ",");
-//			System.out.println(info.getEventRegistartionEndTime() + ",");
-//			System.out.println(info.getEventStartTime() + ",");
-//			System.out.println(info.getEventEndTime() + ",");
-//			System.out.println(info.getEventState() + ",");
-//			System.out.println(info.getEventPic() + ",");
-//			System.out.println("==================================================");
-//		}
+		List<EventInfoVO> eventInfo_list = eventInfoDAO.getAll();
+		for (EventInfoVO info : eventInfo_list) {
+			System.out.println(info.getEventID() + ",");
+			System.out.println(info.getEventName() + ",");
+			System.out.println(info.getEventCurrentCount() + ",");
+			System.out.println(info.getEventDescription() + ",");
+			System.out.println(info.getGroupType() + ",");
+			System.out.println(info.getGroupCity() + ",");
+			System.out.println(info.getGroupAddress() + ",");
+			System.out.println(info.getEventRegistartionStartTime() + ",");
+			System.out.println(info.getEventRegistartionEndTime() + ",");
+			System.out.println(info.getEventStartTime() + ",");
+			System.out.println(info.getEventEndTime() + ",");
+			System.out.println(info.getEventState() + ",");
+			System.out.println(info.getEventPic() + ",");
+			System.out.println("==================================================");
+		}
 
 	}
 }

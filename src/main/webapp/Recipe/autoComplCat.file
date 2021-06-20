@@ -11,22 +11,17 @@
 		categoryArr.push(catObj);
 	</c:forEach>
 
-<%  if (recipeCategoryIDs != null) {
-		String[] orgList = recipeCategoryIDs.trim().split(" ");
-		for (String one : orgList) {
-%>
-			var tempCat = "<%= one %>";
-			if (tempCat != "") { 
-				categoryArr.forEach(function(item, index, array){
-		        	if (tempCat == array[index].id) {
-		        		array.splice(index, 1);
-		        	}
-	        	});
-			}
-				
-<%		}
+	var recipeCategoryIDsEle = $('input[name="recipeCategoryIDs"]').val().trim();
+	if (recipeCategoryIDsEle != "") {
+		var recipeCategoryIDs = recipeCategoryIDsEle.split(" ");
+		recipeCategoryIDs.forEach(function(itm, ind, arr){
+			categoryArr.forEach(function(item, index, array){
+	        	if (parseInt(recipeCategoryIDs[ind]) == categoryArr[index].id) {
+	        		categoryArr.splice(index, 1);
+	        	}
+	    	});
+	    });
 	}
-%>
 	
 	function putCatInIDs(id, value) {
 		var tempCatHtml = "<li data-id='" + id + "'><span>" + value + "</span><i class='fas fa-times'></i></li>";

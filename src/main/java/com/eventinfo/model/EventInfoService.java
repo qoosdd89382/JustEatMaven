@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.dish.model.DishVO;
@@ -147,7 +148,7 @@ public class EventInfoService {
 	public void addDishAndIngredientByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
 			Integer groupType, String groupCity, String groupAddress, String eventRegistartionStartTime,
 			String eventRegistartionEndTime, String eventStartTime, String eventEndTime, Integer eventState,
-			byte[] eventPic, String dishName) {
+			byte[] eventPic, String[] dishNames,Integer[][] IngIDs) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime localRegistartionStartTime = LocalDateTime.parse(eventRegistartionStartTime, formatter);
@@ -174,16 +175,23 @@ public class EventInfoService {
 		eventInfoVO.setEventPic(eventPic);
 
 		List<DishVO> dishList = new ArrayList<DishVO>();
-		DishVO dishVO = new DishVO();
-		dishVO.setDishName(dishName);
-		dishVO.setAccountID(100001); // 再討論
-		dishList.add(dishVO);
+		
+		for(int i =0;i<dishNames.length;i++) {
+			DishVO dishVO = new DishVO();
+			dishVO.setDishName(dishNames[i]);
+			dishVO.setAccountID(100001); // 再討論
+			dishList.add(dishVO);
+		}
 		
 		List<DishAndIngredientVO> dishAndIngredientList = new ArrayList<DishAndIngredientVO>();
-		DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
-		dishAndIngredientVO.setIngredientID(220001);
-		dishAndIngredientList.add(dishAndIngredientVO);
-		
+		for(int i =0;i<dishNames.length;i++) {
+			for(int j =0;j<IngIDs[i].length;j++) {
+				DishAndIngredientVO dishAndIngredientVO = new DishAndIngredientVO();
+				dishAndIngredientVO.setIngredientID(IngIDs[i][j]);
+				dishAndIngredientList.add(dishAndIngredientVO);
+			}
+		}
+
 		List<EventMemberVO> eventMemberList = new ArrayList<EventMemberVO>();
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setAccountID(100001);
@@ -191,6 +199,5 @@ public class EventInfoService {
 		eventMemberList.add(eventMemberVO);
 		
 		dao.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList);
-
 	}
 }

@@ -16,6 +16,7 @@ public interface RecipeStepDAOInterface {
 	// 傳入int[]或List<RecipeStepVO>?
 	
 	public void delete(int recipeStepID);
+	public void deleteByRecipe(RecipeStepVO recipeStep, Connection con);
 	public RecipeStepVO getOneByID(int recipeStepID);
 //	public List<RecipeStepVO> getAll();		// 用不到
 	public List<RecipeStepVO> getAllByRecipe(int recipeID);
