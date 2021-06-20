@@ -513,7 +513,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		
 		AccountInfoJDBCDAO accountInfoJDBCDAO = new AccountInfoJDBCDAO();
 	
-//	//新增 OK
+	//新增 OK
 //		AccountInfoVO accountInfoVO1 = new AccountInfoVO();
 //		accountInfoVO1.setAccountMail("JerryMouse@gmail.com");
 //		accountInfoVO1.setAccountNickname("王曉明");
