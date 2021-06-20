@@ -26,6 +26,8 @@ public class DishJDBCDAO implements DishDAOinterface {
 	private static final String Delete_Stmt = "Delete from Dish Where dish_id = ?";
 	private static final String Select_Key_Stmt = "Select * From Dish Where dish_id=?";
 	private static final String Select_Event_Stmt = "Select * From Dish Where event_id=?";
+	private static final String Select_Account_Stmt = "Select * From Dish Where account_id=?";
+	private static final String Select_Account_And_Event_Stmt = "Select * From Dish Where account_id=? And event_id = ?";
 	private static final String Select_All_Stmt = "Select * From Dish";
 
 	static {
@@ -254,6 +256,118 @@ public class DishJDBCDAO implements DishDAOinterface {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<DishVO> findByAccountID(Integer accountID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DishVO dishVO = null;
+		List<DishVO> list = new ArrayList<DishVO>();
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Account_Stmt);
+			pstmt.setInt(1, accountID);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				dishVO = new DishVO();
+				dishVO.setDishID(rs.getInt("dish_id"));
+				dishVO.setDishName(rs.getString("dish_name"));
+				dishVO.setAccountID(rs.getInt("account_id"));
+				dishVO.setEventID(rs.getInt("event_id"));
+				list.add(dishVO);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public List<DishVO> findByAccountIDAndEventID(Integer AccountID,Integer EventID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DishVO dishVO = null;
+		List<DishVO> list = new ArrayList<DishVO>();
+		
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Account_And_Event_Stmt);
+
+			pstmt.setInt(1, AccountID);
+			pstmt.setInt(2, EventID);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				dishVO = new DishVO();
+				dishVO.setDishID(rs.getInt("dish_id"));
+				dishVO.setDishName(rs.getString("dish_name"));
+				dishVO.setAccountID(rs.getInt("account_id"));
+				dishVO.setEventID(rs.getInt("event_id"));
+				list.add(dishVO);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
 	
 	@Override
 	public List<DishVO> getAll() {
@@ -501,6 +615,7 @@ public class DishJDBCDAO implements DishDAOinterface {
 			System.out.println("=======================");
 		}
 	}
+
 
 
 }

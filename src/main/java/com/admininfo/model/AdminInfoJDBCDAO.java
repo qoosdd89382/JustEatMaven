@@ -23,11 +23,13 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 	}
 
 	// 是否需要註冊日期?
-	private static final String INSERT = "INSERT INTO AdminInfo(admin_mail, admin_nickname, admin_password, admin_pic, admin_state, admin_register_time) VALUES(?, ?, ?, ?, ?, NOW())";
+	private static final String INSERT = "INSERT INTO AdminInfo(admin_mail, admin_nickname, admin_password, admin_pic, admin_register_time) VALUES(?, ?, ?, ?, NOW())";
+//	private static final String INSERT = "INSERT INTO AdminInfo(admin_mail, admin_nickname, admin_password, admin_pic, admin_state, admin_register_time) VALUES(?, ?, ?, ?, ?, NOW())";
 	// 順序看要寫死還是後端判斷
 	private static final String SELECT_ONE = "SELECT * FROM AdminInfo WHERE admin_id = ?";
 	private static final String SELECT_ALL = "SELECT * FROM AdminInfo";
 	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
+//	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM AdminInfo WHERE admin_nickname = ?";
 
 	@Override
@@ -45,7 +47,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			pstmt.setString(2, adminInfo.getAdminNickname());
 			pstmt.setString(3, adminInfo.getAdminPassword());
 			pstmt.setBytes(4, adminInfo.getAdminPic());
-			pstmt.setBoolean(5, adminInfo.getAdminState());
+//			pstmt.setBoolean(5, adminInfo.getAdminState());
 						
 			insertRow = pstmt.executeUpdate();
 			
@@ -314,6 +316,12 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			}
 		}
 		return ExistStatus;
+	}
+
+	@Override
+	public int updateState(AdminInfoVO adminInfo) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

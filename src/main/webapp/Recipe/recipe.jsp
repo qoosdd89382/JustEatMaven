@@ -5,37 +5,52 @@
 
 <%@ page import="java.util.*"%>
 <%@ page import="com.recipe.model.*"%>
+<%@ page import="com.cuisinecategory.model.*"%>
 <%@ page import="com.recipecuisinecategory.model.*"%>
 <%@ page import="com.recipeingredientunit.model.*"%>
 <%@ page import="com.recipestep.model.*"%>
 
 <%			
-int recipeID = new Integer(request.getParameter("id"));
-
-RecipeService recipeSvc = new RecipeService();
-RecipeVO recipeVO = recipeSvc.getOneRecipe(recipeID);
-request.setAttribute("recipeVO", recipeVO);
-
-RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
-List<RecipeCuisineCategoryVO> recipeCatList = recipeCatSvc.getAllByRecipe(recipeID);
-request.setAttribute("recipeCatList", recipeCatList);
-
-RecipeIngredientUnitService recipeIngUnitSvc = new RecipeIngredientUnitService();
-List<RecipeIngredientUnitVO> recipeIngUnitList = recipeIngUnitSvc.getAllByRecipe(recipeID);
-request.setAttribute("recipeIngUnitList", recipeIngUnitList);
-
-RecipeStepService recipeStepSvc = new RecipeStepService();
-List<RecipeStepVO> RecipeStepList = recipeStepSvc.getAllByRecipe(recipeID);
-request.setAttribute("RecipeStepList", RecipeStepList);
-
+	Map<String, String> errorMsgs = new HashMap<String, String>();
+	request.setAttribute("errorMsgs", errorMsgs);
+	
+	try {
+	
+		int recipeID = new Integer(request.getParameter("id"));
+			
+		RecipeService recipeSvc = new RecipeService();
+		RecipeVO recipeVO = recipeSvc.getOneRecipe(recipeID);
+		
+		if (recipeVO == null) {
+			throw new Exception();
+		}
+		
+		request.setAttribute("recipeVO", recipeVO);
+		
+		RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
+		List<RecipeCuisineCategoryVO> recipeCatList = recipeCatSvc.getAllByRecipe(recipeID);
+		request.setAttribute("recipeCatList", recipeCatList);
+		
+		RecipeIngredientUnitService recipeIngUnitSvc = new RecipeIngredientUnitService();
+		List<RecipeIngredientUnitVO> recipeIngUnitList = recipeIngUnitSvc.getAllByRecipe(recipeID);
+		request.setAttribute("recipeIngUnitList", recipeIngUnitList);
+		
+		RecipeStepService recipeStepSvc = new RecipeStepService();
+		List<RecipeStepVO> RecipeStepList = recipeStepSvc.getAllByRecipe(recipeID);
+		request.setAttribute("RecipeStepList", RecipeStepList);
+	
+	} catch (Exception e) {
+		errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
+		e.printStackTrace();
+		RequestDispatcher failureView = request.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+		failureView.forward(request, response);
+	}
 %>
 
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<jsp:useBean id="CategorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
-<jsp:useBean id="IngredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
-<jsp:useBean id="UnitSvc" scope="page" class="com.unit.model.UnitService" />
-<%-- <jsp:useBean id="recipeCatSvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" /> --%>
-<%-- <jsp:useBean id="recipeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" /> --%>
+<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
+<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
+<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 
 <!DOCTYPE html>
 <html>
@@ -51,6 +66,7 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipe.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <title>${recipeVO.recipeName} | 食譜 | Just Eat 揪食</title>
 	
 </head>
@@ -148,8 +164,9 @@ request.setAttribute("RecipeStepList", RecipeStepList);
 
 		</div>
 
+		<%-- include sidebar --%>
 		<div class="sidebar col-md-3 col-12">
-			目前沒東西
+			<%@ include file="/Recipe/recipeSidebar.bar"%>
 		</div>	
     </main>
 	

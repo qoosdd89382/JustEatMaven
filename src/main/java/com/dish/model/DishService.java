@@ -37,6 +37,14 @@ public class DishService {
 		return dao.findByEventID(eventID);
 	}
 	
+	public List<DishVO> getAccountID(int accountID) {
+		return dao.findByAccountID(accountID);
+	}
+	
+	public List<DishVO> getAccountIDAndEventID(int accountID , int eventID) {
+		return dao.findByAccountIDAndEventID(accountID, eventID);
+	}
+	
 	public List<DishVO> getAll(){
 		return dao.getAll();
 	}

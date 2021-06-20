@@ -59,6 +59,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
 <style>
 </style>
@@ -292,7 +293,10 @@
 
 		</div>
 
-		<div class="sidebar col-md-3 col-12">目前沒東西</div>
+		<%-- include sidebar --%>
+		<div class="sidebar col-md-3 col-12">
+			<%@ include file="/Recipe/recipeSidebar.bar"%>
+		</div>	
 	</main>
 
 	<%-- include footer --%>
