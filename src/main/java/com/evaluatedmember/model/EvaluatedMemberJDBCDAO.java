@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eventmember.model.EventMemberVO;
+
 public class EvaluatedMemberJDBCDAO implements EvaluatedMemberDAOInterface {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
@@ -19,7 +21,7 @@ public class EvaluatedMemberJDBCDAO implements EvaluatedMemberDAOInterface {
 	private static final String Update_Stmt = "Update EvaluatedMember Set give_score=? Where event_id = ? AND accepter_account_id = ?";
 //	private static final String Delete_Stmt = "Delete From EvaluatedMember Where "; 再想想
 	private static final String Select_All_Stmt = "Select * From EvaluatedMember";
-
+	private static final String Get_AllByEventID_Stmt = "Select * From EvaluatedMember Where event_id = ?";
 	static {
 		try {
 			Class.forName(driver);
@@ -117,6 +119,59 @@ public class EvaluatedMemberJDBCDAO implements EvaluatedMemberDAOInterface {
 		try {
 			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(Select_All_Stmt);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				evaluatedMemberVO = new EvaluatedMemberVO();
+				evaluatedMemberVO.setAccepterAccountID(rs.getInt("accepter_account_id"));
+				evaluatedMemberVO.setGiverAccountID(rs.getInt("Giver_account_id"));
+				evaluatedMemberVO.setEventID(rs.getInt("Event_id"));
+				evaluatedMemberVO.setGiveScore(rs.getInt("Give_score"));
+				list.add(evaluatedMemberVO);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(con!=null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public List<EvaluatedMemberVO>  getAllByEventID(Integer eventID) {
+		List<EvaluatedMemberVO> list = new ArrayList<EvaluatedMemberVO>();
+		EvaluatedMemberVO evaluatedMemberVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Get_AllByEventID_Stmt);
+			pstmt.setInt(1, eventID);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				evaluatedMemberVO = new EvaluatedMemberVO();

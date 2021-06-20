@@ -26,9 +26,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.accountinfo.model.AccountInfoService;
+import com.dish.model.DishService;
+import com.dish.model.DishVO;
 import com.dishandingredient.model.DishAndIngredientVO;
+import com.dishandingredient.model.DishandingredientService;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
+import com.eventmember.model.EventMemberService;
+import com.eventmember.model.EventMemberVO;
+import com.ingredient.model.IngredientService;
 import com.ingredient.model.IngredientVO;
 
 public class EventInfoActionServlet extends HttpServlet {
@@ -788,6 +795,58 @@ public class EventInfoActionServlet extends HttpServlet {
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 			returnView.forward(request, response);
+		}
+		
+		if("確定參加".equals(action)) {
+			String dishAndIngJson = request.getParameter("dishAndIngJson");
+//			System.out.println(dishAndIngJson);
+			Integer[][] ingID = null;
+			String[] dishName = null;
+			try {
+				JSONArray jsonArray = new JSONArray(dishAndIngJson);
+				ingID = new Integer[jsonArray.length()][];
+				dishName = new String[jsonArray.length()];
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject jsonObj = jsonArray.getJSONObject(i);
+					Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
+
+					for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
+						tempIngID[j] = jsonObj.getJSONArray("IngID").getInt(j);
+					}
+
+					dishName[i] = jsonObj.getString("dishName");
+					ingID[i] = tempIngID;
+				}
+//				System.out.println(Arrays.toString(dishName) + "," + Arrays.deepToString(ingID));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			EventMemberService eventMemberSvc = new EventMemberService();
+			eventMemberSvc.addEventMemberAndDish(Integer.parseInt(request.getParameter("eventID")), 100002, 1, false, dishName, ingID);
+			
+			RequestDispatcher MenuView = request.getRequestDispatcher("/Event/EventList.jsp");
+			MenuView.forward(request, response);
+		}
+		//===================================成員菜單================================
+		if("成員菜單".equals(action)) {
+			RequestDispatcher MenuView = request.getRequestDispatcher("/Event/MemberMenu.jsp");
+			MenuView.forward(request, response);
+		}
+		
+		if("返回活動詳情".equals(action)) {
+			RequestDispatcher ReturnView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
+			ReturnView.forward(request, response);
+		}
+		
+		if("返回活動列表".equals(action)) {
+			RequestDispatcher ReturnView = request.getRequestDispatcher("/Event/EventList.jsp");
+			ReturnView.forward(request, response);
+		}
+		//===================================活動詳情(主辦者)===========================
+		if("活動編輯".equals(action)) {
+			
 		}
 	}
 

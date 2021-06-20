@@ -15,6 +15,7 @@ public class EvaluatedMemberService {
 		evaluatedMemberVO.setGiverAccountID(giverAccountID);
 		evaluatedMemberVO.setEventID(eventID);
 		evaluatedMemberVO.setGiveScore(giveScore);
+		evaluatedMemberVO.setGiveScore(eventID);
 		dao.insert(evaluatedMemberVO);
 		return evaluatedMemberVO;
 	}
@@ -31,4 +32,10 @@ public class EvaluatedMemberService {
 	public List<EvaluatedMemberVO> getAll(){
 		return dao.getAll();
 	}
+	
+
+	public List<EvaluatedMemberVO> getAllByEventID(Integer eventID){
+		return dao.getAllByEventID(eventID);
+	}
+
 }
