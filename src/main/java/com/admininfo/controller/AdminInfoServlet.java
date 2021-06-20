@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import com.admininfo.model.AdminInfoVO;
 import com.recipe.model.RecipeService;
 
 @WebServlet("/Dashboard/admin.do")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 3 * 1024 * 1024)
 public class AdminInfoServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -90,6 +92,7 @@ public class AdminInfoServlet extends HttpServlet {
 					}
 				} catch (Exception e) {
 					System.err.println("使用者操作時發生其他例外");
+					e.printStackTrace();
 				}
 
 				AdminInfoVO adminVO = new AdminInfoVO();
