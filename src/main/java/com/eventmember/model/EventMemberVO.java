@@ -7,8 +7,7 @@ public class EventMemberVO implements Serializable{
 	private Integer eventID;
 	private Integer accountID;
 	private Integer participationState;
-	private Integer totalScore;
-	private Integer totalJudger;
+	private boolean hostIdentifier;
 
 	public Integer getEventID() {
 		return eventID;
@@ -34,20 +33,13 @@ public class EventMemberVO implements Serializable{
 		this.participationState = participationState;
 	}
 
-	public Integer getTotalScore() {
-		return totalScore;
+	public boolean isHostIdentifier() {
+		return hostIdentifier;
 	}
 
-	public void setTotalScore(Integer totalScore) {
-		this.totalScore = totalScore;
+	public void setHostIdentifier(boolean hostIdentifier) {
+		this.hostIdentifier = hostIdentifier;
 	}
 
-	public Integer getTotalJudger() {
-		return totalJudger;
-	}
-
-	public void setTotalJudger(Integer totalJudger) {
-		this.totalJudger = totalJudger;
-	}
-
+	
 }

@@ -1,5 +1,35 @@
+<%@page import="com.ingredient.model.IngredientService"%>
+<%@page import="java.util.List"%>
+<%@page import="com.eventmember.model.EventMemberVO"%>
+<%@page import="com.eventmember.model.EventMemberService"%>
+<%@page import="com.dish.model.DishVO"%>
+<%@page import="com.dishandingredient.model.DishandingredientService"%>
+<%@page import="com.dishandingredient.model.DishAndIngredientVO"%>
+<%@page import="com.dish.model.DishService"%>
+<%@page import="com.accountinfo.model.AccountInfoService"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
+<jsp:useBean id="accountInfoSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="dishSvc" scope="page" class="com.dish.model.DishService" />
+<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
+<jsp:useBean id="dishAndIngredientSvc" scope="page" class="com.dishandingredient.model.DishandingredientService" />
+<%
+// 	EventMemberService eventMemberSvc = new EventMemberService();
+// 	AccountInfoService accountInfoSvc = new AccountInfoService();
+// 	DishService dishSvc = new DishService();
+// 	DishandingredientService dishAndIngredientSvc = new DishandingredientService();
+// 	IngredientService ingredientSvc = new IngredientService();
+	
+	List<EventMemberVO> eventMemberVOList = eventMemberSvc.getAllByEventID(Integer.parseInt(request.getParameter("eventID")));
+	request.setAttribute("eventMemberVOList",eventMemberVOList);
+	
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,9 +58,48 @@
 		</ol>
 	</nav>
 	<form action="<%=request.getContextPath()%>/Event/EventInfo.do" method="POST" id="formID">
-		<div>
-			<ul></ul>
+		<div class="temp_data">
+			<input type="hidden" name="eventID" value="${param.eventID}">
 		</div>
+		<div class="title">
+	        <h2>成員菜單</h2>
+	    </div>
+	    <main  class="memberMenu col-lg-12 col-12 row">
+			<div class="col-lg-12 col-12">
+				<table class="borderforMenu">
+					<thead>
+						<tr class="">
+							<th class="">帳號</th>
+							<th class="">菜名</th>
+							<th class="">食材</th>
+							<th class="">狀態</th>
+						</tr>
+					</thead>
+					<c:forEach var="eventMemberVO" items="${eventMemberVOList}" varStatus="i">
+						<tbody>
+							<tr class="">
+								<td class="" rowspan=${fn:length(dishSvc.getAccountID(eventMemberVO.accountID))}>
+								${accountInfoSvc.getAccountID(eventMemberVO.accountID).accountMail}
+								</td>
+									<c:forEach var="dishVO" items="${dishSvc.getAccountIDAndEventID(eventMemberVO.accountID,param.eventID)}">
+										<td class="">${dishVO.dishName}</td>
+										<td class="">
+										<c:forEach var="dishAndIngredientVO" items="${dishAndIngredientSvc.getAllByDish(dishVO.dishID)}">
+											<span>${ingredientSvc.getOneIngredient(dishAndIngredientVO.ingredientID).ingredientName}</span>
+										</c:forEach>
+										</td>
+										<td>已確認</td></tr><tr>		
+								</c:forEach>
+							</tr>
+						</tbody>						
+					</c:forEach>
+				</table>
+				<div class="">
+					<input type="submit" name="action" value="返回活動詳情">
+					<input type="submit" name="action" value="返回活動列表">
+				</div>
+			</div>
+		</main>
     </form>
     <footer>
 		<%@ include file="/common/footer.jsp"%>
