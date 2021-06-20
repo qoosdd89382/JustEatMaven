@@ -5,13 +5,18 @@
 
 <%@ page import="java.util.*"%>
 <%@ page import="com.recipe.model.*"%>
+<%@ page import="com.cuisinecategory.model.*"%>
 
 <%
 	RecipeService recipeSvc = new RecipeService();
 	List<RecipeVO> recipeList = recipeSvc.getAll();
 	pageContext.setAttribute("list", recipeList);
 %>
+
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
+<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
+<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 <!-- 基本上意思和上面java區塊new、放進Page scope是一樣的 -->
 
 <!DOCTYPE html>
@@ -28,6 +33,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/listAllRecipe.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
 	
 </head>
@@ -51,8 +57,11 @@
 					<li class="breadcrumb-item active" aria-current="page">食譜列表</li>
 				</ol>
 			</div> 
-    		
     	
+    		<section class="error">
+    			${errorMsgs.get("UnknowErr")}
+    		</section>
+    		
 			<div class="list">
     		<%@ include file="pages/page1.file"%>
 				<c:forEach var="recipeVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
@@ -88,7 +97,7 @@
 									<button class="btn btn-primary" type="submit">編輯</button>
 								</form>
 								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="getOneForDelete">
+									<input type="hidden" name="action" value="delete">
 									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
 									<button class="btn btn-primary" type="submit">刪除</button>
 								</form>
@@ -107,8 +116,9 @@
 
 		</div>
 
+		<%-- include sidebar --%>
 		<div class="sidebar col-md-3 col-12">
-			目前沒東西
+			<%@ include file="/Recipe/recipeSidebar.bar"%>
 		</div>	
     </main>
 	
@@ -127,5 +137,8 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
+	<script>
+	
+	</script>
 </body>
 </html>

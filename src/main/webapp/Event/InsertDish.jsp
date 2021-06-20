@@ -49,7 +49,7 @@
     </c:forEach>
     </p>
 	<form method="post" action="<%=request.getContextPath()%>/Event/EventInfo.do">
-	
+		<input type="hidden" name="eventID" value="${eventInfoVO.eventID}">
 		<input type="hidden" name="choose_type" value="${eventInfoVO.groupType}">
 		<input type="hidden" name="event_name" value="${eventInfoVO.eventName}">
 		<input type="hidden" name="event_member" value="${eventInfoVO.eventCurrentCount}">
@@ -115,6 +115,8 @@
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
 	//======================AutoComplete==================================
 	$(function(){

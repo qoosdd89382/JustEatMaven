@@ -37,8 +37,10 @@
 	request.getAttribute("errorMsgs");
 	
 	String dishAndIngJson = request.getParameter("dishAndIngJson");
-	String replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
-
+	String replaceDishAndIngJson = null;
+	if(dishAndIngJson!=null){
+		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
+	}
 	
 %>
 <!DOCTYPE html>
@@ -74,10 +76,11 @@
 	    </div>
 	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
 	   	<div class="temp_data">
-	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson%>">
+	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
 	   	</div>
-	    <div class="event_content">
-	        <div class="info">
+	    <div class="event_content col-12 col-lg-12 row">
+	        <div class="info col-6 col-lg-6">
+	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")}</span>
 	            <div class="title_separate">
 	                請選擇揪團類型
 	                <label>
@@ -162,13 +165,11 @@
 	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
 	            </div>
 	        </div>
-	        <div class="overflow">
-		        <div class="info">
-		            <div class="event_description">
-		                <textarea name="event_description" cols="60" rows="20" placeholder="活動說明"></textarea>
-		            </div>
+		    <div class="info col-6 col-lg-6">
+		        <div class="event_description">
+		            <textarea name="event_description" cols="60" rows="20" placeholder="活動說明"></textarea>
 		        </div>
-	        </div>
+		    </div>
 	    </div>
 	    </form>
 	<footer>
@@ -176,6 +177,8 @@
 	</footer>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/datetimepicker/js/jquery.datetimepicker.full.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
 		 $.datetimepicker.setLocale('zh'); // kr ko ja en
 	     $('#eventStart').datetimepicker({

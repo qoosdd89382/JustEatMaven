@@ -10,6 +10,9 @@ public interface DishDAOinterface {
 	public void update(DishVO dishVO);
 	public void delete(Integer dishID);
     public DishVO findByPrimaryKey(Integer dishID);
+    public List<DishVO> findByEventID(Integer eventID);
+    public List<DishVO> findByAccountID(Integer AccountID);
+    public List<DishVO> findByAccountIDAndEventID(Integer AccountID,Integer EventID);
     public List<DishVO> getAll();
     
     //被活動資訊連鎖用

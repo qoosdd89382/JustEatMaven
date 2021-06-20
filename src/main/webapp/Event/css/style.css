@@ -87,17 +87,18 @@ img {
     display: block;
 }
 
+.event_content{
+	margin: 0 auto !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .info div {
     margin: 10px 0 0 20px;
 }
 
-.overflow{
-	 overflow: hidden;
-}
-
 .info {
-    margin: 0 20px 0 0;
-    float: left;
+
 }
 
 .inputAddress{
@@ -113,11 +114,15 @@ textarea {
 	color: red;
 }
 
-/*   */
+/*活動詳情*/
 
 .border {
     padding: 0 5px;
     border: 1px solid black;
+}
+
+.event_content_left >div{
+	margin:0 0 10px 0;
 }
 
 
@@ -168,3 +173,4 @@ textarea {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+

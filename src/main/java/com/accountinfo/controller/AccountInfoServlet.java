@@ -212,11 +212,38 @@ public class AccountInfoServlet extends HttpServlet {
 				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
 					errorMsgs.put("accountPhoneError","請輸入電話");
 				}
-				//照片檢查
+				
+//照片檢查後續再補
+				
 				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
 					errorMsgs.put("accountTextError","請輸入自我介紹");
 				}
 				
+				//有錯誤就返回
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = req
+							.getRequestDispatcher("/Account/AccountRegisterPage.jsp");
+					failureView.forward(req, res);
+					return;//程式中斷
+				}
+				
+				//註冊正則表達式規範
+			//帳號規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
+				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
+				//判斷使用者帳號輸入是否符合，回傳boolean值
+				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
+			//密碼規範:至少8碼任意大小寫英文數字
+				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,}$");
+				//判斷使用者密碼輸入是否符合，回傳boolean值
+				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+			//暱稱規範:兩個字以上
+				Pattern accountNicknamePattern = Pattern.compile("^\\w{8,}$");
+				//判斷使用者密碼輸入是否符合，回傳boolean值
+//				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+//			//暱稱規範:兩個字以上
+//				Pattern accountNicknamePattern = Pattern.compile("^\\w{8,}$");
+//				//判斷使用者密碼輸入是否符合，回傳boolean值
+//				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
 				
 				//註冊成功就可以到登入畫面登入看自己的資料
 				String url = "/Account/AccountInfoPage.jsp";

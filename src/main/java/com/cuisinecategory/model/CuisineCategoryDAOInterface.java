@@ -11,6 +11,7 @@ public interface CuisineCategoryDAOInterface {
 	public int delete(int[] cuisineCategoryIDs);	// 回傳筆數
 //	public void deleteAll();
 	public List<CuisineCategoryVO> getAll();
+	public List<CuisineCategoryVO> getAll(String sqlStatement);
 	public CuisineCategoryVO getOneByID(int cuisineCategoryID);
 	public boolean isExist(String cuisineCategoryName);
 //	public Set<CuisineCategoryVO> getManyByID(int cuisineCategoryID);	// 參考別人的表才需要	

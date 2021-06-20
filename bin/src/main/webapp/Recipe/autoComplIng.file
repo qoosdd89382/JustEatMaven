@@ -1,0 +1,129 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+
+<!-- 食譜食材單位用 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+
+
+	var ingredientArr = new Array();
+	<c:forEach var="ingOne" items="${ingredientSvc.all}">
+		var ingObj = new Object();
+		ingObj.id = ${ingOne.ingredientID};
+		ingObj.value = "${ingOne.ingredientName}";
+		ingredientArr.push(ingObj);
+	</c:forEach>
+	
+		var unitArr = new Array();
+	<c:forEach var="unitOne" items="${unitSvc.all}">
+		unitArr.push(${unitOne.unitID});
+	</c:forEach>
+	
+<%  if (recipeIngredientIDs != null) {
+		String[] orgList = recipeIngredientIDs.trim().split(" ");
+		for (String one : orgList) {
+%>
+				var tempIng = "<%= one %>";
+				if (tempIng != "") { 
+			        ingredientArr.forEach(function(item, index, array){
+	        		  if (tempIng == array[index].id) {
+	        				array.splice(index, 1);
+	        		  }
+	        		});
+				}
+				
+<%		}
+	}
+%>
+		
+	
+
+	var bringBackUnits = new Array();
+<%	if (unitIDs != null) {
+		for (String unitID : unitIDs) {
+%>
+			bringBackUnits.push("<%= unitID%>");
+<%		}
+	}
+%>
+	
+	
+	var bringBackAmounts = new Array();
+<%	if (recipeUnitAmounts != null) {
+		for (String recipeUnitAmount : recipeUnitAmounts) {
+%>
+
+			bringBackAmounts.push("<%= recipeUnitAmount%>");
+
+<%		}
+	} 
+%>
+	
+	function putIngInIDs(id, value) {
+		var tempIngHtml = "<li class='row ui-widget' data-id='" + id + "'><div class='col-4 vertical-container'>" + value + "</div>"
+				 		  + "<input class='form-control unitAmounts col-2' name='unitAmounts' type='number' min='0.01' max='9999.99' step='0.01'>" 
+						  + "<select class='form-control unitIDs col-3' name='unitIDs'><option value='0'>選擇單位</option>"
+					<c:forEach var="unitOne" items="${unitSvc.all}">
+						  + "<option value='${unitOne.unitID}'>${unitOne.unitName}</option>"
+					</c:forEach>
+						  ;
+						
+		var tempIngHtml2 = "<div class='vertical-container'><i class='fas fa-times'></i></div>";
+		
+		$(".ingAutoOutput").find("ul").append(tempIngHtml);
+		$(".ingAutoOutput").find("ul").find("li").last().append(tempIngHtml2);
+   		
+        if ($(".ingAutoInput").val() == "") {
+            $(".ingAutoInput").val(" " + id);
+        } else {
+            var tempIngStr = $(".ingAutoInput").val();
+            tempIngStr += " " + id;
+            $(".ingAutoInput").val(tempIngStr);
+        }
+	}
+	
+	
+	
+
+   		
+	$("#ingAutoCompl")
+	    // don't navigate away from the field on tab when selecting an item
+	    .on("keydown", function (event) {
+	        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+	            event.preventDefault();
+	        }
+	    })
+	    .autocomplete({
+	        minLength: 0,
+	        source: ingredientArr,
+	        select: function (event, ui) {
+		        ingredientArr.forEach(function(item, index, array){
+        		  if (ui.item.value == array[index].value) {
+        			  array.splice(index, 1);
+        		  }
+        		});
+	        	
+	            putIngInIDs(ui.item.id, ui.item.value);
+				$("#ingAutoCompl").val("");
+	            return false;
+	        }
+	    });
+	
+	
+	$(".ingAutoOutput").on("click", "svg", function(e) {
+		
+		var selectStr = $(this).parent().attr("data-id");
+		var selectName = $(this).parent().find("div").html();
+		console.log(selectStr + "," + selectName)
+		
+        var tempStr = $(".ingAutoInput").val();
+        var newStr = tempStr.replace(" " + selectStr, "");
+        
+        $(".ingAutoInput").val(newStr);
+        
+        var addBackIngObj = new Object();
+		addBackIngObj.id = selectStr;
+		addBackIngObj.value = selectName;
+		ingredientArr.push(addBackIngObj);
+
+		$(this).closest("li").remove();		
+	});
+	
+<!-- 食譜食材單位用 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ -->

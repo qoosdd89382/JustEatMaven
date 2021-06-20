@@ -25,23 +25,28 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 
 <title>AccountInfoPage</title>
 <style>
-h1#accountWelcom{
-	margin-top:100px;
+div#main_block{
+	margin-top:150px;
 }
-ul#accountInfo{
-	margin-top:40px;
+span#accountWelcom{
+	font-size:30px;
 }
-ul#accountInfo li{
-	margin:20px;
-}
-div#account_welcom{
-	text-align:center;
-}
-div#function_select_area li{
+div#function_select_area form,
+div#function_select_area a {
 	border:1px ridge orange;
 	font-size:25px;
 	margin:15px;
 }
+div#account_info_area{
+ 	border:1px solid gray;
+}
+div#account_info_area form,
+div#account_info_area span {
+	font-size:25px;
+	margin:15px;
+}
+
+
 input#account_change_info,
 input#account_logout {
 	margin:5px;
@@ -69,91 +74,81 @@ input#account_logout:hover {
 	</header>
 	
 	<div class="container" id="main_block">
-		<div class="row" id="account_welcom">
+	
+		<div class="row offset-4" id="account_welcom">
 			<div class="col">
-				<h1 id="accountWelcom">歡迎，用戶<%=accountInfoVO.getAccountNickname()%></h1>
-				<h2>以下是您的資料</h2>
+				<span id="accountWelcom">歡迎，用戶<%=accountInfoVO.getAccountNickname()%></span><br>
+				<span id="accountWelcom">以下是您的資料</span><br>
 			</div>
 		</div>
+		
 		<div class="row">
+		
 			<div class="col-4" id="function_select_area">
-				<ul>
-					<li>
-					<form method="post" action="accountInfo.do">
-							<input type="hidden" name="action" value="gotoAccountInfoPage">
-							<input type="submit" value="會員資料">
-					</form>
-					</li>
-					<li><a href='#'>我的活動</a></li>
-					<li><a href='#'>我的評價</a></li>
-					<li>
-					<form method="post" action="friendship.do">
-							<input type="hidden" name="action" value="getAccount_Friendship">
-							<input type="submit" value="我的好友">
-					</form>
-					</li>
-					<li><a href='#'>我的文章</a></li>
-					<li><a href='#'>我的收藏</a></li>
-					<li><a href='#'>我的訂單</a></li>
-					<li><a href='#'>成為商家(這裡記得要加判斷)</a></li>
-					<li>
-						<form method="post" action="notice.do">
-							<input type="hidden" name="action" value="getAccount_Notice">
-							<input type="submit" value="查看我的通知">
-						</form>
-					</li>
-					<li>
-						<form method="post" action="announce.do">
-							<input type="hidden" name="action" value="getAccount_Announce">
-							<input type="submit" value="查看我的公告">
-						</form>
-					</li>		
-				</ul>
+				<form method="post" action="accountInfo.do">
+					<input type="hidden" name="action" value="gotoAccountInfoPage">
+					<input type="submit" value="會員資料">
+				</form>
+				<a href='#'>我的活動</a><br>
+				<a href='#'>我的評價</a><br>
+				<form method="post" action="friendship.do">
+						<input type="hidden" name="action" value="getAccount_Friendship">
+						<input type="submit" value="我的好友">
+				</form>
+				<a href='#'>我的文章</a><br>
+				<a href='#'>我的收藏</a><br>
+				<a href='#'>我的訂單</a><br>
+				<a href='#'>成為商家(這裡記得要加判斷)</a><br>
+				<form method="post" action="notice.do">
+					<input type="hidden" name="action" value="getAccount_Notice">
+					<input type="submit" value="查看我的通知">
+				</form>
+				<form method="post" action="announce.do">
+					<input type="hidden" name="action" value="getAccount_Announce">
+					<input type="submit" value="查看我的公告">
+				</form>
 			</div>
 			
 			<div class="col-6" id="account_info_area">
-				<ul id="accountInfo">
-			<%-- 		<li><%=accountInfoVO.getAccountID()%></li> --%>
+				<%-- <span><%=accountInfoVO.getAccountID()%></span> --%>
+				<span>用戶信箱:<%=accountInfoVO.getAccountMail()%></span><br>
+				<span>用戶暱稱:<%=accountInfoVO.getAccountNickname()%></span><br>
+				<%-- <span><%=accountInfoVO.getAccountPassword()%></span> --%>
+				<%-- <span><%=accountInfoVO.getAccountState()%></span> --%>
+				<%-- <span><%=accountInfoVO.getAccountLevel()%></span> --%>
+				
+				<span>用戶名稱:<%=accountInfoVO.getAccountName()%></span><br>
+				<span>用戶性別:<%=accountInfoVO.getAccountGender()==1?"男":"女"%></span><br>
+				<span>用戶生日:<%=accountInfoVO.getAccountBirth()%></span><br>
+				<span>用戶電話:<%=accountInfoVO.getAccountPhone()%></span><br>
+				<span>用戶照片:</span><br>					
+				<img src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVO.accountID}" width="300px" height="150px"><br>
 					
-					<li>用戶信箱:<%=accountInfoVO.getAccountMail()%></li>
-					<li>用戶暱稱:<%=accountInfoVO.getAccountNickname()%></li>
-			<%-- 		<li><%=accountInfoVO.getAccountPassword()%></li> --%>
-			<%-- 		<li><%=accountInfoVO.getAccountState()%></li> --%>
-			<%-- 		<li><%=accountInfoVO.getAccountLevel()%></li> --%>
-					
-					<li>用戶名稱:<%=accountInfoVO.getAccountName()%></li>
-					<li>用戶性別:<%=accountInfoVO.getAccountGender()==1?"男":"女"%></li>
-					<li>用戶生日:<%=accountInfoVO.getAccountBirth()%></li>
-					<li>用戶電話:<%=accountInfoVO.getAccountPhone()%></li>
-					<li>用戶照片:<%=accountInfoVO.getAccountPic()%><img src="images/accountTest.jpg" width="100" height="100" border="0"></li>
-					
-					<li>用戶身分證正面:<%=accountInfoVO.getAccountIDcardFront()%><img src="images/accountIDFTest.jpg" width="100" height="100" border="0"></li>
-					<li>用戶身分證背面:<%=accountInfoVO.getAccountIDcardBack()%><img src="images/accountIDBTest.jpg" width="100" height="100" border="0"></li>
-					<li>用戶自我介紹:<%=accountInfoVO.getAccountText()%></li>
-					<li>用戶註冊時間:<%=accountInfoVO.getAccountRegistTime()%></li>
-					<li>
-						<form method="post" action="accountInfo.do">
-							<input type="hidden" name="action" value="Account_Change_Info">
-							<input id="account_change_info" type="submit" value="修改我的會員資料">	
-						</form>					
-					</li>
-					<li>
-						<form method="post" action="accountInfo.do">
-							<input type="hidden" name="action" value="Account_Logout">
-							<input id="account_logout" type="submit" value="登出帳戶">						
-						</form>
-					</li>
-
-					<!--儲存用戶資料在session -->
-					<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
-					<p>借我標記一下session==${accountMail}</p>
-					
-				</ul>
+				<span>用戶身分證正面:</span><br>
+				<img src="<%=request.getContextPath()%>/Account/Pic/Front/${accountInfoVO.accountID}" width="300px" height="150px"><br>
+				<span>用戶身分證背面:</span><br>
+				<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVO.accountID}" width="300px" height="150px"><br>
+				<span>用戶自我介紹:<br><%=accountInfoVO.getAccountText()%></span><br>
+				<span>用戶註冊時間:<%=accountInfoVO.getAccountRegistTime()%></span><br>
+				
+				<form method="post" action="accountInfo.do">
+					<input type="hidden" name="action" value="Account_Change_Info">
+					<input id="account_change_info" type="submit" value="修改我的會員資料">	
+				</form>
+				<form method="post" action="accountInfo.do">
+					<input type="hidden" name="action" value="Account_Logout">
+					<input id="account_logout" type="submit" value="登出帳戶">						
+				</form>
 			</div>
 		</div>	
 	</div>
 
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
+	
+	<p>備忘區</p>
+	<!--儲存用戶資料在session -->
+	<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
+	<span>借我標記一下session==${accountMail}</span>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
