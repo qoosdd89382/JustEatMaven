@@ -26,9 +26,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.accountinfo.model.AccountInfoService;
+import com.dish.model.DishService;
+import com.dish.model.DishVO;
 import com.dishandingredient.model.DishAndIngredientVO;
+import com.dishandingredient.model.DishandingredientService;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
+import com.eventmember.model.EventMemberService;
+import com.eventmember.model.EventMemberVO;
+import com.ingredient.model.IngredientService;
 import com.ingredient.model.IngredientVO;
 
 public class EventInfoActionServlet extends HttpServlet {
@@ -788,6 +795,25 @@ public class EventInfoActionServlet extends HttpServlet {
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 			returnView.forward(request, response);
+		}
+		//===================================成員菜單================================
+		if("成員菜單".equals(action)) {
+			RequestDispatcher MenuView = request.getRequestDispatcher("/Event/MemberMenu.jsp");
+			MenuView.forward(request, response);
+		}
+		
+		if("返回活動詳情".equals(action)) {
+			RequestDispatcher ReturnView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
+			ReturnView.forward(request, response);
+		}
+		
+		if("返回活動列表".equals(action)) {
+			RequestDispatcher ReturnView = request.getRequestDispatcher("/Event/EventList.jsp");
+			ReturnView.forward(request, response);
+		}
+		//===================================活動詳情(主辦者)===========================
+		if("活動編輯".equals(action)) {
+			
 		}
 	}
 

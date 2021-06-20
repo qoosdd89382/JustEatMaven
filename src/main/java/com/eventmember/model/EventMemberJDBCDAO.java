@@ -15,7 +15,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	private static String user = "DBAdmin";
 	private static String password = "justeat";
 
-	private static final String Insert_Stmt = "Insert into EventMember(event_id,account_id,participation_state,total_score,total_judger)Values((Select event_id From EventInfo Where event_id = ?),(Select account_id From AccountInfo Where account_id = ?),?,?,?)";
+	private static final String Insert_Stmt = "Insert into EventMember(event_id,account_id,participation_state,host_identifier)Values((Select event_id From EventInfo Where event_id = ?),(Select account_id From AccountInfo Where account_id = ?),?,?)";
 	private static final String Insert_With_Default_Stmt = "Insert into EventMember(event_id,account_id,participation_state)Values((Select event_id From EventInfo Where event_id = ?),(Select account_id From AccountInfo Where account_id = ?),?)";
 	// 單一活動獲得總評分,單一活動評分總人數 可在修改用查詢獲得 暫時還沒做
 	private static final String Update_Stmt = "Update EventMember Set participation_state = ? Where event_id = ? AND account_id = ?"; // 審核過就更新
@@ -44,8 +44,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			pstmt.setInt(1, eventMemberVO.getEventID());
 			pstmt.setInt(2, eventMemberVO.getAccountID());
 			pstmt.setInt(3, eventMemberVO.getParticipationState());
-			pstmt.setInt(4, eventMemberVO.getTotalScore());
-			pstmt.setInt(5, eventMemberVO.getTotalJudger());
+			pstmt.setBoolean(4, eventMemberVO.isHostIdentifier());
 			pstmt.executeUpdate();
 			System.out.println("新增成功");
 		} catch (SQLException e) {
@@ -83,6 +82,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			pstmt.setInt(1, eventMemberVO.getParticipationState());
 			pstmt.setInt(2, eventMemberVO.getEventID());
 			pstmt.setInt(3, eventMemberVO.getAccountID());
+			pstmt.setBoolean(4, eventMemberVO.isHostIdentifier());
 			pstmt.executeUpdate();
 			System.out.println("更新成功");
 		} catch (SQLException e) {
@@ -161,8 +161,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 				eventMemberVO.setEventID(rs.getInt("event_id"));
 				eventMemberVO.setAccountID(rs.getInt("account_id"));
 				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
-				eventMemberVO.setTotalScore(rs.getInt("total_score"));
-				eventMemberVO.setTotalJudger(rs.getInt("total_judger"));
+				eventMemberVO.setHostIdentifier(rs.getBoolean("host_identifier"));
 				list.add(eventMemberVO);
 			}
 		} catch (SQLException e) {
@@ -216,8 +215,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 				eventMemberVO.setEventID(rs.getInt("event_id"));
 				eventMemberVO.setAccountID(rs.getInt("account_id"));
 				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
-				eventMemberVO.setTotalScore(rs.getInt("total_score"));
-				eventMemberVO.setTotalJudger(rs.getInt("total_judger"));
+				eventMemberVO.setHostIdentifier(rs.getBoolean("host_identifier"));
 				list.add(eventMemberVO);
 			}
 		} catch (SQLException e) {
@@ -270,8 +268,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 				eventMemberVO.setEventID(rs.getInt("event_id"));
 				eventMemberVO.setAccountID(rs.getInt("account_id"));
 				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
-				eventMemberVO.setTotalScore(rs.getInt("total_score"));
-				eventMemberVO.setTotalJudger(rs.getInt("total_judger"));
+				eventMemberVO.setHostIdentifier(rs.getBoolean("host_identifier"));
 				list.add(eventMemberVO);
 			}
 		} catch (SQLException e) {
@@ -315,6 +312,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			pstmt.setInt(1, eventMemberVO.getEventID());
 			pstmt.setInt(2, eventMemberVO.getAccountID());
 			pstmt.setInt(3, eventMemberVO.getParticipationState());
+			pstmt.setBoolean(4, eventMemberVO.isHostIdentifier());
 			pstmt.executeUpdate();
 			System.out.println("新增活動成員 成功");
 		} catch (SQLException e) {
@@ -344,8 +342,6 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 //		eventMemberVO.setEventID(300001);
 //		eventMemberVO.setAccountID(100001);
 //		eventMemberVO.setParticipationState(1);
-//		eventMemberVO.setTotalScore(5);
-//		eventMemberVO.setTotalJudger(1);
 //		eventMemberJDBCDAO.insert(eventMemberVO);
 		// =====================更新用=========================
 //		eventMemberVO.setParticipationState(1);
@@ -360,8 +356,6 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 //			System.out.println(eventMemberVO_temp.getEventID());
 //			System.out.println(eventMemberVO_temp.getAccountID());
 //			System.out.println(eventMemberVO_temp.getParticipationState());
-//			System.out.println(eventMemberVO_temp.getTotalScore());
-//			System.out.println(eventMemberVO_temp.getTotalJudger());
 //			System.out.println("==================================");
 //		}
 		
@@ -370,8 +364,6 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 //			System.out.println(eventMemberVO_temp.getEventID());
 //			System.out.println(eventMemberVO_temp.getAccountID());
 //			System.out.println(eventMemberVO_temp.getParticipationState());
-//			System.out.println(eventMemberVO_temp.getTotalScore());
-//			System.out.println(eventMemberVO_temp.getTotalJudger());
 //			System.out.println("==================================");
 //		}
 		

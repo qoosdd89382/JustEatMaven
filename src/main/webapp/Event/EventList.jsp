@@ -41,7 +41,6 @@
 	<div class="add_Event">
 		<div class="Create_or_Join_Event col-10">
 			<button type="button" class="col-12 col-sm-3 col-md-2 col-lg-1">建立活動</button>
-			<button type="button" class="col-12 col-sm-3 col-md-2 col-lg-1">加入活動</button>
 		</div>
 	</div>
 	<div class="event_list_content row">
