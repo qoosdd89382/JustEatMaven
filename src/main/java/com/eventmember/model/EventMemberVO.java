@@ -9,6 +9,11 @@ public class EventMemberVO implements Serializable{
 	private Integer participationState;
 	private Integer totalScore;
 	private Integer totalJudger;
+	private Integer avgScore;
+	private Integer totalevent;
+	private Integer totalattendance;
+	private Integer eventstatus;
+	
 
 	public Integer getEventID() {
 		return eventID;
@@ -49,5 +54,39 @@ public class EventMemberVO implements Serializable{
 	public void setTotalJudger(Integer totalJudger) {
 		this.totalJudger = totalJudger;
 	}
+	public Integer getAvgScore() {
+		return avgScore;
+	}
+
+	public void setAvgScore(Integer avgScore) {
+		this.avgScore = avgScore;
+	}
+	public Integer getTotalEvent() {
+		return totalevent;
+	}
+
+	public void setTotalEvent(Integer totalevent) {
+		this.totalevent= totalevent;
+	}
+	
+	public Integer getTotalAttendance() {
+			return totalattendance;
+		}
+
+	public void setTotalAttendance(Integer totalattendance) {
+			this.totalattendance= totalattendance;
+	}
+	
+	public Integer getEventStatus() {
+		return eventstatus;
+	}
+
+	public void setEventStatus(Integer eventstatus) {
+		 this.eventstatus= eventstatus;
+}
+	
+		
+		
+	
 
 }

@@ -8,13 +8,17 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.eventmember.model.*"%>
 <%@ page import="com.accountinfo.model.*"%>
-<%
-	EventMemberService eventMemberSvc = new EventMemberService();
-	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300001);
-	pageContext.setAttribute("list", list);
-%>
-<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
+
+<%
+	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
+	pageContext.setAttribute("list", list);
+// 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
+// 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
+
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,8 +68,17 @@
 					<c:if test="${accountSvc.getAccountID(eventMemberVO.accountID).accountGender == 2}">女</c:if>
 				</td>
 				
-					<td>${evaluatedMemberVO.giveScore}</td> 
-					
+				<td>${eventMemberSvc.getAvgScoreByAccountID(eventMemberVO.accountID)}</td> 
+				<td>${eventMemberSvc.getTotalEventByAccountID(eventMemberVO.accountID)}</td> 	
+				<td>${eventMemberSvc.getTotalAttendanceByAccountID(eventMemberVO.accountID)}</td> 
+		
+				<td>	
+				     <c:if test="${eventMemberSvc.getTotalAttendanceByAccountID(eventMemberVO.accountID) == 1}">審核中</c:if>
+				     <c:if test="${eventMemberSvc.getTotalAttendanceByAccountID(eventMemberVO.accountID) == 2}">參與中</c:if>
+				</td>
+			
+			
+			
 				
 			</tr> 
 		</c:forEach>
