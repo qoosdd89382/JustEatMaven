@@ -8,6 +8,15 @@
 //先不用
 // AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
 //EmpServlet.java(Concroller), 存入req的VO物件
+
+String accountMail = request.getParameter("accountMail");
+String accountPassword = request.getParameter("accountPassword");
+String accountNickname = request.getParameter("accountNickname");
+String accountName = request.getParameter("accountName");
+// Integer accountGender =request.getParameter("accountGender");
+String accountBirth = request.getParameter("accountBirth");
+String accountText = request.getParameter("accountText");
+
 %>
 
 <html>
@@ -33,6 +42,11 @@ div#register_area{
 	margin-right:300px;
 }
 div#second_level_register_area{
+	margin-top:5px;
+	border:1px solid gray;	
+}
+
+div#third_level_register_area{
 	margin-top:5px;
 	border:1px solid gray;
 }
@@ -90,21 +104,25 @@ textarea#textarea {
 				
 				<form method="post" action="accountInfo.do">
 					<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br>
-					<input type="text" name="accountMail"><span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
+					<input type="text" name="accountMail" value="<%=(accountMail == null) ? "" : accountMail%>">
+					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 					
-					<span>請輸入會員暱稱 (如王陽明):</span><br>
-					<input type="text" name="accountNickname"><span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
+					<span>請輸入會員暱稱 (兩個字以上，任意 中文 數字 英文大小寫):</span><br>
+					<input type="text" name="accountNickname" value="<%=(accountNickname == null) ? "" : accountNickname%>">
+					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
 					
-					<span>請輸入會員密碼(如1q2w3e4r5t):之後改寄驗證信修改密碼</span><br>
-					<input type="text" name="accountPassword"><span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
+					<span>請輸入會員密碼(至少8~16碼任意大小寫英文數字):寄驗證信修改密碼</span><br>
+					<input type="text" name="accountPassword" value="<%=(accountPassword == null) ? "" : accountPassword%>">
+					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 					
 					<!-- 			<b>請輸入會員狀態 (如1):</b> -->
 					<!-- 			<input type="text" name="accountState"><br> -->
 					<!-- 			<b>請輸入會員層級 (如1):</b> -->
 					<!-- 			<input type="text" name="accountLevel"><br> -->
 
-					<span>請輸入會員姓名 (如王曉明):</span><br> 
-					<input type="text" name="accountName"><span style="color:red">${errorMsgs.get("accountNameError")}</span><br>
+					<span>請輸入會員姓名 (兩個字以上，任意 中文 英文大小寫):</span><br> 
+					<input type="text" name="accountName" value="<%=(accountName == null) ? "" : accountName%>">
+					<span style="color:red">${errorMsgs.get("accountNameError")}</span><br>
 					
 					<span>請輸入會員性別 :</span>
 					<input type="radio" name="accountGender" value="1">男
@@ -113,12 +131,17 @@ textarea#textarea {
 					<br>
 					
 					<span>請輸入會員生日</span><br>
-					<input type="date" name="accountBirth"><span style="color:red">${errorMsgs.get("accountBirthError")}</span><br>
-					
-					<span>請輸入會員電話 (如0912345678):</span><br>
-					<input type="text" name="accountPhone"><span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
+					<input type="date" name="accountBirth" value="<%=(accountBirth == null) ? "" : accountBirth%>">
+					<span style="color:red">${errorMsgs.get("accountBirthError")}</span><br>
 					
 					<div id="second_level_register_area">
+					<span>如要進行購物，則需上傳照片進行人工審核，需要幾個工作天</span><br>
+					<span>請輸入會員電話 (如0912345678):</span><br>
+					<input type="text" name="accountPhone">
+					<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
+					</div>
+
+					<div id="third_level_register_area">
 					<span>如要進行活動，則需上傳照片進行人工審核，需要幾個工作天</span><br>
 					<span>請輸入會員照片 :照片要用JSP照片要用JSP照片要用JSP</span><br> 
 					<input type="file" name="accountPic"><br> 
@@ -133,8 +156,8 @@ textarea#textarea {
 					<div id="account_idcardback_preview"><span class="preview_pic">會員身分證背面預覽圖</span></div>
 					</div>
 					
-					<span>請輸入會員自我介紹:</span><br>
-					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)" ></textarea><br>
+					<span>請輸入會員自我介紹:(必填)</span><br>
+					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)"><%=(accountText == null) ? "" : accountText%></textarea><br>
 					<span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
 					<!-- 			<b>請輸入會員註冊時間</b> -->
 					<!-- 			<input type="text" name="accountPhone"><br> -->
@@ -147,8 +170,9 @@ textarea#textarea {
 		</div>
 	</div>
 	<P>備忘錄</P>
+	<p>加入會員是否已存在的功能</p>
 	<P>會員自我介紹框自動伸縮</P>
-	<P>資料重新整理要在</P>	
+	<P>圖片要能夠預覽</P>	
 
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 

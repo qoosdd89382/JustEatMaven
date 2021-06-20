@@ -49,6 +49,7 @@ public class AccountInfoService {
 		
 		return accountInfoVO;
 	}
+	
 	public AccountInfoVO updateAccountInfoVO(
 //			Integer accountID,
 			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
@@ -106,7 +107,37 @@ public class AccountInfoService {
 	public AccountInfoVO getAccountPassword(String accountMail) {
 		return dao.getAccountPassword(accountMail);
 	}
+//註冊用
+	public void setLevelOneAccountInfoFromRegister(
+//		Integer accountID,
+		String accountMail,String accountNickname,String accountPassword,
+		String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+		String accountText
+		){
+		AccountInfoVO accountInfoVO = new AccountInfoVO();
+	//	accountInfoVO.setAccountID(accountID);
 	
+		accountInfoVO.setAccountMail(accountMail);
+		accountInfoVO.setAccountNickname(accountNickname);
+		accountInfoVO.setAccountPassword(accountPassword);
+		accountInfoVO.setAccountState(new Boolean("1"));
+		accountInfoVO.setAccountLevel(new Integer(1));
+		
+		accountInfoVO.setAccountName(accountName);
+		accountInfoVO.setAccountGender(accountGender);
+		accountInfoVO.setAccountBirth(accountBirth);
+		accountInfoVO.setAccountPhone(accountPhone);
+		accountInfoVO.setAccountPic(null);
+		
+		accountInfoVO.setAccountIDcardFront(null);
+		accountInfoVO.setAccountIDcardBack(null);
+		accountInfoVO.setAccountText(accountText);
+		
+		dao.setLevelOneAccountInfoFromRegister(
+				accountMail,accountNickname,accountPassword,
+				accountName,accountGender,accountBirth,accountPhone,
+				accountText);
+	}
 	
 	
 }
