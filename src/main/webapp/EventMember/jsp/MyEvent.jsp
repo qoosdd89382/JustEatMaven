@@ -18,8 +18,8 @@
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 <%
-
-	List<EventMemberVO> eventMemberList = eventMemberSvc.getAllByAccount(accountID);
+	String accountID = request.getParameter("accountID");
+	List<EventMemberVO> eventMemberList = eventMemberSvc.getAllByAccount(new Integer(accountID));
 %>
 %>
 <!DOCTYPE html>
