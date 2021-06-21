@@ -18,5 +18,7 @@ public interface EventMemberDAOInterface {
 	public void insertByEventInfo(EventMemberVO eventMemberVO,Connection con);
 	
 	public void insertWithDishIngredient(EventMemberVO eventMemberVO,List<DishVO> dishList,List<DishAndIngredientVO> dishAndIngredientList);
+	
+	public EventMemberVO getByEventIDAndMemberID(Integer eventID, Integer accountID);
 
 }

@@ -7,6 +7,7 @@
 	if(dishAndIngJson!=null){
 		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
 	}
+	System.out.println(request.getParameter("accountID"));
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,6 +37,7 @@
 	</nav>
 	<form action="<%=request.getContextPath()%>/Event/EventInfo.do" method="POST" id="formID">
 		<div class="temp_data">
+			<input type="hidden" name="accountID" value="${param.accountID}" class="accountIDTemp">
 			<input type="hidden" name="eventID" value="${param.eventID}" class="eventIDTemp">
 			<input type="hidden" name="choose_type" value="" class="groupTypeTemp">
 			<input type="hidden" name="event_name" value="" class="eventNameTemp">
@@ -44,12 +46,14 @@
 			<input type="hidden" name="event_end" value="" class="eventEndTemp">
 			<input type="hidden" name="city" value="" class="cityTemp">
 			<input type="hidden" name="address" value="" class="addressTemp">
+			<input type="hidden" name="event_description" value="" class="eventDescriptionTemp">
 			<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
 
 		</div>
 	    <div class="title">
 	        <h2>活動詳情</h2>
 	    </div>
+	    	<span class="error">${errorMsgs.get("dishAndIngredientIsNull")}</span>
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="event_content_left col-6 col-lg-6">
 	        	<div>
@@ -139,7 +143,8 @@
 				$(".eventStartTemp").val(startTime);
 				$(".eventEndTemp").val(endTime);
 				$(".cityTemp").val(data.city);
-				$(".addressTemp").val(data);
+				$(".addressTemp").val(data.address);
+				$(".eventDescriptionTemp").val(data.eventDescription);
 			}
 		});
 		

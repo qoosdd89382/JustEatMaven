@@ -40,6 +40,10 @@ public class EventMemberService {
 		dao.delete(eventID, accountID);
 	}
 	
+	public EventMemberVO getByEventAndMemberID(int eventID,int accountID) {
+		return dao.getByEventIDAndMemberID(eventID, accountID);
+	}
+	
 	public List<EventMemberVO> getAll() {
 		return dao.getAll();	
 	}

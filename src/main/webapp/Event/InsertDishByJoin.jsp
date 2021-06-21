@@ -50,7 +50,7 @@
     </p>
 	<form method="post" action="<%=request.getContextPath()%>/Event/EventInfo.do">
 		<input type="hidden" name="eventID" value="${param.eventID}">
-		
+		<input type="hidden" name="accountID" value="${param.accountID}">
 	    <main class="insert_content col-11 col-lg-11 row">
 	        <div class="insert_content_left col-6 col-lg-6">
 	            <div class="title">
