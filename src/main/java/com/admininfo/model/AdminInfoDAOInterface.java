@@ -9,6 +9,7 @@ public interface AdminInfoDAOInterface {
 	public int updateState(AdminInfoVO adminInfo);
 	public AdminInfoVO getOne(int adminID);
 	public boolean isNicknameExist(String adminNickname);
+	public boolean isMailExist(String adminMail);
 	public List<AdminInfoVO> getAll();
 
 }

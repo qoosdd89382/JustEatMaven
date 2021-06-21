@@ -41,6 +41,10 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	private static final String Select_Account_Stmt ="SELECT * FROM EventMember WHERE account_id = ?";
 	private static final String Select_EventandHost_Stmt ="SELECT account_id FROM EventMember WHERE event_id = ? and host_indentifier = 1";
 	
+
+	private static final String Select_EventID_And_MemberID_Stmt = "Select * From EventMember Where event_id = ? And account_id = ?";
+
+
 	static {
 		try {
 			Class.forName(driver);
@@ -161,6 +165,58 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 
 	}
 
+	@Override
+	public EventMemberVO getByEventIDAndMemberID(Integer eventID,Integer accountID) {
+		EventMemberVO eventMemberVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_EventID_And_MemberID_Stmt);
+			pstmt.setInt(1, eventID);
+			pstmt.setInt(2, accountID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				eventMemberVO = new EventMemberVO();
+				eventMemberVO.setEventID(rs.getInt("event_id"));
+				eventMemberVO.setAccountID(rs.getInt("account_id"));
+				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
+				eventMemberVO.setHostIdentifier(rs.getBoolean("host_identifier"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return eventMemberVO;
+	}
+	
 	@Override
 	public List<EventMemberVO> getAll() {
 		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
@@ -662,6 +718,8 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 				dishVO.setEventID(eventMemberVO.getEventID());
 				dao.insertByEventInfoAndWithDishAndIngredient(dishVO, dishAndIngredientList, con);
 			}
+			con.commit();
+			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

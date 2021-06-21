@@ -65,18 +65,18 @@
 		<th>評鑑</th>
 		
 	</tr>
-		<c:forEach var="evaluatedmemberVO" items="${list}" >
-			<tr> 
-				<td>${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountNickname}</td>
-				<td>
-					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 1}">男</c:if>
-					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 2}">女</c:if>
-				</td> 
-				<td>${eventMemberSvc.getAvgScoreByAccountID(evaluatedmemberVO.accepterAccountID)}</td> 
-				<td>${evaluatedmemberVO.giveScore}</td> 
-			</tr> 
-		</c:forEach>
-	</table>
+	<c:forEach var="eventMemberVO" items="${eventMemberList}">
+		<tr>
+			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventID}</td>
+			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</td>
+			<td>${accountSvc.getOneAccount(eventInfoSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td>
+			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>
+			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventCurrentCount}</td>
+			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).getEventDate}</td>
+			
+		</tr>
+	</c:forEach>
+</table>
 	
 			
 	<footer>

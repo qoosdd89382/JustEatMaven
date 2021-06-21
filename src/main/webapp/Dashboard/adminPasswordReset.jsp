@@ -3,6 +3,8 @@
 
 <%@ page import="com.admininfo.model.*" %>
 
+<jsp:useBean id="adminSvc" class="com.admininfo.model.AdminInfoService" />
+
 <%
 	AdminInfoVO adminVO = (AdminInfoVO) request.getAttribute("adminVO");
 %>
@@ -11,7 +13,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin register page</title>
+<title>Admin password reset</title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick-theme.css" />
@@ -92,6 +94,9 @@ body {
 #submit {
 	margin-top: 20px;
 }
+.visible-pw {
+	margin-left: 10px;
+}
 
 </style>
 </head>
@@ -100,7 +105,7 @@ body {
 	
 	<div class="login rounded-lg col-10 col-md-6 col-lg-5 col-xl-4 shadow-lg">
 		<div class="login-title rounded-top">
-			<h3>新增管理員</h3>
+			<h3>設定管理員密碼</h3>
 		</div>
 		<div class="login-block row">
 			<div class="login-inner col-12 form-group">
@@ -113,7 +118,7 @@ body {
 						</label>
 					</div>
 					<div class="input-element col-12 input-group mb-3">
-						<input id="adminMail" class="form-control form-control-lg rounded-pill" type="text" name="adminMail" value="${adminVO.adminMail}" placeholder="">
+						<input id="adminMail" class="form-control form-control-lg rounded-pill" type="text" name="adminMail" value="${adminSvc.getOneAdmin(param.adminID).adminMail}" placeholder="" disabled>
 					</div>
 					
 					<div class="input-label col-12 vertical-container">
@@ -123,21 +128,21 @@ body {
 						</label>
 					</div>
 					<div class="input-element col-12 input-group mb-3">
-						<input id="adminNickname" class="form-control form-control-lg rounded-pill" type="text" name="adminNickname" value="${adminVO.adminNickname}">
+						<input id="adminNickname"  class="form-control form-control-lg rounded-pill" type="text" name="adminNickname" value="${adminSvc.getOneAdmin(param.adminID).adminNickname}" disabled>
 					</div>
 					
-<!-- 					<div class="input-label col-12 vertical-container"> -->
-<!-- 						<label for="adminPassword"> -->
-<!-- 							密碼 -->
-<%-- 							<span class="errorSpan">${errorMsgs.get("adminPasswordErr")}</span> --%>
-<!-- 						</label> -->
-<!-- 					</div> -->
-<!-- 					<div class="input-element col-12 input-group mb-3"> -->
-<!-- 						<input id="adminPassword" class="form-control" type="password" name="adminPassword" aria-describedby="button-addon2"> -->
-<!-- 						<div class="input-group-append"> -->
-<!-- 							<button class="btn btn-primary visible-pw" type="button" id="button-addon2"><i class="fas fa-eye"></i></button> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
+					<div class="input-label col-12 vertical-container">
+						<label for="adminPassword">
+							密碼
+							<span class="errorSpan">${errorMsgs.get("adminPasswordErr")}</span>
+						</label>
+					</div>
+					<div class="input-element col-12 input-group mb-3">
+						<input id="adminPassword" class="form-control form-control-lg rounded-pill" type="password" name="adminPassword" aria-describedby="button-addon2">
+						<div class="input-group-append">
+							<button class="btn btn-primary visible-pw form-control form-control-lg rounded-pill" type="button" id="button-addon2"><i class="fas fa-eye"></i></button>
+						</div>
+					</div>
 					
 <!-- 					<div class="input-label col-12 vertical-container"> -->
 <!-- 						<label for="adminPasswordRecheck"> -->
@@ -153,8 +158,8 @@ body {
 <!-- 					</div> -->
 					
 					<div class="input-element col-12 input-group">
-						<input type="hidden" name="action" value="insert">
-						<button id="submit" class="btn btn-primary rounded-pill btn-lg btn-block" type="submit">註冊</button>
+						<input type="hidden" name="action" value="pwreset">
+						<button id="submit" class="btn btn-primary rounded-pill btn-lg btn-block" type="submit">設定密碼</button>
 					</div>
 				</form>
 			</div>

@@ -69,6 +69,7 @@ font-size:20px;
 	<ul>
 		<li><h3><a id="AccountLogin" href='AccountLoginPage.jsp'>會員登入</a></h3><br></li>
 		<li><h3><a id="AccountLogin" href='/justeat-maven/index.jsp'>首頁</a></h3><br></li>
+		<li><h3><a id="AccountLogin" href='/justeat-maven/Dashboard/DashboardPage.jsp'>後臺頁面</a></h3><br></li>
 	</ul>
 		
 	

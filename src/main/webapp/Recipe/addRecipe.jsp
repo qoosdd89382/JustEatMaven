@@ -314,21 +314,22 @@ div.temp_loading{
 			<%@ include file="/Recipe/autoComplCat.file"%>
 			<%@ include file="/Recipe/autoComplIng.file"%>
 			
-			var oldFileIdentify = new Array();
+			var oldFileIdentifyArr = new Array();
 			<%
 			if (request.getAttribute("oldFileIdentify") != null) {
 				String[] oldFileIdentify = (String[])request.getAttribute("oldFileIdentify");
 				for (String one : oldFileIdentify ) {	%>
 					var tempOD = "<%= one %>";
 					if (tempOD != "") { 
-						oldFileIdentify.push(tempOD);
+						oldFileIdentifyArr.push(tempOD);
 					}
-			<%	}
-			} %>
-			
+			<%	} %>
+
 			$('input[name="oldFileIdentify"]').each(function(index, item, array){
-				$(item).val(oldFileIdentify[index]);
+				$(item).val(oldFileIdentifyArr[index]);
 			});
+
+			<%	} %>
 			
 			var isNewRecipe = "${recipeVO}";
 			if (isNewRecipe == "") {
@@ -352,7 +353,7 @@ div.temp_loading{
 						
 // 					}
 					$.ajax({
-						  url: "recipe.do?delOrder=" + delOrder.toString(),           // 資料請求的網址
+						  url: "deleteRecipeStep.do?delOrder=" + delOrder.toString(),           // 資料請求的網址
 						  type: "GET",                  // GET | POST | PUT | DELETE | PATCH
 // 						  beforeSend: function(){       // 在 request 發送之前執行
 // 							  $("table").append(`<div class="temp_loading"><div class="loader3"></div></div>`);

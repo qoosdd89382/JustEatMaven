@@ -14,4 +14,11 @@ public interface AccountInfoDAOInterface {
     public AccountInfoVO getAccountLogin(String accountMail,String accountPassword);
     public AccountInfoVO getAccountMail(String accountMail);
     public AccountInfoVO getAccountPassword(String accountPassword);
+//註冊用
+    public void setLevelOneAccountInfoFromRegister(
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			String accountText
+    		);
+ 
 }
