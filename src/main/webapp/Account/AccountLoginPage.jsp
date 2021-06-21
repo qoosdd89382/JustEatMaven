@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+String accountMail = request.getParameter("accountMail");
+String accountPassword = request.getParameter("accountPassword");
+
+%>
+
 <!DOCTYPE html>
 
 <html>
@@ -90,12 +96,15 @@ input#account_register_info {
 				<div id="login_area_input"></div>
 				
 					<form method="post" action="accountInfo.do" name="LoginInfo">
+					<span style="color:red">${errorMsgs.get("UnexceptionError")}</span>
 						<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br>
-						<input id="account_mail_input" type="text" name="accountMail">
+						<input id="account_mail_input" type="text" name="accountMail" 
+							value="<%=(accountMail == null) ? "" : accountMail%>">
 						<span style="color:red">${errorMsgs.get("accountMailError")}</span><br>
 						
-						<span>請輸入會員密碼 (如1q2w3e4r5t):</span><br>
-						<input id="account_password_input" type="text" name="accountPassword">
+						<span>請輸入會員密碼 (至少8~16碼任意大小寫英文數字):</span><br>
+						<input id="account_password_input" type="text" name="accountPassword"
+							value="<%=(accountPassword == null) ? "" : accountPassword%>">
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
 					    <span>請輸入驗證碼 (點擊圖片可刷新):</span><br>
