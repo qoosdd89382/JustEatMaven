@@ -1,8 +1,15 @@
+<%@page import="com.eventmember.model.EventMemberVO"%>
+<%@page import="com.eventmember.model.EventMemberService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	EventMemberService eventMemberSvc = new EventMemberService();
+	EventMemberVO eventMemberVO = eventMemberSvc.getByEventAndMemberID(Integer.parseInt(request.getParameter("eventID")), Integer.parseInt(request.getParameter("accountID")));
+	request.setAttribute("eventMemberVO", eventMemberVO);
+%>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,6 +39,7 @@
 	    </div>
 	    <div class="temp_data">
 	    	<input type="hidden" name="eventID" value="${param.eventID}">
+	    	<input type="hidden" name="accountID" value="${param.accountID}">
 	    </div>
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="event_content_left col-6 col-lg-6">
@@ -64,10 +72,24 @@
 	            </div>
 	            <div>
 	                <input type="submit" name="action" value="成員菜單">
+	                <input type="submit" name="action" value="成員列表">
 	            </div>
-	            <div>
-	                <input type="button" value="上一頁" class="returnList">
-	                <input type="submit" name="action" value="加入活動" class="joinEvent">
+	            <div>	            	
+	            	<c:choose>
+	            		<c:when test="${eventMemberVO.hostIdentifier == true}">
+	            			<input type="button" value="上一頁" class="return">
+	                		<input type="submit" name="action" value="活動編輯" class="">
+	                		<input type="submit" name="action" value="取消活動" class="">
+	            		</c:when>
+	            		<c:when test="${eventMemberVO.hostIdentifier == false}">
+	            			<input type="button" value="上一頁" class="return">
+	                		<input type="submit" name="action" value="退出活動" class="">
+	            		</c:when>
+	            		<c:otherwise>
+		            		<input type="button" value="上一頁" class="return">
+		                	<input type="submit" name="action" value="加入活動" class="joinEvent">
+	            		</c:otherwise>
+	            	</c:choose>	
 	            </div>
 	        </div>
 	        <div class="event_content_right col-6 col-lg-6">
@@ -95,7 +117,7 @@
 			data:{"eventID":"<%=request.getParameter("eventID")%>"},
 			datatype:"json",
 			success:function(data,result){
-				console.log(data);
+// 				console.log(data);
 				if(data.groupType == 1){
 					$(".group_type").html("一人一菜");
 				}else if(data.groupType==2){
@@ -115,10 +137,9 @@
 			}
 		});
 		
-		$(".returnList").on("click",function(){
-			window.location.href = "<%=request.getContextPath()%>/Event/EventList.jsp";
+		$(".return").on("click",function(){
+			history.go(-1);
 		});
-			
 	});
 	
 	</script>

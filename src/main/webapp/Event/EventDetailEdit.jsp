@@ -1,3 +1,4 @@
+<%@page import="com.eventinfo.model.EventInfoService"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Arrays"%>
@@ -10,8 +11,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
-
+	EventInfoService eventInfoSvc = new EventInfoService();
+	EventInfoVO eventInfoVO = eventInfoSvc.getEventID(Integer.parseInt(request.getParameter("eventID")));
+	
 	if(eventInfoVO!=null){
 		if(eventInfoVO.getEventStartTime()!=null){
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -50,7 +52,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>建立活動</title>
+    <title>活動編輯</title>
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
@@ -72,7 +74,7 @@
 	</nav>
 	
 	    <div class="title">
-	        <h2>建立活動</h2>
+	        <h2>活動編輯</h2>
 	    </div>
 	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
 	   	<div class="temp_data">
@@ -159,10 +161,8 @@
 	            <span class="error">${errorMsgs.get("GroupAddressIsNull")}</span>
 	            </div>
 	            <div>
-	                <input type="submit" name="action" value="新增菜色">
-	                <input type="submit" name="action" value="邀請好友">
-	                <input type="submit" name="action" value="取消建立">
-	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
+	                <input type="button" name="" value="上一頁" class="return">
+	                <input type="submit" name="action" value="儲存">
 	            </div>
 	        </div>
 		    <div class="info col-6 col-lg-6">
@@ -206,6 +206,10 @@
 			    format: 'Y-m-d H:i',
 		 });
 	  
+	     
+	     $(".return").on("click",function(){
+				history.go(-1);
+		 });
 	</script>
 </body>
 </html>

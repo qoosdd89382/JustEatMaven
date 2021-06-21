@@ -93,8 +93,9 @@
 					<c:when test="${not empty listfind}">
 						<c:forEach var="eventInfoVO" items="${listfind}" varStatus="i">
 							<tr class="row">
+<%-- 							<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">  --%>
 								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a></td>
+								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
 								<c:if test="${eventInfoVO.groupType == 1}">
 									<td class="col-sm-2 col-2">一人一菜</td>
 								</c:if>
@@ -116,7 +117,7 @@
 						<c:forEach var="eventInfoVO" items="${list}" varStatus="i">
 							<tr class="row">
 								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a></td>
+								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
 								<c:if test="${eventInfoVO.groupType == 1}">
 									<td class="col-sm-2 col-2">一人一菜</td>
 								</c:if>
