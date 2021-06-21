@@ -83,7 +83,11 @@
 			</tr> 
 		</c:forEach>
 	</table>
-	
+	  <div class="btn_margin" align="right"  >
+	  
+	              <input type ="button" onclick="history.back()" value="返回"></input>
+
+	  </div>
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

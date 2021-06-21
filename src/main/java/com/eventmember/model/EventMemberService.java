@@ -48,8 +48,14 @@ public class EventMemberService {
 		return dao.getAllByMemberID(accountID);
 	}
 	
+	public List<EventMemberVO> getAllByAccount(Integer accountID) {
+		return dao.getAllByMemberID(accountID);
+	}
 	public List<EventMemberVO> getAllByEventID(Integer eventID) {
 		return dao.getAllByEventID(eventID);
+	}
+	public int getOneByEventAndHost(int eventID) {
+		return dao.getOneByEventAndHost(eventID);
 	}
 	public int getAvgScoreByAccountID(Integer accountID) {
 		return dao.getAvgScoreByAccountID(accountID);

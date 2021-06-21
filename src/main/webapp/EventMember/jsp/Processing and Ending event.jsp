@@ -8,16 +8,19 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.evaluatedmember.model.*"%>
 <%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.eventmember.model.*"%>
+<%@ page import="com.admininfo.model.*"%>
+<%@ page import="com.eventinfo.model.*"%>
+
 
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="admininfoSvc" scope="page" class="com.admininfo.model.AdminInfoService" />
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 <%
-	List<EvaluatedMemberVO> list = evaluatedmemberSvc.getAllByEventID(300002);
-	pageContext.setAttribute("list", list);
-// 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
-// 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
 
+	List<EventMemberVO> eventMemberList = eventMemberSvc.getAllByAccount(accountID);
+%>
 %>
 <!DOCTYPE html>
 <html lang="en">
