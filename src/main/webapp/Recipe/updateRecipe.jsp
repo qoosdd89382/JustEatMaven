@@ -18,9 +18,9 @@
 
 <%
 	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
-// 	if (recipeVO != null) {
-// 		byte[] recipePicTopBuffer = recipeVO.getRecipePicTop();
-// 		request.setAttribute("recipePicTopBuffer", recipePicTopBuffer);
+	if (recipeVO != null) {
+		byte[] recipePicTopBuffer = recipeVO.getRecipePicTop();
+		request.setAttribute("recipePicTopBuffer", recipePicTopBuffer);
 		
 	List<RecipeCuisineCategoryVO> recipeCatVOs = (List<RecipeCuisineCategoryVO>) request.getAttribute("recipeCatVOs");
 	List<RecipeIngredientUnitVO> recipeIngUnitVOs = (List<RecipeIngredientUnitVO>) request.getAttribute("recipeIngUnitVOs");
@@ -36,7 +36,7 @@
 	request.setAttribute("orgRecipeCatVOs", orgRecipeCatVOs);
 	request.setAttribute("orgRecipeIngUnitVOs", orgRecipeIngUnitVOs);
 	request.setAttribute("orgRecipeStepVOs", orgRecipeStepVOs);
-// 	}
+	}
 	// 驗證新資料帶回
 // 	String recipeCategoryIDs = request.getParameter("recipeCategoryIDs");
 // 	String recipeIngredientIDs = request.getParameter("recipeIngredientIDs");
@@ -283,7 +283,7 @@
 				<div id="addStepBtn" class="btn btn-primary">增加一個步驟</div>
 
 				<label>
-					<input type="checkbox" name="agreement" class="styled-checkbox" value="agree" checked>
+					<input type="checkbox" name="agreement" class="styled-checkbox" value="agree">
 						同意使用本網站之條款及隱私權政策
 				</label>
 				<span class="errorSpan">${errorMsgs.get("agreementErr")}</span>
@@ -321,21 +321,23 @@
 			<%@ include file="/Recipe/autoComplCat.file"%>
 			<%@ include file="/Recipe/autoComplIng.file"%>
 			
-			var oldFileIdentify = new Array();
+			var oldFileIdentifyArr = new Array();
 			<%
 			if (request.getAttribute("oldFileIdentify") != null) {
 				String[] oldFileIdentify = (String[])request.getAttribute("oldFileIdentify");
 				for (String one : oldFileIdentify ) {	%>
 					var tempOD = "<%= one %>";
 					if (tempOD != "") { 
-						oldFileIdentify.push(tempOD);
+						oldFileIdentifyArr.push(tempOD);
 					}
-			<%	}
-			} %>
-			
+			<%	} %>
+
 			$('input[name="oldFileIdentify"]').each(function(index, item, array){
-				$(item).val(oldFileIdentify[index]);
+				$(item).val(oldFileIdentifyArr[index]);
 			});
+			
+		<%
+			} %>
 			
 			var isNewRecipe = "${recipeStepVOs}";
 			if (isNewRecipe == "") {
@@ -349,7 +351,7 @@
 					var recipeID = $('input[name="recipeID"]').val();
 			  		console.log(recipeID);
 					$.ajax({
-						  url: "recipe.do?update=" + recipeID + "&delOrder=" + delOrder.toString(),
+						  url: "deleteRecipeStep.do?update=" + recipeID + "&delOrder=" + delOrder.toString(),
 						  type: "GET",
 						  success: function(data){
 							$(that).closest("tr.recipe").remove();

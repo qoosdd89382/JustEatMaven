@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.admininfo.model.AdminInfoService;
 import com.admininfo.model.AdminInfoVO;
-import com.recipe.model.RecipeService;
+import com.mail.controller.MailService;
+import com.mail.controller.RandomAuthCode;
 
 @WebServlet("/Dashboard/admin.do")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 3 * 1024 * 1024)
@@ -31,27 +33,24 @@ public class AdminInfoServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 
+		AdminInfoService adminSvc = new AdminInfoService();
+		
 		String action = req.getParameter("action");
 
+		
 		if ("insert".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 
-			try {
+//			try {
 				String adminMail = req.getParameter("adminMail");
 				String adminMailReg = "^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$";
 				if (adminMail.trim() == null || adminMail.trim().length() == 0) {
-					errorMsgs.put("adminEmialErr", "e-mail請勿空白");
+					errorMsgs.put("adminEmailErr", "e-mail請勿空白");
 				} else if (!adminMail.trim().matches(adminMailReg)) {
-					errorMsgs.put("adminEmialErr", "信箱格式錯誤");
-				}
-
-				String adminPassword = req.getParameter("adminPassword");
-				String adminPasswordReg = "^[a-zA-Z0-9]{8,20}$";
-				if (adminPassword.trim() == null || adminPassword.trim().length() == 0) {
-					errorMsgs.put("adminPasswordErr", "密碼不可為空或只輸入空白鍵作為密碼！");
-				} else if (!adminPassword.trim().matches(adminPasswordReg)) {
-					errorMsgs.put("adminPasswordErr", "密碼須為8-20字英文大小寫與數字");
+					errorMsgs.put("adminEmailErr", "信箱格式錯誤");
+				} else if (adminSvc.isNicknameExist(adminMail)) {
+					errorMsgs.put("adminEmailErr", "信箱已被註冊使用！");
 				}
 
 				String adminNickname = req.getParameter("adminNickname");
@@ -59,47 +58,65 @@ public class AdminInfoServlet extends HttpServlet {
 				if (adminNickname.trim() == null || adminMail.trim().length() == 0) {
 					errorMsgs.put("adminNicknameErr", "暱稱不可空白！");
 				} else if (!adminNickname.trim().matches(adminNicknameReg)) {
-					errorMsgs.put("adminNicknameErr", "密碼須為3至45個英文字母或數字，或1個中文字至15個中文字！");
+					errorMsgs.put("adminNicknameErr", "暱稱須為3至45字元");
+				} else if (adminSvc.isNicknameExist(adminNickname)) {
+					errorMsgs.put("adminNicknameErr", "暱稱已被註冊使用！");
 				}
+				
+//				String adminPassword = req.getParameter("adminPassword");
+//				String adminPasswordReg = "^[a-zA-Z0-9]{8,20}$";
+//				if (adminPassword == null || adminPassword.trim().length() == 0) {
+//					errorMsgs.put("adminPasswordErr", "密碼不可為空");
+//					errorMsgs.put("adminPasswordRecheckErr", "密碼不可為空");
+//				} else if (!adminPassword.trim().matches(adminPasswordReg)) {
+//					errorMsgs.put("adminPasswordErr", "密碼須為8-20字英文大小寫與數字");
+//					errorMsgs.put("adminPasswordRecheckErr", "請再次輸入密碼");
+//				} else {
+//					String adminPasswordRecheck = req.getParameter("adminPasswordRecheck");
+//					if (adminPasswordRecheck == null || adminPasswordRecheck.trim().length() == 0) {
+//						errorMsgs.put("adminPasswordRecheckErr", "請再次輸入密碼");
+//					} else if (!adminPasswordRecheck.trim().equals(adminPassword.trim())) {
+//						errorMsgs.put("adminPasswordRecheckErr", "請重新輸入密碼");
+//						errorMsgs.put("adminPasswordRecheckErr", "與第一次輸入不符，重新輸入");
+//					}
+//				}
+				
 
-				byte[] adminPicBuffer = null;
-				try {
-					Part part = req.getPart("adminPic");
-
-					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
-						System.out.println("使用者沒有上傳置頂圖片");
-						if (req.getSession().getAttribute("adminPicBuffer") != null) {
-							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
-						} else {
-							errorMsgs.put("adminPicErr", "請上傳置頂圖之圖檔");
-						}
-					} else if (!part.getContentType().startsWith("image")) {
-						errorMsgs.put("adminPicErr", "請上傳image類型之圖檔");
-						if (req.getSession().getAttribute("adminPicBuffer") != null) {
-							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
-						}
-					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
-						errorMsgs.put("adminPicErr", "請注意檔案尺寸過大");
-						if (req.getSession().getAttribute("adminPicBuffer") != null) {
-							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
-						}
-					} else {
-						InputStream in = part.getInputStream();
-						adminPicBuffer = new byte[in.available()];
-						in.read(adminPicBuffer);
-						in.close();
-						req.getSession().setAttribute("adminPicBuffer", adminPicBuffer);
-					}
-				} catch (Exception e) {
-					System.err.println("使用者操作時發生其他例外");
-					e.printStackTrace();
-				}
+//				byte[] adminPicBuffer = null;
+//				try {
+//					Part part = req.getPart("adminPic");
+//
+//					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+//						System.out.println("使用者沒有上傳置頂圖片");
+//						if (req.getSession().getAttribute("adminPicBuffer") != null) {
+//							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
+//						} else {
+//							errorMsgs.put("adminPicErr", "請上傳置頂圖之圖檔");
+//						}
+//					} else if (!part.getContentType().startsWith("image")) {
+//						errorMsgs.put("adminPicErr", "請上傳image類型之圖檔");
+//						if (req.getSession().getAttribute("adminPicBuffer") != null) {
+//							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
+//						}
+//					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
+//						errorMsgs.put("adminPicErr", "請注意檔案尺寸過大");
+//						if (req.getSession().getAttribute("adminPicBuffer") != null) {
+//							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
+//						}
+//					} else {
+//						InputStream in = part.getInputStream();
+//						adminPicBuffer = new byte[in.available()];
+//						in.read(adminPicBuffer);
+//						in.close();
+//						req.getSession().setAttribute("adminPicBuffer", adminPicBuffer);
+//					}
+//				} catch (Exception e) {
+//					System.err.println("使用者操作時發生其他例外");
+//				}
 
 				AdminInfoVO adminVO = new AdminInfoVO();
 				adminVO.setAdminMail(adminMail);
-				adminVO.setAdminPassword(adminPassword);
-				if (adminPicBuffer != null)
-					adminVO.setAdminPic(adminPicBuffer);
+				adminVO.setAdminNickname(adminNickname);
 
 				req.setAttribute("adminVO", adminVO);
 
@@ -110,27 +127,82 @@ public class AdminInfoServlet extends HttpServlet {
 				}
 
 				// All parameters are correct, so we can send them to db ==========================
-//				AdminInfoService recipeSvc = new RecipeService();
-//				recipeVO = null;
-//				recipeVO = recipeSvc.addRecipeWithDetails(recipeName, recipeIntroduction, recipePicTopBuffer,
-//						recipeServe, 100001, recipeCatVOs, recipeIngUnitVOs, recipeStepVOs);
-//
-//				if (recipeVO != null) {
-//					System.out.println("新增成功");
-//					req.getSession().removeAttribute("recipePicTopBuffer");
-//					req.getSession().removeAttribute("recipeStepPicBuffers");
-//					RequestDispatcher successView = req
-//							.getRequestDispatcher("/Recipe/recipe.jsp?id=" + recipeVO.getRecipeID());
-//					successView.forward(req, res);
-//				}
+				String adminPassword = new RandomAuthCode().generateCode();
+				
+				adminVO = adminSvc.addAdmin(adminMail, adminNickname, adminPassword);
 
-			} catch (Exception e) {
-				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/addRecipe.jsp");
-				failureView.forward(req, res);
-			}
+				if (adminSvc != null) {
+					System.out.println("新增成功");
+					
+					MailService mailSvc = new MailService();
+					String subject = "JustEat管理員註冊認證信";
+					String messageText = "請點擊本連結，啟用帳號："
+										+ req.getRequestURL()
+										+ "?action=auth"
+										+ "&adminID=" + adminVO.getAdminID()
+										+ "&authCode=" + adminPassword;
+					
+					mailSvc.sendMail(adminMail, subject, messageText);
+//					
+					RequestDispatcher inputAuthCodeView = 
+							req.getRequestDispatcher("/Dashboard/adminRegisterAuth.jsp?action=auth&adminID=" + adminVO.getAdminID());
+					inputAuthCodeView.forward(req, res);
+				}
+
+//			} catch (Exception e) {
+//				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+//				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/addAdmin.jsp");
+//				failureView.forward(req, res);
+//			}
 
 		}
+		
+
+		if ("auth".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				Integer adminID = new Integer(req.getParameter("adminID"));
+				
+				String authCodePara = req.getParameter("authCode");
+				String authCodeAttr = (String) req.getAttribute("authCode");
+				
+//				AdminInfoVO adminVO = adminSvc.getOneAdmin(adminID);
+//				req.setAttribute("adminVO", adminVO);
+				if (authCodePara == null && authCodeAttr == null) {
+					errorMsgs.put("authWrongErr", "未輸入驗證碼！");
+					RequestDispatcher inputAuthCodeView = 
+							req.getRequestDispatcher("/Dashboard/adminRegisterAuth.jsp?action=auth&adminID=" + adminID);
+					inputAuthCodeView.forward(req, res);
+					return;
+				} else if (adminSvc.getOneAdmin(adminID).getAdminPassword().equals(authCodePara) || adminSvc.getOneAdmin(adminID).getAdminPassword().equals(authCodeAttr)) {
+					RequestDispatcher successView = 
+							req.getRequestDispatcher("/Dashboard/adminPasswordReset.jsp?action=pwreset&adminID=" + adminID);
+					successView.forward(req, res);		
+				} else {
+					errorMsgs.put("authWrongErr", "驗證錯誤！");
+					RequestDispatcher successView = 
+							req.getRequestDispatcher("/Dashboard/adminRegisterAuth.jsp?action=auth&adminID=" + adminID);
+					successView.forward(req, res);
+				}
+				
+				
+			} catch (Exception e) {
+//				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的編號不存在！");
+//				e.printStackTrace();
+//				RequestDispatcher failureView = req.getRequestDispatcher("/");
+//				failureView.forward(req, res);
+				res.sendRedirect(req.getContextPath());
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
 	}
 
 }
