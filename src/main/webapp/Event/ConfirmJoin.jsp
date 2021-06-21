@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%
+	String dishAndIngJson = request.getParameter("dishAndIngJson");
+	String replaceDishAndIngJson = null;
+	if(dishAndIngJson!=null){
+		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
+	}
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,6 +44,8 @@
 			<input type="hidden" name="event_end" value="" class="eventEndTemp">
 			<input type="hidden" name="city" value="" class="cityTemp">
 			<input type="hidden" name="address" value="" class="addressTemp">
+			<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
+
 		</div>
 	    <div class="title">
 	        <h2>活動詳情</h2>

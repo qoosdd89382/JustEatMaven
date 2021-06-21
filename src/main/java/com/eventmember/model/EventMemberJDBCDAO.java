@@ -8,6 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dish.model.DishJDBCDAO;
+import com.dish.model.DishVO;
+import com.dishandingredient.model.DishAndIngredientVO;
+
 public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
@@ -335,6 +339,56 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 		}
 	}
 
+	public void insertWithDishIngredient(EventMemberVO eventMemberVO,List<DishVO> dishList,List<DishAndIngredientVO> dishAndIngredientList) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(Insert_Stmt);
+			pstmt.setInt(1, eventMemberVO.getEventID());
+			pstmt.setInt(2, eventMemberVO.getAccountID());
+			pstmt.setInt(3, eventMemberVO.getParticipationState());
+			pstmt.setBoolean(4, eventMemberVO.isHostIdentifier());
+			pstmt.executeUpdate();
+			
+			DishJDBCDAO dao = new DishJDBCDAO();
+			for(DishVO dishVO : dishList) {
+				dishVO.setEventID(eventMemberVO.getEventID());
+				dao.insertByEventInfoAndWithDishAndIngredient(dishVO, dishAndIngredientList, con);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				if(con!=null) {
+					con.rollback();
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		EventMemberJDBCDAO eventMemberJDBCDAO = new EventMemberJDBCDAO();

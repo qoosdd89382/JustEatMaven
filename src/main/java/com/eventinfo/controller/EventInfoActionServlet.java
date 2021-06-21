@@ -796,6 +796,39 @@ public class EventInfoActionServlet extends HttpServlet {
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 			returnView.forward(request, response);
 		}
+		
+		if("確定參加".equals(action)) {
+			String dishAndIngJson = request.getParameter("dishAndIngJson");
+//			System.out.println(dishAndIngJson);
+			Integer[][] ingID = null;
+			String[] dishName = null;
+			try {
+				JSONArray jsonArray = new JSONArray(dishAndIngJson);
+				ingID = new Integer[jsonArray.length()][];
+				dishName = new String[jsonArray.length()];
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject jsonObj = jsonArray.getJSONObject(i);
+					Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
+
+					for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
+						tempIngID[j] = jsonObj.getJSONArray("IngID").getInt(j);
+					}
+
+					dishName[i] = jsonObj.getString("dishName");
+					ingID[i] = tempIngID;
+				}
+//				System.out.println(Arrays.toString(dishName) + "," + Arrays.deepToString(ingID));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			EventMemberService eventMemberSvc = new EventMemberService();
+			eventMemberSvc.addEventMemberAndDish(Integer.parseInt(request.getParameter("eventID")), 100002, 1, false, dishName, ingID);
+			
+			RequestDispatcher MenuView = request.getRequestDispatcher("/Event/EventList.jsp");
+			MenuView.forward(request, response);
+		}
 		//===================================成員菜單================================
 		if("成員菜單".equals(action)) {
 			RequestDispatcher MenuView = request.getRequestDispatcher("/Event/MemberMenu.jsp");

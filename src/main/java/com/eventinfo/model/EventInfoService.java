@@ -196,6 +196,7 @@ public class EventInfoService {
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setAccountID(100001);
 		eventMemberVO.setParticipationState(1);
+		eventMemberVO.setHostIdentifier(true);
 		eventMemberList.add(eventMemberVO);
 		
 		dao.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList);
