@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<%
+AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+%>
+
+
 <jsp:useBean id="accountInfoSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <%--    <% com.emp.model.EmpService dao =new com.emp.model.EmpService(); --%>
 <!-- //    		pageContext.setAttribute("dao",dao); -->
@@ -22,12 +27,10 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>DashboardPage</title>
+<title>DashboardPage-ListOneAccountInfo</title>
 </head>
 <style>
-div#Dashboard_Account_Area{
-	margin-top:150px;
-}
+
 </style>
 </head>
 <body>
@@ -35,46 +38,37 @@ div#Dashboard_Account_Area{
 		<%@ include file="/common/header.jsp"%>
 	</header>
 	
-	<div class="container">
-	
-		<div id="Dashboard_Account_Area" class="row">
-		
-			<div class="col">
-				<span>會員管理</span><br>
-				${errorMsgs.get("accountIDError")}
-				<form METHOD="post" ACTION="accountInfo.do">
-					<span>輸入會員編號 (如100001):</span>
-					<input type="text" name="accountID">
-					<input type="hidden" name="action" value="getOneAccountInfo_From_Dashboard">
-					<input type="submit" value="送出">
-				</form>
-				<form METHOD="post" ACTION="accountInfo.do">
-					<span>選擇會員編號:</span> 
-					<select size="1" name="accountID">
-						<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
-							<option value="${accountInfoVO.accountID}">${accountInfoVO.accountID}
-						</c:forEach>
-					</select> 
-					<input type="hidden" name="action" value="getOneAccountInfo_From_Dashboard">
-					<input type="submit" value="送出">
-				</form>
-				<form METHOD="post" ACTION="accountInfo.do">
-					<span>選擇會員姓名:</span><br> 
-					<select size="1" name="accountID">
-						<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
-							<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
-						</c:forEach>
-					</select>
-					<input type="hidden" name="action" value="getOneAccountInfo_From_Dashboard">
-					<input type="submit" value="送出">
-				</form>
-				<br>
-				<span><a href='listAllAccountinfo.jsp'>List</a> all AccountInfo.</span>
-				<br>
-				<span><a href='addAccountInfo.jsp'>Add</a> a new AccountInfo.</span>
-			</div>
-		</div>
-	</div>
+	<table>
+		<tr>
+			<th>會員編號</th>
+			<th>會員信箱</th>
+			<th>會員暱稱</th>
+			<th>會員密碼</th>
+			<th>會員狀態</th>
+			
+			<th>會員名稱</th>
+			<th>會員性別</th>
+			<th>會員生日</th>
+			<th>會員電話</th>
+			<th>會員生日</th>
+			
+			<th>會員照片</th>
+			<th>會員身分證正面</th>
+			<th>會員身分證背面</th>
+			<th>會員自我介紹</th>
+		</tr>
+		<tr>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+			<td><%=accountInfoVO.getAccountID()%></td>
+		</tr>
+	</table>
+
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

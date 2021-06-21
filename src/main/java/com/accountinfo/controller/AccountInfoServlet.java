@@ -37,8 +37,9 @@ public class AccountInfoServlet extends HttpServlet {
 		//設定編碼與確認回應
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
-		
-//<--會員登入處理-->來自AccountLoginPage的登入請求
+//========================================================================
+//帳號登入與修改相關請求
+//來自AccountLoginPage的登入請求
 		if ("getAccountInfo_For_Login".equals(action)) {
 			//已取得回傳之accountMail、accountPassword資料
 			
@@ -103,8 +104,7 @@ public class AccountInfoServlet extends HttpServlet {
 					errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
 				}
 				
-//驗證碼放在SESSION
-				//驗證碼存取
+				//驗證碼存取放置session
 				HttpSession session = req.getSession();
 				String CorrectNumber = (String)session.getAttribute("RandomNumber");
 
@@ -173,6 +173,45 @@ public class AccountInfoServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
+//在AccountInfoPage.jsp收到"會員資料"的請求
+		if("gotoAccountInfoPage".equals(action)) {
+			//取得帳號資料
+			HttpSession session = req.getSession();
+			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+			req.setAttribute("accountMail", accountInfoVO.getAccountMail());
+			//轉移到帳號修改頁面
+			String url = "/Account/AccountInfoPage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+//在AccountInfoPage.jsp收到"修改會員資料"的請求
+		if("Account_Change_Info".equals(action)) {
+			//取得帳號資料
+			HttpSession session = req.getSession();
+			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+			req.setAttribute("accountMail", accountInfoVO.getAccountMail());
+			//轉移到帳號修改頁面
+			String url = "/Account/AccountChangePage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+//在AccountInfoPage.jsp收到登出的請求
+		if("Account_Logout".equals(action)) {
+			//清除在SESSION中的帳號資料
+			HttpSession session = req.getSession();
+			session.removeAttribute("accountInfoVO");
+			session.removeAttribute("accountMail");
+			//回到登入頁面
+			String url = "/Account/AccountLoginPage.jsp";
+			RequestDispatcher successView = req.getRequestDispatcher(url);
+			successView.forward(req, res);
+		}
+		
+
+//===========================================================================================
+//註冊相關請求
 //在AccountRegisterPage.jsp收到加入會員的請求
 		if ("setAccountInfo_For_Register".equals(action)) {
 			
@@ -308,8 +347,9 @@ public class AccountInfoServlet extends HttpServlet {
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
-//可能補各級驗證標準	
 				
+//補各級驗證標準	
+				//輸入資料無誤的儲存
 				req.setAttribute("accountMail",accountMailInput);
 				req.setAttribute("accountPassword",accountPasswordInput);
 				req.setAttribute("accountNickname",accountNicknameInput);
@@ -323,17 +363,7 @@ public class AccountInfoServlet extends HttpServlet {
 						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
 						accountText);
 
-				
-//				AccountInfoVO accountInfoVO = accountInfoSvc.setLevelOneAccountInfoFromRegister(
-//					accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
-//					accountText);
-
-				//3.準備轉交(Send the Success view)
-				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
-//				HttpSession session = req.getSession();
-//				session.setAttribute("accountInfoVO", accountInfoVO); 
-
-				//註冊成功就可以到登入畫面登入看自己的資料
+				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Account/AccountLoginPage.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
@@ -345,350 +375,8 @@ public class AccountInfoServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
-		
-		
-//在AccountInfoPage.jsp收到"修改會員資料"的請求
-		if("Account_Change_Info".equals(action)) {
-			HttpSession session = req.getSession();
-			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
-			req.setAttribute("accountMail", accountInfoVO.getAccountMail());
-			
-			String url = "/Account/AccountChangePage.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);
-			successView.forward(req, res);
-		}
-//在AccountChangePage.jsp收到"確認修改資料"的請求
-		if("setAccountInfo_For_Change".equals(action)) {
-			
-			
-		}
-		
-//在AccountInfoPage.jsp收到登出的請求
-		if("Account_Logout".equals(action)) {
-			HttpSession session = req.getSession();
-			session.removeAttribute("accountInfoVO");
-			session.removeAttribute("accountMail");
 
-			String url = "/Account/AccountLoginPage.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);
-			successView.forward(req, res);
-		}
-		
-		
-		
-//收到查看會員資料的請求
-		if("gotoAccountInfoPage".equals(action)) {
-			String url = "/Account/AccountInfoPage.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);
-			successView.forward(req, res);
-		}
-		
-		
-		
-// 來自AccountPage.jsp103的請求
-//		if ("getOne_For_Display".equals(action)) { 
-//
-//			//儲存錯誤訊息
-//			List<String> errorMsgs = new LinkedList<String>();
-//			req.setAttribute("errorMsgs", errorMsgs);
-//			
-//			try {
-//				//1.接收請求參數 - 輸入格式的錯誤處理
-//				String str = req.getParameter("accountID");
-//				//檢查是否無輸入
-//				if (str == null || (str.trim()).length() == 0) {
-//					errorMsgs.add("請輸入會員編號");
-//				}
-//				//有錯誤就返回總表，顯示錯誤訊息
-//				if (!errorMsgs.isEmpty()) {
-//					RequestDispatcher failureView = req
-//							.getRequestDispatcher("/Account/AccountPage.jsp");
-//					failureView.forward(req, res);
-//					return;//程式中斷
-//				}
-//				
-//				Integer accountID = null;
-//				//檢查是否為數字
-//				try {
-//					accountID = new Integer(str);
-//				} catch (Exception e) {
-//					errorMsgs.add("會員編號格式不正確");
-//				}
-//				// 有錯誤就返回總表，顯示錯誤訊息
-//				if (!errorMsgs.isEmpty()) {
-//					RequestDispatcher failureView = req
-//							.getRequestDispatcher("/Account/AccountPage.jsp");
-//					failureView.forward(req, res);
-//					return;//程式中斷
-//				}
-//				
-//				//2.開始查詢資料
-//				AccountInfoService accountInfoSvc = new AccountInfoService();
-//				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountID(accountID);
-//				if (accountInfoVO == null) {
-//					errorMsgs.add("查無此會員資料");
-//				}
-//				// 有錯誤就返回總表，顯示錯誤訊息
-//				if (!errorMsgs.isEmpty()) {
-//					RequestDispatcher failureView = req
-//							.getRequestDispatcher("/Account/AccountPage.jsp");
-//					failureView.forward(req, res);
-//					return;//程式中斷
-//				}
-//				
-////進度=======================================================
-//
-//				//3.查詢完成,準備轉交(Send the Success view)
-//				// 資料庫取出的accountVO物件,存入req
-//				req.setAttribute("accountInfoVO", accountInfoVO); 
-//				String url = "/Account/ListOneAccountInfo.jsp";
-//				RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneEmp.jsp
-//				successView.forward(req, res);
-//
-//				/***************************其他可能的錯誤處理*************************************/
-//			} catch (Exception e) {
-//				errorMsgs.add("無法取得資料:" + e.getMessage());
-//				RequestDispatcher failureView = req
-//						.getRequestDispatcher("/Account/AccountPage.jsp");
-//				failureView.forward(req, res);
-//			}
-//		}
-//		
-//		
-//		if ("getOne_For_Update".equals(action)) { // 來自listAllEmp.jsp的請求
-//
-//			List<String> errorMsgs = new LinkedList<String>();
-//			// Store this set in the request scope, in case we need to
-//			// send the ErrorPage view.
-//			req.setAttribute("errorMsgs", errorMsgs);
-//			
-//			try {
-//				/***************************1.接收請求參數****************************************/
-//				Integer accountID = new Integer(req.getParameter("accountID"));
-//				
-//				/***************************2.開始查詢資料****************************************/
-//				AccountInfoService accountInfoSvc = new AccountInfoService();
-//				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountID(accountID);
-//								
-//				/***************************3.查詢完成,準備轉交(Send the Success view)************/
-//				req.setAttribute("accountInfoVO", accountInfoVO);         // 資料庫取出的empVO物件,存入req
-//				String url = "/Account/UpdateAccountInfoInput.jsp";
-//				RequestDispatcher successView = req.getRequestDispatcher(url);// 成功轉交 update_emp_input.jsp
-//				successView.forward(req, res);
-//
-//				/***************************其他可能的錯誤處理**********************************/
-//			} catch (Exception e) {
-//				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
-//				RequestDispatcher failureView = req
-//						.getRequestDispatcher("/Account/listAllEmp.jsp");
-//				failureView.forward(req, res);
-//			}
-//		}
-//		
-//update
-		
-//		if ("update".equals(action)) { // 來自update_emp_input.jsp的請求
-//			
-//			List<String> errorMsgs = new LinkedList<String>();
-//			// Store this set in the request scope, in case we need to
-//			// send the ErrorPage view.
-//			req.setAttribute("errorMsgs", errorMsgs);
-//		
-//			try {
-//				/***************************1.接收請求參數 - 輸入格式的錯誤處理**********************/
-//				Integer accountID = new Integer(req.getParameter("accountID").trim());
-//				
-//				String accountMail = req.getParameter("accountMail");
-//				String accountMailReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$";
-//				if (accountMail == null || accountMail.trim().length() == 0) {
-//					errorMsgs.add("員工姓名: 請勿空白");
-//				} else if(!accountMail.trim().matches(accountMailReg)) { //以下練習正則(規)表示式(regular-expression)
-//					errorMsgs.add("員工姓名: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間");
-//	            }
-//				
-//				String job = req.getParameter("job").trim();
-//				if (job == null || job.trim().length() == 0) {
-//					errorMsgs.add("職位請勿空白");
-//				}	
-//				
-//				java.sql.Date hiredate = null;
-//				try {
-//					hiredate = java.sql.Date.valueOf(req.getParameter("hiredate").trim());
-//				} catch (IllegalArgumentException e) {
-//					hiredate=new java.sql.Date(System.currentTimeMillis());
-//					errorMsgs.add("請輸入日期!");
-//				}
-//
-//				Double sal = null;
-//				try {
-//					sal = new Double(req.getParameter("sal").trim());
-//				} catch (NumberFormatException e) {
-//					sal = 0.0;
-//					errorMsgs.add("薪水請填數字.");
-//				}
-//
-//				Double comm = null;
-//				try {
-//					comm = new Double(req.getParameter("comm").trim());
-//				} catch (NumberFormatException e) {
-//					comm = 0.0;
-//					errorMsgs.add("獎金請填數字.");
-//				}
-//
-//				Integer deptno = new Integer(req.getParameter("deptno").trim());
-//
-//				EmpVO empVO = new EmpVO();
-//				empVO.setEmpno(empno);
-//				empVO.setEname(ename);
-//				empVO.setJob(job);
-//				empVO.setHiredate(hiredate);
-//				empVO.setSal(sal);
-//				empVO.setComm(comm);
-//				empVO.setDeptno(deptno);
-//
-//				// Send the use back to the form, if there were errors
-//				if (!errorMsgs.isEmpty()) {
-//					req.setAttribute("empVO", empVO); // 含有輸入格式錯誤的empVO物件,也存入req
-//					RequestDispatcher failureView = req
-//							.getRequestDispatcher("/emp/update_emp_input.jsp");
-//					failureView.forward(req, res);
-//					return; //程式中斷
-//				}
-//				
-//				/***************************2.開始修改資料*****************************************/
-//				AccountInfoService accountInfoSvc = new AccountInfoService();
-//				accountInfoVO = accountInfoSvc.updateAccountInfoVO();
-//				
-//				/***************************3.修改完成,準備轉交(Send the Success view)*************/
-//				req.setAttribute("empVO", empVO); // 資料庫update成功後,正確的的empVO物件,存入req
-//				String url = "/emp/listOneEmp.jsp";
-//				RequestDispatcher successView = req.getRequestDispatcher(url); // 修改成功後,轉交listOneEmp.jsp
-//				successView.forward(req, res);
-//
-//				/***************************其他可能的錯誤處理*************************************/
-//			} catch (Exception e) {
-//				errorMsgs.add("修改資料失敗:"+e.getMessage());
-//				RequestDispatcher failureView = req
-//						.getRequestDispatcher("/emp/update_emp_input.jsp");
-//				failureView.forward(req, res);
-//			}
-//		}
-
-//insert		
-//        if ("insert".equals(action)) { // 來自addEmp.jsp的請求  
-//			
-//			List<String> errorMsgs = new LinkedList<String>();
-//			// Store this set in the request scope, in case we need to
-//			// send the ErrorPage view.
-//			req.setAttribute("errorMsgs", errorMsgs);
-//
-//			try {
-//				/***********************1.接收請求參數 - 輸入格式的錯誤處理*************************/
-//				String ename = req.getParameter("ename");
-//				String enameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$";
-//				if (ename == null || ename.trim().length() == 0) {
-//					errorMsgs.add("員工姓名: 請勿空白");
-//				} else if(!ename.trim().matches(enameReg)) { //以下練習正則(規)表示式(regular-expression)
-//					errorMsgs.add("員工姓名: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間");
-//	            }
-//				
-//				String job = req.getParameter("job").trim();
-//				if (job == null || job.trim().length() == 0) {
-//					errorMsgs.add("職位請勿空白");
-//				}
-//				
-//				java.sql.Date hiredate = null;
-//				try {
-//					hiredate = java.sql.Date.valueOf(req.getParameter("hiredate").trim());
-//				} catch (IllegalArgumentException e) {
-//					hiredate=new java.sql.Date(System.currentTimeMillis());
-//					errorMsgs.add("請輸入日期!");
-//				}
-//				
-//				Double sal = null;
-//				try {
-//					sal = new Double(req.getParameter("sal").trim());
-//				} catch (NumberFormatException e) {
-//					sal = 0.0;
-//					errorMsgs.add("薪水請填數字.");
-//				}
-//				
-//				Double comm = null;
-//				try {
-//					comm = new Double(req.getParameter("comm").trim());
-//				} catch (NumberFormatException e) {
-//					comm = 0.0;
-//					errorMsgs.add("獎金請填數字.");
-//				}
-//				
-//				Integer deptno = new Integer(req.getParameter("deptno").trim());
-//
-//				EmpVO empVO = new EmpVO();
-//				empVO.setEname(ename);
-//				empVO.setJob(job);
-//				empVO.setHiredate(hiredate);
-//				empVO.setSal(sal);
-//				empVO.setComm(comm);
-//				empVO.setDeptno(deptno);
-//
-//				// Send the use back to the form, if there were errors
-//				if (!errorMsgs.isEmpty()) {
-//req.setAttribute("empVO", empVO); // 含有輸入格式錯誤的empVO物件,也存入req
-//					RequestDispatcher failureView = req
-//							.getRequestDispatcher("/emp/addEmp.jsp");
-//					failureView.forward(req, res);
-//					return;
-//				}
-//				
-//				/***************************2.開始新增資料***************************************/
-//				EmpService empSvc = new EmpService();
-//				empVO = empSvc.addEmp(ename, job, hiredate, sal, comm, deptno);
-//				
-//				/***************************3.新增完成,準備轉交(Send the Success view)***********/
-//				String url = "/emp/listAllEmp.jsp";
-//				RequestDispatcher successView = req.getRequestDispatcher(url); // 新增成功後轉交listAllEmp.jsp
-//				successView.forward(req, res);				
-//				
-//				/***************************其他可能的錯誤處理**********************************/
-//			} catch (Exception e) {
-//				errorMsgs.add(e.getMessage());
-//				RequestDispatcher failureView = req
-//						.getRequestDispatcher("/emp/addEmp.jsp");
-//				failureView.forward(req, res);
-//			}
-//		}
-		
-//delete
-//		if ("delete".equals(action)) { // 來自listAllEmp.jsp
-//
-//			List<String> errorMsgs = new LinkedList<String>();
-//			// Store this set in the request scope, in case we need to
-//			// send the ErrorPage view.
-//			req.setAttribute("errorMsgs", errorMsgs);
-//	
-//			try {
-//				/***************************1.接收請求參數***************************************/
-//				Integer empno = new Integer(req.getParameter("empno"));
-//				
-//				/***************************2.開始刪除資料***************************************/
-//				EmpService empSvc = new EmpService();
-//				empSvc.deleteEmp(empno);
-//				
-//				/***************************3.刪除完成,準備轉交(Send the Success view)***********/								
-//				String url = "/emp/listAllEmp.jsp";
-//				RequestDispatcher successView = req.getRequestDispatcher(url);// 刪除成功後,轉交回送出刪除的來源網頁
-//				successView.forward(req, res);
-//				
-//				/***************************其他可能的錯誤處理**********************************/
-//			} catch (Exception e) {
-//				errorMsgs.add("刪除資料失敗:"+e.getMessage());
-//				RequestDispatcher failureView = req
-//						.getRequestDispatcher("/emp/listAllEmp.jsp");
-//				failureView.forward(req, res);
-//			}
-//		}
-		
-		
+//===	
 	}
 }
 
