@@ -41,52 +41,52 @@ public class RecipeServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 //		res.setContentType("text/html; charset=UTF-8");		// for ajax，但輸出的參數是數字，其實可以不用設...
 		
-		/**********************刪除食譜步驟**********************/
-		String delOrder = req.getParameter("delOrder");
-		String recipeIDforUpdate = req.getParameter("update");
-		Map<Integer, byte[]> recipeStepPicBuffers = null;
-		if (delOrder != null) {
-			System.out.println(delOrder);
-			System.out.println(recipeIDforUpdate);
-			if (recipeIDforUpdate != null) {
-				RecipeStepService recipeStepSvc = new RecipeStepService();
-				List<RecipeStepVO> orgRecipeStepVOs = recipeStepSvc.getAllByRecipe(new Integer(recipeIDforUpdate));
-				Map<Integer, byte[]> orgRecipeStepPicBuffers = new LinkedHashMap<Integer, byte[]>();
-				for (RecipeStepVO orgRecipeStepVO : orgRecipeStepVOs) {
-					orgRecipeStepPicBuffers.put(new Integer(orgRecipeStepVO.getRecipeStepOrder()-1), orgRecipeStepVO.getRecipeStepPic());
-				}
-				recipeStepPicBuffers = orgRecipeStepPicBuffers;
-				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
-			}
-			if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
-				recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
-				Map<Integer, byte[]> deepCopy = new LinkedHashMap<Integer, byte[]>(recipeStepPicBuffers);
-				System.out.println(recipeStepPicBuffers.size());
-				System.out.println(delOrder);
-				System.out.println(Integer.parseInt(delOrder) == recipeStepPicBuffers.size());
-				if(Integer.parseInt(delOrder) == recipeStepPicBuffers.size()) {
-					recipeStepPicBuffers.remove(Integer.parseInt(delOrder)-1);
-					System.out.println("recipeStepPicBuffers:" + recipeStepPicBuffers.toString());
-				} else {
-					for (Integer key : recipeStepPicBuffers.keySet()) {
-						byte[] temp = recipeStepPicBuffers.get(key+1);
-						System.out.println(key);
-						if(key.equals(recipeStepPicBuffers.size() - 1)) {
-							System.out.println("last deepCopy original value=" + deepCopy.get(key));
-							deepCopy.remove(key);
-							System.out.println("last one(order:" + key + ")has been deleted");
-						} else if (key >= Integer.parseInt(delOrder) - 1) {
-							deepCopy.put(key, temp);
-							System.out.println("deepCopy new value=" + deepCopy.get(key));
-						}  
-					}
-					System.out.println("deepCopy:" + deepCopy.toString());
-					req.getSession().setAttribute("recipeStepPicBuffers", deepCopy);
-				}
-				PrintWriter out = res.getWriter();
-		        out.write(delOrder);
-			}
-		}
+//		/**********************刪除食譜步驟**********************/
+//		String delOrder = req.getParameter("delOrder");
+//		String recipeIDforUpdate = req.getParameter("update");
+//		Map<Integer, byte[]> recipeStepPicBuffers = null;
+//		if (delOrder != null) {
+//			System.out.println(delOrder);
+//			System.out.println(recipeIDforUpdate);
+//			if (recipeIDforUpdate != null) {
+//				RecipeStepService recipeStepSvc = new RecipeStepService();
+//				List<RecipeStepVO> orgRecipeStepVOs = recipeStepSvc.getAllByRecipe(new Integer(recipeIDforUpdate));
+//				Map<Integer, byte[]> orgRecipeStepPicBuffers = new LinkedHashMap<Integer, byte[]>();
+//				for (RecipeStepVO orgRecipeStepVO : orgRecipeStepVOs) {
+//					orgRecipeStepPicBuffers.put(new Integer(orgRecipeStepVO.getRecipeStepOrder()-1), orgRecipeStepVO.getRecipeStepPic());
+//				}
+//				recipeStepPicBuffers = orgRecipeStepPicBuffers;
+//				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
+//			}
+//			if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
+//				recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
+//				Map<Integer, byte[]> deepCopy = new LinkedHashMap<Integer, byte[]>(recipeStepPicBuffers);
+//				System.out.println(recipeStepPicBuffers.size());
+//				System.out.println(delOrder);
+//				System.out.println(Integer.parseInt(delOrder) == recipeStepPicBuffers.size());
+//				if(Integer.parseInt(delOrder) == recipeStepPicBuffers.size()) {
+//					recipeStepPicBuffers.remove(Integer.parseInt(delOrder)-1);
+//					System.out.println("recipeStepPicBuffers:" + recipeStepPicBuffers.toString());
+//				} else {
+//					for (Integer key : recipeStepPicBuffers.keySet()) {
+//						byte[] temp = recipeStepPicBuffers.get(key+1);
+//						System.out.println(key);
+//						if(key.equals(recipeStepPicBuffers.size() - 1)) {
+//							System.out.println("last deepCopy original value=" + deepCopy.get(key));
+//							deepCopy.remove(key);
+//							System.out.println("last one(order:" + key + ")has been deleted");
+//						} else if (key >= Integer.parseInt(delOrder) - 1) {
+//							deepCopy.put(key, temp);
+//							System.out.println("deepCopy new value=" + deepCopy.get(key));
+//						}  
+//					}
+//					System.out.println("deepCopy:" + deepCopy.toString());
+//					req.getSession().setAttribute("recipeStepPicBuffers", deepCopy);
+//				}
+//				PrintWriter out = res.getWriter();
+//		        out.write(delOrder);
+//			}
+//		}
 		
 		String action = req.getParameter("action");
 
@@ -265,7 +265,7 @@ public class RecipeServlet extends HttpServlet {
 					}
 				}
 				String[] oldFileIdentify = req.getParameterValues("oldFileIdentify");
-//				Map<String, byte[]> recipeStepPicBuffers = null;
+				Map<Integer, byte[]> recipeStepPicBuffers = null;
 				if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
 					recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
 //					recipeStepPicBuffers = (List<byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
@@ -285,11 +285,36 @@ public class RecipeServlet extends HttpServlet {
 							if ("false".equals(oldFileIdentify[index])) {
 								recipeStepPicBuffers.remove(index);
 								errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔");
+							} else {
+								RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+								if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+									recipeStepVO.setRecipeStepPic((byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index));
+									if (recipeStepVO.getRecipeStepPic() == null) {
+										errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔");
+									}
+								}
 							}
+							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+							recipeStepVO.setRecipeStepPic(recipeStepPicBuffers.get(index));
+							recipeStepVOs.set(index, recipeStepVO);
+							recipeStepPicBuffers.put(index, recipeStepPicBuffers.get(index));
+							if ("false".equals(oldFileIdentify[index])) {
+								recipeStepPicBuffers.remove(index);
+								errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔");
+							}
+							
 						} else if (!part.getContentType().startsWith("image")) { 
 							errorMsgs.put("recipeStepPicErr", "請上傳image類型之圖檔");
+							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+							if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+								recipeStepVO.setRecipeStepPic((byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index));
+							}
 						} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
 							errorMsgs.put("recipeStepPicErr", "請注意檔案尺寸過大");
+							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+							if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+								recipeStepVO.setRecipeStepPic((byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index));
+							}
 						} else {
 							InputStream in = part.getInputStream();
 							recipeStepPicBuffer = new byte[in.available()];
@@ -374,6 +399,8 @@ public class RecipeServlet extends HttpServlet {
 				
 				RecipeService recipeSvc = new RecipeService();
 				recipeSvc.deleteRecipe(recipeID);
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				successView.forward(req, res);
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
 				e.printStackTrace();
@@ -591,12 +618,12 @@ public class RecipeServlet extends HttpServlet {
 						parts.add(part);
 					}
 				}
-
 				Map<Integer, byte[]> orgRecipeStepPicBuffers = new LinkedHashMap<Integer, byte[]>();
 				for (RecipeStepVO orgRecipeStepVO : orgRecipeStepVOs) {
 					orgRecipeStepPicBuffers.put(new Integer(orgRecipeStepVO.getRecipeStepOrder()-1), orgRecipeStepVO.getRecipeStepPic());
 				}
 				String[] oldFileIdentify = req.getParameterValues("oldFileIdentify");
+				Map<Integer, byte[]> recipeStepPicBuffers = null;
 				if (req.getSession().getAttribute("recipeStepPicBuffers") != null) {
 					recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
 					System.out.println("session gets buffers! OOOOOOOOOO");
@@ -611,45 +638,48 @@ public class RecipeServlet extends HttpServlet {
 					byte[] recipeStepPicBuffer = null;
 					try {
 						Part part = parts.get(index);
-						if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
-							System.out.println("使用者沒有上傳步驟" + (index + 1) + "之圖片");
-							
-							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
-							if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
-								recipeStepVO.setRecipeStepPic((byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index));
+
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+								System.out.println("使用者沒有上傳步驟" + (index + 1) + "之圖片");
+								
+								RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+	//							if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+									recipeStepVO.setRecipeStepPic(recipeStepPicBuffers.get(index));
+									recipeStepVOs.set(index, recipeStepVO);
+									recipeStepPicBuffers.put(index, recipeStepPicBuffers.get(index));
+	//							}
+								if ("false".equals(oldFileIdentify[index])) {
+									recipeStepPicBuffers.remove(index);
+									errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔");
+								}
+							} else if (!part.getContentType().startsWith("image")) { 
+								errorMsgs.put("recipeStepPicErr", "請上傳image類型之圖檔");
+								RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+	
+								recipeStepVO.setRecipeStepPic(recipeStepPicBuffers.get(index));
+								recipeStepVOs.set(index, recipeStepVO);
+								recipeStepPicBuffers.put(index, recipeStepPicBuffers.get(index));
+								oldFileIdentify[index] = "true";
+							} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
+								errorMsgs.put("recipeStepPicErr", "請注意檔案尺寸過大");
+								RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+	
+								recipeStepVO.setRecipeStepPic(recipeStepPicBuffers.get(index));
+								recipeStepVOs.set(index, recipeStepVO);
+								recipeStepPicBuffers.put(index, recipeStepPicBuffers.get(index));
+								oldFileIdentify[index] = "true";
+							} else {
+								InputStream in = part.getInputStream();
+								recipeStepPicBuffer = new byte[in.available()];
+								in.read(recipeStepPicBuffer);
+								in.close();
+								System.out.println(index + 1 + ": "+ recipeStepPicBuffer.length);
+								RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
+								recipeStepVO.setRecipeStepPic(recipeStepPicBuffer);
+								recipeStepPicBuffers.put(index, recipeStepPicBuffer);
+								oldFileIdentify[index] = "true ";
 							}
-							if ("false".equals(oldFileIdentify[index])) {
-								recipeStepPicBuffers.remove(index);
-								errorMsgs.put("recipeStepPicErr", "請上傳所有步驟之圖檔");
-							}
-//							else {
-//								if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
-//									recipeStepPicBuffer = (byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index);
-//									recipeStepPicBuffers.put(index, recipeStepPicBuffer);
-//								}
-//							}
-						} else if (!part.getContentType().startsWith("image")) { 
-							errorMsgs.put("recipeStepPicErr", "請上傳image類型之圖檔");
-							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
-							if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
-								recipeStepVO.setRecipeStepPic((byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index));
-							}
-						} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
-							errorMsgs.put("recipeStepPicErr", "請注意檔案尺寸過大");
-							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
-							if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
-								recipeStepVO.setRecipeStepPic((byte[]) ((Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers")).get(index));
-							}
-						} else {
-							InputStream in = part.getInputStream();
-							recipeStepPicBuffer = new byte[in.available()];
-							in.read(recipeStepPicBuffer);
-							in.close();
-							System.out.println(index + 1 + ": "+ recipeStepPicBuffer.length);
-							RecipeStepVO recipeStepVO = recipeStepVOs.get(index);
-							recipeStepVO.setRecipeStepPic(recipeStepPicBuffer);
-							recipeStepPicBuffers.put(index, recipeStepPicBuffer);
-							oldFileIdentify[index] = "true";
 						}
 					} catch (Exception e) {
 						System.err.println("使用者操作時發生其他例外");
@@ -696,13 +726,13 @@ public class RecipeServlet extends HttpServlet {
 				recipeCatAllSet.addAll(orgRecipeCatVOs);
 				recipeCatAllSet.addAll(recipeCatVOs);
 				Collection<RecipeCuisineCategoryVO> recipeCatDiff = new ArrayList<RecipeCuisineCategoryVO>(recipeCatAllSet);
-				recipeCatDiff.removeAll(recipeCatCol);
+				recipeCatDiff.removeAll(recipeCatCol);	// 刪除
 //				System.out.println("------刪除------");
 //				for (RecipeCuisineCategoryVO one : recipeCatDiff) {
 //					System.out.println(one.getCuisineCategoryID());
 //				}
 				Collection<RecipeCuisineCategoryVO> recipeCatAdd = new ArrayList<RecipeCuisineCategoryVO>(recipeCatAllSet);
-				recipeCatAdd.removeAll(orgRecipeCatCol);
+				recipeCatAdd.removeAll(orgRecipeCatCol);	// 新增
 //				System.out.println("------新增------");
 //				for (RecipeCuisineCategoryVO one : recipeCatAdd) {
 //					System.out.println(one.getCuisineCategoryID());
@@ -715,17 +745,49 @@ public class RecipeServlet extends HttpServlet {
 				recipeIngUnitAllSet.addAll(orgRecipeIngUnitVOs);
 				recipeIngUnitAllSet.addAll(recipeIngUnitVOs);		// 全集
 				Collection<RecipeIngredientUnitVO> recipeIngUnitDiff = new ArrayList<RecipeIngredientUnitVO>(recipeIngUnitAllSet);
-				recipeIngUnitDiff.removeAll(recipeIngUnitCol);		// 要刪除的資料=全集-新資料
-//				System.out.println("---刪除---");
+				recipeIngUnitDiff.removeAll(recipeIngUnitCol);		// 要刪除的資料=全集-新資料(可能包含更新的資料)
+//				System.out.println("---刪除(可能包含更新的資料)---");
 //				for(RecipeIngredientUnitVO one : recipeIngUnitDiff) {
 //					System.out.print("getIngredientID:" + one.getIngredientID());
 //					System.out.print("-getUnitID:" + one.getUnitID());
 //					System.out.println("-getUnitAmount:" + one.getUnitAmount());
 //				}
 				Collection<RecipeIngredientUnitVO> recipeIngUnitAdd = new ArrayList<RecipeIngredientUnitVO>(recipeIngUnitAllSet);
-				recipeIngUnitAdd.removeAll(orgRecipeIngUnitCol);	// 要新增的資料=全集-舊資料
-//				System.out.println("---新增---");
+				recipeIngUnitAdd.removeAll(orgRecipeIngUnitCol);	// 要新增的資料=全集-舊資料(可能包含更新的資料)
+//				System.out.println("---新增(可能包含更新的資料)---");
 //				for(RecipeIngredientUnitVO one : recipeIngUnitAdd) {
+//					System.out.print("getIngredientID:" + one.getIngredientID());
+//					System.out.print("-getUnitID:" + one.getUnitID());
+//					System.out.println("-getUnitAmount:" + one.getUnitAmount());
+//				}
+//				List<RecipeIngredientUnitVO> recipeIngUnitDiffList = new ArrayList<RecipeIngredientUnitVO>(recipeIngUnitDiff);
+//				List<RecipeIngredientUnitVO> recipeIngUnitAddList = new ArrayList<RecipeIngredientUnitVO>(recipeIngUnitAdd);
+//				List<RecipeIngredientUnitVO> recipeIngUnitUpdateList = new ArrayList<RecipeIngredientUnitVO>();	// 更新的資料
+//				if (recipeIngUnitDiffList.size() != 0 && recipeIngUnitAddList.size() != 0) {
+//					for (int i = 0; i < recipeIngUnitDiffList.size(); i++) {
+//						for(int j = 0; j < recipeIngUnitAddList.size(); j++) {
+//							if (recipeIngUnitDiffList.get(i).getIngredientID().equals(recipeIngUnitAddList.get(j).getIngredientID())) {
+//								recipeIngUnitUpdateList.add(recipeIngUnitAddList.get(j));
+//								recipeIngUnitAddList.remove(j);
+//							}
+//						}
+//						recipeIngUnitDiffList.remove(i);
+//					}
+//				}
+//				System.out.println("---刪除(不包含更新的資料)---");
+//				for(RecipeIngredientUnitVO one : recipeIngUnitDiffList) {
+//					System.out.print("getIngredientID:" + one.getIngredientID());
+//					System.out.print("-getUnitID:" + one.getUnitID());
+//					System.out.println("-getUnitAmount:" + one.getUnitAmount());
+//				}
+//				System.out.println("---新增(不包含更新的資料)---");
+//				for(RecipeIngredientUnitVO one : recipeIngUnitAddList) {
+//					System.out.print("getIngredientID:" + one.getIngredientID());
+//					System.out.print("-getUnitID:" + one.getUnitID());
+//					System.out.println("-getUnitAmount:" + one.getUnitAmount());
+//				}
+//				System.out.println("---更新的資料---");
+//				for(RecipeIngredientUnitVO one : recipeIngUnitUpdateList) {
 //					System.out.print("getIngredientID:" + one.getIngredientID());
 //					System.out.print("-getUnitID:" + one.getUnitID());
 //					System.out.println("-getUnitAmount:" + one.getUnitAmount());
@@ -737,12 +799,6 @@ public class RecipeServlet extends HttpServlet {
 				Set<RecipeStepVO> recipeStepAllSet = new HashSet<RecipeStepVO>();
 				recipeStepAllSet.addAll(orgRecipeStepVOs);
 				recipeStepAllSet.addAll(recipeStepVOs);			// 全集
-//				System.out.println("---全集---");
-//				for(RecipeStepVO one : recipeStepAllSet) {
-//					System.out.print("getRecipeStepOrder:" + one.getRecipeStepOrder());
-//					System.out.print("-getRecipeStepText:" + one.getRecipeStepText());
-//					System.out.println("-getRecipeStepPic():" + one.getRecipeStepPic());
-//				}
 				Collection<RecipeStepVO> recipeStepDiff = new ArrayList<RecipeStepVO>(recipeStepAllSet);
 				recipeStepDiff.removeAll(recipeStepCol);		// 要刪除的資料=全集-新資料
 //				System.out.println("---刪除---");
