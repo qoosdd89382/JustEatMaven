@@ -10,6 +10,7 @@ public class EvaluatedMemberVO implements Serializable {
 	private Integer eventID;
 	private Integer giveScore;
 	
+	
 	public Integer getAccepterAccountID() {
 		return accepterAccountID;
 	}
@@ -41,4 +42,6 @@ public class EvaluatedMemberVO implements Serializable {
 	public void setGiveScore(Integer giveScore) {
 		this.giveScore = giveScore;
 	}
+	
+	
 }

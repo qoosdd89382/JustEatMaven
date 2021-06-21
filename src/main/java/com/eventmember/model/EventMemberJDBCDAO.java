@@ -27,7 +27,23 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	private static final String Select_All_Stmt = "Select * From EventMember";
 	private static final String Select_MemberID_Stmt = "Select * From EventMember Where account_id = ?";
 	private static final String Select_EventID_Stmt = "Select * From EventMember Where event_id = ?";
+	private static final String Select_Avgscore_Stmt = "SELECT \r\n" + 
+			"    SUM(EvaluatedMember.give_score) / COUNT(*)\r\n" + 
+			"FROM EvaluatedMember\r\n" + 
+			" left join EventMember\r\n" + 
+			"  on EvaluatedMember.accepter_account_id = EventMember.account_id\r\n" + 
+			"WHERE\r\n" + 
+			" participation_state = 3\r\n" + 
+			" and accepter_account_id = ?";
+	private static final String Select_Totalevent_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 3 or participation_state = 4)";
+	private static final String Select_TotalAttendance_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 3 )";
+	private static final String Select_EventStatus_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 1 or participation_state = 2)";
+	private static final String Select_Account_Stmt ="SELECT * FROM EventMember WHERE account_id = ?";
+	private static final String Select_EventandHost_Stmt ="SELECT account_id FROM EventMember WHERE event_id = ? and host_indentifier = 1";
+	
+
 	private static final String Select_EventID_And_MemberID_Stmt = "Select * From EventMember Where event_id = ? And account_id = ?";
+
 
 	static {
 		try {
@@ -306,6 +322,297 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 		}
 		return list;
 	}
+	@Override
+	public List<EventMemberVO> getAllByAccount(Integer accountID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		EventMemberVO eventMemberVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Account_Stmt);
+			pstmt.setInt(1, accountID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				eventMemberVO = new EventMemberVO();
+				eventMemberVO.setEventID(rs.getInt("event_id"));
+				eventMemberVO.setAccountID(rs.getInt("account_id"));
+				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
+				eventMemberVO.setHostIdentifier(rs.getBoolean("host_identifier"));
+				list.add(eventMemberVO);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	@Override
+	public int getAvgScoreByAccountID(Integer accountID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		int avgScore = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Avgscore_Stmt);
+			pstmt.setInt(1,  accountID);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {	
+				avgScore = rs.getInt(1);	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return avgScore;
+	}
+	
+	@Override
+	public int getTotalEventByAccountID(Integer accountID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		int totalevent = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Totalevent_Stmt);
+			pstmt.setInt(1,  accountID);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {	
+				totalevent = rs.getInt(1);	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return totalevent;
+	}
+	
+	@Override
+	public int getTotalAttendanceByAccountID(Integer accountID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		int totalattendance = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_TotalAttendance_Stmt);
+			pstmt.setInt(1,  accountID);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {	
+				totalattendance = rs.getInt(1);	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return totalattendance;
+	}
+	
+	@Override
+	public int getEventStatusByAccountID(Integer accountID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		int eventstatus = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_TotalAttendance_Stmt);
+			pstmt.setInt(1,  accountID);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {	
+				eventstatus = rs.getInt(1);	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return eventstatus;
+	}
+	
+	@Override
+	public int getOneByEventAndHost(int eventID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		int eventAndHost = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Avgscore_Stmt);
+			pstmt.setInt(1,  eventID);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {	
+				eventAndHost = rs.getInt(1);	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return eventAndHost;
+	}
 	
 	@Override
 	public List<EventMemberVO> getAllByEventID(Integer eventID) {
@@ -475,6 +782,16 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 //			System.out.println(eventMemberVO_temp.getParticipationState());
 //			System.out.println("==================================");
 //		}
+		//===================查詢平均星星數=============================
+//		EventMemberService eventMemberSvc = new EventMemberService();
+//		int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
+//		System.out.println(accountAvgScore);
+//		System.out.println("==================================");
+	
+		//=================查詢總活動次數=========================
+		
+		
+		
 		
 	}
 
