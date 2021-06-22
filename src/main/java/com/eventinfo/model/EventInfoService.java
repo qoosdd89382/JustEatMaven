@@ -195,7 +195,7 @@ public class EventInfoService {
 		List<EventMemberVO> eventMemberList = new ArrayList<EventMemberVO>();
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setAccountID(100001);
-		eventMemberVO.setParticipationState(1);
+		eventMemberVO.setParticipationState(3);
 		eventMemberVO.setHostIdentifier(true);
 		eventMemberList.add(eventMemberVO);
 		

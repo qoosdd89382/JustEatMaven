@@ -472,6 +472,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
@@ -554,6 +555,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
@@ -638,6 +640,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
