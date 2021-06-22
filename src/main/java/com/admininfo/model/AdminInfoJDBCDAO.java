@@ -28,6 +28,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 	// 順序看要寫死還是後端判斷
 	private static final String SELECT_ONE = "SELECT * FROM AdminInfo WHERE admin_id = ?";
 	private static final String SELECT_ALL = "SELECT * FROM AdminInfo";
+	private static final String UPDATE_PW_PIC = "UPDATE AdminInfo SET admin_password = ?, admin_pic = ? WHERE admin_id = ?";
 	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
 //	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM AdminInfo WHERE admin_nickname = ?";
@@ -383,6 +384,44 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 	public int updateState(AdminInfoVO adminInfo) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int setPasswordAndPic(AdminInfoVO adminInfo) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int updateRow = 0;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(UPDATE_PW_PIC);
+			
+			pstmt.setString(1, adminInfo.getAdminPassword());
+			pstmt.setBytes(2, adminInfo.getAdminPic());
+			pstmt.setInt(3, adminInfo.getAdminID());
+
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return updateRow;
 	}
 }
 

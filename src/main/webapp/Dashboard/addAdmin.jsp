@@ -23,26 +23,25 @@
     box-sizing: border-box;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    font-family: Arial, "微軟正黑體", Verdana, Geneva, Tahoma, sans-serif;
-}
 
 body {
 	background: #A5D0FF;
-	position: relative;
+    font-family: Arial, "微軟正黑體", Verdana, Geneva, Tahoma, sans-serif;
+    height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  padding-top: 50px;
+  padding-bottom: 50px;
+  
 }
 
 .login {
 	background: #fff;
-	top: 50%;
-	left: 50%;
-	position: absolute;
-	transform: translate(-50%, -50%);
 	padding: 0!important;
 	margin: 0!important;
 }
+
 
 .login-title {
 	background: #007BFF;
