@@ -52,9 +52,28 @@ public class EventMemberService {
 		return dao.getAllByMemberID(accountID);
 	}
 	
+	public List<EventMemberVO> getAllByAccount(Integer accountID) {
+		return dao.getAllByMemberID(accountID);
+	}
 	public List<EventMemberVO> getAllByEventID(Integer eventID) {
 		return dao.getAllByEventID(eventID);
 	}
+	public int getOneByEventAndHost(int eventID) {
+		return dao.getOneByEventAndHost(eventID);
+	}
+	public int getAvgScoreByAccountID(Integer accountID) {
+		return dao.getAvgScoreByAccountID(accountID);
+	}
+	public int getTotalEventByAccountID(Integer accountID) {
+		return dao.getTotalEventByAccountID(accountID);
+	}
+	public int  getTotalAttendanceByAccountID(Integer accountID)  {
+		return dao.getTotalAttendanceByAccountID(accountID);
+	}
+	public int  getEventStatusByAccountID(Integer accountID)  {
+		return dao.getEventStatusByAccountID(accountID);
+	}
+
 	
 	public void addEventMemberAndDish(int eventID , int accountID,int participationState,boolean isHostIdentifier ,String[] dishNames,Integer[][] IngIDs) {
 		

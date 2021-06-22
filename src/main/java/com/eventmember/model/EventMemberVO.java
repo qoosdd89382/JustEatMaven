@@ -40,6 +40,4 @@ public class EventMemberVO implements Serializable{
 	public void setHostIdentifier(boolean hostIdentifier) {
 		this.hostIdentifier = hostIdentifier;
 	}
-
-	
 }
