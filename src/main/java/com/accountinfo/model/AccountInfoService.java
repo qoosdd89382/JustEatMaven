@@ -14,15 +14,39 @@ public class AccountInfoService {
 	public AccountInfoService() {
 		dao = new AccountInfoJDBCDAO();
 	}
+//後臺用
+	public void insertAccountInfo(
+			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,byte[] accountPic,
+			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegisterTime
+			) {
+		
+		
+	}
+	
+	public AccountInfoVO selectOneAccountInfo(Integer accountID) {
+		return dao.selectOneAccountInfo(accountID);
+	}
+	
+	public List<AccountInfoVO> selectAllAccountInfo(){
+		return dao.selectAllAccountInfo();
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public AccountInfoVO addAccountInfo(
 //			Integer accountID,
 			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
 			String accountName,Integer accountGender,Date accountBirth,String accountPhone,byte[] accountPic,
-			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegistTime
+			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegisterTime
 			){
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime localDateTime = LocalDateTime.parse(accountRegistTime,formatter);
+		LocalDateTime localDateTime = LocalDateTime.parse(accountRegisterTime,formatter);
 		Timestamp timestampdate = Timestamp.valueOf(localDateTime);
 		
 		AccountInfoVO accountInfoVO = new AccountInfoVO();
@@ -43,7 +67,7 @@ public class AccountInfoService {
 		accountInfoVO.setAccountIDcardFront(accountIDcardFront);
 		accountInfoVO.setAccountIDcardBack(accountIDcardback);
 		accountInfoVO.setAccountText(accountText);
-		accountInfoVO.setAccountRegistTime(timestampdate);
+		accountInfoVO.setAccountRegisterTime(timestampdate);
 		
 		dao.insert(accountInfoVO);
 		
@@ -54,10 +78,10 @@ public class AccountInfoService {
 //			Integer accountID,
 			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
 			String accountName,Integer accountGender,Date accountBirth,String accountPhone,byte[] accountPic,
-			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegistTime
+			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegisterTime
 			){
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime localDateTime = LocalDateTime.parse(accountRegistTime,formatter);
+		LocalDateTime localDateTime = LocalDateTime.parse(accountRegisterTime,formatter);
 		Timestamp timestampdate = Timestamp.valueOf(localDateTime);
 		
 		AccountInfoVO accountInfoVO = new AccountInfoVO();
@@ -78,7 +102,7 @@ public class AccountInfoService {
 		accountInfoVO.setAccountIDcardFront(accountIDcardFront);
 		accountInfoVO.setAccountIDcardBack(accountIDcardback);
 		accountInfoVO.setAccountText(accountText);
-		accountInfoVO.setAccountRegistTime(timestampdate);
+		accountInfoVO.setAccountRegisterTime(timestampdate);
 		
 		dao.update(accountInfoVO);
 		
@@ -88,14 +112,11 @@ public class AccountInfoService {
 		dao.delete(accountID);
 	}
 	
-	public AccountInfoVO getAccountID(Integer accountID) {
-		return dao.findByPrimaryKey(accountID);
-	}
+
 	
-	public List<AccountInfoVO> getAll(){
-		return dao.getAll();
-	}
-	
+
+//=====================================================
+//review
 //登入用
 	public AccountInfoVO getAccountInfo(String accountMail,String accountPassword) {
 		return dao.getAccountLogin(accountMail,accountPassword);
@@ -106,6 +127,40 @@ public class AccountInfoService {
 	}
 	public AccountInfoVO getAccountPassword(String accountMail) {
 		return dao.getAccountPassword(accountMail);
+	}
+	public AccountInfoVO getAccountIDByAccountMail(String accountMail){
+		return dao.getAccountIDByAccountMail(accountMail);
+	}
+//會員修改資料用
+	public void updateAccountInfoFromChange(
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			String accountText,
+			Integer accountID
+		){
+		AccountInfoVO accountInfoVO = new AccountInfoVO();
+	//	accountInfoVO.setAccountID(accountID);
+	
+		accountInfoVO.setAccountMail(accountMail);
+		accountInfoVO.setAccountNickname(accountNickname);
+		accountInfoVO.setAccountPassword(accountPassword);
+//		accountInfoVO.setAccountState(new Boolean("1"));
+//		accountInfoVO.setAccountLevel(new Integer(1));
+		
+		accountInfoVO.setAccountName(accountName);
+		accountInfoVO.setAccountGender(accountGender);
+		accountInfoVO.setAccountBirth(accountBirth);
+		accountInfoVO.setAccountPhone(accountPhone);
+//		accountInfoVO.setAccountPic(null);
+		
+//		accountInfoVO.setAccountIDcardFront(null);
+//		accountInfoVO.setAccountIDcardBack(null);
+		accountInfoVO.setAccountText(accountText);
+		
+		dao.updateAccountInfoFromChange(
+				accountMail,accountNickname,accountPassword,
+				accountName,accountGender,accountBirth,accountPhone,
+				accountText,accountID);
 	}
 //註冊用
 	public void setLevelOneAccountInfoFromRegister(

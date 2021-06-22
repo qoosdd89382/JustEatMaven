@@ -21,6 +21,15 @@
 	</resource-ref>
 
 	<servlet>
+		<servlet-name>DashboardServlet</servlet-name>
+		<servlet-class>com.admininfo.controller.DashboardServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DashboardServlet</servlet-name>
+		<url-pattern>/Dashboard/Account/dashboard.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>AccountInfoServlet</servlet-name>
 		<servlet-class>com.accountinfo.controller.AccountInfoServlet</servlet-class>
 	</servlet>

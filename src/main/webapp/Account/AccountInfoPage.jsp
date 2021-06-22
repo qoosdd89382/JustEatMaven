@@ -149,6 +149,8 @@ input#account_logout:hover {
 	<!--儲存用戶資料在session -->
 	<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
 	<span>借我標記一下session==${accountMail}</span>
+	<%session.setAttribute("accountInfoVO",accountInfoVO);%>
+	<span>借我標記一下session==${accountInfoVO}</span>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

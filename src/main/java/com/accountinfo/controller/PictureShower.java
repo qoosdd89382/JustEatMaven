@@ -121,6 +121,6 @@ public class PictureShower extends HttpServlet {
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
-		
 	}
+	
 }

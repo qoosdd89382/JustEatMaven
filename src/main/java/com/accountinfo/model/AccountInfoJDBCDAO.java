@@ -30,26 +30,39 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static String userid = "DBAdmin";
 	private static String password = "justeat";
 	
-	//CRUD指令，五個一排，共14個
+	//後臺用，CRUD指令，五個一排，共15個
 	private static final String Insert_Stmt = "Insert into AccountInfo "
 			+ "(account_mail,account_nickname,account_password,account_state,account_level,"
 			+ "account_name,account_gender,account_birth,account_phone,account_pic,"
-			+ "account_idcard_front,account_idcard_back,account_text,account_register_time)"
+			+ "account_idcard_front,account_idcard_back,account_text,account_register_time,account_code)"
 			+ "Values(?,?,?,?,?,?,?,?,?,?,"
-			+ "?,?,?,?)";
-
+			+ "?,?,?,NOW(),?)";
 	private static final String Update_Stmt = "Update AccountInfo set "
 			+ "account_mail=?,account_nickname=?,account_password=?,account_state=?,account_level=?,"
 			+ "account_name=?,account_gender=?,account_birth=?,account_phone=?,account_pic=?,"
-			+ "account_idcard_front=?,account_idcard_back=?,account_text=?,account_register_time=?"
+			+ "account_idcard_front=?,account_idcard_back=?,account_text=?,account_register_time=?,account_code=?"
 			+ "Where account_id=?";
 	private static final String Delete_Stmt = "Delete From AccountInfo Where account_id=?";
 	private static final String Select_Key_Stmt = "Select * From JustEat.AccountInfo Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.AccountInfo";
+	//1review0622
+	
+	
 	//登入用
 	private static final String Select_Account_Login = "Select * From JustEat.AccountInfo Where account_mail=? && account_password=?";
+	
+	
 	private static final String Select_Account_Mail = "Select * From JustEat.AccountInfo Where account_mail=?";
+	private static final String Select_Account_ID_By_AccountMail = "Select account_id From JustEat.AccountInfo Where account_mail=?";
 	private static final String Select_Account_Password_By_AccoutMail = "Select account_password From JustEat.AccountInfo Where account_mail=?";
+	//會員修改資料用
+	private static final String Update_Account_Info_From_Change = "Update AccountInfo set "
+			+ "account_mail=?,account_nickname=?,account_password=?,"
+			+ "account_name=?,account_gender=?,account_birth=?,account_phone=?,"
+//			+ "account_pic=?,account_idcard_front=?,account_idcard_back=?,"
+			+ "account_text=?"
+			+ "Where account_id=?";
+	
 	//註冊用
 		//註冊第一層級會員
 	private static final String Insert_LevelOne_Account_From_Register = "Insert into AccountInfo "
@@ -60,6 +73,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 //	private static final String Select_Account_Mail_Boolean =
 //	private static final String Select_Account_Nickname_Boolean =
 
+//建立連線池=====
 	static {
 		try {
 			Class.forName(driver);
@@ -67,7 +81,10 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			e.printStackTrace(System.err);
 		}
 	}
+//建立連線池=====	
 	
+//指令詳細區=====
+//後臺用 insert 
 	@Override
 	public void insert(AccountInfoVO accountInfoVO) {
 		Connection con = null;
@@ -94,7 +111,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			pstmt.setBytes(11,accountInfoVO.getAccountIDcardFront());
 			pstmt.setBytes(12,accountInfoVO.getAccountIDcardBack());
 			pstmt.setString(13,accountInfoVO.getAccountText());
-			pstmt.setTimestamp(14,accountInfoVO.getAccountRegistTime());
+			pstmt.setTimestamp(14,accountInfoVO.getAccountRegisterTime());
+			pstmt.setString(15,accountInfoVO.getAccountCode());
 			
 			pstmt.executeUpdate();
 			
@@ -131,7 +149,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			}
 		}
 	}
-
+	
+//後臺用 update
 	@Override
 	public void update(AccountInfoVO accountInfoVO) {
 		Connection con = null;
@@ -146,17 +165,20 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			pstmt.setString(3,accountInfoVO.getAccountPassword());
 			pstmt.setBoolean(4,accountInfoVO.getAccountState());
 			pstmt.setInt(5,accountInfoVO.getAccountLevel());
+			
 			pstmt.setString(6,accountInfoVO.getAccountName());
 			pstmt.setInt(7,accountInfoVO.getAccountGender());
 			pstmt.setDate(8,accountInfoVO.getAccountBirth());
 			pstmt.setString(9,accountInfoVO.getAccountPhone());
 			pstmt.setBytes(10,accountInfoVO.getAccountPic());
+			
 			pstmt.setBytes(11,accountInfoVO.getAccountIDcardFront());
 			pstmt.setBytes(12,accountInfoVO.getAccountIDcardBack());
 			pstmt.setString(13,accountInfoVO.getAccountText());
-			pstmt.setTimestamp(14,accountInfoVO.getAccountRegistTime());
+			pstmt.setTimestamp(14,accountInfoVO.getAccountRegisterTime());
+			pstmt.setString(15,accountInfoVO.getAccountCode());
 			
-			pstmt.setInt(15,accountInfoVO.getAccountID());
+			pstmt.setInt(16,accountInfoVO.getAccountID());
 			
 			pstmt.executeUpdate();
 			
@@ -181,7 +203,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			}
 		}
 	}
-
+	
+//後臺用 delete
 	@Override
 	public void delete(Integer accountID) {
 		Connection con = null;
@@ -213,9 +236,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			}
 		}
 	}
-
+//後臺用 selectOneAccountInfo
 	@Override
-	public AccountInfoVO findByPrimaryKey(Integer accountID) {
+	public AccountInfoVO selectOneAccountInfo(Integer accountID) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -247,7 +270,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				accountInfoVO.setAccountIDcardFront(rs.getBytes("account_idcard_front"));
 				accountInfoVO.setAccountIDcardBack(rs.getBytes("account_idcard_back"));
 				accountInfoVO.setAccountText(rs.getString("account_text"));
-				accountInfoVO.setAccountRegistTime(rs.getTimestamp("account_register_time"));
+				accountInfoVO.setAccountRegisterTime(rs.getTimestamp("account_register_time"));
+				accountInfoVO.setAccountCode(rs.getString("account_code"));
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -276,9 +300,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 		return accountInfoVO;
 	}
-	
+//後臺用 selectAllAccountInfo
 	@Override
-	public List<AccountInfoVO> getAll() {
+	public List<AccountInfoVO> selectAllAccountInfo() {
 		List<AccountInfoVO> list = new ArrayList<AccountInfoVO>();
 		AccountInfoVO accountInfoVO = null;
 		
@@ -311,18 +335,17 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				accountInfoVO.setAccountIDcardFront(rs.getBytes("account_idcard_front"));
 				accountInfoVO.setAccountIDcardBack(rs.getBytes("account_idcard_back"));
 				accountInfoVO.setAccountText(rs.getString("account_text"));
-				accountInfoVO.setAccountRegistTime(rs.getTimestamp("account_register_time"));
+				accountInfoVO.setAccountRegisterTime(rs.getTimestamp("account_register_time"));
+				accountInfoVO.setAccountCode(rs.getString("account_code"));
 				
 				list.add(accountInfoVO);
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Couldn't load database driver. "
 					+ e.getMessage());
-			// Handle any SQL errors
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. "
 					+ se.getMessage());
-			// Clean up JDBC resources
 		} finally {
 			if (rs != null) {
 				try {
@@ -348,7 +371,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 		return list;
 	}
-	
+//=======================================================================================
+//review
 //登入用
 	@Override
 	public AccountInfoVO getAccountLogin(String accountMail,String accountPassword) {
@@ -384,7 +408,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				accountInfoVO.setAccountIDcardFront(rs.getBytes("account_idcard_front"));
 				accountInfoVO.setAccountIDcardBack(rs.getBytes("account_idcard_back"));
 				accountInfoVO.setAccountText(rs.getString("account_text"));
-				accountInfoVO.setAccountRegistTime(rs.getTimestamp("account_register_time"));
+				accountInfoVO.setAccountRegisterTime(rs.getTimestamp("account_register_time"));
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -463,6 +487,54 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 	@Override
+	public AccountInfoVO getAccountIDByAccountMail(String accountMail) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO accountInfoVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_ID_By_AccountMail);
+			
+			pstmt.setString(1, accountMail);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				accountInfoVO = new AccountInfoVO();
+				
+				accountInfoVO.setAccountPassword(rs.getString("account_id"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return accountInfoVO;
+	}
+	
+	@Override
 	public AccountInfoVO getAccountPassword(String accountMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -508,6 +580,56 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			}
 		}
 		return accountInfoVO;
+	}
+//會員修改資料用
+	public void updateAccountInfoFromChange(
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			String accountText,
+			Integer accountID
+			) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Update_Account_Info_From_Change);
+			
+			pstmt.setString(1,accountMail);
+			pstmt.setString(2,accountNickname);
+			pstmt.setString(3,accountPassword);
+			pstmt.setString(4,accountName);
+			pstmt.setInt(5,accountGender);
+			pstmt.setDate(6,(java.sql.Date)accountBirth);
+			pstmt.setString(7,accountPhone);
+			pstmt.setString(8,accountText);
+
+			
+			pstmt.setInt(9,accountID);
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("AccountInfo update completed!");
+			
+		}catch(Exception e){
+			e.printStackTrace();	
+		}finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		
 	}
 	
 //註冊用
@@ -600,35 +722,33 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		AccountInfoJDBCDAO accountInfoJDBCDAO = new AccountInfoJDBCDAO();
 	
 		//新增10名會員
-		String[] aMail = {
-			"user1@gmail.com","user2@gmail.com","user3@gmail.com","user4@gmail.com","user5@gmail.com",
-			"user6@gmail.com","user7@gmail.com","user8@gmail.com","user9@gmail.com","user10@gmail.com"};
-		String[] aNickname = {
-				"使用者暱稱1","使用者暱稱2","使用者暱稱3","使用者暱稱4","使用者暱稱5",
-				"使用者暱稱6","使用者暱稱7","使用者暱稱8","使用者暱稱9","使用者暱稱10"};
-		String[] aPassword = {
-				"1111aaaa","2222bbbb","3333cccc","4444dddd","55555dddd",
-				"6666eeee","7777ffff","8888gggg","9999hhhh","0000iiii"};
-		Boolean[] aSate = {
-				true,true,true,true,true,
-				true,true,true,true,true};
-		String[] aName = {
-				"使用者名稱1","使用者名稱2","使用者名稱3","使用者名稱4","使用者名稱5",
-				"使用者名稱6","使用者名稱7","使用者名稱8","使用者名稱9","使用者名稱10"};
-		Integer[] aLevel = {
-				1,1,1,1,1,
-				1,1,1,1,1};
-		Integer[] aGender = {
-				1,2,1,2,1,
-				2,1,2,1,2};
-		String[] aBirth = {
-			"1990-01-01","1990-01-02","1990-01-03","1990-01-04","1990-01-05",
-			"1990-01-06","1990-01-07","1990-01-08","1990-01-09","1990-01-10"};
-		String[] aPhone = {
-				"0912345678","0923456789","0934567891","0945678912","0956789123",
-				"0967891234","0978912345","0978912345","0989123456","0991234567"};
-		
-		
+//		String[] aMail = {
+//			"user1@gmail.com","user2@gmail.com","user3@gmail.com","user4@gmail.com","user5@gmail.com",
+//			"user6@gmail.com","user7@gmail.com","user8@gmail.com","user9@gmail.com","user10@gmail.com"};
+//		String[] aNickname = {
+//				"使用者暱稱1","使用者暱稱2","使用者暱稱3","使用者暱稱4","使用者暱稱5",
+//				"使用者暱稱6","使用者暱稱7","使用者暱稱8","使用者暱稱9","使用者暱稱10"};
+//		String[] aPassword = {
+//				"1111aaaa","2222bbbb","3333cccc","4444dddd","55555dddd",
+//				"6666eeee","7777ffff","8888gggg","9999hhhh","0000iiii"};
+//		Boolean[] aSate = {
+//				true,true,true,true,true,
+//				true,true,true,true,true};
+//		String[] aName = {
+//				"使用者名稱1","使用者名稱2","使用者名稱3","使用者名稱4","使用者名稱5",
+//				"使用者名稱6","使用者名稱7","使用者名稱8","使用者名稱9","使用者名稱10"};
+//		Integer[] aLevel = {
+//				1,1,1,1,1,
+//				1,1,1,1,1};
+//		Integer[] aGender = {
+//				1,2,1,2,1,
+//				2,1,2,1,2};
+//		String[] aBirth = {
+//			"1990-01-01","1990-01-02","1990-01-03","1990-01-04","1990-01-05",
+//			"1990-01-06","1990-01-07","1990-01-08","1990-01-09","1990-01-10"};
+//		String[] aPhone = {
+//				"0912345678","0923456789","0934567891","0945678912","0956789123",
+//				"0967891234","0978912345","0978912345","0989123456","0991234567"};
 //		for(int i =0;i<10;i++) {
 //			
 //		AccountInfoVO accountInfoVO1 = new AccountInfoVO();
