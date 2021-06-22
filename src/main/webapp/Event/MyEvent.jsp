@@ -17,11 +17,15 @@
 <jsp:useBean id="admininfoSvc" scope="page" class="com.admininfo.model.AdminInfoService" />
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
+<jsp:useBean id="eventInfoSvc" scope="page" class="com.eventinfo.model.EventInfoService" />
 <%
 	String accountID = request.getParameter("accountID");
 	List<EventMemberVO> eventMemberList = eventMemberSvc.getAllByAccount(new Integer(accountID));
+	pageContext.setAttribute("eventMemberList", eventMemberList);
+
+		 
 %>
-%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,13 +71,14 @@
 	</tr>
 	<c:forEach var="eventMemberVO" items="${eventMemberList}">
 		<tr>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventID}</td>
+			<td>${eventMemberVO.eventID}</td>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</td>
-			<td>${accountSvc.getOneAccount(eventInfoSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td>
+			<td>${accountSvc.getAccountID(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountNickname}</td>
+<%-- 			<td>${accountSvc.getOneAccount(eventMemberSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td> --%>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventCurrentCount}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).getEventDate}</td>
-			
+			<td><fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventStartTime}" pattern="yyyy-MM-dd hh:mm"/></td> 
+			<td></td>
 		</tr>
 	</c:forEach>
 </table>

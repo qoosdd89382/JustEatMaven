@@ -39,7 +39,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	private static final String Select_TotalAttendance_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 3 )";
 	private static final String Select_EventStatus_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 1 or participation_state = 2)";
 	private static final String Select_Account_Stmt ="SELECT * FROM EventMember WHERE account_id = ?";
-	private static final String Select_EventandHost_Stmt ="SELECT account_id FROM EventMember WHERE event_id = ? and host_indentifier = 1";
+	private static final String Select_EventandHost_Stmt ="SELECT account_id FROM EventMember WHERE event_id = ? and host_identifier = 1";
 	
 
 	private static final String Select_EventID_And_MemberID_Stmt = "Select * From EventMember Where event_id = ? And account_id = ?";
@@ -569,18 +569,18 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	@Override
 	public int getOneByEventAndHost(int eventID) {
 		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
-		int eventAndHost = 0;
+		int accountID = 0;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
 		try {
 			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(Select_Avgscore_Stmt);
+			pstmt = con.prepareStatement(Select_EventandHost_Stmt);
 			pstmt.setInt(1,  eventID);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {	
-				eventAndHost = rs.getInt(1);	
+				accountID = rs.getInt(1);	
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -611,7 +611,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 				}
 			}
 		}
-		return eventAndHost;
+		return accountID;
 	}
 	
 	@Override
