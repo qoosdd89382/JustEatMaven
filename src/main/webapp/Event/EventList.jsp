@@ -40,7 +40,7 @@
 
 	<div class="add_Event">
 		<div class="Create_or_Join_Event col-10">
-			<button type="button" class="col-12 col-sm-3 col-md-2 col-lg-1">建立活動</button>
+			<button type="button" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent">建立活動</button>
 		</div>
 	</div>
 	<div class="event_list_content row">
@@ -93,7 +93,6 @@
 					<c:when test="${not empty listfind}">
 						<c:forEach var="eventInfoVO" items="${listfind}" varStatus="i">
 							<tr class="row">
-<%-- 							<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">  --%>
 								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
 								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
 								<c:if test="${eventInfoVO.groupType == 1}">
@@ -153,6 +152,10 @@
 		
 		$("[name=date]").on("change",function(){
 			$(".dateSubmit").submit();
+		});
+		
+		$(".createEvent").on("click",function(){
+			location.href = "<%=request.getContextPath()%>/Event/CreateEvent.jsp";
 		});
 	</script>
 </body>

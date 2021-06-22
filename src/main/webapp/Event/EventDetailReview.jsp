@@ -77,16 +77,16 @@
 	            <div>	            	
 	            	<c:choose>
 	            		<c:when test="${eventMemberVO.hostIdentifier == true}">
-	            			<input type="button" value="上一頁" class="return">
+	            			<input type="button" value="回到活動列表" class="return">
 	                		<input type="submit" name="action" value="活動編輯" class="">
 	                		<input type="submit" name="action" value="取消活動" class="">
 	            		</c:when>
 	            		<c:when test="${eventMemberVO.hostIdentifier == false}">
-	            			<input type="button" value="上一頁" class="return">
+	            			<input type="button" value="回到活動列表" class="return">
 	                		<input type="submit" name="action" value="退出活動" class="">
 	            		</c:when>
 	            		<c:otherwise>
-		            		<input type="button" value="上一頁" class="return">
+		            		<input type="button" value="回到活動列表" class="return">
 		                	<input type="submit" name="action" value="加入活動" class="joinEvent">
 	            		</c:otherwise>
 	            	</c:choose>	
@@ -138,7 +138,7 @@
 		});
 		
 		$(".return").on("click",function(){
-			history.go(-1);
+			location.href = "<%=request.getContextPath()%>/Event/EventList.jsp";
 		});
 	});
 	

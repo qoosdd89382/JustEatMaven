@@ -79,6 +79,8 @@
 	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
 	   	<div class="temp_data">
 	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
+	   		<input type="hidden" name="eventID" value="${param.eventID}">
+	    	<input type="hidden" name="accountID" value="${param.accountID}">
 	   	</div>
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="info col-6 col-lg-6">

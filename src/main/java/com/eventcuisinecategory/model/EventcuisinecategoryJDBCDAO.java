@@ -31,7 +31,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("找不到驅動(driver)" + e.getMessage());
 		}
 	}
 
@@ -53,7 +53,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 		
 			if (pstmt != null) {
@@ -61,7 +61,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 				}
 			}
 			if (con != null) {
@@ -69,7 +69,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 					con.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 		}
@@ -126,7 +126,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 			System.out.println("刪除成功");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		}
 	}
 
@@ -154,14 +154,14 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 				}
 			}
 			if (pstmt != null) {
@@ -169,7 +169,15 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
+				}
+			}
+			if(con!=null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 			
@@ -201,14 +209,14 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 				}
 			}
 			if (pstmt != null) {
@@ -216,7 +224,15 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
+				}
+			}
+			if(con!=null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 			
@@ -248,14 +264,14 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 				}
 			}
 			if (pstmt != null) {
@@ -263,10 +279,17 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 				}
 			}
-			
+			if(con!=null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
+				}
+			}
 		}
 		return list;
 	}

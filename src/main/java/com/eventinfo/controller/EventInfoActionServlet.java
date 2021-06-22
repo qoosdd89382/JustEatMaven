@@ -950,8 +950,21 @@ public class EventInfoActionServlet extends HttpServlet {
 			
 			EventInfoService eventInfoSvc = new EventInfoService();
 			eventInfoSvc.updateEventInfo(Integer.parseInt(request.getParameter("eventID")), eventName, Integer.parseInt(eventMember), eventDescription, Integer.parseInt(groupType), groupCity, groupAddress, eventRegStart, eventRegEnd, eventStart, eventEnd, 1,null);
-			RequestDispatcher detailView = request.getRequestDispatcher("/Event/EventDetailCheckForHost.jsp");
+			RequestDispatcher detailView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
 			detailView.forward(request, response);
+		}
+		
+		if("退出活動".equals(action)) {
+			EventMemberService eventMemberSvc = new EventMemberService();
+			eventMemberSvc.deleteEventMember(Integer.parseInt(request.getParameter("eventID")), Integer.parseInt(request.getParameter("accountID")));
+			DishService dishSvc = new DishService();
+			List<DishVO> dishVOs = dishSvc.getAccountIDAndEventID(Integer.parseInt(request.getParameter("accountID")), Integer.parseInt(request.getParameter("eventID")));
+			for(DishVO dishVO:dishVOs) {
+				int dishID = dishVO.getDishID();
+				dishSvc.deleteDish(dishID);
+			}
+			RequestDispatcher exitView = request.getRequestDispatcher("/Event/EventList.jsp");
+			exitView.forward(request, response);
 		}
 	}
 
