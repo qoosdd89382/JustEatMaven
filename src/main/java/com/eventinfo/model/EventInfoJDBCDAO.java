@@ -46,7 +46,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("找不到驅動(driver)" + e.getMessage());
 		}
 	}
 
@@ -84,28 +84,28 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 			}
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 	}
@@ -136,21 +136,21 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			System.out.println("更新成功");
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 	}
@@ -168,21 +168,21 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			System.out.println("刪除成功");
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 	}
@@ -219,28 +219,28 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 			}
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 		return eventVO;
@@ -279,28 +279,28 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 			}
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 		return list;
@@ -339,28 +339,28 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 			}
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 		return list;
@@ -399,28 +399,28 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
 			}
 			try {
 				if (pstmt != null) {
 					pstmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 			}
 		}
 		return list;
@@ -472,13 +472,13 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					throw new RuntimeException("交易沒有rollback" + e1.getMessage());
 				}
+				throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 			}
 		} finally {
 			if(pstmt!=null) {
@@ -486,7 +486,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
@@ -494,7 +494,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 					con.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 		}
@@ -554,13 +554,13 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					throw new RuntimeException("交易沒有rollback" + e1.getMessage());
 				}
+				throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 			}
 		} finally {
 			if(pstmt!=null) {
@@ -568,7 +568,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
@@ -576,7 +576,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 					con.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 		}
@@ -638,13 +638,13 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					throw new RuntimeException("交易沒有rollback" + e1.getMessage());
 				}
+				throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 			}
 		} finally {
 			if(pstmt!=null) {
@@ -652,7 +652,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 					pstmt.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("PrepareStatment發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
@@ -660,7 +660,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 					con.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 		}

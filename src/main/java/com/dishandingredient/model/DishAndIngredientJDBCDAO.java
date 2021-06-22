@@ -33,7 +33,7 @@ public class DishAndIngredientJDBCDAO implements DishAndIngredientDAOinterface {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("找不到驅動(driver)" + e.getMessage());
 		}
 	}
 

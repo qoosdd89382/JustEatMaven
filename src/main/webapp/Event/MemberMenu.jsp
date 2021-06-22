@@ -60,6 +60,7 @@
 	<form action="<%=request.getContextPath()%>/Event/EventInfo.do" method="POST" id="formID">
 		<div class="temp_data">
 			<input type="hidden" name="eventID" value="${param.eventID}">
+			<input type="hidden" name="accountID" value="${param.accountID}">
 		</div>
 		<div class="title">
 	        <h2>成員菜單</h2>

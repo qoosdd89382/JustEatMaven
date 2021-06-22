@@ -20,7 +20,7 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException ce) {
-			ce.printStackTrace();
+			throw new RuntimeException("找不到驅動(driver)" + ce.getMessage());
 		}
 	}
 
@@ -48,21 +48,21 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 			insertRow = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("PrepareStatement發生錯誤" + se.getMessage());
 				}
 			}
 			if (con != null) {
 				try {
 					con.close();
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 
@@ -86,21 +86,21 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 			deleteRow = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("PrepareStatement發生錯誤" + se.getMessage());
 				}
 			}
 			if (con != null) {
 				try {
 					con.close();
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 
@@ -128,28 +128,28 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("ResultSet發生錯誤" + se.getMessage());
 				}
 			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("PrepareStatement發生錯誤" + se.getMessage());
 				}
 			}
 			if (con != null) {
 				try {
 					con.close();
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 
@@ -179,28 +179,28 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("ResultSet發生錯誤" + se.getMessage());
 				}
 			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("PrepareStatement發生錯誤" + se.getMessage());
 				}
 			}
 			if (con != null) {
 				try {
 					con.close();
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 
@@ -230,28 +230,28 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("ResultSet發生錯誤" + se.getMessage());
 				}
 			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+					throw new RuntimeException("PrepareStatement發生錯誤" + se.getMessage());
 				}
 			}
 			if (con != null) {
 				try {
 					con.close();
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
 				}
 			}
 

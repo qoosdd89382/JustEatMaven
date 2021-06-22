@@ -26,7 +26,7 @@ public class EventChatroomJDBCDAO implements EventChartroomDAOInterfaceForJDBC {
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException("找不到驅動(driver)" + e.getMessage());
 		}
 	}
 	
@@ -52,27 +52,27 @@ public class EventChatroomJDBCDAO implements EventChartroomDAOInterfaceForJDBC {
 				System.out.println("沒有新增任何東西");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if(rs!=null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(pstmt!=null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 		}
@@ -91,20 +91,20 @@ public class EventChatroomJDBCDAO implements EventChartroomDAOInterfaceForJDBC {
 			pstmt.executeUpdate();
 			System.out.println("更新成功");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if(pstmt!=null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 		}
@@ -131,27 +131,27 @@ public class EventChatroomJDBCDAO implements EventChartroomDAOInterfaceForJDBC {
 				eventChatroomVO.setChatText(rs.getString("chat_text"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if(rs!=null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(pstmt!=null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 		}
@@ -180,27 +180,27 @@ public class EventChatroomJDBCDAO implements EventChartroomDAOInterfaceForJDBC {
 				list.add(eventChatroomVO);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
 			if(rs!=null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(pstmt!=null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 			if(con!=null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 				}
 			}
 		}
