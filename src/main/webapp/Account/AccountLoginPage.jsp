@@ -92,7 +92,7 @@ input#account_register_info {
 			<div id="login_area" class="col col-sm-4">
 			
 				<strong id="login_area_title">您好，歡迎登入</strong>
-				
+				<span>${errorMsgs}</span>
 				<div id="login_area_input"></div>
 				
 					<form method="post" action="accountInfo.do" name="LoginInfo">
@@ -107,8 +107,8 @@ input#account_register_info {
 							value="<%=(accountPassword == null) ? "" : accountPassword%>">
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
-					    <span>請輸入驗證碼 (點擊圖片可刷新):</span><br>
-					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput">
+					    <span>請輸入驗證碼 (點擊圖片可刷新):測試中後拔VALUE</span><br>
+					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput" value="1111">
 					    <span style="color:red">${errorMsgs.get("randomNumberError")}</span><br>
 					    
 					    <img id="login_area_randomnumber_pic" name="imgValidate" src="RandomNumber.jsp" onclick="refresh()"><br>

@@ -6,12 +6,6 @@ import java.sql.Clob;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-//郭建巖2021.0521.1200
-//會員資料VO
-//set auto_increment_offset = 100001;
-//set auto_increment_increment = 1;
-
-//table AccountInfo
 public class AccountInfoVO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
@@ -29,7 +23,8 @@ public class AccountInfoVO implements Serializable{
 	private byte[] accountIDcardFront;
 	private byte[] accountIDcardBack;
 	private String accountText;
-	private Timestamp accountRegistTime;
+	private Timestamp accountRegisterTime;
+	private String accountCode;
 	
 	public AccountInfoVO() {
 		super();
@@ -119,10 +114,16 @@ public class AccountInfoVO implements Serializable{
 	public void setAccountText(String accountText) {
 		this.accountText = accountText;
 	}
-	public Timestamp getAccountRegistTime() {
-		return accountRegistTime;
+	public Timestamp getAccountRegisterTime() {
+		return accountRegisterTime;
 	}
-	public void setAccountRegistTime(Timestamp accountRegistTime) {
-		this.accountRegistTime = accountRegistTime;
+	public void setAccountRegisterTime(Timestamp accountRegisterTime) {
+		this.accountRegisterTime = accountRegisterTime;
+	}
+	public String getAccountCode() {
+		return accountCode;
+	}
+	public void setAccountCode(String accountCode) {
+		this.accountCode = accountCode;
 	}
 }

@@ -25,7 +25,7 @@
 <title>DashboardPage</title>
 </head>
 <style>
-div#Dashboard_Account_Area{
+div#Dashboard_Area{
 	margin-top:150px;
 }
 </style>
@@ -37,41 +37,11 @@ div#Dashboard_Account_Area{
 	
 	<div class="container">
 	
-		<div id="Dashboard_Account_Area" class="row">
+		<div id="Dashboard_Area" class="row">
 		
 			<div class="col">
-				<span>會員管理</span><br>
-				${errorMsgs.get("accountIDError")}
-				<form METHOD="post" ACTION="accountInfo.do">
-					<span>輸入會員編號 (如100001):</span>
-					<input type="text" name="accountID">
-					<input type="hidden" name="action" value="getOneAccountInfo_From_Dashboard">
-					<input type="submit" value="送出">
-				</form>
-				<form METHOD="post" ACTION="accountInfo.do">
-					<span>選擇會員編號:</span> 
-					<select size="1" name="accountID">
-						<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
-							<option value="${accountInfoVO.accountID}">${accountInfoVO.accountID}
-						</c:forEach>
-					</select> 
-					<input type="hidden" name="action" value="getOneAccountInfo_From_Dashboard">
-					<input type="submit" value="送出">
-				</form>
-				<form METHOD="post" ACTION="accountInfo.do">
-					<span>選擇會員姓名:</span><br> 
-					<select size="1" name="accountID">
-						<c:forEach var="accountInfoVO" items="${accountInfoSvc.all}">
-							<option value="${accountInfoVO.accountID}">${accountInfoVO.accountMail}
-						</c:forEach>
-					</select>
-					<input type="hidden" name="action" value="getOneAccountInfo_From_Dashboard">
-					<input type="submit" value="送出">
-				</form>
-				<br>
-				<span><a href='listAllAccountinfo.jsp'>List</a> all AccountInfo.</span>
-				<br>
-				<span><a href='addAccountInfo.jsp'>Add</a> a new AccountInfo.</span>
+				<span><a href="<%=request.getContextPath()%>/Dashboard/Account/DashboardAccountPage.jsp">會員管理</a></span><br>
+
 			</div>
 		</div>
 	</div>
