@@ -23,11 +23,12 @@ public class TestBCrypt extends HttpServlet {
 
 		// gensalt's log_rounds parameter determines the complexity
 		// the work factor is 2**log_rounds, and the default is 10
-		String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
-
+		String hashed = BCrypt.hashpw(password, BCrypt.gensalt());	// BCrypt.hashpw(password, BCrypt.gensalt(12));
+		System.out.println(hashed);
+		
 		// Check that an unencrypted password matches one that has
 		// previously been hashed
-		if (BCrypt.checkpw(password, hashed))
+		if (BCrypt.checkpw(password, hashed))	// BCrypt.checkpw(password, BCrypt.hashpw(password, BCrypt.gensalt())
 			System.out.println("It matches");
 		else
 			System.out.println("It does not match");

@@ -11,5 +11,6 @@ public interface AdminInfoDAOInterface {
 	public boolean isNicknameExist(String adminNickname);
 	public boolean isMailExist(String adminMail);
 	public List<AdminInfoVO> getAll();
+	public int setPasswordAndPic(AdminInfoVO adminInfo);
 
 }

@@ -34,6 +34,18 @@ public class AdminInfoService {
 	public boolean isMailExist(String adminMail) {
 		return dao.isMailExist(adminMail);
 	}
+	
+
+	public int setPasswordAndPic(int adminID, String adminPassword, byte[] adminPic) {
+		AdminInfoVO vo = new AdminInfoVO();
+		vo.setAdminPassword(adminPassword);
+		vo.setAdminPic(adminPic);
+		vo.setAdminID(adminID);
+		return dao.setPasswordAndPic(vo);
+	}
+	
+	
+	
 //	public int updateAdmin(String adminMail, String adminNickname,
 //								String adminPassword, byte[] adminPic) {
 //		
