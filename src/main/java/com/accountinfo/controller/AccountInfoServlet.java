@@ -125,13 +125,11 @@ public class AccountInfoServlet extends HttpServlet {
 				if(session.getAttribute("accountMail")!=null) {
 					System.out.println("這裡有信箱SESSION");
 				}
-				
 				AccountInfoService accountInfoSvc = new AccountInfoService();
 				//資料庫找不到該會員
 				if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
 					errorMsgs.put("accountMailError","查無此會員資料");
 				} 
-				
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
@@ -139,13 +137,13 @@ public class AccountInfoServlet extends HttpServlet {
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
+				req.setAttribute("accountMail",accountMailInput);
 
 				//資料庫有該會員，但輸入密碼跟資料庫不符合
 				if(!((accountInfoSvc.getAccountPassword(accountMailInput)).getAccountPassword()).equals(accountPassword)) {
 					errorMsgs.put("accountPasswordError","密碼輸入錯誤");
 				}
-				
-				req.setAttribute("accountMail",accountMailInput);
+				//確認帳號 密碼 驗證碼 無誤後 將資料放入request保存
 				req.setAttribute("accountPassword",accountPasswordInput);
 				// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
@@ -155,14 +153,15 @@ public class AccountInfoServlet extends HttpServlet {
 					return;//程式中斷
 				}
 				
-				//檢查完成，取得資料庫內的帳號密碼資料
-				AccountInfoVO accountInfoVO = accountInfoSvc.getAccountInfo(accountMail,accountPassword);
+				//檢查完成，將確認過的資料轉交 取得資料庫內該會員的所有資料
+				AccountInfoVO accountInfoVO = accountInfoSvc
+						.getAccountInfoForLogin(accountMail,accountPassword);
 					
 				//3.查詢完成,準備轉交(Send the Success view)
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				session.setAttribute("accountInfoVO", accountInfoVO); 
 				String url = "/Account/AccountInfoPage.jsp";
-				RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneEmp.jsp
+				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				
 			//其他例外
@@ -173,18 +172,19 @@ public class AccountInfoServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
-//在AccountInfoPage.jsp收到"會員資料"的請求
+//在AccountInfoPage.jsp的functionbar收到"會員資料"的請求
 		if("gotoAccountInfoPage".equals(action)) {
 			//取得帳號資料
 			HttpSession session = req.getSession();
-			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO");
+			//將有完整資料的vo存在session
 			req.setAttribute("accountMail", accountInfoVO.getAccountMail());
 			//轉移到帳號修改頁面
 			String url = "/Account/AccountInfoPage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}
-		
+//REVIEW
 //在AccountInfoPage.jsp收到"修改會員資料"的請求，轉接到修改會員資料的頁面
 		if("Account_Change_Info".equals(action)) {
 			//取得帳號資料
@@ -198,7 +198,6 @@ public class AccountInfoServlet extends HttpServlet {
 		}
 //在AccountChangePage.jsp收到"提交修改資料的請求"
 		if("setAccountInfo_For_Change".equals(action)) {
-			
 			//檢查使用者輸入正確性
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
