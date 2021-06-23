@@ -20,7 +20,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	private static String password = "justeat";
 
 	private static final String Insert_Stmt = "Insert into EventMember(event_id,account_id,participation_state,host_identifier)Values((Select event_id From EventInfo Where event_id = ?),(Select account_id From AccountInfo Where account_id = ?),?,?)";
-	private static final String Insert_With_Default_Stmt = "Insert into EventMember(event_id,account_id,participation_state)Values((Select event_id From EventInfo Where event_id = ?),(Select account_id From AccountInfo Where account_id = ?),?)";
+	private static final String Insert_With_Default_Stmt = "Insert into EventMember(event_id,account_id,participation_state,host_identifier)Values((Select event_id From EventInfo Where event_id = ?),(Select account_id From AccountInfo Where account_id = ?),?,?)";
 	// 單一活動獲得總評分,單一活動評分總人數 可在修改用查詢獲得 暫時還沒做
 	private static final String Update_Stmt = "Update EventMember Set participation_state = ? Where event_id = ? AND account_id = ?"; // 審核過就更新
 	private static final String Delete_Stmt = "Delete From EventMember Where event_id = ? AND account_id = ? ";

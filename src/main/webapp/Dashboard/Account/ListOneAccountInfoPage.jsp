@@ -3,6 +3,7 @@
 
 <%
 AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
+
 %>
 
 
@@ -107,10 +108,11 @@ td{
 						   </form>
 						</td>
 						<td>
+						${accountInfoVO.accountID}
 						  <form method="post" action="dashboard.do" style="margin-bottom: 0px;">
 						     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
-						     <input type="hidden" name="action" value="delete">
-						     <input type="submit" value="刪除">
+						     <input type="hidden" name="action" value="freezeAccountInfo">
+						     <input type="submit" value="停權">
 						   </form>
 						</td>
 					</tr>

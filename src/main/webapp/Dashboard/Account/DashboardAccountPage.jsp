@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <jsp:useBean id="accountInfoSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<%-- <jsp:useBean id="dao" scope="page" class="com.emp.model.EmpService" /> --%>
 <%--    <% com.emp.model.EmpService dao =new com.emp.model.EmpService(); --%>
 <!-- //    		pageContext.setAttribute("dao",dao); -->
 
