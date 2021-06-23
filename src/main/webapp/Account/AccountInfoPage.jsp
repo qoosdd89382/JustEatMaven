@@ -129,7 +129,7 @@ input#account_logout:hover {
 				<span>用戶身分證背面:</span><br>
 				<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVO.accountID}" width="300px" height="150px"><br>
 				<span>用戶自我介紹:<br><%=accountInfoVO.getAccountText()%></span><br>
-				<span>用戶註冊時間:<%=accountInfoVO.getAccountRegistTime()%></span><br>
+				<span>用戶註冊時間:<%=accountInfoVO.getAccountRegisterTime()%></span><br>
 				
 				<form method="post" action="accountInfo.do">
 					<input type="hidden" name="action" value="Account_Change_Info">

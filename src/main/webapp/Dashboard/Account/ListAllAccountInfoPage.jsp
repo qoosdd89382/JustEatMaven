@@ -109,6 +109,21 @@ th, td {
 							<td>${accountInfoVO.accountText}</td>
 							<td>${accountInfoVO.accountRegisterTime}</td>
 							<td>${accountInfoVO.accountCode}</td>	
+							<td>
+							  <form method="post" action="dashboard.do" style="margin-bottom: 0px;">
+							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
+							     <input type="hidden" name="action"	value="gotoUpdateAccountInfo">
+							     <input type="submit" value="修改">
+							   </form>
+							</td>
+							<td>
+							${accountInfoVO.accountID}
+							  <form method="post" action="dashboard.do" style="margin-bottom: 0px;">
+							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
+							     <input type="hidden" name="action" value="freezeAccountInfo">
+							     <input type="submit" value="停權">
+							   </form>
+							</td>
 						</tr>
 					</c:forEach>
 				</table>

@@ -110,7 +110,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
 			<td><%=accountInfoVO.getAccountIDcardFront()%><img src="images/accountIDFTest.jpg" width="100" height="100" border="0"></td>
 			<td><%=accountInfoVO.getAccountIDcardBack()%><img src="images/accountIDBTest.jpg" width="100" height="100" border="0"></td>
 			<td><%=accountInfoVO.getAccountText()%></td>
-			<td><%=accountInfoVO.getAccountRegistTime()%></td>
+			<td><%=accountInfoVO.getAccountRegisterTime()%></td>
 		</tr>
 	</table>
 	

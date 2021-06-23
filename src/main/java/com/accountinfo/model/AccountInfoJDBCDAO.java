@@ -123,8 +123,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			}else {
 				System.out.println("AccountInfo insert failed!");
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if(rs != null) {
 				try {
@@ -183,9 +184,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			pstmt.executeUpdate();
 			
 			System.out.println("AccountInfo update completed!");
-			
-		}catch(Exception e){
-			e.printStackTrace();	
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());	
 		}finally {
 			if (pstmt != null) {
 				try {
@@ -217,8 +218,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			pstmt.executeUpdate();
 
 			System.out.println("AccountInfo delete completed!");
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if (pstmt != null) {
 				try {
@@ -273,8 +275,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				accountInfoVO.setAccountRegisterTime(rs.getTimestamp("account_register_time"));
 				accountInfoVO.setAccountCode(rs.getString("account_code"));
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if(rs != null) {
 				try {
@@ -982,7 +985,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		
 //=============================================================
 		//刪除 OK
-//		accountInfoJDBCDAO.delete(100011);
+//		accountInfoJDBCDAO.delete(100001);
 //=============================================================
 		//查詢 OK
 //		AccountInfoVO accountInfoVO3 = new AccountInfoVO();
