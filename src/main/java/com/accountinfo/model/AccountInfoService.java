@@ -21,7 +21,30 @@ public class AccountInfoService {
 			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegisterTime
 			) {
 		
+	}
+	
+	public AccountInfoVO updateAccountInfo(
+		String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
+		String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+		String accountText
+		) {
+		AccountInfoVO accountInfoVO = new AccountInfoVO();
+
+		accountInfoVO.setAccountMail(accountMail);
+		accountInfoVO.setAccountNickname(accountNickname);
+		accountInfoVO.setAccountPassword(accountPassword);
+		accountInfoVO.setAccountState(accountState);
+		accountInfoVO.setAccountLevel(accountLevel);
 		
+		accountInfoVO.setAccountName(accountName);
+		accountInfoVO.setAccountGender(accountGender);
+		accountInfoVO.setAccountBirth(accountBirth);
+		accountInfoVO.setAccountPhone(accountPhone);
+		accountInfoVO.setAccountText(accountText);
+		
+		dao.update(accountInfoVO);
+		
+		return accountInfoVO;
 	}
 	
 	public AccountInfoVO selectOneAccountInfo(Integer accountID) {
@@ -32,6 +55,9 @@ public class AccountInfoService {
 		return dao.selectAllAccountInfo();
 	}
 	
+	public void deleteAccountInfo(Integer accountID) {
+		dao.delete(accountID);
+	}
 	
 	
 	
@@ -108,9 +134,7 @@ public class AccountInfoService {
 		
 		return accountInfoVO;
 	}
-	public void deleteAccountInfo(Integer accountID) {
-		dao.delete(accountID);
-	}
+
 	
 
 	

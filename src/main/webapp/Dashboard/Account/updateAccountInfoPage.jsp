@@ -84,7 +84,6 @@ td{
 					<span>會員姓名:</span><br>
 					<input type="text" name="accountName" value="${accountInfoVO.accountName}"><br>
 					
-					
 					<span>會員性別 :</span> 
 					<input type="radio" name="accountGender" value="1" ${(accountInfoVO.accountGender)== 1?"checked":""}>男
 					<input type="radio" name="accountGender" value="2" ${(accountInfoVO.accountGender)== 2?"checked":""}>女 <br>
@@ -116,6 +115,9 @@ td{
 					
 					<span>會員註冊時間:</span>
 					<span>${accountInfoVO.accountRegisterTime}</span><br>
+					
+					<span>會員驗證碼:</span>
+					<span>${accountInfoVO.accountCode}</span><br>
 					
 					<input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
 					<input type="hidden" name="action"	value="updateAccountInfo_From_Dashboard">
