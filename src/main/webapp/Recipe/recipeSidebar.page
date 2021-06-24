@@ -12,7 +12,7 @@
 	</div>
 	<div class="category-list">
 		<c:forEach var="categoryVO" items="${categoryList}">
-			<a class="btn btn-primary" href="<%= request.getContextPath() %>/Recipe/category.jsp?=${categoryVO.cuisineCategoryID}" role="button">${categoryVO.cuisineCategoryName}</a>
+			<a class="btn btn-primary" href="<%= request.getContextPath() %>/Recipe/listAllByCategory.jsp?id=${categoryVO.cuisineCategoryID}" role="button">${categoryVO.cuisineCategoryName}</a>
 		</c:forEach>
 	</div>
 </section>

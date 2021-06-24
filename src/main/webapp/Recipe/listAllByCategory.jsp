@@ -1,20 +1,29 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%@ page import="java.util.*"%>
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
+<%@ page import="com.recipecuisinecategory.model.*"%>
+
 
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
+<jsp:useBean id="reicpeCatSvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 <jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
-<!-- 基本上意思和java區塊new、放進Page scope是一樣的 -->
+
 <%
-	List<RecipeVO> list = recipeSvc.getAll();
+	String cuisineCategoryID = request.getParameter("id");
+	List<RecipeCuisineCategoryVO> list = null;
+	if (cuisineCategoryID != null) {
+		list = reicpeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
+	}
+	pageContext.setAttribute("cuisineCategoryID", cuisineCategoryID);
 	pageContext.setAttribute("list", list);
 %>
 
@@ -58,52 +67,57 @@
 				</ol>
 			</div> 
     	
-    		<section class="error">
-    			${errorMsgs.get("UnknowErr")}
+<!--     		<section class="error"> -->
+<%--     			${errorMsgs.get("UnknowErr")} --%>
+<!--     		</section> -->
+
+    		<section class="searchResult">
+				<c:if test="${not empty list}">
+	    			系統為您尋找 <b>${categorySvc.getOneCategory(cuisineCategoryID).cuisineCategoryName}</b> 料理分類，符合條件的食譜共有 <b>${fn:length(list)}</b> 筆：
+	    		</c:if>
+	    		<c:if test="${empty list}">
+	    			系統為您尋找 <b>${categorySvc.getOneCategory(cuisineCategoryID).cuisineCategoryName}</b> 料理分類，抱歉，暫時沒有食譜符合條件！
+	    		</c:if>
     		</section>
     		
 			<div class="list">
     		<%@ include file="pages/page1.file"%>
-				<c:forEach var="recipeVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+				<c:forEach var="recipeCatVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 				
-					<div class="recipe-block row" id="${recipeVO.recipeID}">
+					<div class="recipe-block row" id="${recipeCatVO.recipeID}">
 					
 						<div class="pic col-12 col-lg-5">
 							<div class="time">
-								<fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd"/>
-								<%-- yyyy.MM.dd a KK:mm --%>
+								<fmt:formatDate value="${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeTime}" pattern="yyyy.MM.dd"/>
 							</div>
 							<div class="img-outer">
-								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}">
+								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeCatVO.recipeID}">
 							</div>
 							<div class="count">
-								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeVO.recipeLikeCount}</span>
-								<span class="favcount"><i class="fas fa-heart"></i>${recipeVO.recipeCollectCount}</span>
+								<span class="viewcount"><i class="fas fa-eye"></i>${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeViewCount}</span>
+								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeLikeCount}</span>
+								<span class="favcount"><i class="fas fa-heart"></i>${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeCollectCount}</span>
 							</div>
 						</div>
 						
 						<div class="info col-12 col-lg-7">
-							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
-<!-- 							<div class="row"> -->
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
-<!-- 							<div class="col-6">test</div> -->
-<!-- 							</div> -->
-							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
+							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeCatVO.recipeID}">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeName}</a></h4></div>
+							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeCatVO.recipeID).accountID).accountNickname}</a></div>
+							<div class="intro"><div class="intro-text">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeIntroduction}</div></div>
 							<div class="change form-group">
 								<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 									<input type="hidden" name="action" value="getOneForUpdate">
-									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+									<input type="hidden" name="recipeID"  value="${recipeCatVO.recipeID}">
 									<button class="btn btn-primary" type="submit">編輯</button>
 								</form>
 								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 									<input type="hidden" name="action" value="delete">
-									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+									<input type="hidden" name="recipeID"  value="${recipeCatVO.recipeID}">
 									<button class="btn btn-primary" type="submit">刪除</button>
 								</form>
 							</div>
 							<div class="readmore">
-								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
+								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeCatVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
 							</div>
 						</div>
 						
