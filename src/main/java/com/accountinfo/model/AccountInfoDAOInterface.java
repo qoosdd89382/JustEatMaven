@@ -21,6 +21,9 @@ public interface AccountInfoDAOInterface {
     public void updateAccountInfoFromChange(
 			String accountMail,String accountNickname,String accountPassword,
 			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			byte[] accountPic,
+			byte[] accountIDcardFront,
+			byte[] accountIDcardBack,
 			String accountText,
 			Integer accountID
     		);
@@ -30,5 +33,20 @@ public interface AccountInfoDAOInterface {
 			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
 			String accountText
     		);
- 
+    
+    public void setLevelTwoAccountInfoFromRegister(
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			String accountText
+    		);
+    
+    public void setLevelThreeAccountInfoFromRegister(
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			byte[] accountPic,
+			byte[] accountIDcardFront,
+			byte[] accountIDcardBack,
+			String accountText
+			);
+    
 }

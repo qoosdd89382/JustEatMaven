@@ -157,6 +157,9 @@ public class AccountInfoService {
 	public void updateAccountInfoFromChange(
 			String accountMail,String accountNickname,String accountPassword,
 			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			byte[] accountPic,
+			byte[] accountIDcardFront,
+			byte[] accountIDcardBack,
 			String accountText,
 			Integer accountID
 		){
@@ -173,15 +176,18 @@ public class AccountInfoService {
 		accountInfoVO.setAccountGender(accountGender);
 		accountInfoVO.setAccountBirth(accountBirth);
 		accountInfoVO.setAccountPhone(accountPhone);
-//		accountInfoVO.setAccountPic(null);
+		accountInfoVO.setAccountPic(accountPic);
 		
-//		accountInfoVO.setAccountIDcardFront(null);
-//		accountInfoVO.setAccountIDcardBack(null);
+		accountInfoVO.setAccountIDcardFront(accountIDcardFront);
+		accountInfoVO.setAccountIDcardBack(accountIDcardBack);
 		accountInfoVO.setAccountText(accountText);
 		
 		dao.updateAccountInfoFromChange(
 				accountMail,accountNickname,accountPassword,
 				accountName,accountGender,accountBirth,accountPhone,
+				accountPic,
+				accountIDcardFront,
+				accountIDcardBack,
 				accountText,accountID);
 	}
 //註冊用
@@ -203,7 +209,7 @@ public class AccountInfoService {
 		accountInfoVO.setAccountName(accountName);
 		accountInfoVO.setAccountGender(accountGender);
 		accountInfoVO.setAccountBirth(accountBirth);
-		accountInfoVO.setAccountPhone(accountPhone);
+		accountInfoVO.setAccountPhone(null);
 		accountInfoVO.setAccountPic(null);
 		
 		accountInfoVO.setAccountIDcardFront(null);
@@ -215,6 +221,77 @@ public class AccountInfoService {
 				accountName,accountGender,accountBirth,accountPhone,
 				accountText);
 	}
+	
+	public void setLevelTwoAccountInfoFromRegister(
+//			Integer accountID,
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			String accountText
+			){
+			AccountInfoVO accountInfoVO = new AccountInfoVO();
+		//	accountInfoVO.setAccountID(accountID);
+		
+			accountInfoVO.setAccountMail(accountMail);
+			accountInfoVO.setAccountNickname(accountNickname);
+			accountInfoVO.setAccountPassword(accountPassword);
+			accountInfoVO.setAccountState(new Boolean("1"));
+			accountInfoVO.setAccountLevel(new Integer(2));
+			
+			accountInfoVO.setAccountName(accountName);
+			accountInfoVO.setAccountGender(accountGender);
+			accountInfoVO.setAccountBirth(accountBirth);
+			accountInfoVO.setAccountPhone(accountPhone);
+			accountInfoVO.setAccountPic(null);
+			
+			accountInfoVO.setAccountIDcardFront(null);
+			accountInfoVO.setAccountIDcardBack(null);
+			accountInfoVO.setAccountText(accountText);
+			
+			dao.setLevelOneAccountInfoFromRegister(
+					accountMail,accountNickname,accountPassword,
+					accountName,accountGender,accountBirth,accountPhone,
+					accountText);
+		}
+	
+	public void setLevelThreeAccountInfoFromRegister(
+//			Integer accountID,
+			String accountMail,String accountNickname,String accountPassword,
+			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			byte[] accountPic,
+			byte[] accountIDcardFront,
+			byte[] accountIDcardBack,
+			String accountText
+			){
+			AccountInfoVO accountInfoVO = new AccountInfoVO();
+		//	accountInfoVO.setAccountID(accountID);
+		
+			accountInfoVO.setAccountMail(accountMail);
+			accountInfoVO.setAccountNickname(accountNickname);
+			accountInfoVO.setAccountPassword(accountPassword);
+			accountInfoVO.setAccountState(new Boolean("1"));
+			accountInfoVO.setAccountLevel(new Integer(3));
+			
+			accountInfoVO.setAccountName(accountName);
+			accountInfoVO.setAccountGender(accountGender);
+			accountInfoVO.setAccountBirth(accountBirth);
+			accountInfoVO.setAccountPhone(accountPhone);
+			accountInfoVO.setAccountPic(accountPic);
+			
+			accountInfoVO.setAccountIDcardFront(accountIDcardFront);
+			accountInfoVO.setAccountIDcardBack(accountIDcardBack);
+			
+			accountInfoVO.setAccountText(accountText);
+			
+			dao.setLevelThreeAccountInfoFromRegister(
+					accountMail,accountNickname,accountPassword,
+					accountName,accountGender,accountBirth,accountPhone,
+					accountPic,
+					accountIDcardFront,
+					accountIDcardBack,
+					accountText);
+		}
+	
+	
 	
 	
 }

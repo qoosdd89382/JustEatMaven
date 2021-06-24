@@ -146,6 +146,7 @@ input#account_logout:hover {
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 	
 	<p>備忘區</p>
+	${errorMsgs}
 	<!--儲存用戶資料在session -->
 	<%session.setAttribute("accountMail",accountInfoVO.getAccountMail());%>
 	<span>借我標記一下session==${accountMail}</span>

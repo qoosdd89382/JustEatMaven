@@ -104,7 +104,7 @@ textarea#textarea {
 <%-- 			<span>JAVA<%=accountMail %></span><br> --%>
 <%-- 			<span>JAVAVO<%=accountInfoVO.getAccountMail() %></span> --%>
 				<span>請輸入您的會員資料</span><br>
-				<form id="change" method="post" action="accountInfo.do">
+				<form id="change" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
 					<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br> 
 					
 <%-- 					<input type="text" name="accountMail" value="<%=(accountMail == null) ? "" : accountMail%>"> --%>
