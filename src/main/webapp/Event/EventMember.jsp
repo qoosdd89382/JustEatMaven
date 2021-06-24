@@ -26,7 +26,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>成員列表</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/EventMember/css/style.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/abc.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
@@ -64,8 +64,8 @@
 			<tr> 
 				<td>${eventMemberVO.accountID}</td> 
 				<td>
-					<c:if test="${accountSvc.getAccountID(eventMemberVO.accountID).accountGender == 1}">男</c:if>
-					<c:if test="${accountSvc.getAccountID(eventMemberVO.accountID).accountGender == 2}">女</c:if>
+					<c:if test="${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountGender == 1}">男</c:if>
+					<c:if test="${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountGender == 2}">女</c:if>
 				</td>
 				
 				<td>${eventMemberSvc.getAvgScoreByAccountID(eventMemberVO.accountID)}</td> 
@@ -76,8 +76,8 @@
 				     <c:if test="${eventMemberSvc.getTotalAttendanceByAccountID(eventMemberVO.accountID) == 1}">審核中</c:if>
 				     <c:if test="${eventMemberSvc.getTotalAttendanceByAccountID(eventMemberVO.accountID) == 2}">參與中</c:if>
 				</td>
-			
-			
+		
+			    
 			
 				
 			</tr> 

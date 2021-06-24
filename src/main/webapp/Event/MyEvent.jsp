@@ -33,7 +33,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>參加/結束的活動</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/EventMember/css/style.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/abc.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">

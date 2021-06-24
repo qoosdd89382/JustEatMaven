@@ -6,14 +6,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.*"%>
-<%@ page import="com.evaluatedmember.model.*"%>
+<%@ page import="com.eventmember.model.*"%>
 <%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.dish.model.*"%>
 
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
+<jsp:useBean id="dishService" scope="page" class="com.dish.model.DishService" />
 <%
-	List<EvaluatedMemberVO> list = evaluatedmemberSvc.getAllByEventID(300002);
+	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
 	pageContext.setAttribute("list", list);
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
@@ -25,7 +26,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>成員評分</title>
+<title>成員列表</title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/abc.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
@@ -42,8 +43,8 @@
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
 			<li class="breadcrumb-item"><a href=" # ">我的活動</a></li>
 			<li class="breadcrumb-item"><a href=" # ">參加/結束的活動</a></li>
-			<li class="breadcrumb-item"><a href=" # ">評鑑頁面</a></li>
-			
+			<li class="breadcrumb-item"><a href=" # ">活動詳情</a></li>
+			<li class="breadcrumb-item active" aria-current="page">成員列表</li>
 		</ol>
 	</nav>
 	
@@ -55,28 +56,32 @@
 		<th>帳號</th> 
 		<th>性別</th>
 		<th>平均星數</th>
-		<th>給予星數</th>
-		<th>社交</th>
+		<th>總活動次數</th>
+		<th>菜名</th>
+		<th>審核</th>
 		
 	</tr>
-		<c:forEach var="evaluatedmemberVO" items="${list}" >
+		<c:forEach var="eventMemberVO" items="${list}" >
 			<tr> 
-				<td>${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountNickname}</td>
+				<td>${eventMemberVO.accountID}</td> 
 				<td>
-					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 1}">男</c:if>
-					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 2}">女</c:if>
-				</td> 
-				<td>${eventMemberSvc.getAvgScoreByAccountID(evaluatedmemberVO.accepterAccountID)}</td> 
-				<td>${evaluatedmemberVO.giveScore}</td> 
+					<c:if test="${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountGender == 1}">男</c:if>
+					<c:if test="${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountGender == 2}">女</c:if>
+				</td>
+				
+				<td>${eventMemberSvc.getAvgScoreByAccountID(eventMemberVO.accountID)}</td> 
+				<td>${eventMemberSvc.getTotalEventByAccountID(eventMemberVO.accountID)}</td> 	
+				<td>${dishSvc.getDishID(eventMemberVO.accountID)}																	</td>
+			
+				
 			</tr> 
 		</c:forEach>
 	</table>
-	  <div class="btn_margin" align="center"  >
+	  <div class="btn_margin" align="right"  >
 	  
-	              <input type ="button" onclick="history.back()" value="確定送出"></input>
+	              <input type ="button" onclick="history.back()" value="確認"></input>
 
 	  </div>
-			
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
@@ -87,7 +92,11 @@
 	<script src="<%=request.getContextPath()%>/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
 	<script>
-
+		$(function() {
+			$(".header").load("header.html");
+			$(".footer").load("footer.html");
+		});
+		
 		$("[name=position]").on("change",function(){
 			if($(this).is(":checked")){
 				$(".positionSubmit").submit();
