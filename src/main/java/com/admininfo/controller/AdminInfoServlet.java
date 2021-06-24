@@ -52,18 +52,18 @@ public class AdminInfoServlet extends HttpServlet {
 					errorMsgs.put("adminEmailErr", "e-mail請勿空白");
 				} else if (!adminMail.trim().matches(adminMailReg)) {
 					errorMsgs.put("adminEmailErr", "信箱格式錯誤");
-				} else if (adminSvc.isNicknameExist(adminMail)) {
-					errorMsgs.put("adminEmailErr", "信箱已被註冊使用！");
+				} else if (adminSvc.getOneAdmin(adminMail) != null) {
+					errorMsgs.put("adminEmailErr", "信箱已被註冊使用");
 				}
 
 				String adminNickname = req.getParameter("adminNickname");
 				String adminNicknameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{3,45}$";
 				if (adminNickname.trim() == null || adminMail.trim().length() == 0) {
-					errorMsgs.put("adminNicknameErr", "暱稱不可空白！");
+					errorMsgs.put("adminNicknameErr", "暱稱不可空白");
 				} else if (!adminNickname.trim().matches(adminNicknameReg)) {
 					errorMsgs.put("adminNicknameErr", "暱稱須為3至45字元");
 				} else if (adminSvc.isNicknameExist(adminNickname)) {
-					errorMsgs.put("adminNicknameErr", "暱稱已被註冊使用！");
+					errorMsgs.put("adminNicknameErr", "暱稱已被註冊使用");
 				}
 
 				AdminInfoVO adminVO = new AdminInfoVO();
@@ -73,7 +73,7 @@ public class AdminInfoServlet extends HttpServlet {
 				req.setAttribute("adminVO", adminVO);
 
 				if (!errorMsgs.isEmpty()) {
-					RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/addAdmin.jsp");
+					RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/Admin/addAdmin.jsp");
 					failureView.forward(req, res);
 					return;
 				}
@@ -89,19 +89,24 @@ public class AdminInfoServlet extends HttpServlet {
 
 					MailService mailSvc = new MailService();
 					String subject = "JustEat管理員註冊認證信";
-					String messageText = "請點擊本連結，啟用帳號：<br>" + req.getRequestURL() + "?action=auth" + "&adminID="
-							+ adminVO.getAdminID() + "&authCode=" + adminPassword + "<br>或輸入驗證碼" + adminPassword;
+					String messageText =
+							"請點擊本連結，啟用帳號：<br>" + req.getRequestURL() + "?action=auth" + 
+							"&adminID="	+ adminVO.getAdminID() + 
+							"&authCode=" + adminPassword + 
+							"<br><br>或至" +  req.getRequestURL() + "?adminID="	+ adminVO.getAdminID() + 
+							"輸入驗證碼" + adminPassword;
 
 					mailSvc.sendMail(adminMail, subject, messageText);
 //					
 					RequestDispatcher inputAuthCodeView = req.getRequestDispatcher(
-							"/Dashboard/adminRegisterAuth.jsp?adminID" + adminVO.getAdminID());
+//							"/Dashboard/adminRegisterAuth.jsp?adminID=" + adminVO.getAdminID());
+							"/Dashboard/Admin/addAdminSuccess.jsp?adminID=" + adminVO.getAdminID());
 					inputAuthCodeView.forward(req, res);
 				}
 
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/addAdmin.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/index.jsp");
 				failureView.forward(req, res);
 			}
 
@@ -184,9 +189,10 @@ public class AdminInfoServlet extends HttpServlet {
 						System.out.println("使用者沒有上傳置頂圖片");
 						if (session.getAttribute("adminPicBuffer") != null) {
 							adminPicBuffer = (byte[]) session.getAttribute("adminPicBuffer");
-						} else {
-							errorMsgs.put("adminPicErr", "請上傳置頂圖之圖檔");
-						}
+						} 
+//						else {
+//							errorMsgs.put("adminPicErr", "請上傳置頂圖之圖檔");
+//						}
 					} else if (!part.getContentType().startsWith("image")) {
 						errorMsgs.put("adminPicErr", "請上傳image類型之圖檔");
 						if (session.getAttribute("adminPicBuffer") != null) {
@@ -224,7 +230,16 @@ public class AdminInfoServlet extends HttpServlet {
 				// ==========================
 				
 				String hashedPassword = BCrypt.hashpw(adminPassword, BCrypt.gensalt());
-				adminVO.setAdminPassword(hashedPassword);
+				System.out.println(hashedPassword);
+				if (adminSvc.setPasswordAndPic(adminID, hashedPassword, adminPicBuffer) > 0) {
+					session.removeAttribute("adminPicBuffer");
+					session.removeAttribute("adminID");
+					System.out.println("修改密碼成功");
+					RequestDispatcher successView = 
+							req.getRequestDispatcher("/Dashboard");
+					successView.forward(req, res);
+					return;
+				}
 				
 				
 //			} catch (Exception e) {

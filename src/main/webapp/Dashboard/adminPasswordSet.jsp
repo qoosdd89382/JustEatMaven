@@ -18,7 +18,7 @@
 		adminVO = (AdminInfoVO) request.getAttribute("adminVO");
 	} else {
 		session.removeAttribute("adminPicBuffer");
-		pageContext.setAttribute("isNewAdmin", "");
+		pageContext.setAttribute("isNewAdmin", "yes");
 	}
 	pageContext.setAttribute("adminVO", adminVO);
 	
@@ -267,7 +267,7 @@ body {
 	    }
 	    
 		var isNewAdmin = "${isNewAdmin}";
-		if (isNewAdmin == "") {
+		if (isNewAdmin == "yes") {
 			sessionStorage.clear();
 		}
 	    

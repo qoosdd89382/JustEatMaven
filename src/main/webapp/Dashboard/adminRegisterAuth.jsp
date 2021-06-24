@@ -9,6 +9,10 @@
 
 try {
 	AdminInfoVO adminVO = adminSvc.getOneAdmin(new Integer(request.getParameter("adminID")));
+	request.setAttribute("adminVO", adminVO);
+	if (adminVO == null) {
+		throw new Exception();
+	}
 } catch (Exception e) {
 	response.sendRedirect(request.getContextPath());
 	return;
@@ -126,9 +130,9 @@ body {
 				<form method="post" action="<%= request.getContextPath() %>/Dashboard/admin.do?action=auth&adminID=${param.adminID}" >
 					
 					<div class="pre-login border-bottom">
-						<h4>${adminSvc.getOneAdmin(param.adminID).adminNickname}，您好！</h4>
+						<h4>${adminVO.adminNickname}，您好！</h4>
 						<p>您註冊的信箱為：<br>
-							${adminSvc.getOneAdmin(param.adminID).adminMail}<br>
+							${adminVO.adminMail}<br>
 							請前往收取驗證碼，或於下方輸入驗證碼。</p>
 					</div>
 				
@@ -140,7 +144,7 @@ body {
 <!-- 					</div> -->
 					<span class="errorSpan col-12">${errorMsgs.get("authWrongErr")}</span>
 					<div class="input-element col-12 input-group mb-3">
-						<input id="authCode" class="form-control form-control-lg rounded-pill" type="text" name="authCode" value="${adminVO.adminMail}" placeholder="請輸入驗證碼">
+						<input id="authCode" class="form-control form-control-lg rounded-pill" type="text" name="authCode" value="" placeholder="請輸入驗證碼">
 					</div>
 					
 					<div class="input-element col-12 input-group">
