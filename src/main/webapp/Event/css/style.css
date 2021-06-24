@@ -1,4 +1,4 @@
-/*æ´»å‹•åˆ—è¡¨ */
+/*¬¡°Ê¦Cªí */
 
 .event_list_content {
     margin: 20px 0 0 0;
@@ -69,7 +69,7 @@ img {
 }
 
 
-/*æ–°å¢æ´»å‹• */
+/*·s¼W¬¡°Ê */
 
 .title h2 {
     margin: 20px 0 0 10px;
@@ -88,7 +88,7 @@ img {
 }
 
 .event_content{
-	margin: 0 auto !important;
+ margin: 0 auto !important;
     width: 100%;
     box-sizing: border-box;
 }
@@ -102,7 +102,7 @@ img {
 }
 
 .inputAddress{
-	width: 300px;
+ width: 300px;
 }
 /* .event_description {} */
 
@@ -111,10 +111,10 @@ textarea {
 }
 
 .error{
-	color: red;
+ color: red;
 }
 
-/*æ´»å‹•è©³æƒ…*/
+/*¬¡°Ê¸Ô±¡*/
 
 .border {
     padding: 0 5px;
@@ -122,11 +122,14 @@ textarea {
 }
 
 .event_content_left >div{
-	margin:0 0 10px 0;
+ margin:0 0 10px 0;
 }
 
-
-/*æ–°å¢èœè‰²*/
+.preview_img{
+ max-width: 400px;
+ max-height: 300px;
+}
+/*·s¼Wµæ¦â*/
 
 .ingredient_zone {
     width: 300px;
@@ -154,8 +157,8 @@ textarea {
 }
 
 .insert_dish_list > tr > td,th {
-	border-bottom:1px solid black;
-	border-right:1px solid black;
+ border-bottom:1px solid black;
+ border-right:1px solid black;
 }
 
 .insert_content {
@@ -169,22 +172,22 @@ textarea {
 }
 
 .ui-autocomplete {
-	max-height: 100px;
-	overflow-y: auto;
-	overflow-x: hidden;
+ max-height: 100px;
+ overflow-y: auto;
+ overflow-x: hidden;
 }
 
-/*æˆå“¡èœå–®*/
+/*¦¨­ûµæ³æ*/
 .memberMenu{
-	margin: 0 auto !important;
+ margin: 0 auto !important;
     width: 100%;
     box-sizing: border-box;
 }
 .borderforMenu{
-	margin:5px;
+ margin:5px;
 }
 
 .borderforMenu th,td{
-	border:1px solid black;
-	border-collapse: collapse;
+ border:1px solid black;
+ border-collapse: collapse;
 }

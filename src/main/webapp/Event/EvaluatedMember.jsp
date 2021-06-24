@@ -8,19 +8,16 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.evaluatedmember.model.*"%>
 <%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.eventmember.model.*"%>
-<%@ page import="com.admininfo.model.*"%>
-<%@ page import="com.eventinfo.model.*"%>
-
 
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<jsp:useBean id="admininfoSvc" scope="page" class="com.admininfo.model.AdminInfoService" />
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 <%
-	String accountID = request.getParameter("accountID");
-	List<EventMemberVO> eventMemberList = eventMemberSvc.getAllByAccount(new Integer(accountID));
-%>
+	List<EvaluatedMemberVO> list = evaluatedmemberSvc.getAllByEventID(300002);
+	pageContext.setAttribute("list", list);
+// 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
+// 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,8 +25,8 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>參加/結束的活動</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/EventMember/css/style.css">
+<title>成員評分</title>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/abc.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
@@ -45,7 +42,7 @@
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
 			<li class="breadcrumb-item"><a href=" # ">我的活動</a></li>
 			<li class="breadcrumb-item"><a href=" # ">參加/結束的活動</a></li>
-			
+			<li class="breadcrumb-item"><a href=" # ">評鑑頁面</a></li>
 			
 		</ol>
 	</nav>
@@ -55,29 +52,31 @@
 	
 	<table> 
 	<tr> 
-		<th>活動編號</th> 
-		<th>活動名稱</th>
-		<th>主辦人</th>
-		<th>地區</th>
-		<th>人數</th>
-		<th>活動開始日期</th>
-		<th>狀態</th>
-		<th>評鑑</th>
+		<th>帳號</th> 
+		<th>性別</th>
+		<th>平均星數</th>
+		<th>給予星數</th>
+		<th>社交</th>
 		
 	</tr>
-	<c:forEach var="eventMemberVO" items="${eventMemberList}">
-		<tr>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventID}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</td>
-			<td>${accountSvc.getOneAccount(eventInfoSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventCurrentCount}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).getEventDate}</td>
+		<c:forEach var="evaluatedmemberVO" items="${list}" >
+			<tr> 
+				<td>${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountNickname}</td>
+				<td>
+					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 1}">男</c:if>
+					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 2}">女</c:if>
+				</td> 
+				<td>${eventMemberSvc.getAvgScoreByAccountID(evaluatedmemberVO.accepterAccountID)}</td> 
+				<td>${evaluatedmemberVO.giveScore}</td> 
+			</tr> 
+		</c:forEach>
+	</table>
+	  <div class="btn_margin" align="center"  >
+	  
+	              <input type ="button" onclick="history.back()" value="確定送出"></input>
+
+	  </div>
 			
-		</tr>
-	</c:forEach>
-</table>
-	
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
