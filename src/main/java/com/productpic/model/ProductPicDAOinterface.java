@@ -16,5 +16,7 @@ public interface ProductPicDAOinterface  {
 	ProductPicVO findByPK(int picID);
 	
 	List<ProductPicVO> getAll();
+	
+	List<ProductPicVO> getAllByProduct(int productID);
 
 }

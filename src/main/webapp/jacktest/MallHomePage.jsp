@@ -1,5 +1,7 @@
 
 
+<%@page import="com.productpic.model.ProductPicVO"%>
+<%@page import="com.productpic.model.ProductPicJDBCDAO"%>
 <%@page import="com.product.model.ProductVO"%>
 <%@page import="com.product.model.ProductJDBCDAO"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
@@ -10,8 +12,10 @@
 
 <%
 ProductJDBCDAO dao = new ProductJDBCDAO();
-	List<ProductVO> list = dao.getAll();
+	List<ProductVO> list = dao.getAllByClickCount();
 	pageContext.setAttribute("list", list);
+	
+	
 %>
 
 
@@ -94,6 +98,8 @@ th, td {
 		</ul>
 	</c:if>
 
+	<h1>熱門食材</h1>
+
 	<table>
 		<tr>
 			<th>商品流水號</th>
@@ -132,6 +138,16 @@ th, td {
 				
 
 		</c:forEach>
+		
+	
+	
+			
+				
+
+		
+		
+		
+		
 	</table>
 	
 	

@@ -15,7 +15,9 @@ public class ProductJDBCDAO implements ProfuctDAOinterface {
 	private static final String DELETE_STMT = "DELETE FROM Product WHERE product_id = ?";
 	private static final String FIND_BY_PK = "SELECT * FROM Product WHERE product_id = ?";
 	private static final String GET_ALL = "SELECT * FROM Product";
-
+	private static final String GET_ALL_BY_CLICK_COUNT = "SELECT * FROM Product order by product_click_count ";
+	
+	
 	private static String driver = "com.mysql.cj.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost:3306/JustEat?serverTimezone=Asia/Taipei"
 			+ "&rewriteBatchedStatements=true";
@@ -342,6 +344,78 @@ public class ProductJDBCDAO implements ProfuctDAOinterface {
 			}
 		}
 		return empList;
+	}
+
+	@Override
+	public List<ProductVO> getAllByClickCount() {
+		
+		List<ProductVO> empList = new ArrayList<>();
+		ProductVO emp = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(GET_ALL_BY_CLICK_COUNT);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				emp = new ProductVO();
+				emp.setProductID(rs.getInt("product_id"));
+				emp.setSellerID(rs.getInt("seller_id"));
+				emp.setProductState(rs.getInt("product_state"));
+				emp.setProductPrice(rs.getInt("product_price"));
+				emp.setProductAmount(rs.getInt("product_amount"));
+				emp.setProductUnit(rs.getString("product_unit"));
+				emp.setProductSpecification(rs.getString("product_specification"));
+				emp.setProductOrigin(rs.getString("product_origin"));
+				emp.setProductStorageMethod(rs.getString("product_storage_method"));
+				emp.setProductReleaseTime(rs.getTimestamp("product_release_time"));
+				emp.setProductExpireTime(rs.getTimestamp("product_expire_time"));
+				emp.setProductDiscount(rs.getBoolean("product_discount"));
+				emp.setProductText(rs.getString("product_text"));
+				emp.setProductSgsPic(rs.getBytes("product_sgs_pic"));
+//				emp.setEmpno(rs.getInt("sellerID"));
+//				emp.setEname(rs.getString("sellerCompany"));
+//				emp.setJob(rs.getString("JOB"));
+//				emp.setHiredate(rs.getDate("HIREDATE"));
+//				emp.setSal(rs.getDouble("SAL"));
+//				emp.setComm(rs.getDouble("COMM"));
+//				emp.setDeptno(rs.getInt("DEPTNO"));
+
+				empList.add(emp);
+			}
+
+		} catch (SQLException se) {
+			se.printStackTrace();
+			// Clean up JDBC resources
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return empList;
+		
 	}
 
 }

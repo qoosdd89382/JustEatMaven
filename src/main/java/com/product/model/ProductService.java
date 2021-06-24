@@ -126,4 +126,10 @@ public class ProductService {
 	public List<ProductVO> getAll() {
 		return dao.getAll();
 	}
+	
+	public List<ProductVO> getAllByClickCount() {
+		return dao.getAllByClickCount();
+	}
+	
+	
 }
