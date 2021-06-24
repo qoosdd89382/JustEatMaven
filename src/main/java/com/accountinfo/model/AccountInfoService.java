@@ -59,12 +59,7 @@ public class AccountInfoService {
 		dao.delete(accountID);
 	}
 	
-	
-	
-	
-	
-	
-	
+//=====待修正
 	public AccountInfoVO addAccountInfo(
 //			Integer accountID,
 			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
@@ -99,7 +94,7 @@ public class AccountInfoService {
 		
 		return accountInfoVO;
 	}
-	
+//=====待修正
 	public AccountInfoVO updateAccountInfoVO(
 //			Integer accountID,
 			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
@@ -140,21 +135,24 @@ public class AccountInfoService {
 	
 
 //=====================================================
-//review
+
 //登入用
-	public AccountInfoVO getAccountInfo(String accountMail,String accountPassword) {
-		return dao.getAccountLogin(accountMail,accountPassword);
+	//傳入比對過的信箱密碼 回傳該帳號的所有資料
+	public AccountInfoVO getAccountInfoForLogin(String accountMail,String accountPassword) {
+		return dao.getAccountMailPasswordForLogin(accountMail,accountPassword);
 	}
-	
+	//輸入信箱 回傳 帳號資料的 VO物件
 	public AccountInfoVO getAccountMail(String accountMail) {
 		return dao.getAccountMail(accountMail);
 	}
+	//輸入信箱 回傳該信箱帳號的 含密碼的VO物件 用來比對使用者的輸入資料是否正確
 	public AccountInfoVO getAccountPassword(String accountMail) {
 		return dao.getAccountPassword(accountMail);
 	}
 	public AccountInfoVO getAccountIDByAccountMail(String accountMail){
 		return dao.getAccountIDByAccountMail(accountMail);
 	}
+//review
 //會員修改資料用
 	public void updateAccountInfoFromChange(
 			String accountMail,String accountNickname,String accountPassword,

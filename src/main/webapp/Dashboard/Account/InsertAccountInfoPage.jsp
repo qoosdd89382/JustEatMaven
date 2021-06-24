@@ -1,16 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<%@ page import="com.accountinfo.model.*"%>
 <%
+//重新整理，重新取得數值
 AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
+
 %>
 
 
-<jsp:useBean id="accountInfoSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<%--    <% com.emp.model.EmpService dao =new com.emp.model.EmpService(); --%>
-<!-- //    		pageContext.setAttribute("dao",dao); -->
 
-<%@ page import="com.accountinfo.model.*"%>
 <!DOCTYPE html>
 
 <html>
@@ -26,27 +25,11 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>DashboardPage-updateAccountInfoPage</title>
+<title>DashboardPage-InsertAccountInfoPage</title>
 </head>
 <style>
-div#Dashboard_AccountInfo_Area{
+div#InsertAccountInfoPage_AccountInfo_Area{
 	margin-top:150px;
-}
-table {
-	width: 600px;
-	background-color: white;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-table, th, td {
-	border: 1px solid #CCCCFF;
- }
-th{
-	padding:auto 30px;
-	text-align: center;
-}
-td{
-   text-align: center;
 }
 </style>
 </head>
@@ -56,33 +39,35 @@ td{
 	</header>
 	<div class="container">
 	
-		<div id="Dashboard_AccountInfo_Area" class="row">
+		<div id="InsertAccountInfoPage_AccountInfo_Area" class="row">
 		
 			<div class="col">
 				<form id="update" method="post" action="dashboard.do">
 					<span>會員信箱:</span><br> 
 					<%-- <input type="text" name="accountMail" value="<%=(accountMail == null) ? "" : accountMail%>"> --%>
-					<input type="text" name="accountMail" value="${accountInfoVO.accountMail}">
+					${accountInfoVO.accountMail == null?"1":"2"}
+					<input type="text" name="accountMail" value="${accountInfoVO.accountMail == null?"":"2"}">
+<%-- 					<input type="text" name="accountMail" value="${accountInfoVO.accountMail}"> --%>
 					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 					
 					<span>會員暱稱:</span><br> 
-					<input type="text" name="accountNickname" value="${accountInfoVO.accountNickname}">
+					<input type="text" name="accountNickname" value="${accountInfoVO.accountNickname == null?"":"2"}">
 					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
 					
 					<span>會員密碼:</span><br> 
-					<input type="text" name="accountPassword" value="${accountInfoVO.accountPassword}"><br>
+					<input type="text" name="accountPassword" value="${accountInfoVO.accountPassword == null?"":"2"}"><br>
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br> 
 					
 					<span>會員狀態:</span>
-					<input type="text" name="accountState" value="${accountInfoVO.accountState}"><br>
+					<input type="text" name="accountState" value="${accountInfoVO.accountState == null?"":"2"}"><br>
 					<span style="color:red">${errorMsgs.get("accountStateError")}</span><br>
 					
 					<span>會員層級:</span>
-					<input type="text" name="accountLevel" value="${accountInfoVO.accountLevel}"><br>
+					<input type="text" name="accountLevel" value="${accountInfoVO.accountLevel == null?"":"2"}"><br>
 					<span style="color:red">${errorMsgs.get("accountLevelError")}</span><br>
 					
 					<span>會員姓名:</span><br>
-					<input type="text" name="accountName" value="${accountInfoVO.accountName}"><br>
+					<input type="text" name="accountName" value="${accountInfoVO.accountName == null?"":"2"}"><br>
 					
 					<span>會員性別 :</span> 
 					<input type="radio" name="accountGender" value="1" ${(accountInfoVO.accountGender)== 1?"checked":""}>男
@@ -98,16 +83,13 @@ td{
 					<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br>
 					
 					<span>會員照片:(還沒做預覽圖)</span>
-					<input type="file" name="accountPic" value="<%=(accountInfoVO.getAccountPic()==null? "":"有圖片")%>"><br>
-					<img src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVO.accountID}" width="300px" height="150px"><br>
+					<input type="file" name="accountPic"><br>
 					 
 					<span>會員身分證正面:</span>
-					<input type="file" name="accountIDcardFront" value="<%=(accountInfoVO.getAccountIDcardFront()==null? "":"有圖片")%>"><br>
-					<img src="<%=request.getContextPath()%>/Account/Pic/Front/${accountInfoVO.accountID}" width="300px" height="150px"><br>
+					<input type="file" name="accountIDcardFront"><br>
 					
 					<span>會員身分證背面:</span>
-					<input type="file" name="accountIDcardBack" value="<%=(accountInfoVO.getAccountIDcardBack()==null? "":"有圖片")%>"><br>
-					<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVO.accountID}" width="300px" height="150px"><br>
+					<input type="file" name="accountIDcardBack"><br>
 					
 					<span>會員自我介紹:</span><br>
 					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)">${accountInfoVO.accountText}</textarea><br>
@@ -120,10 +102,10 @@ td{
 					<span>${accountInfoVO.accountCode}</span><br>
 					
 					<input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
-					<input type="hidden" name="action"	value="updateAccountInfo_From_Dashboard">
-					<input id="change_submit_btn" type="submit" value="確認修改"> 
+					<input type="hidden" name="action"	value="insertAccountInfo_From_Dashboard">
+					<input id="change_submit_btn" type="submit" value="確認送出"> 
 				</form>
-					<a href="<%=request.getContextPath()%>/Dashboard/Account/DashboardAccountPage.jsp">取消修改</a>
+					<a href="<%=request.getContextPath()%>/Dashboard/Account/DashboardAccountPage.jsp">取消新增</a>
 			
 			
 <!-- 				<table> -->
