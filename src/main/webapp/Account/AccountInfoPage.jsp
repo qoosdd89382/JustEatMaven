@@ -132,11 +132,11 @@ input#account_logout:hover {
 				<span>用戶註冊時間:<%=accountInfoVO.getAccountRegisterTime()%></span><br>
 				
 				<form method="post" action="accountInfo.do">
-					<input type="hidden" name="action" value="Account_Change_Info">
+					<input type="hidden" name="action" value="gotoAccountChangePage">
 					<input id="account_change_info" type="submit" value="修改我的會員資料">	
 				</form>
 				<form method="post" action="accountInfo.do">
-					<input type="hidden" name="action" value="Account_Logout">
+					<input type="hidden" name="action" value="getAccountLogout">
 					<input id="account_logout" type="submit" value="登出帳戶">						
 				</form>
 			</div>

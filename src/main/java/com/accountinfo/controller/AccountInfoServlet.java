@@ -39,6 +39,22 @@ public class AccountInfoServlet extends HttpServlet {
 		String action = req.getParameter("action");
 //========================================================================
 //帳號登入與修改相關請求
+//來自首頁點選會員中心的請求
+		if("gotoAccountLoginPage".equals(action)) {
+			//取得帳號資料
+			HttpSession session = req.getSession();
+			if(session.getAttribute("accountMail")==null) {
+				res.sendRedirect(req.getContextPath() + "/Account/AccountLoginPage.jsp");
+				return;
+			}else {				
+				AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+				req.setAttribute("accountMail", accountInfoVO.getAccountMail());
+				//轉移到帳號頁面
+				String url = "/Account/AccountInfoPage.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+			}
+		}
 //來自AccountLoginPage的登入請求
 		if ("getAccountInfo_For_Login".equals(action)) {
 			//已取得回傳之accountMail、accountPassword資料
@@ -160,6 +176,7 @@ public class AccountInfoServlet extends HttpServlet {
 				//3.查詢完成,準備轉交(Send the Success view)
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				session.setAttribute("accountInfoVO", accountInfoVO); 
+				session.setAttribute("accountMail", accountInfoVO.getAccountMail()); 
 				String url = "/Account/AccountInfoPage.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
@@ -186,7 +203,7 @@ public class AccountInfoServlet extends HttpServlet {
 		}
 //REVIEW
 //在AccountInfoPage.jsp收到"修改會員資料"的請求，轉接到修改會員資料的頁面
-		if("Account_Change_Info".equals(action)) {
+		if("gotoAccountChangePage".equals(action)) {
 			//取得帳號資料
 			HttpSession session = req.getSession();
 			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
@@ -364,10 +381,10 @@ public class AccountInfoServlet extends HttpServlet {
 						.getRequestDispatcher("/Account/AccountPage.jsp");
 				failureView.forward(req, res);
 			}
-		}////在AccountChangePage.jsp收到"提交修改資料的請求"
+		}//在AccountChangePage.jsp收到"提交修改資料的請求"
 
 //在AccountInfoPage.jsp收到登出的請求
-		if("Account_Logout".equals(action)) {
+		if("getAccountLogout".equals(action)) {
 			//清除在SESSION中的帳號資料
 			HttpSession session = req.getSession();
 			session.removeAttribute("accountInfoVO");
