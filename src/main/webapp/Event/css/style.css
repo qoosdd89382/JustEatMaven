@@ -125,7 +125,10 @@ textarea {
 	margin:0 0 10px 0;
 }
 
-
+.preview_img{
+	max-width: 400px;
+	max-height: 300px;
+}
 /*新增菜色*/
 
 .ingredient_zone {
