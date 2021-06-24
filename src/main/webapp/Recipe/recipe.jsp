@@ -81,7 +81,7 @@
 	<%-- main --%>
     <main class="row col-12 col-md-10 justify-content-between" style="margin: 0 auto;">
     
-		<div class="content col-md-9 col-12">
+		<div class="content col-xl-9 col-12">
 			<%-- breadcrumbs --%>
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
@@ -165,8 +165,8 @@
 		</div>
 
 		<%-- include sidebar --%>
-		<div class="sidebar col-md-3 col-12">
-			<%@ include file="/Recipe/recipeSidebar.bar"%>
+		<div class="sidebar col-xl-3 col-12">
+			<%@ include file="/Recipe/recipeSidebar.page"%>
 		</div>	
     </main>
 	

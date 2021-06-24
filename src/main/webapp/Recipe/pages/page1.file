@@ -9,7 +9,7 @@
 %>
 
 <%  
-	rowNumber = recipeList.size();
+	rowNumber = list.size();
 	if (rowNumber % rowsPerPage != 0)
 		pageNumber = rowNumber / rowsPerPage + 1;
     else

@@ -74,7 +74,7 @@
 	<%-- include navbar --%>
 
 	<%-- main --%>
-	<main class="row col-12 col-md-10 justify-content-between"
+	<main class="row col-12 col-xl-10 justify-content-between"
 		style="margin: 0 auto;">
 
 		<div class="content col-md-9 col-12">
@@ -294,8 +294,8 @@
 		</div>
 
 		<%-- include sidebar --%>
-		<div class="sidebar col-md-3 col-12">
-			<%@ include file="/Recipe/recipeSidebar.bar"%>
+		<div class="sidebar col-xl-3 col-12">
+			<%@ include file="/Recipe/recipeSidebar.page"%>
 		</div>	
 	</main>
 

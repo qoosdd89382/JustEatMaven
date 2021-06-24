@@ -289,7 +289,7 @@ div.temp_loading{
 		</div>
 
 		<div class="sidebar col-md-3 col-12">
-			<%@ include file="/Recipe/recipeSidebar.bar"%>
+			<%@ include file="/Recipe/recipeSidebar.page"%>
 		</div>
 	</main>
 
