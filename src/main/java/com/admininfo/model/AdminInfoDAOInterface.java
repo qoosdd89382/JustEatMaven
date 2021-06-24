@@ -8,8 +8,9 @@ public interface AdminInfoDAOInterface {
 	public int update(AdminInfoVO adminInfo);	// 好像也不一定要回傳
 	public int updateState(AdminInfoVO adminInfo);
 	public AdminInfoVO getOne(int adminID);
+	public AdminInfoVO getOne(String adminmail, String adminPassword);
+	public AdminInfoVO getOne(String adminMail);
 	public boolean isNicknameExist(String adminNickname);
-	public boolean isMailExist(String adminMail);
 	public List<AdminInfoVO> getAll();
 	public int setPasswordAndPic(AdminInfoVO adminInfo);
 

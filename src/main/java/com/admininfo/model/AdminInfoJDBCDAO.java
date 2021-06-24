@@ -28,11 +28,12 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 	// 順序看要寫死還是後端判斷
 	private static final String SELECT_ONE = "SELECT * FROM AdminInfo WHERE admin_id = ?";
 	private static final String SELECT_ALL = "SELECT * FROM AdminInfo";
-	private static final String UPDATE_PW_PIC = "UPDATE AdminInfo SET admin_password = ?, admin_pic = ? WHERE admin_id = ?";
+	private static final String UPDATE_PW_PIC = "UPDATE AdminInfo SET admin_password = ?, admin_pic = ?, admin_state = 1 WHERE admin_id = ?";
 	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
 //	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM AdminInfo WHERE admin_nickname = ?";
 	private static final String SELECT_ONE_BY_MAIL = "SELECT * FROM AdminInfo WHERE admin_mail = ?";
+	private static final String SELECT_ONE_BY_EMAIL_PW = "SELECT * FROM AdminInfo WHERE admin_mail = ? and admin_password = ?";
 
 	@Override
 	public int insert(AdminInfoVO adminInfo) {
@@ -152,8 +153,9 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				adminInfo.setAdminState(rs.getBoolean("admin_state"));
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());		
 		} finally {
 			
 			if (rs != null) {
@@ -205,9 +207,10 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				adminInfo.setAdminState(rs.getBoolean("admin_state"));
 				allAdminInfo.add(adminInfo);				
 			}		
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());		
 		} finally {
 
 			if (rs != null) {
@@ -301,8 +304,9 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				ExistStatus = true;
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());		
 		} finally {
 
 			if (rs != null)
@@ -333,11 +337,11 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 
 
 	@Override
-	public boolean isMailExist(String adminMail) {
+	public AdminInfoVO getOne(String adminMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		boolean ExistStatus = false;
+		AdminInfoVO adminVO = null;
 
 		try {
 			con = DriverManager.getConnection(url, userid, passwd);
@@ -347,11 +351,19 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				ExistStatus = true;
+				adminVO = new AdminInfoVO();
+				adminVO.setAdminID(rs.getInt("admin_id"));
+				adminVO.setAdminMail(rs.getString("admin_mail"));
+				adminVO.setAdminNickname(rs.getString("admin_nickname"));
+				adminVO.setAdminPassword(rs.getString("admin_password"));
+				adminVO.setAdminPic(rs.getBytes("admin_pic"));
+				adminVO.setAdminRegisterTime(rs.getTimestamp("admin_register_time"));
+				adminVO.setAdminState(rs.getBoolean("admin_state"));
 			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+			
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());		
 		} finally {
 
 			if (rs != null)
@@ -377,7 +389,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				}
 			}
 		}
-		return ExistStatus;
+		return adminVO;
 	}
 
 	@Override
@@ -400,10 +412,11 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			pstmt.setBytes(2, adminInfo.getAdminPic());
 			pstmt.setInt(3, adminInfo.getAdminID());
 
-			pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+			updateRow = pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());		
 		} finally {
 
 			if (pstmt != null) {
@@ -422,6 +435,63 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			}
 		}
 		return updateRow;
+	}
+
+	@Override
+	public AdminInfoVO getOne(String adminEmail, String adminPassword) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AdminInfoVO adminVO = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(SELECT_ONE_BY_EMAIL_PW);
+
+			pstmt.setString(1, adminEmail);
+			pstmt.setString(1, adminPassword);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				adminVO = new AdminInfoVO();
+				adminVO.setAdminID(rs.getInt("admin_id"));
+				adminVO.setAdminMail(rs.getString("admin_mail"));
+				adminVO.setAdminNickname(rs.getString("admin_nickname"));
+				adminVO.setAdminPassword(rs.getString("admin_password"));
+				adminVO.setAdminPic(rs.getBytes("admin_pic"));
+				adminVO.setAdminRegisterTime(rs.getTimestamp("admin_register_time"));
+				adminVO.setAdminState(rs.getBoolean("admin_state"));
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());		
+		} finally {
+
+			if (rs != null)
+				try {
+					rs.close();
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return adminVO;
 	}
 }
 

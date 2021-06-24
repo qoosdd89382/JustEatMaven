@@ -47,7 +47,7 @@
 	}
 %>
 
-<jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
@@ -101,7 +101,7 @@
 				</div>
 				<div class="sub-title row col-12">
 					<div class="author">
-						<i class="fas fa-user"></i><a href="#">${accountSrv.getAccountID(recipeVO.accountID).accountNickname}</a>
+						<i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a>
 					</div>
 					<div class="time">
 						發表於 <fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd a K:mm"/>

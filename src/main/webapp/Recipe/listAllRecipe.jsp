@@ -7,17 +7,17 @@
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
 
-<%
-	RecipeService recipeSvc = new RecipeService();
-	List<RecipeVO> recipeList = recipeSvc.getAll();
-	pageContext.setAttribute("list", recipeList);
-%>
-
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
-<!-- 基本上意思和上面java區塊new、放進Page scope是一樣的 -->
+<jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
+<!-- 基本上意思和java區塊new、放進Page scope是一樣的 -->
+<%
+	List<RecipeVO> recipeList = recipeSvc.getAll();
+	pageContext.setAttribute("list", recipeList);
+%>
+
 
 <!DOCTYPE html>
 <html>
@@ -86,7 +86,7 @@
 						<div class="info col-12 col-lg-7">
 							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
 <!-- 							<div class="row"> -->
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.getAccountID(recipeVO.accountID).accountNickname}</a></div>
+							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
 <!-- 							<div class="col-6">test</div> -->
 <!-- 							</div> -->
 							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>

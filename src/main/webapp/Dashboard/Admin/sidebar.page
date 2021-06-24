@@ -1,0 +1,154 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<%=request.getContextPath()%>/index.jsp">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Just Eat<sup></sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="<%=request.getContextPath()%>/Dashboard/index.jsp">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard Homepage</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                	Function 功能管理
+            </div>
+
+            <!-- Nav Item - Account Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                	data-target="#accountCollapse" aria-controls="accountCollapse"
+                    aria-expanded="true">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Account 會員</span>
+                </a>
+                <div id="accountCollapse" class="collapse"
+                		aria-labelledby="headingAccount"
+                		data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="buttons.html">會員列表管理</a>
+                        <a class="collapse-item" href="cards.html">商家認證審核</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Recipe Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                	data-target="#recipeCollapse" aria-controls="recipeCollapse"
+                    aria-expanded="true">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Recipe 食譜</span>
+                </a>
+                <div id="recipeCollapse" class="collapse"
+                		aria-labelledby="headingRecipe"
+                		data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="utilities-color.html">食譜列表管理</a>
+                        <a class="collapse-item" href="utilities-border.html">食材列表管理</a>
+                        <a class="collapse-item" href="utilities-animation.html">食材分類列表管理</a>
+                        <a class="collapse-item" href="utilities-other.html">料理分類列表管理</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Event Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                	data-target="#eventCollapse" aria-controls="eventCollapse"
+                    aria-expanded="true">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Event 活動</span>
+                </a>
+                <div id="eventCollapse" class="collapse"
+                		aria-labelledby="headingEvent"
+                		data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="utilities-color.html">食譜列表管理</a>
+                        <a class="collapse-item" href="utilities-border.html">食材列表管理</a>
+                        <a class="collapse-item" href="utilities-animation.html">食材分類列表管理</a>
+                        <a class="collapse-item" href="utilities-other.html">料理分類列表管理</a>
+                    </div>
+                </div>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Dashboard 後臺管理
+            </div>
+
+            <!-- Nav Item - Event Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                	data-target="#adminCollapse" aria-controls="adminCollapse"
+                    aria-expanded="true">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Admin 管理員</span>
+                </a>
+                <div id="adminCollapse" class="collapse"
+                		aria-labelledby="headingAdmin"
+                		data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="<%= request.getContextPath() %>/Dashboard/Admin/listAllAdmin.jsp">管理員列表</a>
+                        <a class="collapse-item" href="<%= request.getContextPath() %>/Dashboard/Admin/addAdmin.jsp">新增管理員</a>
+                    </div>
+                </div>
+            </li>
+<%--%
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Administrator 管理員</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="login.html">新增會員</a>
+                        <a class="collapse-item" href="register.html">補發認證信 / 密碼</a>
+                        <a class="collapse-item" href="forgot-password.html">忘記密碼</a>
+                    </div>
+                </div>
+            </li>
+--%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="charts.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>瀏覽紀錄</span></a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="tables.html">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>數據報表</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
