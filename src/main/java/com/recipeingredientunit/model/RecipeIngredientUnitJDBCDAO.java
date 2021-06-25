@@ -364,7 +364,7 @@ public class RecipeIngredientUnitJDBCDAO implements RecipeIngredientUnitDAOInter
 
 		try {
 			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(SELECT_ALL_BY_RECIPE);
+			pstmt = con.prepareStatement(SELECT_ALL_BY_INGREDIENT);
 
 			pstmt.setInt(1, ingredientID);
 

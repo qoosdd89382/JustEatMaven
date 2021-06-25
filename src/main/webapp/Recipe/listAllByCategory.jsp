@@ -5,10 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%@ page import="java.util.*"%>
+<%@ page import="com.accountinfo.model.*"%>
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
+<%@ page import="com.ingredient.model.*"%>
+<%@ page import="com.unit.model.*"%>
 <%@ page import="com.recipecuisinecategory.model.*"%>
-
+<%@ page import="com.recipeingredientunit.model.*"%>
+<%@ page import="com.recipestep.model.*"%>
 
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />

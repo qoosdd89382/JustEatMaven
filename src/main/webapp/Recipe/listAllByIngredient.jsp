@@ -1,4 +1,3 @@
-<%@page import="com.recipeingredientunit.model.RecipeIngredientUnitVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -6,9 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%@ page import="java.util.*"%>
+<%@ page import="com.accountinfo.model.*"%>
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
+<%@ page import="com.ingredient.model.*"%>
+<%@ page import="com.unit.model.*"%>
+<%@ page import="com.recipecuisinecategory.model.*"%>
 <%@ page import="com.recipeingredientunit.model.*"%>
+<%@ page import="com.recipestep.model.*"%>
 
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
@@ -22,17 +26,16 @@ Map<String, String> errorMsgs = new HashMap<String, String>();
 request.setAttribute("errorMsgs", errorMsgs);
 
 List<RecipeIngredientUnitVO> list = null;
+String ingredientID = null;
 
 try {
 	
-	String ingredientID = request.getParameter("id");
+	ingredientID = request.getParameter("id");
 	if (ingredientID == null) {
 		throw new Exception();
 	}
+	ingredientSvc.updateSearchCount(new Integer(ingredientID));
 	list = reicpeIngUnitSvc.getAllByIngredient(new Integer(ingredientID));
-	pageContext.setAttribute("ingredientID", ingredientID);
-	pageContext.setAttribute("list", list);
-	
 	
 } catch (Exception e) {
 	errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
@@ -41,6 +44,8 @@ try {
 	failureView.forward(request, response);
 	return;
 }
+	pageContext.setAttribute("ingredientID", ingredientID);
+	pageContext.setAttribute("list", list);
 %>
 
 
