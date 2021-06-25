@@ -1,18 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<%@ page import="java.util.*"%>
-<%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.recipe.model.*"%>
-<%@ page import="com.cuisinecategory.model.*"%>
-<%@ page import="com.ingredient.model.*"%>
-<%@ page import="com.unit.model.*"%>
-<%@ page import="com.recipecuisinecategory.model.*"%>
-<%@ page import="com.recipeingredientunit.model.*"%>
-<%@ page import="com.recipestep.model.*"%>
-
+<%@ include file="/Recipe/recipeImport.jsp"%>
 
 <%			
 	Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -22,7 +10,6 @@
 	
 		int recipeID = new Integer(request.getParameter("id"));
 			
-		RecipeService recipeSvc = new RecipeService();
 		recipeSvc.updateViewCount(new Integer(recipeID));
 		
 		RecipeVO recipeVO = recipeSvc.getOneRecipe(recipeID);
@@ -37,11 +24,9 @@
 		List<RecipeCuisineCategoryVO> recipeCatList = recipeCatSvc.getAllByRecipe(recipeID);
 		request.setAttribute("recipeCatList", recipeCatList);
 		
-		RecipeIngredientUnitService recipeIngUnitSvc = new RecipeIngredientUnitService();
 		List<RecipeIngredientUnitVO> recipeIngUnitList = recipeIngUnitSvc.getAllByRecipe(recipeID);
 		request.setAttribute("recipeIngUnitList", recipeIngUnitList);
 		
-		RecipeStepService recipeStepSvc = new RecipeStepService();
 		List<RecipeStepVO> RecipeStepList = recipeStepSvc.getAllByRecipe(recipeID);
 		request.setAttribute("RecipeStepList", RecipeStepList);
 
@@ -53,11 +38,6 @@
 		failureView.forward(request, response);
 	}
 %>
-
-<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
-<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
-<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 
 <!DOCTYPE html>
 <html>

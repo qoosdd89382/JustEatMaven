@@ -3,6 +3,7 @@ package com.recipe.model;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import com.recipecuisinecategory.model.RecipeCuisineCategoryVO;
 import com.recipeingredientunit.model.RecipeIngredientUnitVO;
@@ -95,12 +96,17 @@ public class RecipeService {
 		return recipeDAO.getOneByPK(recipeID);
 	}
 
-	public InputStream getOneTopPic(int recipeID) {
-		return recipeDAO.getOnePicByPK(recipeID);
-	}
+//	public InputStream getOneTopPic(int recipeID) {
+//		return recipeDAO.getOnePicByPK(recipeID);
+//	}
 	
 	public List<RecipeVO> getAll() {
 		return recipeDAO.getAll();
+	}
+	
+
+	public List<RecipeVO> getAll(Map<String, String[]> map) {
+		return recipeDAO.getAll(map);
 	}
 	
 	public List<RecipeVO> getSomeNew() {

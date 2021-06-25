@@ -3,7 +3,7 @@
 <%@ include file="/Recipe/recipeImport.jsp"%>
 
 <%
-	List<RecipeVO> list = recipeSvc.getAll();
+	List<RecipeVO> list = (List<RecipeVO>) request.getAttribute("list");
 	pageContext.setAttribute("list", list);
 %>
 
