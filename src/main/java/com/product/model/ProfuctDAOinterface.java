@@ -16,4 +16,6 @@ public interface ProfuctDAOinterface {
 	ProductVO findByPK(int productID);
 	
 	List<ProductVO> getAll();
+	
+	List<ProductVO> getAllByClickCount();
 }
