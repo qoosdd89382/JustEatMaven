@@ -79,7 +79,7 @@ div#Dashboard_Account_Area{
 <!-- 				</form> -->
 				<span><a href='ListAllAccountInfoPage.jsp'>List</a> all AccountInfo.</span>
 				<br>
-				<span><a href='addAccountInfo.jsp'>Add</a> a new AccountInfo.</span>
+				<span><a href='InsertAccountInfoPage.jsp'>Add</a> a new AccountInfo.</span>
 			</div>
 		</div>
 	</div>

@@ -26,7 +26,7 @@
 // 	if (session.getAttribute("recipePicTopBuffer") != null) { System.out.println(session.getAttribute("recipePicTopName")); }
 %>
 
-<jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
@@ -289,7 +289,7 @@ div.temp_loading{
 		</div>
 
 		<div class="sidebar col-md-3 col-12">
-			<%@ include file="/Recipe/recipeSidebar.bar"%>
+			<%@ include file="/Recipe/recipeSidebar.page"%>
 		</div>
 	</main>
 

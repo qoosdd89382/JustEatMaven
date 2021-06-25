@@ -19,7 +19,23 @@
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
 	</resource-ref>
-
+	
+	<filter>
+		<filter-name>LoginFilter</filter-name>
+		<filter-class>com.filter.controller.LoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LoginFilter</filter-name>
+		<url-pattern>/Account/AccountInfoPage.jsp</url-pattern>
+		<url-pattern>/Recipe/home.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+		<dispatcher>ASYNC</dispatcher>
+	</filter-mapping>
+	
+	
 	<servlet>
 		<servlet-name>DashboardServlet</servlet-name>
 		<servlet-class>com.admininfo.controller.DashboardServlet</servlet-class>

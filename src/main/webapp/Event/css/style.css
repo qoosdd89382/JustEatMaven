@@ -88,7 +88,7 @@ img {
 }
 
 .event_content{
-	margin: 0 auto !important;
+ margin: 0 auto !important;
     width: 100%;
     box-sizing: border-box;
 }
@@ -102,7 +102,7 @@ img {
 }
 
 .inputAddress{
-	width: 300px;
+ width: 300px;
 }
 /* .event_description {} */
 
@@ -111,7 +111,7 @@ textarea {
 }
 
 .error{
-	color: red;
+ color: red;
 }
 
 /*活動詳情*/
@@ -122,12 +122,12 @@ textarea {
 }
 
 .event_content_left >div{
-	margin:0 0 10px 0;
+ margin:0 0 10px 0;
 }
 
 .preview_img{
-	max-width: 400px;
-	max-height: 300px;
+ max-width: 400px;
+ max-height: 300px;
 }
 /*新增菜色*/
 
@@ -157,8 +157,8 @@ textarea {
 }
 
 .insert_dish_list > tr > td,th {
-	border-bottom:1px solid black;
-	border-right:1px solid black;
+ border-bottom:1px solid black;
+ border-right:1px solid black;
 }
 
 .insert_content {
@@ -172,22 +172,22 @@ textarea {
 }
 
 .ui-autocomplete {
-	max-height: 100px;
-	overflow-y: auto;
-	overflow-x: hidden;
+ max-height: 100px;
+ overflow-y: auto;
+ overflow-x: hidden;
 }
 
 /*成員菜單*/
 .memberMenu{
-	margin: 0 auto !important;
+ margin: 0 auto !important;
     width: 100%;
     box-sizing: border-box;
 }
 .borderforMenu{
-	margin:5px;
+ margin:5px;
 }
 
 .borderforMenu th,td{
-	border:1px solid black;
-	border-collapse: collapse;
+ border:1px solid black;
+ border-collapse: collapse;
 }

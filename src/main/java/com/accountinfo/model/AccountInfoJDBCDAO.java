@@ -378,7 +378,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 //review
 //登入用
 	@Override
-	public AccountInfoVO getAccountLogin(String accountMail,String accountPassword) {
+	//傳入 信箱 密碼 回傳 含所有資料的 VO物件
+	public AccountInfoVO getAccountMailPasswordForLogin(String accountMail,String accountPassword) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -394,8 +395,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 
 			while (rs.next()) {
 				accountInfoVO = new AccountInfoVO();
+				//無回傳 ID 驗證碼
 				accountInfoVO.setAccountID(rs.getInt("account_id"));
-				
+
 				accountInfoVO.setAccountMail(rs.getString("account_mail"));
 				accountInfoVO.setAccountNickname(rs.getString("account_nickname"));
 				accountInfoVO.setAccountPassword(rs.getString("account_password"));
@@ -413,8 +415,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				accountInfoVO.setAccountText(rs.getString("account_text"));
 				accountInfoVO.setAccountRegisterTime(rs.getTimestamp("account_register_time"));
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if(rs != null) {
 				try {
@@ -442,6 +445,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 	@Override
+	//輸入 信箱值 回傳 含信箱的 VO物件 = 檢查資料庫有沒有這個信箱
 	public AccountInfoVO getAccountMail(String accountMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -461,8 +465,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				
 				accountInfoVO.setAccountMail(rs.getString("account_mail"));
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if(rs != null) {
 				try {
@@ -490,6 +495,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 	@Override
+	//輸入 信箱值 回傳 含 ID 的 VO物件
 	public AccountInfoVO getAccountIDByAccountMail(String accountMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -509,8 +515,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 				
 				accountInfoVO.setAccountPassword(rs.getString("account_id"));
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if(rs != null) {
 				try {
@@ -538,6 +545,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 	@Override
+	//輸入 信箱值 回傳 含密碼 的 VO物件 = 資料庫有該會員，用來確認輸入密碼是否符合資料庫
 	public AccountInfoVO getAccountPassword(String accountMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -584,6 +592,10 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 		return accountInfoVO;
 	}
+//review
+	
+	
+	
 //會員修改資料用
 	public void updateAccountInfoFromChange(
 			String accountMail,String accountNickname,String accountPassword,

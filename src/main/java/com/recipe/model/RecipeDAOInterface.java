@@ -27,7 +27,7 @@ public interface RecipeDAOInterface {
 	public List<RecipeVO> getAllByWriter(int accountID);
 	// 刪除食譜的料理分類、食材標籤會在關聯處理(join表controller做)
 	
-	public List<RecipeVO> getAll();				// 用不到?
+	public List<RecipeVO> getAll();
 
 	public List<RecipeVO> getSomeNew();
 	public List<RecipeVO> getSomeHot();

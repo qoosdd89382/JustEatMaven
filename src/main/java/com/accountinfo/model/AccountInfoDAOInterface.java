@@ -12,9 +12,7 @@ public interface AccountInfoDAOInterface {
 //1review0622
 //登入用
     
-    
-    
-    public AccountInfoVO getAccountLogin(String accountMail,String accountPassword);
+    public AccountInfoVO getAccountMailPasswordForLogin(String accountMail,String accountPassword);
     public AccountInfoVO getAccountMail(String accountMail);
     public AccountInfoVO getAccountPassword(String accountPassword);
     public AccountInfoVO getAccountIDByAccountMail(String accountMail);

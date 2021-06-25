@@ -27,12 +27,16 @@ public class AdminInfoService {
 		return dao.getOne(adminID);
 	}
 	
+	public AdminInfoVO getOneAdmin(String adminEmail, String adminPassword) {
+		return dao.getOne(adminEmail, adminPassword);
+	}
+	
+	public AdminInfoVO getOneAdmin(String adminMail) {
+		return dao.getOne(adminMail);
+	}
+	
 	public boolean isNicknameExist(String adminNickname) {
 		return dao.isNicknameExist(adminNickname);
-	}
-
-	public boolean isMailExist(String adminMail) {
-		return dao.isMailExist(adminMail);
 	}
 	
 
@@ -44,13 +48,15 @@ public class AdminInfoService {
 		return dao.setPasswordAndPic(vo);
 	}
 	
+	public List<AdminInfoVO> getAll() {
+		return dao.getAll();
+	}
 	
 	
 //	public int updateAdmin(String adminMail, String adminNickname,
 //								String adminPassword, byte[] adminPic) {
 //		
 //	}
-//	public List<AdminInfoVO> getAll();
 
 	
 	

@@ -193,6 +193,109 @@ section.error {
 }
 
 
+.recipeRowCountEle {
+	text-align: center;
+}
+
+.recipeRowCountEle span {
+/* 	color: #F3722C; */
+	font-weight: bold;
+}
+
+.pageSwitcher {
+	margin-top: 20px;
+	text-align: center;
+	margin-bottom: 60px;
+	font-size: 0;
+}
+
+.pageSwitcher a {
+	padding: 7px;
+	border-radius: 3px;
+	background: #C4C4C4;
+	color: #fff;
+/* 	line-height: 1.5; */
+	font-size: 16px;
+	margin-right: 7px;
+}
+
+.pageSwitcher a.currenPageEle {
+	background: #F3722C;
+	color: #fff;
+}
+
+
+.pageSwitcher a.prevPageEle, .pageSwitcher a.nextPageEle  {
+	background: #FFAE82;
+	color: #fff;
+}
+
+.pageSwitcher a.prevPageEle {
+	margin-right: 14px;
+}
+
+.pageSwitcher a.nextPageEle {
+	margin-left: 7px;
+}
+
+.pageSwitcher a:hover {
+	background: #F2CBB6;
+	color: #000;
+}
+
+@media screen and (max-width: 768px){
+	.pageSwitcher a {
+		display: none;
+	}
+	
+	.pageSwitcher a.prevPageEle, .pageSwitcher a.nextPageEle  {
+		display: inline-block;
+		line-height: auto;
+	}
+}
+
+
+.searchResult {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
