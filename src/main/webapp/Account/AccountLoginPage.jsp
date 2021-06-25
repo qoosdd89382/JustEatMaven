@@ -113,7 +113,7 @@ input#account_register_info {
 					    
 					    <img id="login_area_randomnumber_pic" name="imgValidate" src="RandomNumber.jsp" onclick="refresh()"><br>
 			    
-						<input type="hidden" name="action" value="getAccountInfo_For_Login">
+						<input type="hidden" name="action" value="getAccountInfoForLogin">
 						<input id="account_login_btn" type="submit" value="登入">
 						<input id="account_reset_btn" type="reset" value="重置">
 					</form>

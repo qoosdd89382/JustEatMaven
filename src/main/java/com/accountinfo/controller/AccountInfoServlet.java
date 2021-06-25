@@ -1,6 +1,7 @@
 package com.accountinfo.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -13,16 +14,19 @@ import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.hibernate.Session;
 
 import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
 
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class AccountInfoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +60,7 @@ public class AccountInfoServlet extends HttpServlet {
 			}
 		}
 //來自AccountLoginPage的登入請求
-		if ("getAccountInfo_For_Login".equals(action)) {
+		if ("getAccountInfoForLogin".equals(action)) {
 			//已取得回傳之accountMail、accountPassword資料
 			
 			//利用map儲存錯誤訊,用put將錯誤資料塞到值，之後到jsp就可以取出鍵顯示值，可以在顯示位置更彈性
@@ -222,16 +226,20 @@ public class AccountInfoServlet extends HttpServlet {
 			try {
 			System.out.println("轉換資料中");
 			//接收頁面使用者輸入的參數
+			//基本認證
 			String accountMailInput = req.getParameter("accountMail");
 			String accountNicknameInput = req.getParameter("accountNickname");
 			String accountPasswordInput = req.getParameter("accountPassword");
 			String accountNameInput = req.getParameter("accountName");
 			String accountGenderInput = req.getParameter("accountGender");
 			String accountBirthInput = req.getParameter("accountBirth");
+			//二級認證
 			String accountPhoneInput = req.getParameter("accountPhone");
-			String accountPicInput = req.getParameter("accountPic");
-			String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
-			String accountIDcardBackInput = req.getParameter("accountIDcardBack");
+			System.out.println(accountNameInput);
+			//三級認證
+//			String accountPicInput = req.getParameter("accountPic");
+//			String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
+//			String accountIDcardBackInput = req.getParameter("accountIDcardBack");
 			String accountTextInput = req.getParameter("accountText");
 			
 			//檢查各項輸入
@@ -270,7 +278,41 @@ public class AccountInfoServlet extends HttpServlet {
 				failureView.forward(req, res);
 				return;//程式中斷
 			}
+
+			byte[] accountPicBuffer  = null;
+			AccountInfoVO accountInfoVO = new AccountInfoVO();
+			Part part = req.getPart("accountPic");
 			
+			InputStream in = part.getInputStream();
+			accountPicBuffer = new byte[in.available()];
+			in.read(accountPicBuffer);
+			in.close();
+			req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
+			accountInfoVO.setAccountPic(accountPicBuffer);
+			System.out.println("圖片OK");
+
+			byte[] accountIDcardFrontBuffer  = null;
+			Part part1 = req.getPart("accountIDcardFront");
+			
+			InputStream in1 = part1.getInputStream();
+			accountIDcardFrontBuffer = new byte[in1.available()];
+			in1.read(accountIDcardFrontBuffer);
+			in1.close();
+			req.getSession().setAttribute("aaccountIDcardFrontBuffer", accountIDcardFrontBuffer);
+			accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
+			System.out.println("圖片OK");
+
+			byte[] accountIDcardBackBuffer  = null;
+			Part part2 = req.getPart("accountIDcardBack");
+			
+			InputStream in2 = part2.getInputStream();
+			accountIDcardBackBuffer = new byte[in2.available()];
+			in2.read(accountIDcardBackBuffer);
+			in2.close();
+			req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
+			accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
+			System.out.println("圖片OK");
+
 			//註冊正則表達式規範
 		//O帳號規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
 			Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
@@ -328,7 +370,10 @@ public class AccountInfoServlet extends HttpServlet {
 			}
 			
 			try {
+				System.out.println(accountNameInput);
+				System.out.println(accountNameMatcher.matches());
 				if (accountNameMatcher.matches()) {
+					System.out.println("名字符合");
 					accountName = new String(accountNameInput);
 				}
 			} catch (Exception e) {
@@ -365,8 +410,13 @@ public class AccountInfoServlet extends HttpServlet {
 			//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
 			AccountInfoService accountInfoSvc = new AccountInfoService();
 			Integer accountID = (accountInfoSvc.getAccountIDByAccountMail(accountMail)).getAccountID();
+			System.out.println(accountNameInput);
+			System.out.println(accountName);
 			accountInfoSvc.updateAccountInfoFromChange(
-					accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
+					accountMail,accountNickname,accountPassword,accountNameInput,accountGender,accountBirth,accountPhoneInput,
+					accountPicBuffer,
+					accountIDcardFrontBuffer,
+					accountIDcardBackBuffer,
 					accountText,accountID);
 
 			//更改成功就可以到會員中心畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
@@ -399,24 +449,26 @@ public class AccountInfoServlet extends HttpServlet {
 //===========================================================================================
 //註冊相關請求
 //在AccountRegisterPage.jsp收到加入會員的請求
-		if ("setAccountInfo_For_Register".equals(action)) {
-			
-			//儲存註冊錯誤的訊息
+		if ("setAccountInfoForRegister".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
-			
+			System.out.println("進入");
 			try {
 				//接收頁面使用者輸入的參數
+				//基本認證
 				String accountMailInput = req.getParameter("accountMail");
 				String accountNicknameInput = req.getParameter("accountNickname");
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountNameInput = req.getParameter("accountName");
 				String accountGenderInput = req.getParameter("accountGender");
 				String accountBirthInput = req.getParameter("accountBirth");
+				//二級認證
 				String accountPhoneInput = req.getParameter("accountPhone");
-				String accountPicInput = req.getParameter("accountPic");
-				String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
-				String accountIDcardBackInput = req.getParameter("accountIDcardBack");
+				//三級認證
+//				String accountPicInput = req.getParameter("accountPic");
+//				String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
+//				String accountIDcardBackInput = req.getParameter("accountIDcardBack");
+				//基本認證
 				String accountTextInput = req.getParameter("accountText");
 				
 				//檢查各項輸入
@@ -438,15 +490,47 @@ public class AccountInfoServlet extends HttpServlet {
 				if (accountBirthInput == null || (accountBirthInput.trim()).length() == 0) {
 					errorMsgs.put("accountBirthError","請輸入生日");
 				}
-//				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
-//					errorMsgs.put("accountPhoneError","請輸入電話");
-//				}
-				
-//照片檢查後續再補
-				
 				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
 					errorMsgs.put("accountTextError","請輸入自我介紹");
 				}
+				//二級驗證 可不填 不驗證輸入
+				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
+					errorMsgs.put("accountPhoneError","請輸入電話");
+				}
+				//三級驗證
+				byte[] accountPicBuffer  = null;
+				AccountInfoVO accountInfoVO = new AccountInfoVO();
+				Part part = req.getPart("accountPic");
+				
+				InputStream in = part.getInputStream();
+				accountPicBuffer = new byte[in.available()];
+				in.read(accountPicBuffer);
+				in.close();
+				req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
+				accountInfoVO.setAccountPic(accountPicBuffer);
+				System.out.println("圖片OK");
+
+				byte[] accountIDcardFrontBuffer  = null;
+				Part part1 = req.getPart("accountIDcardFront");
+				
+				InputStream in1 = part1.getInputStream();
+				accountIDcardFrontBuffer = new byte[in1.available()];
+				in1.read(accountIDcardFrontBuffer);
+				in1.close();
+				req.getSession().setAttribute("aaccountIDcardFrontBuffer", accountIDcardFrontBuffer);
+				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
+				System.out.println("圖片OK");
+
+				byte[] accountIDcardBackBuffer  = null;
+				Part part2 = req.getPart("accountIDcardBack");
+				
+				InputStream in2 = part2.getInputStream();
+				accountIDcardBackBuffer = new byte[in2.available()];
+				in2.read(accountIDcardBackBuffer);
+				in2.close();
+				req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
+				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
+				System.out.println("圖片OK");
 				
 				//有錯誤就返回
 				if (!errorMsgs.isEmpty()) {
@@ -541,16 +625,26 @@ public class AccountInfoServlet extends HttpServlet {
 				req.setAttribute("accountNickname",accountNicknameInput);
 				req.setAttribute("accountName",accountNameInput);
 				req.setAttribute("accountGender",accountGender);
+				req.setAttribute("accountBirth",accountPhoneInput);
 				req.setAttribute("accountBirth",accountBirth);
 				req.setAttribute("accountText",accountTextInput);
 				//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
 				AccountInfoService accountInfoSvc = new AccountInfoService();
-				accountInfoSvc.setLevelOneAccountInfoFromRegister(
-						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
+				System.out.println("準備轉交");
+//				accountInfoSvc.setLevelOneAccountInfoFromRegister(
+//						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
+//						accountText);
+				//測試用
+				accountInfoSvc.setLevelThreeAccountInfoFromRegister(
+						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhoneInput,
+						accountPicBuffer,
+						accountIDcardFrontBuffer,
+						accountIDcardBackBuffer,
 						accountText);
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Account/AccountLoginPage.jsp";
+				System.out.println("???");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				
