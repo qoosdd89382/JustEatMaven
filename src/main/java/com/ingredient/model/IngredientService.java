@@ -15,9 +15,8 @@ public class IngredientService {
 		vo.setIngredientName(ingredientName);
 		int ingredientID = dao.insert(vo);
 		vo.setIngredientID(ingredientID);
-		
-//		/************注意：交易問題************/
-//		vo.setIngredientSearchCount(dao.getOneByID(ingredientID).getIngredientSearchCount());
+		/************注意：交易問題************/
+		vo.setIngredientSearchCount(dao.getOneByID(ingredientID).getIngredientSearchCount());
 		
 		return vo;
 	}
@@ -26,12 +25,20 @@ public class IngredientService {
 		IngredientVO vo = new IngredientVO();
 		vo.setIngredientID(ingredientID);
 		vo.setIngredientName(ingredientName);
-		
-//		/************注意：交易問題************/
-//		vo.setIngredientSearchCount(dao.getOneByID(ingredientID).getIngredientSearchCount());
+		/************注意：交易問題************/
+		vo.setIngredientSearchCount(dao.getOneByID(ingredientID).getIngredientSearchCount());
 		
 		return vo;
 	}
+	
+	public IngredientVO updateSearchCount(int ingredientID) {
+		IngredientVO vo = dao.getOneByID(ingredientID);
+		int count = vo.getIngredientSearchCount();
+		vo.setIngredientSearchCount(++count);
+		dao.updateSearchCount(vo);
+		return vo;
+	}
+
 
 	public void deleteIngredient(int ingredientID) {
 		dao.delete(ingredientID);
@@ -42,6 +49,10 @@ public class IngredientService {
 	
 	public List<IngredientVO> getAll() {
 		return dao.getAll();
+	}
+
+	public List<IngredientVO> getAll(String sqlStatement) {
+		return dao.getAll(sqlStatement);
 	}
 	
 	public IngredientVO getOneIngredient(int ingredientID) {

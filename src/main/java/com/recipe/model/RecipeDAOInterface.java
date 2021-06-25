@@ -22,6 +22,8 @@ public interface RecipeDAOInterface {
 	public int delete(int recipeID);
 	public int delete(int[] recipeIDs);			// 後臺用
 	public void update(RecipeVO recipe);		// 理論上要呼叫時 controller 已經透過 getOneByPK 取得這筆食譜的所有包裝資料，使用者更改後 controller 再包裝好送進 update，所以不需要再有回傳
+	public void updateViewCount(RecipeVO recipe);
+	
 	public RecipeVO getOneByPK(int recipeID);
 	public InputStream getOnePicByPK(int recipeID);
 	public List<RecipeVO> getAllByWriter(int accountID);

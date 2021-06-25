@@ -4,11 +4,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ page import="java.util.*"%>
+<%@ page import="com.accountinfo.model.*"%>
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
+<%@ page import="com.ingredient.model.*"%>
+<%@ page import="com.unit.model.*"%>
 <%@ page import="com.recipecuisinecategory.model.*"%>
 <%@ page import="com.recipeingredientunit.model.*"%>
 <%@ page import="com.recipestep.model.*"%>
+
 
 <%			
 	Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -19,6 +23,8 @@
 		int recipeID = new Integer(request.getParameter("id"));
 			
 		RecipeService recipeSvc = new RecipeService();
+		recipeSvc.updateViewCount(new Integer(recipeID));
+		
 		RecipeVO recipeVO = recipeSvc.getOneRecipe(recipeID);
 		
 		if (recipeVO == null) {
@@ -38,6 +44,7 @@
 		RecipeStepService recipeStepSvc = new RecipeStepService();
 		List<RecipeStepVO> RecipeStepList = recipeStepSvc.getAllByRecipe(recipeID);
 		request.setAttribute("RecipeStepList", RecipeStepList);
+
 	
 	} catch (Exception e) {
 		errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");

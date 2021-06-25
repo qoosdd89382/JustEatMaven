@@ -74,7 +74,8 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 //			}
 
 		} catch (SQLException se) {
-			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null) {
@@ -119,8 +120,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 			
 			updateRow = pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (pstmt != null) {
@@ -156,8 +158,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 			
 			deleteRow = pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (pstmt != null) {
@@ -197,8 +200,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 
 			pstmt.executeBatch();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (pstmt != null) {
@@ -241,8 +245,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 				allCuisineCategory.add(cuisineCategory);
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)
@@ -293,8 +298,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 				cuisineCategory.setCuisineCategoryName(rs.getString("CuisineCategory_name"));
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)
@@ -342,8 +348,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 				ExistStatus = true;
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)
@@ -429,8 +436,9 @@ public class CuisineCategoryJDBCDAO implements CuisineCategoryDAOInterface {
 				allCuisineCategory.add(cuisineCategory);
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)

@@ -23,8 +23,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 	private static final String INSERT = "INSERT INTO Ingredient(ingredient_name) VALUES(?)";
 	private static final String SELECT_ONE_BY_ID = "SELECT * FROM Ingredient WHERE ingredient_id = ?";
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM Ingredient WHERE ingredient_name = ?";
-	private static final String SELECT_ALL = "SELECT * FROM Ingredient ORDER BY ingredient_id DESC";
+	private static final String SELECT_ALL = "SELECT * FROM Ingredient ";
 	private static final String UPDATE = "UPDATE Ingredient SET ingredient_name = ? WHERE ingredient_id = ?";
+	private static final String UPDATE_SEARCH_COUNT = "UPDATE Ingredient SET ingredient_search_count = ? WHERE ingredient_id = ?";
 	private static final String DELETE = "DELETE FROM Ingredient WHERE ingredient_id = ?";
 
 	@Override
@@ -48,7 +49,8 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 			}
 
 		} catch (SQLException se) {
-			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null) {
@@ -98,8 +100,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 				ingredient.setIngredientSearchCount(rs.getInt("ingredient_search_count"));
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)
@@ -145,8 +148,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 			pstmt.setInt(2, ingredient.getIngredientID());
 			updateRow = pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (pstmt != null) {
@@ -177,7 +181,7 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 
 		try {
 			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(SELECT_ALL);
+			pstmt = con.prepareStatement(SELECT_ALL + "ORDER BY ingredient_id DESC");
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -188,8 +192,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 				allIngredient.add(ingredient);
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)
@@ -232,8 +237,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 			pstmt.setInt(1, ingredientID);
 			deleteRow = pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (pstmt != null) {
@@ -273,8 +279,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 
 			pstmt.executeBatch();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (pstmt != null) {
@@ -314,8 +321,9 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 				ExistStatus = true;
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		} finally {
 
 			if (rs != null)
@@ -402,6 +410,98 @@ public class IngredientJDBCDAO implements IngredientDAOInterface {
 //			System.out.println("刪除成功");
 //		}
 
+	}
+
+	@Override
+	public List<IngredientVO> getAll(String sqlStatement) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<IngredientVO> allIngredient = new ArrayList<IngredientVO>();
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(SELECT_ALL + sqlStatement);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				IngredientVO ingredient = new IngredientVO();
+				ingredient.setIngredientID(rs.getInt("ingredient_id"));
+				ingredient.setIngredientName(rs.getString("ingredient_name"));
+				ingredient.setIngredientSearchCount(rs.getInt("ingredient_search_count"));
+				allIngredient.add(ingredient);
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (rs != null)
+				try {
+					rs.close();
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+
+		return allIngredient;
+	}
+
+	@Override
+	public int updateSearchCount(IngredientVO ingredient) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int updateRow = 0;
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+
+			// 再 set
+			pstmt = con.prepareStatement(UPDATE_SEARCH_COUNT);
+
+			pstmt.setInt(1, ingredient.getIngredientSearchCount());
+			pstmt.setInt(2, ingredient.getIngredientID());
+			updateRow = pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return updateRow;
 	}
 
 }

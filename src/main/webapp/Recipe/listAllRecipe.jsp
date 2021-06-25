@@ -4,14 +4,20 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ page import="java.util.*"%>
+<%@ page import="com.accountinfo.model.*"%>
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
+<%@ page import="com.ingredient.model.*"%>
+<%@ page import="com.unit.model.*"%>
+<%@ page import="com.recipecuisinecategory.model.*"%>
+<%@ page import="com.recipeingredientunit.model.*"%>
+<%@ page import="com.recipestep.model.*"%>
 
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
-<jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
 <!-- 基本上意思和java區塊new、放進Page scope是一樣的 -->
 <%
 	List<RecipeVO> list = recipeSvc.getAll();
