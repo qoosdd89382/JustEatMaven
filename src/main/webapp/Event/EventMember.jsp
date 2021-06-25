@@ -13,7 +13,9 @@
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 
 <%
+	String eventID = request.getParameter("eventID");
 	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
+	pageContext.setAttribute("eventID", 300002);
 	pageContext.setAttribute("list", list);
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
@@ -36,7 +38,7 @@
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-
+	<h2>成員列表</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
@@ -85,8 +87,7 @@
 	</table>
 	  <div class="btn_margin" align="right"  >
 	  
-	              <input type ="button" onclick="history.back()" value="返回"></input>
-
+	         <a href="<%= request.getContextPath()%>/Event/EventDetailEdit.jsp?eventID=${eventID}">返回活動詳情</a>   
 	  </div>
 			
 	<footer>
