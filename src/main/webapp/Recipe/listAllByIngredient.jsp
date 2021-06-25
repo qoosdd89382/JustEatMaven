@@ -1,3 +1,4 @@
+<%@page import="com.recipeingredientunit.model.RecipeIngredientUnitVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -7,12 +8,11 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.recipe.model.*"%>
 <%@ page import="com.cuisinecategory.model.*"%>
-<%@ page import="com.recipecuisinecategory.model.*"%>
-
+<%@ page import="com.recipeingredientunit.model.*"%>
 
 <jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
-<jsp:useBean id="reicpeCatSvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
+<jsp:useBean id="reicpeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 <jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
@@ -21,16 +21,16 @@
 Map<String, String> errorMsgs = new HashMap<String, String>();
 request.setAttribute("errorMsgs", errorMsgs);
 
-List<RecipeCuisineCategoryVO> list = null;
+List<RecipeIngredientUnitVO> list = null;
 
 try {
 	
-	String cuisineCategoryID = request.getParameter("id");
-	if (cuisineCategoryID == null) {
+	String ingredientID = request.getParameter("id");
+	if (ingredientID == null) {
 		throw new Exception();
 	}
-	list = reicpeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
-	pageContext.setAttribute("cuisineCategoryID", cuisineCategoryID);
+	list = reicpeIngUnitSvc.getAllByIngredient(new Integer(ingredientID));
+	pageContext.setAttribute("ingredientID", ingredientID);
 	pageContext.setAttribute("list", list);
 	
 	
@@ -41,7 +41,6 @@ try {
 	failureView.forward(request, response);
 	return;
 }
-
 %>
 
 
@@ -90,51 +89,51 @@ try {
 
     		<section class="searchResult">
 				<c:if test="${not empty list}">
-	    			系統為您尋找 <b>${categorySvc.getOneCategory(cuisineCategoryID).cuisineCategoryName}</b> 料理分類，符合條件的食譜共有 <b>${fn:length(list)}</b> 筆：
+	    			系統為您尋找 <b>${ingredientSvc.getOneIngredient(ingredientID).ingredientName}</b> 食材，符合條件的食譜共有 <b>${fn:length(list)}</b> 筆：
 	    		</c:if>
 	    		<c:if test="${empty list}">
-	    			系統為您尋找 <b>${categorySvc.getOneCategory(cuisineCategoryID).cuisineCategoryName}</b> 料理分類，抱歉，暫時沒有食譜符合條件！
+	    			系統為您尋找 <b>${ingredientSvc.getOneIngredient(ingredientID).ingredientName}</b> 食材，抱歉，暫時沒有食譜符合條件！
 	    		</c:if>
     		</section>
     		
 			<div class="list">
     		<%@ include file="pages/page1.file"%>
-				<c:forEach var="recipeCatVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+				<c:forEach var="recipeIngUnit" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 				
-					<div class="recipe-block row" id="${recipeCatVO.recipeID}">
+					<div class="recipe-block row" id="${recipeIngUnit.recipeID}">
 					
 						<div class="pic col-12 col-lg-5">
 							<div class="time">
-								<fmt:formatDate value="${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeTime}" pattern="yyyy.MM.dd"/>
+								<fmt:formatDate value="${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeTime}" pattern="yyyy.MM.dd"/>
 							</div>
 							<div class="img-outer">
-								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeCatVO.recipeID}">
+								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeIngUnit.recipeID}">
 							</div>
 							<div class="count">
-								<span class="viewcount"><i class="fas fa-eye"></i>${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeViewCount}</span>
-								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeLikeCount}</span>
-								<span class="favcount"><i class="fas fa-heart"></i>${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeCollectCount}</span>
+								<span class="viewcount"><i class="fas fa-eye"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeViewCount}</span>
+								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeLikeCount}</span>
+								<span class="favcount"><i class="fas fa-heart"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeCollectCount}</span>
 							</div>
 						</div>
 						
 						<div class="info col-12 col-lg-7">
-							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeCatVO.recipeID}">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeName}</a></h4></div>
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeCatVO.recipeID).accountID).accountNickname}</a></div>
+							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeName}</a></h4></div>
+							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID).accountNickname}</a></div>
 							<div class="intro"><div class="intro-text">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeIntroduction}</div></div>
 							<div class="change form-group">
 								<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 									<input type="hidden" name="action" value="getOneForUpdate">
-									<input type="hidden" name="recipeID"  value="${recipeCatVO.recipeID}">
+									<input type="hidden" name="recipeID"  value="${recipeIngUnit.recipeID}">
 									<button class="btn btn-primary" type="submit">編輯</button>
 								</form>
 								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 									<input type="hidden" name="action" value="delete">
-									<input type="hidden" name="recipeID"  value="${recipeCatVO.recipeID}">
+									<input type="hidden" name="recipeID"  value="${recipeIngUnit.recipeID}">
 									<button class="btn btn-primary" type="submit">刪除</button>
 								</form>
 							</div>
 							<div class="readmore">
-								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeCatVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
+								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
 							</div>
 						</div>
 						
