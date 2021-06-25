@@ -1,18 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
-<%@ page import="java.util.*"%>
-<%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.recipe.model.*"%>
-<%@ page import="com.cuisinecategory.model.*"%>
-<%@ page import="com.ingredient.model.*"%>
-<%@ page import="com.unit.model.*"%>
-<%@ page import="com.recipecuisinecategory.model.*"%>
-<%@ page import="com.recipeingredientunit.model.*"%>
-<%@ page import="com.recipestep.model.*"%>
-
+<%@ include file="/Recipe/recipeImport.jsp"%>
 
 <%
 	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
@@ -30,11 +18,6 @@
 	// 	RecipeCuisineCategoryVO recipeCatVO = (RecipeCuisineCategoryVO) request.getAttribute("racipeCatVO");
 // 	if (session.getAttribute("recipePicTopBuffer") != null) { System.out.println(session.getAttribute("recipePicTopName")); }
 %>
-
-<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
-<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
-<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 
 <!DOCTYPE html>
 <html>

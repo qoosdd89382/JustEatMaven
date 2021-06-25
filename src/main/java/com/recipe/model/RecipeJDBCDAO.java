@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.recipecuisinecategory.model.RecipeCuisineCategoryJDBCDAO;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryVO;
@@ -37,7 +38,7 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 	private static final String UPDATE = "UPDATE Recipe SET recipe_name = ?, recipe_introduction = ?, recipe_pic_top = ?, recipe_serve = ? WHERE recipe_id = ?";
 	private static final String UPDATE_VIEW_COUNT = "UPDATE Recipe SET recipe_view_count = ? WHERE recipe_id = ?";
 	private static final String DELETE = "DELETE FROM Recipe WHERE recipe_id = ?";
-	private static final String SELECT_ALL = "SELECT * FROM Recipe";
+	private static final String SELECT_ALL = "SELECT * FROM Recipe ";
 	
 	private static final String NEWEST = " ORDER BY recipe_time DESC ";
 	private static final String HOTTEST_YESTERDAY = " WHERE YEARWEEK(date_format(recipe_time,'%Y-%m-%d')) = YEARWEEK(now())-1 ORDER BY recipe_view_count DESC ";
@@ -737,54 +738,54 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 		
 	}
 
-	@Override
-	public InputStream getOnePicByPK(int recipeID) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		InputStream topPicIn = null;
-
-		try {
-			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(SELECT_ONE_BY_PK);
-
-			pstmt.setInt(1, recipeID);
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				topPicIn = rs.getBinaryStream("recipe_pic_top");
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. "
-					+ se.getMessage());
-		} finally {
-
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-		}
-
-		return topPicIn;
-	}
+//	@Override
+//	public InputStream getOnePicByPK(int recipeID) {
+//		Connection con = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		InputStream topPicIn = null;
+//
+//		try {
+//			con = DriverManager.getConnection(url, userid, passwd);
+//			pstmt = con.prepareStatement(SELECT_ONE_BY_PK);
+//
+//			pstmt.setInt(1, recipeID);
+//			rs = pstmt.executeQuery();
+//
+//			if (rs.next()) {
+//				topPicIn = rs.getBinaryStream("recipe_pic_top");
+//			}
+//
+//		} catch (SQLException se) {
+//			throw new RuntimeException("A database error occured. "
+//					+ se.getMessage());
+//		} finally {
+//
+//			if (rs != null) {
+//				try {
+//					rs.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (pstmt != null) {
+//				try {
+//					pstmt.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (con != null) {
+//				try {
+//					con.close();
+//				} catch (Exception e) {
+//					e.printStackTrace(System.err);
+//				}
+//			}
+//		}
+//
+//		return topPicIn;
+//	}
 
 	@Override
 	public void updateWithDetails(RecipeVO recipe,
@@ -918,5 +919,108 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 
 	}
 
+	@Override
+	public List<RecipeVO> getAll(Map<String, String[]> map) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<RecipeVO> allRecipe = new ArrayList<RecipeVO>();
 
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			String finalSQL = SELECT_ALL
+			          + getWhereConditions(map)
+			          + " order by recipe_time";
+			
+			System.out.println(finalSQL);
+			
+			pstmt = con.prepareStatement(finalSQL);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				RecipeVO recipe = new RecipeVO();
+				recipe.setRecipeID(rs.getInt("recipe_id"));
+				recipe.setRecipeName(rs.getString("recipe_name"));
+				recipe.setRecipeIntroduction(rs.getString("recipe_introduction"));
+				recipe.setRecipePicTop(rs.getBytes("recipe_pic_top"));
+				recipe.setRecipeServe(rs.getInt("recipe_serve"));
+				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
+				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
+				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+				recipe.setAccountID(rs.getInt("account_id"));
+				allRecipe.add(recipe);
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return allRecipe;
+		
+	}
+		
+
+	public String getWhereConditions(Map<String, String[]> map) {
+		Set<String> keys = map.keySet();
+		StringBuffer whereCondition = new StringBuffer();
+		
+		for (String key : keys) {
+			String[] value = map.get(key);
+			
+			if (value.length != 0 && !"action".equals(key)) {
+		
+				for (int i = 0; i < value.length; i++) {
+					
+					if (value.length > 1) {
+						if (value[i] != null && value[i].trim().length() != 0) {
+							if (i == 0) {
+								whereCondition.append(" where recipe_name in " 
+								+ "(SELECT recipe_name FROM Recipe WHERE recipe_name like '%"
+								+ value[i] + "%'");
+							} else if (i == value.length - 1) {
+								whereCondition.append(" or '%" + value[i] + "%') ");
+							} else {
+								whereCondition.append(" or '%" + value[i] + "%'");
+							}
+						}
+					} else {
+						whereCondition.append(" where recipe_name in " 
+								+ "(SELECT recipe_name FROM Recipe WHERE recipe_name like '%"
+								+ value[i] + "%') ");
+					}
+				}
+			}
+		}
+		return whereCondition.toString();
+	}
+	
+	
+	
+	
+	
 }

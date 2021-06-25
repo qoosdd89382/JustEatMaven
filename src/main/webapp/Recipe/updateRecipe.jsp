@@ -1,24 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%@ page import="java.util.*"%>
-<%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.recipe.model.*"%>
-<%@ page import="com.cuisinecategory.model.*"%>
-<%@ page import="com.ingredient.model.*"%>
-<%@ page import="com.unit.model.*"%>
-<%@ page import="com.recipecuisinecategory.model.*"%>
-<%@ page import="com.recipeingredientunit.model.*"%>
-<%@ page import="com.recipestep.model.*"%>
-
-
-<jsp:useBean id="recipeCategorySvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
-<jsp:useBean id="recipeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" />
-<jsp:useBean id="recipeStepSvc" scope="page" class="com.recipestep.model.RecipeStepService" />
-<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
-<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
-<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
+<%@ include file="/Recipe/recipeImport.jsp"%>
 
 <%
 	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
@@ -34,7 +16,7 @@
 		request.getSession().removeAttribute("recipeStepPicBuffers");
 	}
 	
-	List<RecipeCuisineCategoryVO> orgRecipeCatVOs = recipeCategorySvc.getAllByRecipe(recipeVO.getRecipeID());
+	List<RecipeCuisineCategoryVO> orgRecipeCatVOs = reicpeCatSvc.getAllByRecipe(recipeVO.getRecipeID());
 	List<RecipeIngredientUnitVO> orgRecipeIngUnitVOs = recipeIngUnitSvc.getAllByRecipe(recipeVO.getRecipeID());
 	List<RecipeStepVO> orgRecipeStepVOs = recipeStepSvc.getAllByRecipe(recipeVO.getRecipeID());
 	request.setAttribute("orgRecipeCatVOs", orgRecipeCatVOs);
@@ -111,7 +93,7 @@
 					<div class="catAutoOutput">
 						<ul>
 							<c:if test="${empty recipeCatVOs}">
-<%-- 								<c:forEach var="recipeCatVO" items="${recipeCategorySvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
+<%-- 								<c:forEach var="recipeCatVO" items="${reicpeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
 								<c:forEach var="recipeCatVO" items="${orgRecipeCatVOs}">
 									<li data-id='${recipeCatVO.cuisineCategoryID}'>
 										<span>${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
@@ -129,7 +111,7 @@
 							</c:if>
 						</ul>
 						<c:if test="${empty recipeCatVOs}">
-<%-- 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${recipeCategorySvc.getAllByRecipe(recipeVO.recipeID)}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>"> --%>
+<%-- 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${reicpeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>"> --%>
 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${orgRecipeCatVOs}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>">
 						</c:if>
 						<c:if test="${not empty recipeCatVOs}">

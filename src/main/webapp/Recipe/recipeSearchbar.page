@@ -1,0 +1,27 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
+
+<section class="searchbar-block">
+	<form action="<%= request.getContextPath()%>/Recipe/recipe.do" method="post">
+
+<%--
+		<select name="searchBy">
+			<option value="recipe">找食譜</option>
+			<option value="author">找作者</option>
+		</select>
+--%>
+		<input id="searchKeyword" type="text" name="recipeName" placeholder="請輸入食譜名稱">
+		<div class="ui-widget" style="display:inline-block;">
+			<input id="ingSearchAutoCompl" placeholder="請輸入搜尋食材，以半形空白隔開" name="ingredientNames">
+			<input id="ingSearchAutoInput" type="hidden" name="ingredientIDs">
+		</div>
+
+		<input type="hidden" name="action" value="search">
+		<button type="submit" class="">送出</button>
+	</form>
+
+	<div class="">
+	</div>
+	
+</section>
