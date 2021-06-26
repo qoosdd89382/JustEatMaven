@@ -39,11 +39,11 @@ import com.friendship.model.FriendshipVO;
 
 			try {
 				HttpSession session = req.getSession();
-				String accountFriend = (String) session.getAttribute("accountMail");
+				AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
 				
 				FriendshipService friendshipSvc = new FriendshipService();
 				
-				List<AccountInfoVO> friendshipVO = friendshipSvc.getAccountFriendByAccountMail(accountFriend);
+				List<AccountInfoVO> friendshipVO = friendshipSvc.getAccountFriendByAccountID(accountInfoVO.getAccountID());
 				
 
 				req.setAttribute("friendshipVO", friendshipVO); 

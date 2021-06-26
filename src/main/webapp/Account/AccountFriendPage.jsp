@@ -8,8 +8,8 @@
 
 <%
 FriendshipService friendshipSvc = new FriendshipService();
-String accountMail = (String) session.getAttribute("accountMail");
-List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountMail(accountMail);
+AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
+List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountID(accountInfoVO.getAccountID());
 %>
 
 <!DOCTYPE html>

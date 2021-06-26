@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 
 <%
-AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
 //EmpServlet.java(Concroller), 存入req的VO物件
 // String accountMail = request.getParameter("accountMail");
 // String accountPassword = request.getParameter("accountPassword");
@@ -30,7 +30,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>AccountChangePage</title>
+<title>揪食-修改會員資料</title>
 
 <style>
 
@@ -100,52 +100,51 @@ textarea#textarea {
 		
 			<div id="change_area" class="col-6">
 			<span>${errorMsgs}</span><br>
-<%-- 			<span>EL${accountMail}</span><br> --%>
-<%-- 			<span>JAVA<%=accountMail %></span><br> --%>
-<%-- 			<span>JAVAVO<%=accountInfoVO.getAccountMail() %></span> --%>
-				<span>請輸入您的會員資料</span><br>
+				<span>揪食-修改會員資料</span><br>
+				<span>請修改您想更動的資料</span>
 				<form id="change" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
-					<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br> 
 					
-<%-- 					<input type="text" name="accountMail" value="<%=(accountMail == null) ? "" : accountMail%>"> --%>
+					<span>會員信箱 :${accountInfoVOLogin.accountMail}</span><br> 
+					<br>
+					<span>會員暱稱:${accountInfoVOLogin.accountNickname}</span><br> 
+					<br>
 					
-					<input type="text" name="accountMail" value="${accountInfoVO.accountMail}">
-					
-					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
-					
-					<span>請輸入會員暱稱 (如王陽明):</span><br> 
-					<input type="text" name="accountNickname" value="${accountInfoVO.accountNickname}">
-					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
-					
-					<span>請輸入會員密碼(如1q2w3e4r5t):之後改寄驗證信修改密碼</span><br> 
-					<input type="text" name="accountPassword" value="${accountInfoVO.accountPassword}"><br>
-					<!-- 			<b>請輸入會員狀態 (如1):</b> -->
-					<!-- 			<input type="text" name="accountState"><br> -->
-					<!-- 			<b>請輸入會員層級 (如1):</b> -->
-					<!-- 			<input type="text" name="accountLevel"><br> -->
+					<span>會員密碼:</span><br> 
+					<input type="text" name="accountPassword" value="${accountInfoVOLogin.accountPassword}"><br>
+					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 
-					<span>請輸入會員姓名 (如王曉明):</span><br>
-					<input type="text" name="accountName" value="${accountInfoVO.accountName}"><br>
-					<span>請輸入會員性別 :</span> 
-					<input type="radio" name="accountGender" value="1" ${(accountInfoVO.accountGender)== 1?"checked":""}>男
-					<input type="radio" name="accountGender" value="2" ${(accountInfoVO.accountGender)== 2?"checked":""}>女 <br>
-					<span>請輸入會員生日</span><br>
-					<input type="date" name="accountBirth" value="${accountInfoVO.accountBirth}"> <br>
-					<span>請輸入會員電話 (如0912345678):</span><br>
-					<input type="text" name="accountPhone" value="${accountInfoVO.accountPhone}"><br> 
-					<span>請輸入會員照片 :照片要用JSP照片要用JSP照片要用JSP</span>
-					<input type="file" name="accountPic" value="${accountInfoVO.accountPic}"><br> 
-					<span>請輸入會員身分證正面:</span>
-					<input type="file" name="accountIDcardFront"><br> 
-					<span>請輸入會員身分證背面:</span>
-					<input type="file" name="accountIDcardBack"><br> 
-					<span>請輸入會員自我介紹:(必填)</span><br>
-					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)">${accountInfoVO.accountText}</textarea><br>
+					<span>會員姓名:</span><br>
+					<input type="text" name="accountName" value="${accountInfoVOLogin.accountName}"><br>
+					<span style="color:red">${errorMsgs.get("accountNameError")}</span><br> 
+					
+					<span>會員性別 :</span> 
+					<input type="radio" name="accountGender" value="1" ${(accountInfoVOLogin.accountGender)== 1?"checked":""}>男
+					<input type="radio" name="accountGender" value="2" ${(accountInfoVOLogin.accountGender)== 2?"checked":""}>女 <br>
+					<span style="color:red">${errorMsgs.get("accountGenderError")}</span><br> 
+					
+					<span>會員生日:</span><br>
+					<input type="date" name="accountBirth" value="${accountInfoVOLogin.accountBirth}"><br>
+					<span style="color:red">${errorMsgs.get("accountBirthError")}</span><br> 
+					
+					<span>會員電話 :</span><br>
+					<input type="text" name="accountPhone" value="${accountInfoVOLogin.accountPhone}"><br> 
+					<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
+					
+					<span>會員照片 :</span>
+					<input type="file" name="accountPic" value="${accountInfoVOLogin.accountPic}"><br> 
+					<img src="<%=request.getContextPath()%>/Account/Pic/Pic/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>
+					
+					<span>會員身分證正面:(如需修改請更管理員聯絡)</span>
+					<img src="<%=request.getContextPath()%>/Account/Pic/Front/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>
+					
+					<span>會員身分證背面:(如需修改請更管理員聯絡)</span>
+					<img src="<%=request.getContextPath()%>/Account/Pic/Back/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>
+					
+					<span>會員自我介紹:</span><br>
+					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)">${accountInfoVOLogin.accountText}</textarea><br>
 					<span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
-					<!-- <b>請輸入會員註冊時間</b> -->
-					<!-- <input type="text" name="accountPhone"><br> -->
 
-					<input type="hidden" name="action" value="setAccountInfo_For_Change"> 
+					<input type="hidden" name="action" value="setAccountInfoForChange"> 
 					<input id="change_submit_btn" type="submit" value="提交送出"> 
 					<input id="change_reset_btn" type="reset" value="重置">
 				</form>

@@ -33,8 +33,8 @@ public class LoginFilter implements Filter {
 		// 【取得 session】
 		HttpSession session = req.getSession();
 		// 【從 session 判斷此user是否登入過】
-		Object accountMail = session.getAttribute("accountMail");
-		if (accountMail == null) {
+		Object isLogin = session.getAttribute("accountInfoVOLogin");
+		if (isLogin == null) {
 			session.setAttribute("location", req.getRequestURI());
 			res.sendRedirect(req.getContextPath() + "/Account/AccountLoginPage.jsp");
 			return;

@@ -145,6 +145,10 @@ public class AccountInfoService {
 	public AccountInfoVO getAccountMail(String accountMail) {
 		return dao.getAccountMail(accountMail);
 	}
+	//輸入暱稱 回傳 帳號資料的 VO物件
+	public AccountInfoVO getAccountNickname(String accountNickname) {
+		return dao.getAccountNickname(accountNickname);
+	}
 	//輸入信箱 回傳該信箱帳號的 含密碼的VO物件 用來比對使用者的輸入資料是否正確
 	public AccountInfoVO getAccountPassword(String accountMail) {
 		return dao.getAccountPassword(accountMail);
@@ -152,74 +156,57 @@ public class AccountInfoService {
 	public AccountInfoVO getAccountIDByAccountMail(String accountMail){
 		return dao.getAccountIDByAccountMail(accountMail);
 	}
+	public AccountInfoVO getAccountCodeByAccountMail(String accountMail){
+		return dao.getAccountCodeByAccountMail(accountMail);
+	}
+	
 //review
 //會員修改資料用
 	public void updateAccountInfoFromChange(
-			String accountMail,String accountNickname,String accountPassword,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-			byte[] accountPic,
-			byte[] accountIDcardFront,
-			byte[] accountIDcardBack,
-			String accountText,
-			Integer accountID
-		){
+			String accountPassword,String accountName,Integer accountGender,
+			Date accountBirth,String accountPhone,byte[] accountPic,
+			String accountText,Integer accountID){
 		AccountInfoVO accountInfoVO = new AccountInfoVO();
-	//	accountInfoVO.setAccountID(accountID);
-	
-		accountInfoVO.setAccountMail(accountMail);
-		accountInfoVO.setAccountNickname(accountNickname);
 		accountInfoVO.setAccountPassword(accountPassword);
-//		accountInfoVO.setAccountState(new Boolean("1"));
-//		accountInfoVO.setAccountLevel(new Integer(1));
-		
 		accountInfoVO.setAccountName(accountName);
 		accountInfoVO.setAccountGender(accountGender);
+		
 		accountInfoVO.setAccountBirth(accountBirth);
 		accountInfoVO.setAccountPhone(accountPhone);
 		accountInfoVO.setAccountPic(accountPic);
-		
-		accountInfoVO.setAccountIDcardFront(accountIDcardFront);
-		accountInfoVO.setAccountIDcardBack(accountIDcardBack);
+
 		accountInfoVO.setAccountText(accountText);
+		accountInfoVO.setAccountID(accountID);
 		
-		dao.updateAccountInfoFromChange(
-				accountMail,accountNickname,accountPassword,
-				accountName,accountGender,accountBirth,accountPhone,
-				accountPic,
-				accountIDcardFront,
-				accountIDcardBack,
-				accountText,accountID);
+		dao.updateAccountInfoFromChange(accountInfoVO);
 	}
 //註冊用
-	public void setLevelOneAccountInfoFromRegister(
-//		Integer accountID,
-		String accountMail,String accountNickname,String accountPassword,
-		String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-		String accountText
-		){
+	//傳入 可用信箱 帳號 隨機驗證碼到資料庫儲存
+	public AccountInfoVO setBlankAccountInfoFromRegister(String accountMail, String accountNickname, String accountCode) {
 		AccountInfoVO accountInfoVO = new AccountInfoVO();
-	//	accountInfoVO.setAccountID(accountID);
+		accountInfoVO.setAccountMail(accountMail);
+		accountInfoVO.setAccountNickname(accountNickname);
+		accountInfoVO.setAccountCode(accountCode);
+		dao.setBlankAccountInfoFromRegister(accountInfoVO);
+		return accountInfoVO;
+	}
 	
+	
+	//傳入基本會員輸入的資料在VO物件往資料庫送
+	public void setLevelOneAccountInfoFromRegister(
+		String accountMail,String accountNickname,String accountPassword,String accountName,
+		Integer accountGender,Date accountBirth,String accountText,Integer accountID){
+		AccountInfoVO accountInfoVO = new AccountInfoVO();
+		//傳入檢查的參數，並設定一般會員的數值
 		accountInfoVO.setAccountMail(accountMail);
 		accountInfoVO.setAccountNickname(accountNickname);
 		accountInfoVO.setAccountPassword(accountPassword);
-		accountInfoVO.setAccountState(new Boolean("1"));
-		accountInfoVO.setAccountLevel(new Integer(1));
-		
 		accountInfoVO.setAccountName(accountName);
 		accountInfoVO.setAccountGender(accountGender);
 		accountInfoVO.setAccountBirth(accountBirth);
-		accountInfoVO.setAccountPhone(null);
-		accountInfoVO.setAccountPic(null);
-		
-		accountInfoVO.setAccountIDcardFront(null);
-		accountInfoVO.setAccountIDcardBack(null);
 		accountInfoVO.setAccountText(accountText);
-		
-		dao.setLevelOneAccountInfoFromRegister(
-				accountMail,accountNickname,accountPassword,
-				accountName,accountGender,accountBirth,accountPhone,
-				accountText);
+		accountInfoVO.setAccountID(accountID);
+		dao.setLevelOneAccountInfoFromRegister(accountInfoVO);
 	}
 	
 	public void setLevelTwoAccountInfoFromRegister(
@@ -247,51 +234,34 @@ public class AccountInfoService {
 			accountInfoVO.setAccountIDcardBack(null);
 			accountInfoVO.setAccountText(accountText);
 			
-			dao.setLevelOneAccountInfoFromRegister(
+			dao.setLevelTwoAccountInfoFromRegister(
 					accountMail,accountNickname,accountPassword,
 					accountName,accountGender,accountBirth,accountPhone,
 					accountText);
 		}
 	
 	public void setLevelThreeAccountInfoFromRegister(
-//			Integer accountID,
-			String accountMail,String accountNickname,String accountPassword,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
+			String accountPhone,
 			byte[] accountPic,
 			byte[] accountIDcardFront,
 			byte[] accountIDcardBack,
-			String accountText
+			Integer accountID
 			){
 			AccountInfoVO accountInfoVO = new AccountInfoVO();
 		//	accountInfoVO.setAccountID(accountID);
 		
-			accountInfoVO.setAccountMail(accountMail);
-			accountInfoVO.setAccountNickname(accountNickname);
-			accountInfoVO.setAccountPassword(accountPassword);
-			accountInfoVO.setAccountState(new Boolean("1"));
+
 			accountInfoVO.setAccountLevel(new Integer(3));
 			
-			accountInfoVO.setAccountName(accountName);
-			accountInfoVO.setAccountGender(accountGender);
-			accountInfoVO.setAccountBirth(accountBirth);
 			accountInfoVO.setAccountPhone(accountPhone);
 			accountInfoVO.setAccountPic(accountPic);
 			
 			accountInfoVO.setAccountIDcardFront(accountIDcardFront);
 			accountInfoVO.setAccountIDcardBack(accountIDcardBack);
+			accountInfoVO.setAccountID(accountID);
 			
-			accountInfoVO.setAccountText(accountText);
-			
-			dao.setLevelThreeAccountInfoFromRegister(
-					accountMail,accountNickname,accountPassword,
-					accountName,accountGender,accountBirth,accountPhone,
-					accountPic,
-					accountIDcardFront,
-					accountIDcardBack,
-					accountText);
-		}
+			dao.setLevelThreeAccountInfoFromRegister(accountInfoVO);
+					
 	
-	
-	
-	
+	}
 }

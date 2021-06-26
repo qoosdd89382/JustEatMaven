@@ -30,11 +30,11 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 	private static final String Select_Account_Friendship = "Select * From JustEat.Friendship Where account_id=?";
 	
 	//透過session裡面的accountmail找他相關的好友暱稱
-	private static final String Select_Account_Friendship_By_AccountMail = 
+	private static final String Select_Account_Friendship_By_AccountID = 
 			"Select account_nickname From JustEat.AccountInfo where "//用ID找暱稱
 			+ "account_id in (SELECT friend_id From JustEat.Friendship where "//找那些符合條件FriendID
 			+ "account_id = (select account_id From JustEat.AccountInfo where "//找那些跟session的accountmail有好友關係的friendID
-			+ "account_mail=?) && friendship_state=1);";
+			+ "account_id=?) && friendship_state=1);";
 	
 	static {
 		try {
@@ -299,7 +299,7 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 		return friendshipVO;
 	}
 	
-	public List<AccountInfoVO> getAccountFriendByAccountMail(String account_mail) {
+	public List<AccountInfoVO> getAccountFriendByAccountID(Integer account_id) {
 		List<AccountInfoVO> list = new ArrayList<AccountInfoVO>();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -308,9 +308,9 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 		
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Select_Account_Friendship_By_AccountMail);
+			pstmt = con.prepareStatement(Select_Account_Friendship_By_AccountID);
 			
-			pstmt.setString(1, account_mail);
+			pstmt.setInt(1, account_id);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -346,7 +346,7 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 		}
 		return list;
 	}
-	
+//=========================================================================
 	public static void main(String[] args) {
 		FriendshipJDBCDAO friendshipJDBCDAO = new FriendshipJDBCDAO();
 		
