@@ -5,66 +5,62 @@ import java.sql.Timestamp;
 
 public class AdminChatroomVO implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	private String type;
+	private String sender;
+	private String receiver;
+//	private String sendBy;
+	private String time;
+	private String message;
 	
-	private Integer messageID;	// Redis不用此欄位?
-	private Integer accountID;
-	private Integer adminID;
-	private Boolean sendBy;
-	private Timestamp sendTime;
-	private String sendText;
-
-	public AdminChatroomVO() {
-		// TODO Auto-generated constructor stub
+	public AdminChatroomVO(String type, String sender, String receiver, String time, String message) {
+		super();
+		this.type = type;
+		this.sender = sender;
+		this.receiver = receiver;
+		this.time = time;
+		this.message = message;
 	}
 
-	public Integer getMessageID() {
-		return messageID;
+	public String getType() {
+		return type;
 	}
 
-	public void setMessageID(Integer messageID) {
-		this.messageID = messageID;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public Integer getAccountID() {
-		return accountID;
+	public String getSender() {
+		return sender;
 	}
 
-	public void setAccountID(Integer accountID) {
-		this.accountID = accountID;
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
-	public Integer getAdminID() {
-		return adminID;
+	public String getReceiver() {
+		return receiver;
 	}
 
-	public void setAdminID(Integer adminID) {
-		this.adminID = adminID;
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
 
-	public Boolean getSendBy() {
-		return sendBy;
+	public String getTime() {
+		return time;
 	}
 
-	public void setSendBy(Boolean sendBy) {
-		this.sendBy = sendBy;
+	public void setTime(String time) {
+		this.time = time;
 	}
 
-	public Timestamp getSendTime() {
-		return sendTime;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setSendTime(Timestamp sendTime) {
-		this.sendTime = sendTime;
-	}
-
-	public String getSendText() {
-		return sendText;
-	}
-
-	public void setSendText(String sendText) {
-		this.sendText = sendText;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	
-
 }

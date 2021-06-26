@@ -5,7 +5,7 @@ import java.util.List;
 public interface AdminChatroomDAOInterface {
 	
 	public boolean insert(AdminChatroomVO adminChatroom);
-	public List<AdminChatroomVO> getAllByText(int accountID, int adminID, String sendText);
-	public List<AdminChatroomVO> getAllByMembers(int accountID, int adminID);
+	public List<AdminChatroomVO> getAllByText(int adminID, int accountID, String sendText);
+	public List<AdminChatroomVO> getAllByMembers(int adminID, int accountID);
 	
 }
