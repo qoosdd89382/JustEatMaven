@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.dish.model.DishVO;
 import com.dishandingredient.model.DishAndIngredientVO;
+import com.eventcuisinecategory.model.EventCuisineCategoryService;
+import com.eventcuisinecategory.model.EventCuisineCategoryVO;
 import com.eventmember.model.EventMemberVO;
 
 public class EventInfoService {
@@ -85,6 +87,17 @@ public class EventInfoService {
 		return eventInfoVO;
 	}
 
+	public EventInfoVO updateEventInfo(Integer eventID,Integer eventState) {
+
+
+		EventInfoVO eventInfoVO = new EventInfoVO();
+		eventInfoVO.setEventID(eventID);
+		eventInfoVO.setEventState(eventState);
+		dao.updateEventState(eventInfoVO);
+
+		return eventInfoVO;
+	}
+	
 	public void deleteEventInfo(Integer eventID) {
 		dao.delete(eventID);
 	}
@@ -148,7 +161,7 @@ public class EventInfoService {
 	public void addDishAndIngredientByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
 			Integer groupType, String groupCity, String groupAddress, String eventRegistartionStartTime,
 			String eventRegistartionEndTime, String eventStartTime, String eventEndTime, Integer eventState,
-			byte[] eventPic, String[] dishNames,Integer[][] IngIDs) {
+			byte[] eventPic, String[] dishNames,Integer[][] IngIDs,Integer[] cuisinecategoryID) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime localRegistartionStartTime = LocalDateTime.parse(eventRegistartionStartTime, formatter);
@@ -199,6 +212,13 @@ public class EventInfoService {
 		eventMemberVO.setHostIdentifier(true);
 		eventMemberList.add(eventMemberVO);
 		
-		dao.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList);
+		List<EventCuisineCategoryVO> eventCuisineCategoryList = new ArrayList<EventCuisineCategoryVO>();
+		for(int i =0;i < cuisinecategoryID.length;i++) {
+			EventCuisineCategoryVO eventCuisineCategoryVO = new EventCuisineCategoryVO();
+			eventCuisineCategoryVO.setCuisinecategoryID(cuisinecategoryID[i]);
+			eventCuisineCategoryList.add(eventCuisineCategoryVO);
+		}
+		
+		dao.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList,eventCuisineCategoryList);
 	}
 }

@@ -80,7 +80,7 @@
 						<tbody>
 							<tr class="">
 								<td class="" rowspan=${fn:length(dishSvc.getAccountID(eventMemberVO.accountID))}>
-								${accountInfoSvc.getAccountID(eventMemberVO.accountID).accountMail}
+								${accountInfoSvc.selectOneAccountInfo(eventMemberVO.accountID).accountMail}
 								</td>
 									<c:forEach var="dishVO" items="${dishSvc.getAccountIDAndEventID(eventMemberVO.accountID,param.eventID)}">
 										<td class="">${dishVO.dishName}</td>

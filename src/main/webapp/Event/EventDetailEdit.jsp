@@ -1,3 +1,7 @@
+<%@page import="com.eventcuisinecategory.model.EventCuisineCategoryService"%>
+<%@page import="com.eventcuisinecategory.model.EventCuisineCategoryVO"%>
+<%@page import="com.cuisinecategory.model.CuisineCategoryService"%>
+<%@page import="com.cuisinecategory.model.CuisineCategoryVO"%>
 <%@page import="com.eventinfo.model.EventInfoService"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -13,6 +17,9 @@
 <%
 	EventInfoService eventInfoSvc = new EventInfoService();
 	EventInfoVO eventInfoVO = eventInfoSvc.getEventID(Integer.parseInt(request.getParameter("eventID")));
+	EventCuisineCategoryService eventCuisineCategoryService = new EventCuisineCategoryService();
+	List<EventCuisineCategoryVO> eventCuisineCategoryList = eventCuisineCategoryService.getAllByEventID(Integer.parseInt(request.getParameter("eventID")));
+	CuisineCategoryService categoryService = new CuisineCategoryService();
 	
 	if(eventInfoVO!=null){
 		if(eventInfoVO.getEventStartTime()!=null){
@@ -44,6 +51,10 @@
 		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
 	}
 	
+	
+	for(EventCuisineCategoryVO eventCuisineCategoryVO:eventCuisineCategoryList) {
+		System.out.println(categoryService.getOneCategory(eventCuisineCategoryVO.getCuisinecategoryID()).getCuisineCategoryName());
+	}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,6 +64,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>活動編輯</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
@@ -76,7 +88,7 @@
 	    <div class="title">
 	        <h2>活動編輯</h2>
 	    </div>
-	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
+	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do" enctype="multipart/form-data">
 	   	<div class="temp_data">
 	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
 	   		<input type="hidden" name="eventID" value="${param.eventID}">
@@ -120,14 +132,17 @@
 	                <input type="text" name="event_reg_end" id="eventRegEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionEndTime()==null)?"":(pageContext.getAttribute("formatRegEndDateTime"))%>">
 	            	<span class="error">${errorMsgs.get("EventRegEndTimeIsNull")} ${errorMsgs.get("EventRegEndTimeNotConform")}</span>
 	            </div>
-	            <div>
+	       		<div>
 	                類型:
-	                <input type="checkbox" name="eat_style">中式
-	                <input type="checkbox" name="eat_style">日式
-	                <input type="checkbox" name="eat_style">越式
-	                <input type="checkbox" name="eat_style">西式
-	                <input type="checkbox" name="eat_style">泰式
-	                <input type="checkbox" name="eat_style">不拘
+	                <span class="cuisineCat border">
+	               	<%
+	               		for(EventCuisineCategoryVO eventCuisineCategoryVO:eventCuisineCategoryList) {
+	               	%>
+	               		<%=categoryService.getOneCategory(eventCuisineCategoryVO.getCuisinecategoryID()).getCuisineCategoryName() + " " %>	
+	               	<% 
+	               		}
+	               	%>
+	               	</span>
 	            </div>
 	            <div>
 	                <select name="city">
@@ -163,6 +178,11 @@
 	            <span class="error">${errorMsgs.get("GroupAddressIsNull")}</span>
 	            </div>
 	            <div>
+	            	上傳活動圖片:<input type="file" name="eventPic" id="uploadEventImg">
+	            </div>
+	            <div id="preview_img">
+	            </div>
+	            <div>
 	                <input type="button" name="" value="上一頁" class="return">
 	                <input type="submit" name="action" value="儲存">
 	            </div>
@@ -178,6 +198,8 @@
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/datetimepicker/js/jquery.datetimepicker.full.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
@@ -212,6 +234,17 @@
 	     $(".return").on("click",function(){
 				history.go(-1);
 		 });
+	     
+	     //=================圖片預覽==========================
+	     $("#uploadEventImg").on("change", function() {
+	            console.log(this.files);
+	            var reader = new FileReader();
+	            reader.readAsDataURL(this.files[0]);
+	            $(reader).on("load", function() {
+	            	$("#preview_img").html("");
+	                $("#preview_img").append("<img src="+reader.result+">");
+	            });
+	        });
 	</script>
 </body>
 </html>

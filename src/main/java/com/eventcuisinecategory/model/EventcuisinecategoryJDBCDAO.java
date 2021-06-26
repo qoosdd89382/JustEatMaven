@@ -15,11 +15,11 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost:3306/JustEat?serverTimezone=Asia/Taipei";
-	private static String user = "root";
-	private static String password = "831204jeff";
+	private static String user = "DBAdmin";
+	private static String password = "justeat";
 
 	private static final String Insert_Stmt = "Insert into Eventcuisinecategory(event_id,cuisinecategory_id)Values(?,?)";
-	//private static final String Update_Stmt = "Update Eventcuisinecategory Set event_id = ? Where event_id = ?";
+	private static final String Update_Stmt = "Update Eventcuisinecategory Set cuisinecategory_id = ? Where event_id = ?";
 	private static final String Delete_Stmt = "Delete from Eventcuisinecategory Where event_id = ?";
 	//private static final String Select_Key_Stmt = "Select * From Event Where event_id=?";
 	private static final String Select_All_Stmt = "Select * From Eventcuisinecategory";
@@ -74,42 +74,80 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 			}
 		}
 	}
+	
+	@Override
+	public void insertbyEventInfo(EventCuisineCategoryVO eventcuisinecategoryVO,Connection con) {
+		PreparedStatement pstmt = null;
+	
 
-//	@Override
-//	public void update(EventCuisineCategoryVO eventcuisinecategoryVO) {
-//		Connection con = null;
-//		PreparedStatement pstmt = null;
-//
-//		try {
-//			con = DriverManager.getConnection(url, user, password);
-//			pstmt = con.prepareStatement(Update_Stmt);
-//
-//			pstmt.setInt(1, eventcuisinecategoryVO.getEventID());
-//		
-//			pstmt.executeUpdate();
-//			System.out.println("更新成功");
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} finally {
-//			if (pstmt != null) {
-//				try {
-//					pstmt.close();
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			if (con != null) {
-//				try {
-//					con.close();
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+		try {
+			pstmt = con.prepareStatement(Insert_Stmt);
+
+			pstmt.setInt(1, eventcuisinecategoryVO.getEventID());
+			pstmt.setInt(2, eventcuisinecategoryVO.getCuisinecategoryID());
+
+			pstmt.executeUpdate();
+
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			if(con!=null) {
+				try {
+					con.rollback();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("資料庫連線發生錯誤" + e1.getMessage());
+				}
+			}
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
+		} finally {
+		
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
+				}
+			}
+		}
+	}
+
+	@Override
+	public void update(EventCuisineCategoryVO eventcuisinecategoryVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Update_Stmt);
+
+			pstmt.setInt(1, eventcuisinecategoryVO.getCuisinecategoryID());
+			pstmt.setInt(2, eventcuisinecategoryVO.getEventID());
+			pstmt.executeUpdate();
+			System.out.println("更新成功");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	@Override
 	public void delete(Integer eventID) {
