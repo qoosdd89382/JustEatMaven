@@ -25,11 +25,12 @@ public interface RecipeDAOInterface {
 	public void updateViewCount(RecipeVO recipe);
 	
 	public RecipeVO getOneByPK(int recipeID);
-	public InputStream getOnePicByPK(int recipeID);
+//	public InputStream getOnePicByPK(int recipeID);
 	public List<RecipeVO> getAllByWriter(int accountID);
 	// 刪除食譜的料理分類、食材標籤會在關聯處理(join表controller做)
 	
 	public List<RecipeVO> getAll();
+	public List<RecipeVO> getAll(Map<String, String[]> map);
 
 	public List<RecipeVO> getSomeNew();
 	public List<RecipeVO> getSomeHot();

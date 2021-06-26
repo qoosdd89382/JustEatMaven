@@ -1,3 +1,7 @@
+<%@page import="com.eventcuisinecategory.model.EventCuisineCategoryVO"%>
+<%@page import="com.eventcuisinecategory.model.EventCuisineCategoryService"%>
+<%@page import="com.cuisinecategory.model.CuisineCategoryService"%>
+<%@page import="com.cuisinecategory.model.CuisineCategoryVO"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.time.LocalDateTime"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
@@ -12,6 +16,12 @@
 	EventInfoVO eventInfoVO = null;
 	List<EventInfoVO> list = eventInfoSvc.getAll();
 	pageContext.setAttribute("list", list);
+	
+	CuisineCategoryService cuisineCatSvc = new CuisineCategoryService();
+	String cuisineCatID = request.getParameter("cuisineCatID");
+	List<CuisineCategoryVO> cuisineCatList = (List<CuisineCategoryVO>) request.getAttribute("cuisineCatList");
+	
+	EventCuisineCategoryService eventCuisineCategorySvc = new EventCuisineCategoryService();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +30,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>活動列表</title>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/style.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
@@ -45,16 +56,15 @@
 	</div>
 	<div class="event_list_content row">
 		<div class="center_content col-10">
-
 			<table class="filter">
 				<tr class="row">
-					<td class="col-12 col-sm-3">類型: <br> 
-						<input type="checkbox" name="style_filter" id="" value="中式" class="col-1">中式 
-						<input type="checkbox" name="style_filter" id="" value="日式" class="col-1">日式 
-						<input type="checkbox" name="style_filter" id="" value="越式" class="col-1">越式 
-						<input type="checkbox" name="style_filter" id="" value="西式" class="col-1">西式 
-						<input type="checkbox" name="style_filter" id="" value="泰式" class="col-1">泰式 
-						<input type="checkbox" name="style_filter" id="" value="不拘" class="col-1">不拘
+					<td class="col-12 col-sm-3">
+					<div>
+					<form method="post" action="<%=request.getContextPath() %>/Event/EventInfo.do">
+		                類型搜尋:	<input type="text" name="cuisineCatSearch" id="cuisineCatInput" placeholder="請輸入類型名稱  ex:日式 ">
+		                <input type="hidden" name="action" value="cuisineCatSearch">
+		            </form>	
+		            </div>
 					</td>
 					<td class="col-12 col-sm-3">地區: <br> 
 						<form method="post" action="<%=request.getContextPath() %>/Event/EventInfo.do" class="positionSubmit">
@@ -80,6 +90,7 @@
 					</td>
 				</tr>
 			</table>
+			<%@ include file="/Event/Paging.file" %> 
 			<table class="event_list">
 				<tr class="row">
 					<th class="col-sm-2 col-2">活動圖片</th>
@@ -91,20 +102,22 @@
 				</tr>
 				<c:choose>
 					<c:when test="${not empty listfind}">
-						<c:forEach var="eventInfoVO" items="${listfind}" varStatus="i">
-							<tr class="row">
-								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
-								<c:if test="${eventInfoVO.groupType == 1}">
-									<td class="col-sm-2 col-2">一人一菜</td>
-								</c:if>
-								<c:if test="${eventInfoVO.groupType == 2}">
-									<td class="col-sm-2 col-2">我當主廚</td>
-								</c:if>
-								<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
-								<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td class="col-sm-2 col-2">1000</td>
-							</tr>
+						<c:forEach var="eventInfoVO" items="${listfind}" varStatus="i" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+							<c:if test="${eventInfoVO.eventState ==1}">
+								<tr class="row">
+									<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
+									<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
+									<c:if test="${eventInfoVO.groupType == 1}">
+										<td class="col-sm-2 col-2">一人一菜</td>
+									</c:if>
+									<c:if test="${eventInfoVO.groupType == 2}">
+										<td class="col-sm-2 col-2">我當主廚</td>
+									</c:if>
+									<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
+									<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+									<td class="col-sm-2 col-2">1000</td>
+								</tr>
+							</c:if>
 						</c:forEach>
 					</c:when>
 					<c:when test="${empty listfind && not empty errMsg}">
@@ -113,25 +126,27 @@
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach var="eventInfoVO" items="${list}" varStatus="i">
-							<tr class="row">
-								<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-								<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
-								<c:if test="${eventInfoVO.groupType == 1}">
-									<td class="col-sm-2 col-2">一人一菜</td>
-								</c:if>
-								<c:if test="${eventInfoVO.groupType == 2}">
-									<td class="col-sm-2 col-2">我當主廚</td>
-								</c:if>
-								<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
-								<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td class="col-sm-2 col-2">1000</td>
-							</tr>
+						<c:forEach var="eventInfoVO" items="${list}" varStatus="i" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+							<c:if test="${eventInfoVO.eventState ==1}">
+								<tr class="row">
+									<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
+									<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
+									<c:if test="${eventInfoVO.groupType == 1}">
+										<td class="col-sm-2 col-2">一人一菜</td>
+									</c:if>
+									<c:if test="${eventInfoVO.groupType == 2}">
+										<td class="col-sm-2 col-2">我當主廚</td>
+									</c:if>
+									<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
+									<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+									<td class="col-sm-2 col-2">1000</td>
+								</tr>
+							</c:if>
 						</c:forEach>
 					</c:otherwise>
 				</c:choose>
 			</table>
-
+			<%@ include file="/Event/SelectPage.file" %> 
 		</div>
 	</div>
 	<footer>
@@ -139,6 +154,8 @@
 	</footer>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
@@ -157,6 +174,52 @@
 		$(".createEvent").on("click",function(){
 			location.href = "<%=request.getContextPath()%>/Event/CreateEvent.jsp";
 		});
+		
+		$(function(){
+			var cuisineCatArray = new Array();
+			<%
+				for(CuisineCategoryVO tempVO:cuisineCatSvc.getAll()){
+			%>
+				var cuiCatObj = new Object();
+				cuiCatObj['id'] = <%=tempVO.getCuisineCategoryID() %>;
+				cuiCatObj['value'] = "<%=tempVO.getCuisineCategoryName() %>";
+				cuisineCatArray.push(cuiCatObj);
+			<%		
+				}
+			%>
+			
+			$("#cuisineCatInput").on("keydown",function(event){
+				if(event.keyCode === $.ui.keyCode.Enter){
+					event.preventDefault();
+				}
+			}).autocomplete({
+				minLength: 0,
+				source: cuisineCatArray,
+				select: function(event,ui){
+					cuisineCatArray.forEach(function(item,index,array){
+						if(ui.item.value == array[index]['value']){
+							array.splice(index,1);
+						}
+					});
+					return false;
+				}
+			});
+		});
+		//================類型儲存========================
+// 		$(".confirmCreate").on("click",function(){
+// 			var cuisineCatArray = new Array();
+// 			$(".cuisineCatAutoOutput").find("ul").each(function(index,element){
+// 				var cuisineCatObj = new Object();
+// 				var cuisineCatIDArray = new Array();
+// 				$(element).find("li").each(function(index,element){
+// 					cuisineCatIDArray.push($(element).attr("data-id"));
+// 				});
+// 				cuisineCatObj["cuisineCatID"] = cuisineCatIDArray;
+// 				cuisineCatArray.push(cuisineCatObj);
+// 			});
+// 			var cuisineCatJson = JSON.stringify(cuisineCatArray);
+// 			$(".temp_data").append("<input type='hidden' name='cuisineCatJson' value='"+cuisineCatJson+"'>");
+// 		});
 	</script>
 </body>
 </html>

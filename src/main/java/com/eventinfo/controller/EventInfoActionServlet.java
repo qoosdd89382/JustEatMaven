@@ -1,9 +1,9 @@
 package com.eventinfo.controller;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.sql.Date;
+import java.io.InputStream;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,33 +11,34 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.DateFormatter;
+import javax.servlet.http.Part;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.accountinfo.model.AccountInfoService;
+import com.cuisinecategory.model.CuisineCategoryService;
+import com.cuisinecategory.model.CuisineCategoryVO;
 import com.dish.model.DishService;
 import com.dish.model.DishVO;
-import com.dishandingredient.model.DishAndIngredientVO;
-import com.dishandingredient.model.DishandingredientService;
+import com.eventcuisinecategory.model.EventCuisineCategoryService;
+import com.eventcuisinecategory.model.EventCuisineCategoryVO;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
 import com.eventmember.model.EventMemberService;
-import com.eventmember.model.EventMemberVO;
 import com.ingredient.model.IngredientService;
 import com.ingredient.model.IngredientVO;
 
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class EventInfoActionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -176,6 +177,52 @@ public class EventInfoActionServlet extends HttpServlet {
 				findView.forward(request, response);
 			}
 		}
+		
+		if("cuisineCatSearch".equals(action)) {
+			
+			List<String> errMsg = new LinkedList<String>();
+			request.setAttribute("errMsg", errMsg);
+			
+			String str = request.getParameter("cuisineCatSearch");
+			
+			if (str == null || (str.trim().length() == 0)) {
+				RequestDispatcher notthingView = request.getRequestDispatcher("/Event/EventList.jsp");
+				notthingView.forward(request, response);
+				return;
+			}
+
+			EventInfoService eventInfoSvc = new EventInfoService();
+			EventCuisineCategoryService eventCuisineCategoryService = new EventCuisineCategoryService();
+			CuisineCategoryService cuisineCategoryService = new CuisineCategoryService();
+			
+			List<EventInfoVO> eventInfoList = new ArrayList<EventInfoVO>();
+			List<String[]> cuisineCatAndEventIDList = new ArrayList<String[]>();
+			List<String[]> sameCuisineCatNameList = new ArrayList<String[]>();
+
+			for(EventInfoVO eventInfoVO : eventInfoSvc.getAll()) {
+				for(EventCuisineCategoryVO eventCuisineCategoryVO: eventCuisineCategoryService.getAllByEventID(eventInfoVO.getEventID())) {
+					String[] tempArray = {cuisineCategoryService.getOneCategory(eventCuisineCategoryVO.getCuisinecategoryID()).getCuisineCategoryName().toString(),eventInfoVO.getEventID().toString()};
+					cuisineCatAndEventIDList.add(tempArray);
+				}
+			}
+			
+			for(String[] temp : cuisineCatAndEventIDList) {
+				if(temp[0].equals(str)) {
+					sameCuisineCatNameList.add(temp);
+				}
+			}
+			
+			for(int i=0;i<sameCuisineCatNameList.size();i++) {
+				EventInfoVO eventInfoVO = new EventInfoVO();
+				eventInfoVO = eventInfoSvc.getEventID(Integer.parseInt(sameCuisineCatNameList.get(i)[1]));
+				eventInfoList.add(eventInfoVO);
+			}
+			
+			request.setAttribute("listfind", eventInfoList);
+			RequestDispatcher findView = request.getRequestDispatcher("/Event/EventList.jsp");
+			findView.forward(request, response);
+		}
+		
 //========================================建立活動相關===============================
 		if ("新增菜色".equals(action)) {
 			EventInfoVO eventInfoVO = new EventInfoVO();
@@ -348,30 +395,70 @@ public class EventInfoActionServlet extends HttpServlet {
 			System.out.println(dishAndIngJson);
 			Integer[][] ingID = null;
 			String[] dishName = null;
-			try {
-				JSONArray jsonArray = new JSONArray(dishAndIngJson);
-				ingID = new Integer[jsonArray.length()][];
-				dishName = new String[jsonArray.length()];
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObj = jsonArray.getJSONObject(i);
-					Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
+			if (!dishAndIngJson.equals("")) {
+				try {
+					JSONArray jsonArray = new JSONArray(dishAndIngJson);
+					ingID = new Integer[jsonArray.length()][];
+					dishName = new String[jsonArray.length()];
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObj = jsonArray.getJSONObject(i);
+						Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
 
-					for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
-						tempIngID[j] = jsonObj.getJSONArray("IngID").getInt(j);
+						for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
+							tempIngID[j] = jsonObj.getJSONArray("IngID").getInt(j);
+						}
+
+						dishName[i] = jsonObj.getString("dishName");
+						ingID[i] = tempIngID;
 					}
-
-					dishName[i] = jsonObj.getString("dishName");
-					ingID[i] = tempIngID;
+					System.out.println(Arrays.toString(dishName) + "," + Arrays.deepToString(ingID));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-//					System.out.println(Arrays.toString(dishName) + "," + Arrays.deepToString(ingID));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-			if(dishAndIngJson.length()==2 || dishAndIngJson.equals("")) {
+			if (dishAndIngJson.length() == 2 || dishAndIngJson.equals("")) {
 				errorMsgs.put("dishAndIngredientIsNull", "請新增至少一個菜色");
 			}
-
+			
+			//===================================建立活動的圖片處理=============================
+			Part eventPic = request.getPart("eventPic");
+			byte[] eventPicToByte = null;
+			if(eventPic.getSubmittedFileName().length() ==0||eventPic.getContentType() ==null) {
+				System.out.println("使用者沒有上傳活動圖片");
+			}else if(!eventPic.getContentType().startsWith("image")) {
+				errorMsgs.put("eventPicError","上傳必須是image類型");
+			}else if(eventPic.getSize() > 1024*1024*3) {
+				errorMsgs.put("eventPicError","image檔案需要小於3MB");
+			}else {
+				InputStream is = eventPic.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(is);
+				eventPicToByte = new byte[bis.available()];
+				bis.read(eventPicToByte);
+				bis.close();
+				is.close();
+			}		
+			
+			//=======================================類型============================
+			String cuisineCatJson = request.getParameter("cuisineCatJson");
+			Integer[] cuisineCatID = null;
+			if (cuisineCatJson!=null) {
+				try {
+					JSONArray jsonArray = new JSONArray(cuisineCatJson);
+					cuisineCatID = new Integer[jsonArray.length()];
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObj = jsonArray.getJSONObject(i);
+						cuisineCatID[i] = jsonObj.getJSONArray("cuisineCatID").getInt(i);
+						System.out.println(cuisineCatID[i]);
+					}
+//					System.out.println(Arrays.deepToString(cuisineCatID));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					errorMsgs.put("cuisineCatError","請至少選擇一個類型");
+				}
+			}
+			
+			
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
 				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
@@ -380,87 +467,13 @@ public class EventInfoActionServlet extends HttpServlet {
 				EventInfoService eventInfoSvc = new EventInfoService();
 				eventInfoSvc.addDishAndIngredientByEventInfo(eventName, Integer.parseInt(eventMember), eventDescription,
 						Integer.parseInt(groupType), groupCity, groupAddress, eventRegStart, eventRegEnd, eventStart,
-						eventEnd, 1, null, dishName, ingID);
+						eventEnd, 1, eventPicToByte, dishName, ingID,cuisineCatID);
 				System.out.println("新增成功");
+				RequestDispatcher successView = request.getRequestDispatcher("/Event/EventList.jsp");
+				successView.forward(request, response);
 			}
 		}
-		if ("上一頁".equals(action))
-
-		{
-			EventInfoVO eventInfoVO = new EventInfoVO();
-			String groupType = request.getParameter("choose_type");
-			String eventName = request.getParameter("event_name");
-			String eventMember = request.getParameter("event_member");
-			String eventStart = request.getParameter("event_start");
-			String eventEnd = request.getParameter("event_end");
-			String eventRegStart = request.getParameter("event_reg_start");
-			String eventRegEnd = request.getParameter("event_reg_end");
-			String groupCity = request.getParameter("city");
-			String groupAddress = request.getParameter("address");
-
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
-
-			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
-
-			} else {
-				eventInfoVO.setGroupType(Integer.parseInt(groupType));
-			}
-
-			if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
-
-			} else {
-				eventInfoVO.setEventName(eventName);
-			}
-
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
-
-			} else if (eventMember.equals("0")) {
-
-			} else {
-				eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
-			}
-			if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty()
-					|| eventStart.trim() == "") {
-
-			} else {
-				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
-				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
-			}
-			if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd.trim() == "") {
-
-			} else {
-				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
-				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
-			}
-			if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty()
-					|| eventRegStart.trim() == "") {
-
-			} else {
-				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
-				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
-			}
-			if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty()
-					|| eventRegEnd.trim() == "") {
-
-			} else {
-				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
-				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
-			}
-			if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
-
-			} else {
-				eventInfoVO.setGroupCity(groupCity);
-			}
-
-			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
-			} else {
-				eventInfoVO.setGroupAddress(groupAddress);
-			}
-
-			request.setAttribute("eventInfoVO", eventInfoVO);
-			RequestDispatcher returnView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
-			returnView.forward(request, response);
-		}
+		
 		if ("邀請好友".equals(action)) {
 
 		}
@@ -542,6 +555,8 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
 
+			Part eventPic = request.getPart("eventPic");
+			
 //			String dishAndIngJson = request.getParameter("dishAndIngJson");
 //			System.out.println(request.getParameter("dishAndIngJson"));
 
@@ -631,81 +646,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			notfullView.forward(request, response);
 		}
 
-		if ("上一頁".equals(actionInsert)) {
-			EventInfoVO eventInfoVO = new EventInfoVO();
-			String groupType = request.getParameter("choose_type");
-			String eventName = request.getParameter("event_name");
-			String eventMember = request.getParameter("event_member");
-			String eventStart = request.getParameter("event_start");
-			String eventEnd = request.getParameter("event_end");
-			String eventRegStart = request.getParameter("event_reg_start");
-			String eventRegEnd = request.getParameter("event_reg_end");
-			String groupCity = request.getParameter("city");
-			String groupAddress = request.getParameter("address");
-
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
-
-			} else {
-				eventInfoVO.setGroupType(Integer.parseInt(groupType));
-			}
-
-			if (eventName == null || eventName.trim().length() == 0 || eventName.isEmpty()) {
-
-			} else {
-				eventInfoVO.setEventName(eventName);
-			}
-
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
-
-			} else if (eventMember.equals("0")) {
-
-			} else {
-				eventInfoVO.setEventCurrentCount(Integer.parseInt(eventMember));
-			}
-			if (eventStart == null || eventStart.trim().length() == 0 || eventStart.isEmpty()
-					|| eventStart.trim() == "") {
-
-			} else {
-				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
-				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
-			}
-			if (eventEnd == null || eventEnd.trim().length() == 0 || eventEnd.isEmpty() || eventEnd.trim() == "") {
-
-			} else {
-				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
-				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
-			}
-			if (eventRegStart == null || eventRegStart.trim().length() == 0 || eventRegStart.isEmpty()
-					|| eventRegStart.trim() == "") {
-
-			} else {
-				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
-				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
-			}
-			if (eventRegEnd == null || eventRegEnd.trim().length() == 0 || eventRegEnd.isEmpty()
-					|| eventRegEnd.trim() == "") {
-
-			} else {
-				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
-				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
-			}
-			if (groupCity == null || groupCity.trim().length() == 0 || groupCity.isEmpty()) {
-
-			} else {
-				eventInfoVO.setGroupCity(groupCity);
-			}
-
-			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
-			} else {
-				eventInfoVO.setGroupAddress(groupAddress);
-			}
-
-			request.setAttribute("eventInfoVO", eventInfoVO);
-			RequestDispatcher returnView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
-			returnView.forward(request, response);
-		}
+		
 
 		if ("菜色確認".equals(actionInsert)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -791,21 +732,21 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
-
+			
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 			returnView.forward(request, response);
 		}
-		
-		if("確定參加".equals(action)) {
+
+		if ("確定參加".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			request.setAttribute("errorMsgs", errorMsgs);
-			
+
 			String dishAndIngJson = request.getParameter("dishAndIngJson");
 			System.out.println(dishAndIngJson);
 			Integer[][] ingID = null;
 			String[] dishName = null;
-			if(!dishAndIngJson.equals("")) {
+			if (!dishAndIngJson.equals("")) {
 				try {
 					JSONArray jsonArray = new JSONArray(dishAndIngJson);
 					ingID = new Integer[jsonArray.length()][];
@@ -813,54 +754,56 @@ public class EventInfoActionServlet extends HttpServlet {
 					for (int i = 0; i < jsonArray.length(); i++) {
 						JSONObject jsonObj = jsonArray.getJSONObject(i);
 						Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
-	
+
 						for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
 							tempIngID[j] = jsonObj.getJSONArray("IngID").getInt(j);
 						}
 						dishName[i] = jsonObj.getString("dishName");
 						ingID[i] = tempIngID;
 					}
-	//				System.out.println(Arrays.toString(dishName) + "," + Arrays.deepToString(ingID));
+					// System.out.println(Arrays.toString(dishName) + "," +
+					// Arrays.deepToString(ingID));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			if(dishAndIngJson.length()==2 || dishAndIngJson.equals("")) {
+			if (dishAndIngJson.length() == 2 || dishAndIngJson.equals("")) {
 				errorMsgs.put("dishAndIngredientIsNull", "請新增至少一個菜色");
 			}
 			if (!errorMsgs.isEmpty()) {
 				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 				notfullView.forward(request, response);
-			}else {
+			} else {
 				EventMemberService eventMemberSvc = new EventMemberService();
-				eventMemberSvc.addEventMemberAndDish(Integer.parseInt(request.getParameter("eventID")), Integer.parseInt(request.getParameter("accountID")),2, false, dishName, ingID);
+				eventMemberSvc.addEventMemberAndDish(Integer.parseInt(request.getParameter("eventID")),
+						Integer.parseInt(request.getParameter("accountID")), 2, false, dishName, ingID);
 				RequestDispatcher MenuView = request.getRequestDispatcher("/Event/EventList.jsp");
 				MenuView.forward(request, response);
 			}
 		}
-		//===================================成員菜單================================
-		if("成員菜單".equals(action)) {
+		// ===================================成員菜單================================
+		if ("成員菜單".equals(action)) {
 			RequestDispatcher menuView = request.getRequestDispatcher("/Event/MemberMenu.jsp");
 			menuView.forward(request, response);
 		}
-		
-		if("返回活動詳情".equals(action)) {
+
+		if ("返回活動詳情".equals(action)) {
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
 			returnView.forward(request, response);
 		}
-		
-		if("返回活動列表".equals(action)) {
+
+		if ("返回活動列表".equals(action)) {
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/EventList.jsp");
 			returnView.forward(request, response);
 		}
-		//===================================活動詳情(主辦者)===========================
-		if("活動編輯".equals(action)) {
+		// ===================================活動詳情(主辦者)===========================
+		if ("活動編輯".equals(action)) {
 			RequestDispatcher editView = request.getRequestDispatcher("/Event/EventDetailEdit.jsp");
 			editView.forward(request, response);
 		}
-		
-		if("儲存".equals(action)) {
+
+		if ("儲存".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			request.setAttribute("errorMsgs", errorMsgs);
 			EventInfoVO eventInfoVO = new EventInfoVO();
@@ -948,18 +891,77 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
 			
-			EventInfoService eventInfoSvc = new EventInfoService();
-			eventInfoSvc.updateEventInfo(Integer.parseInt(request.getParameter("eventID")), eventName, Integer.parseInt(eventMember), eventDescription, Integer.parseInt(groupType), groupCity, groupAddress, eventRegStart, eventRegEnd, eventStart, eventEnd, 1,null);
-			RequestDispatcher detailView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
-			detailView.forward(request, response);
+			//===================================編輯活動的圖片處理=============================
+			Part eventPic = request.getPart("eventPic");
+			byte[] eventPicToByte = null;
+			if(eventPic.getSubmittedFileName().length() ==0||eventPic.getContentType() ==null) {
+				System.out.println("使用者沒有上傳活動圖片");
+			}else if(!eventPic.getContentType().startsWith("image")) {
+				errorMsgs.put("eventPicError","上傳必須是image類型");
+			}else if(eventPic.getSize() > 1024*1024*3) {
+				errorMsgs.put("eventPicError","image檔案需要小於3MB");
+			}else {
+				InputStream is = eventPic.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(is);
+				eventPicToByte = new byte[bis.available()];
+				bis.read(eventPicToByte);
+				bis.close();
+				is.close();
+			}		
+			
+			//=======================================類型============================
+			String cuisineCatJson = request.getParameter("cuisineCatJson");
+			Integer[] cuisineCatID = null;
+			if (cuisineCatJson!=null) {
+				try {
+					JSONArray jsonArray = new JSONArray(cuisineCatJson);
+					cuisineCatID = new Integer[jsonArray.length()];
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObj = jsonArray.getJSONObject(i);
+						cuisineCatID[i] = jsonObj.getJSONArray("cuisineCatID").getInt(i);
+						System.out.println(cuisineCatID[i]);
+					}
+//					System.out.println(Arrays.deepToString(cuisineCatID));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					errorMsgs.put("cuisineCatError","請至少選擇一個類型");
+				}
+			}
+
+			
+			
+			if (!errorMsgs.isEmpty()) {
+				request.setAttribute("eventInfoVO", eventInfoVO);
+				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
+				notfullView.forward(request, response);
+			} else {
+				EventInfoService eventInfoSvc = new EventInfoService();
+				eventInfoSvc.updateEventInfo(Integer.parseInt(request.getParameter("eventID")), eventName,
+						Integer.parseInt(eventMember), eventDescription, Integer.parseInt(groupType), groupCity,
+						groupAddress, eventRegStart, eventRegEnd, eventStart, eventEnd, 1, eventPicToByte);
+				
+				RequestDispatcher detailView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
+				detailView.forward(request, response);
+			}
 		}
 		
-		if("退出活動".equals(action)) {
+		if("取消活動".equals(action)) {
+			EventInfoService eventInfoSvc = new EventInfoService();
+			eventInfoSvc.updateEventInfo(Integer.parseInt(request.getParameter("eventID")), 0);
+			System.out.println("取消成功");
+			
+			RequestDispatcher eventListView = request.getRequestDispatcher("/Event/EventList.jsp");
+			eventListView.forward(request, response);
+		}
+
+		if ("退出活動".equals(action)) {
 			EventMemberService eventMemberSvc = new EventMemberService();
-			eventMemberSvc.deleteEventMember(Integer.parseInt(request.getParameter("eventID")), Integer.parseInt(request.getParameter("accountID")));
+			eventMemberSvc.deleteEventMember(Integer.parseInt(request.getParameter("eventID")),
+					Integer.parseInt(request.getParameter("accountID")));
 			DishService dishSvc = new DishService();
-			List<DishVO> dishVOs = dishSvc.getAccountIDAndEventID(Integer.parseInt(request.getParameter("accountID")), Integer.parseInt(request.getParameter("eventID")));
-			for(DishVO dishVO:dishVOs) {
+			List<DishVO> dishVOs = dishSvc.getAccountIDAndEventID(Integer.parseInt(request.getParameter("accountID")),
+					Integer.parseInt(request.getParameter("eventID")));
+			for (DishVO dishVO : dishVOs) {
 				int dishID = dishVO.getDishID();
 				dishSvc.deleteDish(dishID);
 			}

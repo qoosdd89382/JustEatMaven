@@ -1,3 +1,5 @@
+<%@page import="org.json.JSONObject"%>
+<%@page import="org.json.JSONArray"%>
 <%@page import="com.ingredient.model.IngredientVO"%>
 <%@page import="java.util.List"%>
 <%@page import="com.ingredient.model.IngredientService"%>
@@ -14,6 +16,28 @@
 	
 	List<IngredientVO> ingList = (List<IngredientVO>) request.getAttribute("ingredientList"); 
 	String ingredientID = request.getParameter("ingredientID");
+	
+	String dishAndIngJson = request.getParameter("dishAndIngJson");
+	Integer[][] ingID = null;
+	String[] dishName = null;
+	String replaceDishAndIngJson = null;
+	if(!dishAndIngJson.isEmpty()){
+		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
+		
+		System.out.println(dishAndIngJson);
+		JSONArray jsonArray = new JSONArray(dishAndIngJson);
+		ingID = new Integer[jsonArray.length()][];
+		dishName = new String[jsonArray.length()];
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject jsonObj = jsonArray.getJSONObject(i);
+			Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
+			for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
+				tempIngID[j] = jsonObj.getJSONArray("IngID").getInt(j);
+			}
+			dishName[i] = jsonObj.getString("dishName");
+			ingID[i] = tempIngID;
+		}
+	}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,18 +73,20 @@
     </c:forEach>
     </p>
 	<form method="post" action="<%=request.getContextPath()%>/Event/EventInfo.do">
-		<input type="hidden" name="eventID" value="${param.eventID}">
-		<input type="hidden" name="accountID" value="${param.accountID}">
+		<div class="temp_data">
+			<input type="hidden" name="eventID" value="${param.eventID}">
+			<input type="hidden" name="accountID" value="${param.accountID}">
+		</div>
+        <div class="title">
+	    	<h2>新增菜色</h2>
+	    </div>
 	    <main class="insert_content col-11 col-lg-11 row">
 	        <div class="insert_content_left col-6 col-lg-6">
-	            <div class="title">
-	                <h2>新增菜色</h2>
-	            </div>
 	            <div class="title_separate">
 	                菜色名稱
 	                <label>
 	                <input type="text" name="dish_name" value="" placeholder="請輸入菜名" class="dish_name">
-	            </label>
+	            	</label>
 	            </div>
 	            <div class="title_separate">
 	                食材		
@@ -81,11 +107,8 @@
 		        	</div>
 	            </div>
 	            <div class="btn_margin">
-	                <input type="submit" name="actionInsert" value="上一頁">
 	                <input type="button" class="dishInsert" name="" value="菜色新增">
 	                <input type="submit" name="actionInsert" value="菜色確認" class="dishConfirm">
-	            </div>
-	            <div class="temp_data">
 	            </div>
 	        </div>
 	        <div class="insert_content_right col-6 col-lg-6">
@@ -94,6 +117,7 @@
 	                    <tr>
 	                        <th>菜名</th>
 	                        <th>食材</th>
+	                        
 	                    </tr>
 	                </table>
 	            </div>
@@ -175,7 +199,7 @@
 		
 		$(".ingAutoOutput").on("click","svg",function(event){
 			var selectID = $(this).parent("li").attr("data-id");
-			var selectName =$(this).parent().find("div").html();
+			var selectName =$(this).parent("li").find("span").html();
 
 			var tempID = $(".ingAutoInput").val();
 			var newID = tempID.replace(" "+selectID,"");
@@ -260,7 +284,7 @@
 		});
 		console.log(dishAndIngArray);
 		var dishAndIngJson = JSON.stringify(dishAndIngArray);
-		$(".temp_data").append("<input type= hidden name='dishAndIngJson' value='"+dishAndIngJson+"'>");
+		$(".temp_data").append("<input type='hidden' name='dishAndIngJson' value='"+dishAndIngJson+"'>");
 	});
 	
 	

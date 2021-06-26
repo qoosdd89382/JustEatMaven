@@ -1,24 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/Recipe/recipeImport.jsp"%>
 
-<%@ page import="java.util.*"%>
-<%@ page import="com.accountinfo.model.*"%>
-<%@ page import="com.recipe.model.*"%>
-<%@ page import="com.cuisinecategory.model.*"%>
-<%@ page import="com.ingredient.model.*"%>
-<%@ page import="com.unit.model.*"%>
-<%@ page import="com.recipecuisinecategory.model.*"%>
-<%@ page import="com.recipeingredientunit.model.*"%>
-<%@ page import="com.recipestep.model.*"%>
-
-<jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
-<jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
-<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
-<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
-<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
-<!-- 基本上意思和java區塊new、放進Page scope是一樣的 -->
 <%
 	List<RecipeVO> list = recipeSvc.getAll();
 	pageContext.setAttribute("list", list);
@@ -36,10 +19,19 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vendors/slick/slick.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vendors/slick/slick-theme.css" />
+<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/listAllRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
+<style>
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+</style>
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
 	
 </head>
@@ -51,8 +43,14 @@
 	
 	<%-- include navbar --%>
 	
+	
 	<%-- main --%>
     <main class="row col-12 col-md-10 justify-content-between" style="margin: 0 auto;">
+	
+	<%-- include searchbar --%>
+	<div class="searchbar col-12">
+		<%@ include file="/Recipe/recipeSearchbar.page"%>
+	</div>
     
 		<div class="content col-xl-9 col-12">
 			<%-- breadcrumbs --%>
@@ -140,10 +138,16 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js"></script> --%>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/vendors/slick/slick.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
 	<script>
+
+	$(function(){
+		
+		<%@ include file="/Recipe/searchAutoComplIng.file"%>
+	});
 	
 	</script>
 </body>

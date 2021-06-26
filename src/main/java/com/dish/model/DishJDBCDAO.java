@@ -442,6 +442,7 @@ public class DishJDBCDAO implements DishDAOinterface {
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			if(con !=null) {
 				try {
 					con.rollback();
@@ -497,7 +498,7 @@ public class DishJDBCDAO implements DishDAOinterface {
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-
+			e.printStackTrace();
 			if(con!=null) {
 				try {
 					con.rollback();
@@ -552,6 +553,7 @@ public class DishJDBCDAO implements DishDAOinterface {
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			if(con !=null) {
 				try {
 					con.rollback();

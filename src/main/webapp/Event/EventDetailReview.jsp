@@ -64,7 +64,7 @@
 	            </div>
 	            <div>
 	                類型:
-	                <span class="eat_style border"></span>
+	                <span class="cuisineCat border"></span>
 	            </div>
 	            <div>
 	                菜色:
@@ -72,7 +72,7 @@
 	            </div>
 	            <div>
 	                <input type="submit" name="action" value="成員菜單">
-	                <input type="submit" name="action" value="成員列表">
+	                <input type="button" name="action" value="成員列表" class="memberList">
 	            </div>
 	            <div>	            	
 	            	<c:choose>
@@ -130,7 +130,7 @@
 				$(".current_people").html(data.eventMember);
 				$(".event_start").html(startTime);
 				$(".event_end").html(endTime);
-				$(".eat_style").html("");
+				$(".cuisineCat").html(data.cuisineCatName);
 				$(".dish_name").html(data.dishName);
 				$(".address").html(data.city+data.address);
 				$(".event_description_content").val(data.eventDescription);
@@ -139,6 +139,10 @@
 		
 		$(".return").on("click",function(){
 			location.href = "<%=request.getContextPath()%>/Event/EventList.jsp";
+		});
+		
+		$(".memberList").on("click",function(){
+			location.href = "<%=request.getContextPath()%>/Event/EventMember.jsp?eventID<%=request.getParameter("eventID")%>&accountID=<%=request.getParameter("accountID")%>";
 		});
 	});
 	

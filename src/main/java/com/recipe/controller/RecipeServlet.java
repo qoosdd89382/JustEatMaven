@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.cuisinecategory.model.CuisineCategoryService;
@@ -39,57 +40,112 @@ public class RecipeServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
-//		res.setContentType("text/html; charset=UTF-8");		// for ajax，但輸出的參數是數字，其實可以不用設...
-		
-//		/**********************刪除食譜步驟**********************/
-//		String delOrder = req.getParameter("delOrder");
-//		String recipeIDforUpdate = req.getParameter("update");
-//		Map<Integer, byte[]> recipeStepPicBuffers = null;
-//		if (delOrder != null) {
-//			System.out.println(delOrder);
-//			System.out.println(recipeIDforUpdate);
-//			if (recipeIDforUpdate != null) {
-//				RecipeStepService recipeStepSvc = new RecipeStepService();
-//				List<RecipeStepVO> orgRecipeStepVOs = recipeStepSvc.getAllByRecipe(new Integer(recipeIDforUpdate));
-//				Map<Integer, byte[]> orgRecipeStepPicBuffers = new LinkedHashMap<Integer, byte[]>();
-//				for (RecipeStepVO orgRecipeStepVO : orgRecipeStepVOs) {
-//					orgRecipeStepPicBuffers.put(new Integer(orgRecipeStepVO.getRecipeStepOrder()-1), orgRecipeStepVO.getRecipeStepPic());
-//				}
-//				recipeStepPicBuffers = orgRecipeStepPicBuffers;
-//				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
-//			}
-//			if(req.getSession().getAttribute("recipeStepPicBuffers") != null) {
-//				recipeStepPicBuffers = (Map<Integer, byte[]>) req.getSession().getAttribute("recipeStepPicBuffers");
-//				Map<Integer, byte[]> deepCopy = new LinkedHashMap<Integer, byte[]>(recipeStepPicBuffers);
-//				System.out.println(recipeStepPicBuffers.size());
-//				System.out.println(delOrder);
-//				System.out.println(Integer.parseInt(delOrder) == recipeStepPicBuffers.size());
-//				if(Integer.parseInt(delOrder) == recipeStepPicBuffers.size()) {
-//					recipeStepPicBuffers.remove(Integer.parseInt(delOrder)-1);
-//					System.out.println("recipeStepPicBuffers:" + recipeStepPicBuffers.toString());
-//				} else {
-//					for (Integer key : recipeStepPicBuffers.keySet()) {
-//						byte[] temp = recipeStepPicBuffers.get(key+1);
-//						System.out.println(key);
-//						if(key.equals(recipeStepPicBuffers.size() - 1)) {
-//							System.out.println("last deepCopy original value=" + deepCopy.get(key));
-//							deepCopy.remove(key);
-//							System.out.println("last one(order:" + key + ")has been deleted");
-//						} else if (key >= Integer.parseInt(delOrder) - 1) {
-//							deepCopy.put(key, temp);
-//							System.out.println("deepCopy new value=" + deepCopy.get(key));
-//						}  
-//					}
-//					System.out.println("deepCopy:" + deepCopy.toString());
-//					req.getSession().setAttribute("recipeStepPicBuffers", deepCopy);
-//				}
-//				PrintWriter out = res.getWriter();
-//		        out.write(delOrder);
-//			}
-//		}
-		
-		String action = req.getParameter("action");
 
+		String action = req.getParameter("action");
+		
+		if ("search".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+//			try {
+				
+				if ((req.getParameter("recipeName") == null || req.getParameter("recipeName").trim().length() == 0)
+						&& (req.getParameter("ingredientIDs") == null || req.getParameter("ingredientIDs").trim().length() == 0)) {
+					errorMsgs.put("UnknowErr", "請輸入搜尋關鍵字或食材標籤");
+					RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+					failureView.forward(req, res);
+					return;
+				}
+				
+				String recipeNameStr = req.getParameter("recipeName");
+				String[] recipeName = null;
+				if (recipeNameStr != null && recipeNameStr.trim().length() != 0) {
+					recipeName = recipeNameStr.trim().split(" ");
+				} 
+				
+				Set<String> ingredientIDSet = new HashSet<String>();
+				String recipeIngredientStr = req.getParameter("ingredientIDs");
+				String[] recipeIngredientIDs = null;
+				if (recipeIngredientStr != null && recipeIngredientStr.trim().length() != 0) {
+					recipeIngredientIDs = recipeIngredientStr.trim().split(" ");
+					for (String recipeIngredientID : recipeIngredientIDs) {
+						ingredientIDSet.add(recipeIngredientID);
+					}
+				}
+
+//				Set<String> ingredientNameSet = new HashSet<String>();
+//				String recipeIngredientStr = req.getParameter("ingredientNames");
+//				String[] recipeIngredientNames = null;
+//				if (recipeIngredientStr != null) {
+//					recipeIngredientNames = recipeIngredientStr.trim().split(" ");
+//					for (String recipeIngredientName : recipeIngredientNames) {
+//						ingredientNameSet.add(recipeIngredientName);
+//					}
+//				}
+
+//				// Send the use back to the form, if there were errors ==========================
+//				if (!errorMsgs.isEmpty()) {
+//					RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+//					failureView.forward(req, res);
+//					return;
+//				}
+
+				// All parameters are correct, so we can send them to db ==========================
+				Map<String, String[]> searchMap = new HashMap<String, String[]>();
+				searchMap.put("recipe_name", recipeName);
+				
+				RecipeService recipeSvc = new RecipeService();
+				RecipeIngredientUnitService recipeIngSvc = new RecipeIngredientUnitService();
+				
+				List<RecipeVO> nameSearchResults = null;
+				List<RecipeVO> searchResults = null;
+				if (recipeName != null) {
+					nameSearchResults = recipeSvc.getAll(searchMap);
+					if (recipeIngredientIDs != null) {
+						searchResults = new ArrayList<RecipeVO>();
+						for (int i = 0; i < nameSearchResults.size(); i++) {
+							List<RecipeIngredientUnitVO> list
+								= recipeIngSvc.getAllByRecipe(nameSearchResults.get(i).getRecipeID());
+							int equalCount = 0;
+							for (int j = 0; j < list.size(); j++) {
+								int ingID = list.get(j).getIngredientID();
+								for (String one : recipeIngredientIDs) {
+									if (new Integer(one) == ingID) {
+										equalCount++;
+									}
+								}
+							}
+							if (equalCount > 0)
+								searchResults.add(recipeSvc.getOneRecipe(list.get(i).getRecipeID()));
+						}
+					} else {
+						searchResults = nameSearchResults;
+					}
+				} else {
+					if (recipeIngredientIDs != null) {
+						searchResults = new ArrayList<RecipeVO>();
+						for (int j = 0; j < recipeIngredientIDs.length; j++) {
+							List<RecipeIngredientUnitVO> list
+								= recipeIngSvc.getAllByIngredient(new Integer(recipeIngredientIDs[j]));
+							for(RecipeIngredientUnitVO one : list) {
+								searchResults.add(recipeSvc.getOneRecipe(one.getRecipeID()));
+							}
+						}
+					}
+				}
+				
+				
+				req.setAttribute("list", searchResults); //  複合查詢, 資料庫取出的list物件,存入request
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/searchResult.jsp");
+				successView.forward(req, res);
+				
+//			} catch (Exception e) {
+//				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+//				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/addRecipe.jsp");
+//				failureView.forward(req, res);
+//			}
+		}
+			
 		/**********************新增食譜**********************/
 		if ("insert".equals(action)) { // 來自addRecipe.jsp的請求
 			Map<String, String> errorMsgs = new HashMap<String, String>();
