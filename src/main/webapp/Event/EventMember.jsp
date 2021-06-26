@@ -87,7 +87,7 @@
 	</table>
 	  <div class="btn_margin" align="right"  >
 	  
-	         <a href="<%= request.getContextPath()%>/Event/EventDetailEdit.jsp?eventID=${eventID}">返回活動詳情</a>   
+	         <a href="<%= request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventID}">返回活動詳情</a>   
 	  </div>
 			
 	<footer>

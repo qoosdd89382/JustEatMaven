@@ -1,48 +1,31 @@
 package com.evaluatedmember.controller;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.DateFormatter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.evaluatedmember.model.EvaluatedMemberService;
 
-import com.accountinfo.model.AccountInfoService;
-import com.dish.model.DishService;
-import com.dish.model.DishVO;
-import com.dishandingredient.model.DishAndIngredientVO;
-import com.dishandingredient.model.DishandingredientService;
-import com.eventinfo.model.EventInfoService;
-import com.eventinfo.model.EventInfoVO;
-import com.eventmember.model.EventMemberService;
-import com.eventmember.model.EventMemberVO;
-import com.ingredient.model.IngredientService;
-import com.ingredient.model.IngredientVO;
 
+@WebServlet("/EvaluatedMemberServlet")
 public class EvaluatedMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+  
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		doPost(req, res);
+	}
 
-	public EvaluatedMemberServlet() {
-		String action = String.getParameter("action");
+	
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		String action = req.getParameter("action");
+		
 		if ("giveScore".equals(action)) {	
 
 			int eventID = new Integer(req.getParameter("eventID"));
@@ -51,11 +34,14 @@ public class EvaluatedMemberServlet extends HttpServlet {
 			int giverScore = new Integer(req.getParameter("score"));
 			
 			EvaluatedMemberService evMemberSvc = new EvaluatedMemberService();
-			evMemberSvc.addEvaluatedMember(giverID, accepterID, giverScore);
+			evMemberSvc.addEvaluatedMember(giverID, accepterID, giverScore, giverScore);
 			
 			RequestDispatcher successView = req.getRequestDispatcher("/Event/EventMember.jsp?eventID=" + eventID);
-			successView.foward(req, res);
+			successView.forward(req, res);
+		
+		
+		
+			}
+
 		}
-
-
-	
+	}

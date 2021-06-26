@@ -72,7 +72,7 @@
 	<c:forEach var="eventMemberVO" items="${eventMemberList}">
 		<tr>
 			<td>${eventMemberVO.eventID}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</td>
+			<td> <a href="<%= request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventMemberVO.eventID}&accountID=100001">${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</a> </td>
 			<td>${accountSvc.selectOneAccountInfo(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountNickname}</td>
 <%-- 			<td>${accountSvc.getOneAccount(eventMemberSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td> --%>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>

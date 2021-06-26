@@ -68,15 +68,23 @@
 				</td> 
 				<td>${eventMemberSvc.getAvgScoreByAccountID(evaluatedmemberVO.accepterAccountID)}</td> 
 				<td>${evaluatedmemberVO.giveScore}</td> 
-				<td>			
+				<td>
+				 <div class="star_block">
+					<span class="star" data-star="1"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="2"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="3"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="4"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="5"><i class="fas fa-star"></i></span>	
+					
+				</div>	
 					<form action="<%= request.getContextPath() %>/Event/evaluatedmember.do"method="post">
-					<input type="hidden" name="eventID" value="${eventID}">
-					<input type="hidden" name="giverID" value="${account}">
-					<input type="hidden" name="accepterID" value="${accountVO.accountID}">
-					<input type="hidden" name="score" value="1">
-					<input type="hidden" name="action" value="giveScore">
-					<button type="submit">送出評分</button>
-		
+						<input type="hidden" name="eventID" value="${eventMemberVO.eventID}">
+						<input type="hidden" name="giverID" value="${account}">
+						<input type="hidden" name="accepterID" value="${accountinfoVO.accountID}">
+						<input type="hidden" name="score" value="0">
+						<input type="hidden" name="action" value="giveScore">
+						<button type="submit">送出評分</button>
+				
 					</form>
 				</td>
 			</tr> 
@@ -97,42 +105,22 @@
 	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
 	<script src="<%=request.getContextPath()%>/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script>
-	  <script>
-      window.onload=function(){  //載入視窗時就呼叫該方法
-          var imgs=document.getElementsByTagName("img");
-          for(var i=0;i<imgs.length;i++){
-              imgs[i].setAttribute("score",i+1);//設定分數
-              imgs[i].onclick=function(){   //點選時呼叫方法
-
-
-                  var srcEl=event.srcElement;//通過event來獲取原元素
-
-
-                  var score=srcEl.getAttribute("score");//獲取分數
-                  for(var j=0;j<score;j++){
-                      imgs[j].src="img/Star.png";
-                  }
-                  for(var j=score;j<imgs.length;j++){
-                      imgs[j].src="img/StarCopy.png";
-                  }
-                  document.getElementById("lab").innerHTML=srcEl.getAttribute("score");//通過srcEl呼叫getAttribute方法獲取分數
-              }
-          }
-      }
-  </script>
-	
-	<body>
-		    <img src="img/StarCopy.png">
-		    <img src="img/StarCopy.png">
-		    <img src="img/StarCopy.png">
-		    <img src="img/StarCopy.png">
-		    <img src="img/StarCopy.png">
-		    <label id="lab">0</label>分
-	</body>
+			    $(function(){
+			        $("div.star_block").on("click", "span.star", function () {
+			            var star_count = $(this).attr("data-star");
+			            $(this).addClass("-on");
+			            $(this).prevAll().addClass("-on");
+			            $(this).nextAll().removeClass("-on");
+			            $(this).closest("li").attr("data-star", star_count);
+			            $(this).parent().next().find('input[name="starCount"]').val(star_count);
+			        });
+			    });
+    </script>
 	
 	
-
 	<script>
 
 		$("[name=position]").on("change",function(){
