@@ -15,8 +15,8 @@ public class FriendshipService {
 		return dao.getAccountFriendship(accountID);
 	}
 
-	public List<AccountInfoVO> getAccountFriendByAccountMail(String account_mail) {
-		return dao.getAccountFriendByAccountMail(account_mail);
+	public List<AccountInfoVO> getAccountFriendByAccountID(Integer accountID) {
+		return dao.getAccountFriendByAccountID(accountID);
 	}
 	
 }

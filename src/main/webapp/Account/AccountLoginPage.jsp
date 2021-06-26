@@ -1,9 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+<%@ page import="com.accountinfo.model.*"%>
 <%
+//登入後產生存在session中的accountInfoVOLogin
+AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
+//取得傳回的使用者輸入參數
 String accountMail = request.getParameter("accountMail");
 String accountPassword = request.getParameter("accountPassword");
-
 %>
 
 <!DOCTYPE html>
@@ -22,7 +27,7 @@ String accountPassword = request.getParameter("accountPassword");
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>AccountLoginPage</title>
+<title>揪食-會員登入</title>
 </head>
 
 <style>
@@ -85,6 +90,7 @@ input#account_register_info {
 		
 		<div id="main_area"class="row">
 			<div id="intro_area" class="col col-sm-8">
+			
 				<img src="images/loginTest.jpg" width="730" height="435" border="0">
 
 			</div>
@@ -118,13 +124,13 @@ input#account_register_info {
 						<input id="account_reset_btn" type="reset" value="重置">
 					</form>
 				
-<!-- 					<form method="post" action="accountInfo.do"> -->
-<!-- 						<input type="hidden" name="action" value="getAccountInfo_For_Login"> -->
-<!-- 						<input id="account_forget_code" type="submit" value="忘記密碼了嗎?"> -->
-<!-- 						<p>連結到寄送信箱頁面(還沒做)</p> -->
-<!-- 					</form> -->
+					<form method="post" action="accountInfo.do">
+						<input type="hidden" name="action" value="getAccountInfoForForget">
+						<input id="account_forget_code" type="submit" value="忘記密碼了嗎?">
+
+					</form>
 				
-				<h3><a id="account_forget_code" href='#'>忘記密碼了嗎?(X)</a></h3>
+<!-- 				<h3><a id="account_forget_code" href='#'>忘記密碼了嗎?(X)</a></h3> -->
 				
 <!-- 					<form method="post" action="accountInfo.do"> -->
 <!-- 						<input type="hidden" name="action" value="gotoAccountInfo_For_Register"> -->
@@ -132,15 +138,15 @@ input#account_register_info {
 <!-- 						<p>連結到註冊會員資料頁面(施工中)</p> -->
 <!-- 					</form> -->
 				
-				<h3><a id="account_register_info" href='AccountRegisterPage.jsp'>還不是會員?</a></h3>
+				<h3><a id="account_register_info" href='<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp'>還不是會員?</a></h3>
 				
-				<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 					
 			</div>
 		</div>
 	</div>
 	
 	<p>備忘區</p>
+				<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 	<p>借我標記一下session(EL)=>${accountMail}</p>
 	<p>記得改type password</p>
 	<p>重新整理帶入資料</p>

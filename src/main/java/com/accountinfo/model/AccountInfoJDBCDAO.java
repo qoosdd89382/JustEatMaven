@@ -54,43 +54,45 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	
 	private static final String Select_Account_Mail = "Select * From JustEat.AccountInfo Where account_mail=?";
 	private static final String Select_Account_ID_By_AccountMail = "Select account_id From JustEat.AccountInfo Where account_mail=?";
+	private static final String Select_Account_Nickname = "Select * From JustEat.AccountInfo Where account_nickname=?";
 	private static final String Select_Account_Password_By_AccoutMail = "Select account_password From JustEat.AccountInfo Where account_mail=?";
+	private static final String select_Account_Code_By_AccountMail = "Select account_code From JustEat.AccountInfo Where account_mail=?";
+	
 	//會員修改資料用
 	private static final String Update_Account_Info_From_Change = "Update JustEat.AccountInfo set "
-			+ "account_mail=?,account_nickname=?,account_password=?,"
+			+ "account_password=?,"
 			+ "account_name=?,account_gender=?,account_birth=?,account_phone=?,"
-			+ "account_pic=?,account_idcard_front=?,account_idcard_back=?,"
+			+ "account_pic=?,"
 			+ "account_text=?"
 			+ "Where account_id=?";
 	
 	//註冊用
-		//註冊第一層級會員
-	private static final String Insert_LevelOne_Account_From_Register = "Insert into AccountInfo "
-			+ "(account_mail,account_nickname,account_password,account_name,"
-			+ "account_gender,account_birth,account_text,"
-			+ "account_register_time) Values(?,?,?,?,?,?,?,?,NOW())";
+	//註冊空白會員
+	private static final String Insert_Blank_Account_From_Register = "Insert into AccountInfo "
+			+ "(account_mail,account_nickname,account_password,account_state,account_level,"
+			+ "account_name,account_gender,account_birth,account_phone,account_pic,"
+			+ "account_idcard_front,account_idcard_back,account_text,account_register_time,account_code)"
+			+ "Values(?,?,?,?,?,?,?,?,?,?,"
+			+ "?,?,?,NOW(),?)";
 	
+	//註冊第一層級會員
+	private static final String Update_LevelOne_Account_From_Register = "Update JustEat.AccountInfo set "
+			+ "account_password=?,account_state=?,account_level=?,"
+			+ "account_name=?,account_gender=?,account_birth=?,"
+			+ "account_text=? "
+			+ "Where account_id=?";
+	//暫時沒用到
 	private static final String Insert_LevelTwo_Account_From_Register = "Insert into AccountInfo "
 			+ "(account_mail,account_nickname,account_password,account_name,"
-			+ "account_gender,account_birth,account_phone,"
+			+ "account_gender,account_birth,"
 			+ "account_text,"
 			+ "account_register_time) Values(?,?,?,?,?,?,?,?,?,NOW())";
+	//註冊第三層級會員
+	private static final String Update_LevelThree_Account_From_Register = "Update JustEat.AccountInfo set "
+			+ "account_phone=?,account_level=?,"
+			+ "account_pic=?,account_idcard_front=?,account_idcard_back=?"
+			+ "Where account_id=?";
 	
-	private static final String Insert_LevelThree_Account_From_Register = "Insert into AccountInfo "
-			+ "(account_mail,account_nickname,account_password,account_name,"
-			+ "account_gender,account_birth,account_phone,"
-			+ "account_pic,"
-			+ "account_idcard_front,"
-			+ "account_idcard_back,"
-			+ "account_text,"
-			+ "account_register_time) Values(?,?,?,?,?,?,?,?,?,?,?,NOW())";
-	
-	
-	
-	
-		//判斷有無使用者使用信箱跟暱稱
-//	private static final String Select_Account_Mail_Boolean =
-//	private static final String Select_Account_Nickname_Boolean =
 
 //建立連線池=====
 	static {
@@ -102,7 +104,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 //建立連線池=====	
 	
-//指令詳細區=====
+//指令詳細區==============================================================================
 //後臺用 insert 
 	@Override
 	public void insert(AccountInfoVO accountInfoVO) {
@@ -514,6 +516,107 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 	@Override
+	//輸入 暱稱值 回傳 含信箱的 VO物件 = 檢查資料庫有沒有這個暱稱
+	public AccountInfoVO getAccountNickname(String accountNickname) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO accountInfoVO = null;
+
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Account_Nickname);
+
+			pstmt.setString(1, accountNickname);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				accountInfoVO = new AccountInfoVO();
+				
+				accountInfoVO.setAccountMail(rs.getString("account_nickname"));
+			}
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return accountInfoVO;
+	}
+	
+	@Override
+	//輸入 暱稱值 回傳 含信箱的 VO物件 = 檢查資料庫有沒有這個暱稱
+	public AccountInfoVO getAccountCodeByAccountMail(String accountMail) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO accountInfoVO = null;
+
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(select_Account_Code_By_AccountMail);
+
+			pstmt.setString(1, accountMail);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				accountInfoVO = new AccountInfoVO();
+				
+				accountInfoVO.setAccountMail(rs.getString("account_code"));
+			}
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return accountInfoVO;
+	}
+	
+	
+	@Override
 	//輸入 信箱值 回傳 含 ID 的 VO物件
 	public AccountInfoVO getAccountIDByAccountMail(String accountMail) {
 		Connection con = null;
@@ -610,20 +713,9 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 		return accountInfoVO;
 	}
-//review
 	
-	
-	
-//會員修改資料用
-	public void updateAccountInfoFromChange(
-			String accountMail,String accountNickname,String accountPassword,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-			byte[] accountPic,
-			byte[] accountIDcardFront,
-			byte[] accountIDcardBack,
-			String accountText,
-			Integer accountID
-			) {
+//會員修改資料用 review06261700
+	public void updateAccountInfoFromChange(AccountInfoVO accountInfoVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		
@@ -631,27 +723,23 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			con = DriverManager.getConnection(url, userid, password);
 			pstmt = con.prepareStatement(Update_Account_Info_From_Change);
 			
-			pstmt.setString(1,accountMail);
-			pstmt.setString(2,accountNickname);
-			pstmt.setString(3,accountPassword);
-			pstmt.setString(4,accountName);
-			pstmt.setInt(5,accountGender);
-			pstmt.setDate(6,(java.sql.Date)accountBirth);
-			pstmt.setString(7,accountPhone);
-			pstmt.setBytes(8,accountPic);
-			pstmt.setBytes(9,accountIDcardFront);
-			pstmt.setBytes(10,accountIDcardBack);
+			pstmt.setString(1,accountInfoVO.getAccountPassword());
+			pstmt.setString(2,accountInfoVO.getAccountName());
+			pstmt.setInt(3,accountInfoVO.getAccountGender());
+			pstmt.setDate(4,(java.sql.Date)accountInfoVO.getAccountBirth());
+			pstmt.setString(5,accountInfoVO.getAccountPhone());
+			pstmt.setBytes(6,accountInfoVO.getAccountPic());
+			pstmt.setString(7,accountInfoVO.getAccountText());
 
-			pstmt.setString(11,accountText);
-
-			pstmt.setInt(12,accountID);
+			pstmt.setInt(8,accountInfoVO.getAccountID());
 			
 			pstmt.executeUpdate();
 			
-			System.out.println("AccountInfo update completed!");
+			System.out.println("updateAccountInfoFromChange completed!");
 			
-		}catch(Exception e){
-			e.printStackTrace();	
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if (pstmt != null) {
 				try {
@@ -672,55 +760,48 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 //註冊用
+	//收到信箱 暱稱驗證碼存到資料庫
 	@Override
-	public void setLevelOneAccountInfoFromRegister(
-			String accountMail,String accountNickname,String accountPassword,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-			String accountText
-			) {
+	public void setBlankAccountInfoFromRegister(AccountInfoVO accountInfoVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String[] autoGeneratedCol = {"account_id"};
-		AccountInfoVO accountInfoVO = null;
-		
+
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Insert_LevelOne_Account_From_Register, autoGeneratedCol);
+			pstmt = con.prepareStatement(Insert_Blank_Account_From_Register, autoGeneratedCol);
+
+			pstmt.setString(1,accountInfoVO.getAccountMail());//傳入
+			pstmt.setString(2,accountInfoVO.getAccountNickname());//傳入
+			pstmt.setString(3,new String("1234"));//預設密碼
+			pstmt.setBoolean(4,false);
+			pstmt.setInt(5,0);//會員層級零
 			
-			pstmt.setString(1,accountMail);
-			pstmt.setString(2,accountNickname);
-			pstmt.setString(3,accountPassword);
-
-			pstmt.setString(4,accountName);
-			pstmt.setInt(5,accountGender);
-			pstmt.setDate(6,(java.sql.Date) accountBirth);
-
-			pstmt.setString(7,accountText);
+			pstmt.setString(6,"使用者姓名");
+			pstmt.setInt(7,new Integer(1));//性別預設男
+			pstmt.setDate(8,java.sql.Date.valueOf("2000-01-01"));
+			pstmt.setString(9,null);
+			pstmt.setBytes(10,null);
+			
+			pstmt.setBytes(11,null);
+			pstmt.setBytes(12,null);
+			pstmt.setString(13,null);
+			
+			pstmt.setString(14,accountInfoVO.getAccountCode());
 			
 			pstmt.executeUpdate();
 			
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next()) {
 				Integer autoGeneratedkey = rs.getInt(1);
-				
-//				accountInfoVO.setAccountMail(rs.getString("account_mail"));
-//				accountInfoVO.setAccountNickname(rs.getString("account_nickname"));
-//				accountInfoVO.setAccountPassword(rs.getString("account_password"));
-//
-//				accountInfoVO.setAccountName(rs.getString("account_name"));
-//				accountInfoVO.setAccountGender(rs.getInt("account_gender"));
-//				accountInfoVO.setAccountBirth(rs.getDate("account_birth"));
-//				accountInfoVO.setAccountPhone(rs.getString("account_phone"));
-//				
-//				accountInfoVO.setAccountText(rs.getString("account_text"));
-
-				System.out.println("AccountInfo Register completed!account_id="+autoGeneratedkey);
+				System.out.println("AccountInfo Register LevelOne completed!account_id="+autoGeneratedkey);
 			}else {
-				System.out.println("AccountInfo Register failed!");
+				System.out.println("AccountInfo Register LevelOne failed!");
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
 			if(rs != null) {
 				try {
@@ -746,64 +827,37 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 	}
 	
+	//一般會員註冊，從前台傳入檢查過之資料並設定該會員的基本數值
+	//review0625OK
 	@Override
-	public void setLevelTwoAccountInfoFromRegister(
-			String accountMail,String accountNickname,String accountPassword,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-			String accountText
-			) {
+	public void setLevelOneAccountInfoFromRegister(AccountInfoVO accountInfoVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String[] autoGeneratedCol = {"account_id"};
-		AccountInfoVO accountInfoVO = null;
 		
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Insert_LevelTwo_Account_From_Register, autoGeneratedCol);
+			pstmt = con.prepareStatement(Update_LevelOne_Account_From_Register);
+
+			pstmt.setString(1,accountInfoVO.getAccountPassword());//傳入
+			pstmt.setBoolean(2,true);
+			pstmt.setInt(3,new Integer(1));
 			
-			pstmt.setString(1,accountMail);
-			pstmt.setString(2,accountNickname);
-			pstmt.setString(3,accountPassword);
+			pstmt.setString(4,accountInfoVO.getAccountName());//傳入
+			pstmt.setInt(5,accountInfoVO.getAccountGender());//傳入
+			pstmt.setDate(6,accountInfoVO.getAccountBirth());//傳入
 
-			pstmt.setString(4,accountName);
-			pstmt.setInt(5,accountGender);
-			pstmt.setDate(6,(java.sql.Date) accountBirth);
-			pstmt.setString(7,accountPhone);
-
-			pstmt.setString(8,accountText);
+			pstmt.setString(7,accountInfoVO.getAccountText());//傳入
+			
+			pstmt.setInt(8, accountInfoVO.getAccountID());
 			
 			pstmt.executeUpdate();
 			
-			rs = pstmt.getGeneratedKeys();
-			if (rs.next()) {
-				Integer autoGeneratedkey = rs.getInt(1);
-				
-//				accountInfoVO.setAccountMail(rs.getString("account_mail"));
-//				accountInfoVO.setAccountNickname(rs.getString("account_nickname"));
-//				accountInfoVO.setAccountPassword(rs.getString("account_password"));
-//
-//				accountInfoVO.setAccountName(rs.getString("account_name"));
-//				accountInfoVO.setAccountGender(rs.getInt("account_gender"));
-//				accountInfoVO.setAccountBirth(rs.getDate("account_birth"));
-//				accountInfoVO.setAccountPhone(rs.getString("account_phone"));
-//				
-//				accountInfoVO.setAccountText(rs.getString("account_text"));
+			System.out.println("setLevelOneAccountInfoFromRegister completed!");
 
-				System.out.println("AccountInfo Register completed!account_id="+autoGeneratedkey);
-			}else {
-				System.out.println("AccountInfo Register failed!");
-			}
-		}catch(Exception e){
-			e.printStackTrace();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
 		}finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				}catch(Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
@@ -821,72 +875,39 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 	}
 	
+	@Override
+	public void setLevelTwoAccountInfoFromRegister(String accountMail, String accountNickname, String accountPassword,
+			String accountName, Integer accountGender, Date accountBirth, String accountPhone, String accountText) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	
 	@Override
-	public void setLevelThreeAccountInfoFromRegister(
-			String accountMail,String accountNickname,String accountPassword,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-			byte[] accountPic,
-			byte[] accountIDcardFront,
-			byte[] accountIDcardBack,
-			String accountText
-			) {
+	public void setLevelThreeAccountInfoFromRegister(AccountInfoVO accountInfoVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String[] autoGeneratedCol = {"account_id"};
-		AccountInfoVO accountInfoVO = null;
 		
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Insert_LevelThree_Account_From_Register, autoGeneratedCol);
+			pstmt = con.prepareStatement(Update_LevelThree_Account_From_Register);
 			
-			pstmt.setString(1,accountMail);
-			pstmt.setString(2,accountNickname);
-			pstmt.setString(3,accountPassword);
-
-			pstmt.setString(4,accountName);
-			pstmt.setInt(5,accountGender);
-			pstmt.setDate(6,(java.sql.Date) accountBirth);
-			pstmt.setString(7,accountPhone);
+			pstmt.setString(1,accountInfoVO.getAccountPhone());
+			pstmt.setInt(2,new Integer(3));
 			
-			pstmt.setBytes(8, accountPic);
-			pstmt.setBytes(9, accountIDcardFront);
-			pstmt.setBytes(10, accountIDcardBack);
+			pstmt.setBytes(3, accountInfoVO.getAccountPic());
+			pstmt.setBytes(4, accountInfoVO.getAccountIDcardFront());
+			pstmt.setBytes(5, accountInfoVO.getAccountIDcardBack());
 
-			pstmt.setString(11,accountText);
+			pstmt.setInt(6,accountInfoVO.getAccountID());
 			
 			pstmt.executeUpdate();
-			
-			rs = pstmt.getGeneratedKeys();
-			if (rs.next()) {
-				Integer autoGeneratedkey = rs.getInt(1);
-				
-//				accountInfoVO.setAccountMail(rs.getString("account_mail"));
-//				accountInfoVO.setAccountNickname(rs.getString("account_nickname"));
-//				accountInfoVO.setAccountPassword(rs.getString("account_password"));
-//
-//				accountInfoVO.setAccountName(rs.getString("account_name"));
-//				accountInfoVO.setAccountGender(rs.getInt("account_gender"));
-//				accountInfoVO.setAccountBirth(rs.getDate("account_birth"));
-//				accountInfoVO.setAccountPhone(rs.getString("account_phone"));
-//				
-//				accountInfoVO.setAccountText(rs.getString("account_text"));
 
-				System.out.println("AccountInfo Register completed!account_id="+autoGeneratedkey);
-			}else {
-				System.out.println("AccountInfo Register failed!");
-			}
+			System.out.println("setLevelThreeAccountInfoFromRegister completed!");
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				}catch(Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();

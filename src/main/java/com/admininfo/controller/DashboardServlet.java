@@ -184,9 +184,9 @@ public class DashboardServlet extends HttpServlet {
 				req.setAttribute("accountText",accountTextInput);
 				//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
 				AccountInfoService accountInfoSvc = new AccountInfoService();
-				accountInfoSvc.setLevelOneAccountInfoFromRegister(
-						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
-						accountText);
+//				accountInfoSvc.setLevelOneAccountInfoFromRegister(
+//						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
+//						accountText);
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Account/AccountLoginPage.jsp";
