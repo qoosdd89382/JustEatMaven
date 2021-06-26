@@ -1,3 +1,7 @@
+<%@page import="org.json.JSONObject"%>
+<%@page import="org.json.JSONArray"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.io.BufferedInputStream"%>
 <%@page import="com.ingredient.model.IngredientVO"%>
 <%@page import="java.util.List"%>
 <%@page import="com.ingredient.model.IngredientService"%>
@@ -8,12 +12,37 @@
 
 <%
 	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
-	IngredientService IngSvc = new IngredientService();
-	List<IngredientVO> list= IngSvc.getAll();
+	IngredientService ingSvc = new IngredientService();
+	List<IngredientVO> list= ingSvc.getAll();
 	request.setAttribute("AllIngredientVO", list);
+// 	Part eventPic = request.getPart("eventPic");
 	
 	List<IngredientVO> ingList = (List<IngredientVO>) request.getAttribute("ingredientList"); 
 	String ingredientID = request.getParameter("ingredientID");
+	
+	Integer[][] ingID = null;
+	String[] dishName = null;
+	String dishAndIngJson = request.getParameter("dishAndIngJson");
+
+	String replaceDishAndIngJson = null;
+	if(!dishAndIngJson.isEmpty()){
+		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
+		
+// 		System.out.println(dishAndIngJson);
+// 		JSONArray jsonArray = new JSONArray(dishAndIngJson);
+// 		ingID = new Integer[jsonArray.length()][];
+// 		dishName = new String[jsonArray.length()];
+// 		for (int i = 0; i < jsonArray.length(); i++) {
+// 			JSONObject jsonObj = jsonArray.getJSONObject(i);
+// 			Integer[] tempIngID = new Integer[jsonObj.getJSONArray("IngID").length()];
+// 			String[] tempIngIDStr = new String[jsonObj.getJSONArray("IngID").length()];
+// 			for (int j = 0; j < jsonObj.getJSONArray("IngID").length(); j++) {
+// 				tempIngID[j] = Integer.parseInt(jsonObj.getJSONArray("IngID").getString(j));
+// 			}
+// 			dishName[i] = jsonObj.getString("dishName");
+// 			ingID[i] = tempIngID;
+// 		}
+	}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,28 +72,25 @@
 			<li class="breadcrumb-item active" aria-current="page">新增菜色</li>
 		</ol>
 	</nav>
-	<p>
-	<c:forEach var="Ing" items="${list}">
-    	${Ing.ingredientName}
-    </c:forEach>
-    </p>
-	<form method="post" action="<%=request.getContextPath()%>/Event/EventInfo.do">
-		<input type="hidden" name="eventID" value="${eventInfoVO.eventID}">
-		<input type="hidden" name="choose_type" value="${eventInfoVO.groupType}">
-		<input type="hidden" name="event_name" value="${eventInfoVO.eventName}">
-		<input type="hidden" name="event_member" value="${eventInfoVO.eventCurrentCount}">
-		<input type="hidden" name="event_start" value="${eventInfoVO.eventStartTime}">
-		<input type="hidden" name="event_end" value="${eventInfoVO.eventEndTime}">
-		<input type="hidden" name="event_reg_start" value="${eventInfoVO.eventRegistartionStartTime}">
-		<input type="hidden" name="event_reg_end" value="${eventInfoVO.eventRegistartionEndTime}">
-		<input type="hidden" name="city" value="${eventInfoVO.groupCity}">
-		<input type="hidden" name="address" value="${eventInfoVO.groupAddress}">
-		
+	<form method="post" action="<%=request.getContextPath()%>/Event/EventInfo.do" enctype="multipart/form-data">
+		<div class="temp_data">
+			<input type="hidden" name="eventID" value="${eventInfoVO.eventID}">
+			<input type="hidden" name="choose_type" value="${eventInfoVO.groupType}">
+			<input type="hidden" name="event_name" value="${eventInfoVO.eventName}">
+			<input type="hidden" name="event_member" value="${eventInfoVO.eventCurrentCount}">
+			<input type="hidden" name="event_start" value="${eventInfoVO.eventStartTime}">
+			<input type="hidden" name="event_end" value="${eventInfoVO.eventEndTime}">
+			<input type="hidden" name="event_reg_start" value="${eventInfoVO.eventRegistartionStartTime}">
+			<input type="hidden" name="event_reg_end" value="${eventInfoVO.eventRegistartionEndTime}">
+			<input type="hidden" name="city" value="${eventInfoVO.groupCity}">
+			<input type="hidden" name="address" value="${eventInfoVO.groupAddress}">
+<%-- 			<input type="hidden" name='dishAndIngJson' value="${replaceDishAndIngJson}">	 --%>
+		</div>
+		<div class="title">
+	    	<h2>新增菜色</h2>
+	    </div>
 	    <main class="insert_content col-11 col-lg-11 row">
 	        <div class="insert_content_left col-6 col-lg-6">
-	            <div class="title">
-	                <h2>新增菜色</h2>
-	            </div>
 	            <div class="title_separate">
 	                菜色名稱
 	                <label>
@@ -81,7 +107,7 @@
 			                <ul>
 				                <c:if test="${not empty ingList}">
 				                	<c:forEach var="ingVO" items="${ingList}">
-				                		<li data-id="${ingVO.ingredientID}"><span>${IngSvc.getOneIngredient(ingVO.ingredientID).ingredientName}</span><i class='fas fa-times'></i></li>
+				                		<li data-id="${ingVO.ingredientID}"><span>${ingSvc.getOneIngredient(ingVO.ingredientID).ingredientName}</span><i class='fas fa-times'></i></li>
 				                	</c:forEach>
 				                </c:if>
 			                </ul>
@@ -90,11 +116,8 @@
 		        	</div>
 	            </div>
 	            <div class="btn_margin">
-	                <input type="submit" name="action" value="上一頁">
 	                <input type="button" class="dishInsert" name="" value="菜色新增">
 	                <input type="submit" name="action" value="菜色確認" class="dishConfirm">
-	            </div>
-	            <div class="temp_data">
 	            </div>
 	        </div>
 	        <div class="insert_content_right col-6 col-lg-6">
@@ -115,6 +138,7 @@
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/datetimepicker/js/jquery.datetimepicker.full.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
@@ -122,7 +146,7 @@
 	$(function(){
 		var ingredientArray = new Array();
 		<%
-			for(IngredientVO tempVO:IngSvc.getAll()){
+			for(IngredientVO tempVO:ingSvc.getAll()){
 		%>
 			var ingObj = new Object();
 			ingObj['id'] = <%=tempVO.getIngredientID() %>;
@@ -138,6 +162,7 @@
 			for(String one:orgList){
 		%>
 				var tempIng = <%= one %>;
+				console.log(<%=one%>);
 				if(tempIng!=""){
 					ingredientArray.forEach(function(item,index,array){
 						if(tempIng==array[index]['id']){
@@ -184,8 +209,8 @@
 		
 		$(".ingAutoOutput").on("click","svg",function(event){
 			var selectID = $(this).parent("li").attr("data-id");
-			var selectName =$(this).parent().find("div").html();
-
+			var selectName =$(this).parent("li").find("span").html();
+			
 			var tempID = $(".ingAutoInput").val();
 			var newID = tempID.replace(" "+selectID,"");
 			
@@ -223,7 +248,7 @@
 			
 			ingredientArray = [];
 		<%
-			for(IngredientVO tempVO:IngSvc.getAll()){
+			for(IngredientVO tempVO:ingSvc.getAll()){
 		%>
 			var ingObj = new Object();
 			ingObj['id'] = <%=tempVO.getIngredientID() %>;
@@ -267,9 +292,8 @@
 				dishAndIngArray.push(dishAndIngObj);
 			}
 		});
-		console.log(dishAndIngArray);
 		var dishAndIngJson = JSON.stringify(dishAndIngArray);
-		$(".temp_data").append("<input type= hidden name='dishAndIngJson' value='"+dishAndIngJson+"'>");
+		$(".temp_data").append("<input type='hidden' name='dishAndIngJson' value='"+dishAndIngJson+"'>");
 	});
 	
 	

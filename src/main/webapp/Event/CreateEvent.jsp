@@ -1,3 +1,5 @@
+<%@page import="com.cuisinecategory.model.CuisineCategoryService"%>
+<%@page import="com.cuisinecategory.model.CuisineCategoryVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Arrays"%>
@@ -11,6 +13,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
+	CuisineCategoryService cuisineCatSvc = new CuisineCategoryService();
+	String cuisineCatID = request.getParameter("cuisineCatID");
+	List<CuisineCategoryVO> cuisineCatList = (List<CuisineCategoryVO>) request.getAttribute("cuisineCatList");
 
 	if(eventInfoVO!=null){
 		if(eventInfoVO.getEventStartTime()!=null){
@@ -51,11 +56,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>建立活動</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/datetimepicker/css/jquery.datetimepicker.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/style.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/datetimepicker/css/jquery.datetimepicker.css">
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/style.css">
 </head>
 
 <body>
@@ -74,13 +80,13 @@
 	    <div class="title">
 	        <h2>建立活動</h2>
 	    </div>
-	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do">
+	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do" enctype="multipart/form-data">
 	   	<div class="temp_data">
 	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
 	   	</div>
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="info col-6 col-lg-6">
-	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")}</span>
+	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")}${errorMsgs.get("eventPicError")}</span>
 	            <div class="title_separate">
 	                請選擇揪團類型
 	                <label>
@@ -117,15 +123,6 @@
 	            	<span class="error">${errorMsgs.get("EventRegEndTimeIsNull")} ${errorMsgs.get("EventRegEndTimeNotConform")}</span>
 	            </div>
 	            <div>
-	                類型:
-	                <input type="checkbox" name="eat_style">中式
-	                <input type="checkbox" name="eat_style">日式
-	                <input type="checkbox" name="eat_style">越式
-	                <input type="checkbox" name="eat_style">西式
-	                <input type="checkbox" name="eat_style">泰式
-	                <input type="checkbox" name="eat_style">不拘
-	            </div>
-	            <div>
 	                <select name="city">
 	                <!--北台灣-->
 	                <option value="基隆市" <%= (eventInfoVO==null)?"":eventInfoVO.getGroupCity().equals("基隆市")?"selected":"" %>>基隆市</option>
@@ -159,6 +156,25 @@
 	            <span class="error">${errorMsgs.get("GroupAddressIsNull")}</span>
 	            </div>
 	            <div>
+	                類型:		<input type="text" id="cuisineCatInput">
+	                <span class="error">${errorMsgs.get("cuisineCatError")}</span>
+	            </div>
+	            <div class="cuisineCatAutoOutput">
+			                <ul>
+				                <c:if test="${not empty cuisineCatList}">
+				                	<c:forEach var="cuisineCatVO" items="${cuisineCatList}">
+				                		<li data-id="${cuisineCatVO.cuisineCategoryID}"><span>${cuisineCatSvc.getOneCategory(cuisineCatVO.cuisineCategoryID).cuisineCategoryName}</span><i class="fas fa-times"></i></li>
+				                	</c:forEach>
+				                </c:if>
+			                </ul>
+			          		<input class="cuisineCatAutoInput" type="hidden" name="cuisineCatID" value="<%= (cuisineCatID==null)?"":cuisineCatID %>">
+			    </div>
+	            <div>
+	            	上傳活動圖片:<input type="file" name="eventPic" id="uploadEventImg">
+	            </div>
+	            <div id="preview_img">
+	            </div>
+	            <div>
 	                <input type="submit" name="action" value="新增菜色">
 	                <input type="submit" name="action" value="邀請好友">
 	                <input type="submit" name="action" value="取消建立">
@@ -176,6 +192,8 @@
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/datetimepicker/js/jquery.datetimepicker.full.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
@@ -205,7 +223,94 @@
 		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 		 });
-	  
+	     //=================圖片預覽==========================
+	     $("#uploadEventImg").on("change", function() {
+	            console.log(this.files);
+	            var reader = new FileReader();
+	            reader.readAsDataURL(this.files[0]);
+	            $(reader).on("load", function() {
+	            	$("#preview_img").html("");
+	                $("#preview_img").append("<img src="+reader.result+">");
+	            });
+	        });
+	     //==================AutoComplete====================
+	   	$(function(){
+		var cuisineCatArray = new Array();
+		<%
+			for(CuisineCategoryVO tempVO:cuisineCatSvc.getAll()){
+		%>
+			var cuiCatObj = new Object();
+			cuiCatObj['id'] = <%=tempVO.getCuisineCategoryID() %>;
+			cuiCatObj['value'] = "<%=tempVO.getCuisineCategoryName() %>";
+			cuisineCatArray.push(cuiCatObj);
+		<%		
+			}
+		%>
+		
+		function putCuisineCatInID(id,name){
+			var tempCuisineCatHTML = "<li data-id='"+id+"'><span>" +name + "</span><i class='fas fa-times'></i></li>";		
+			$(".cuisineCatAutoOutput").find("ul").append(tempCuisineCatHTML);
+			
+			if($(".cuisineCatAutoInput").val()==""){
+				$(".cuisineCatAutoInput").val(" "+id);
+			}else{
+				var tempCuisineCatStr = $(".cuisineCatAutoInput").val();
+				tempCuisineCatStr += " "+id;
+				$(".cuisineCatAutoInput").val(tempCuisineCatStr);
+			}
+		}
+
+		$("#cuisineCatInput").on("keydown",function(event){
+			if(event.keyCode === $.ui.keyCode.Enter){
+				event.preventDefault();
+			}
+		}).autocomplete({
+			minLength: 0,
+			source: cuisineCatArray,
+			select: function(event,ui){
+				cuisineCatArray.forEach(function(item,index,array){
+					if(ui.item.value == array[index]['value']){
+						array.splice(index,1);
+					}
+				});
+				putCuisineCatInID(ui.item.id , ui.item.value);
+				$("#cuisineCatInput").val("");
+				return false;
+			}
+		});
+		
+		$(".cuisineCatAutoOutput").on("click","svg",function(event){
+			var selectID = $(this).parent("li").attr("data-id");
+			var selectName =$(this).parent("li").find("span").html();
+
+			var tempID = $(".cuisineCatAutoInput").val();
+			var newID = tempID.replace(" "+selectID,"");
+			
+			$(".cuisineCatAutoInput").val(newID);
+			
+			var addBackCuisineCatObj = new Object();
+			addBackCuisineCatObj['id'] = selectID;
+			addBackCuisineCatObj['value'] = selectName;
+			cuisineCatArray.push(addBackCuisineCatObj);
+			
+			$(this).closest("li").remove();
+		});
+	});
+	//================類型儲存========================
+	$(".confirmCreate").on("click",function(){
+		var cuisineCatArray = new Array();
+		$(".cuisineCatAutoOutput").find("ul").each(function(index,element){
+			var cuisineCatObj = new Object();
+			var cuisineCatIDArray = new Array();
+			$(element).find("li").each(function(index,element){
+				cuisineCatIDArray.push($(element).attr("data-id"));
+			});
+			cuisineCatObj["cuisineCatID"] = cuisineCatIDArray;
+			cuisineCatArray.push(cuisineCatObj);
+		});
+		var cuisineCatJson = JSON.stringify(cuisineCatArray);
+		$(".temp_data").append("<input type='hidden' name='cuisineCatJson' value='"+cuisineCatJson+"'>");
+	});
 	</script>
 </body>
 </html>

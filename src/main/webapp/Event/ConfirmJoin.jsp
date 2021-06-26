@@ -107,9 +107,7 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
-	<%
-	System.out.println(request.getParameter("eventID"));
-	%>
+	
 	$(function(){
 		$.ajax({
 			type:"POST",
@@ -123,6 +121,7 @@
 				}else if(data.groupType==2){
 					$(".group_type").html("我當主廚");
 				}
+				
 				var startTime = new Date(""+data.eventStart).format("yyyy-MM-dd hh:mm");
 				var endTime = new Date(""+data.eventStart).format("yyyy-MM-dd hh:mm");
 				

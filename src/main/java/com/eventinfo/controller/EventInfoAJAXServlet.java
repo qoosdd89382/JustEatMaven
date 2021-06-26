@@ -19,8 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.cuisinecategory.model.CuisineCategoryService;
 import com.dish.model.DishService;
 import com.dish.model.DishVO;
+import com.eventcuisinecategory.model.EventCuisineCategoryService;
+import com.eventcuisinecategory.model.EventCuisineCategoryVO;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
 
@@ -45,8 +48,12 @@ public class EventInfoAJAXServlet extends HttpServlet {
 		EventInfoVO eventInfoVO = eventInfoService.getEventID(Integer.parseInt(eventID));
 		DishService dishService = new DishService();
 		List<DishVO> dishList = dishService.getEventID(Integer.parseInt(eventID));
+		EventCuisineCategoryService eventCuisineCategoryService = new EventCuisineCategoryService();
+		List<EventCuisineCategoryVO> eventCuisineCategoryList = eventCuisineCategoryService.getAllByEventID(Integer.parseInt(eventID));
+		CuisineCategoryService categoryService = new CuisineCategoryService();
 		JSONObject jsonData = new JSONObject();
 		JSONArray dishArray = new JSONArray();
+		JSONArray cuisineCatArray = new JSONArray();
 		
 		try {
 			jsonData.put("eventID", eventInfoVO.getEventID());
@@ -58,9 +65,13 @@ public class EventInfoAJAXServlet extends HttpServlet {
 			jsonData.put("city", eventInfoVO.getGroupCity());
 			jsonData.put("address", eventInfoVO.getGroupAddress());
 			jsonData.put("eventDescription", eventInfoVO.getEventDescription());
+			for(EventCuisineCategoryVO eventCuisineCategoryVO:eventCuisineCategoryList) {
+				cuisineCatArray.put(categoryService.getOneCategory(eventCuisineCategoryVO.getCuisinecategoryID()).getCuisineCategoryName()+" ");
+			}
 			for(DishVO dishVO:dishList) {
 				dishArray.put("<span class='border'>"+dishVO.getDishName()+"</span>");
 			}
+			jsonData.put("cuisineCatName", cuisineCatArray);
 			jsonData.put("dishName", dishArray);
 			out.print(jsonData.toString());
 		} catch (JSONException e) {

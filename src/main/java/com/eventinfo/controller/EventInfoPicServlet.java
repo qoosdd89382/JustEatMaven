@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.eventinfo.model.EventInfoJDBCDAO;
+import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
 
 public class EventInfoPicServlet extends HttpServlet {
@@ -34,10 +35,10 @@ public class EventInfoPicServlet extends HttpServlet {
 		BufferedInputStream bis = null;
 
 		EventInfoVO eventInfoVO = null;
-		EventInfoJDBCDAO eventInfoDAO = new EventInfoJDBCDAO();
+		EventInfoService eventInfoSvc = new EventInfoService();
 		int paraValue = Integer.parseInt(request.getParameter("image"));
 		try {
-			List<EventInfoVO> list = eventInfoDAO.getAll();
+			List<EventInfoVO> list = eventInfoSvc.getAll();
 			if (list.size() == 0 || list == null) {
 				in = getServletContext().getResourceAsStream("/image/null.png");
 				bis = new BufferedInputStream(in);
