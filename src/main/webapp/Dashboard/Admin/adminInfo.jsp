@@ -94,36 +94,44 @@
 		                        </div>
 	                        
                                 <div class="card-body">
- <form action="<%= request.getContextPath()%>/Dashboard/admin.do">
+                                
+                                <h4 style="text-align: center; color: #4e73df;">${updateSuccess}！</h4>
+ <form action="<%= request.getContextPath()%>/Dashboard/admin.do" method="post" enctype="multipart/form-data">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="adminID">ID</label>
-      <input type="text" class="form-control" id="adminID" value="${adminSvc.getOneAdmin(loginAdminID).adminID}" disabled>
+      <input type="text" class="form-control" value="${ adminSvc.getOneAdmin(loginAdminID).adminID }" disabled>
     </div>
     <div class="form-group col-md-6">
-      <label for="adminNickname">暱稱</label>
-      <input type="text" class="form-control" id="adminNickname" value="${adminSvc.getOneAdmin(loginAdminID).adminNickname}" name="adminNickname">
+      <label for="adminNickname">暱稱
+			<span class="errorSpan"><font color="red">${errorMsgs.get("adminNicknameErr")}</font></span>
+       </label>
+      <input type="text" class='form-control ${errorMsgs.get("adminNicknameErr") == null ? "": "border-danger"}' id="adminNickname" value="${adminVO == null ? adminSvc.getOneAdmin(loginAdminID).adminNickname : adminVO.adminNickname }" name="adminNickname">
     </div>
   <div class="form-group col-md-12">
     <label for="adminMail">E-mail</label>
-    <input type="email" class="form-control" id="adminMail" name="adminMail" value="${adminSvc.getOneAdmin(loginAdminID).adminMail}">
+    <input type="email" class="form-control" id="adminMail" value="${adminSvc.getOneAdmin(loginAdminID).adminMail}" disabled>
   </div>
     <div class="form-group col-md-6">
-      <label for="newPassword">新密碼</label>
-      <input type="password" autocomplete="new-password" class="form-control" id="newPassword" name="newPassword">
+      <label for="newPassword">新密碼
+			<span class="errorSpan"><font color="red">${errorMsgs.get("newPasswordErr")}</font></span>
+      </label>
+      <input type="password" autocomplete="new-password" class='form-control ${errorMsgs.get("newPasswordErr") == null ? "": "border-danger"}' id="newPassword" name="newPassword">
     </div>
     <div class="form-group col-md-6">
-      <label for="newPasswordRecheck">再次輸入新密碼</label>
-      <input type="password" autocomplete="new-password" class="form-control" id="newPasswordRecheck" name="newPasswordRecheck">
+      <label for="newPasswordRecheck">再次輸入新密碼
+			<span class="errorSpan"><font color="red">${errorMsgs.get("newPasswordRecheckErr")}</font></span>
+      </label>
+      <input type="password" autocomplete="new-password" class='form-control ${errorMsgs.get("newPasswordRecheckErr") == null ? "": "border-danger"}' id="newPasswordRecheck" name="newPasswordRecheck">
     </div>
     <hr>
     <div class="col-md-6 vertical-container">
 		<label for="adminPic">頭像上傳
-			<span class="errorSpan">${errorMsgs.get("adminPicErr")}</span>
+			<span class="errorSpan"><font color="red">${errorMsgs.get("adminPicErr")}</font></span>
 		</label>
-		<input id="adminPic" type="file" name="adminPic" style="display:none">
+		<input id="adminPic" accept="image/*" type="file" name="adminPic" style="display:none">
 		<button id="upload-btn" class="btn btn-secondary btn-lg form-control btn-block" type="button" id="button-addon2">上傳檔案</button>
-		<div class="input-element col-12 input-group mb-3 border-bottom upload-block">
+		<div class="input-element col-12 input-group mb-3 upload-block">
 			<div class="col-12 preview text-center rounded">
 				<img src="<%= request.getContextPath() %>/Dashboard/Admin/Pic?adminID=${loginAdminID}" class="preview_img">
 			</div>
@@ -132,8 +140,8 @@
     <div class="col-md-6"></div>
     
 	<div class="form-group col-md-6">
-	 <label for="adminPassword">修改資料，請輸入目前密碼 <font color="red">*</font></label>
-	 <input type="password" autocomplete="new-password" class="form-control" id="adminPassword" name="adminPassword">
+	 <label for="adminPassword">修改資料，請輸入目前密碼 <font color="red">* ${errorMsgs.get("adminPasswordErr")}</font></label>
+	 <input type="password" autocomplete="new-password" class="form-control ${errorMsgs.get("adminPasswordErr") == null ? "": "border-danger"}" id="adminPassword" name="adminPassword">
 	</div>
     <div class="col-md-6"></div>
 	<input type="hidden" name="action" value="update">
@@ -213,7 +221,7 @@
 	
 
 	$('input[name="adminPic"]').on("change", function(e) {
-        previewerPic(e.target.files[0]);
+        	previewerPic(e.target.files[0]);
     });
     
 

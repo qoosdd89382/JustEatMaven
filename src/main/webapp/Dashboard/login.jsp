@@ -32,7 +32,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">後臺登入</h1>
                                     </div>
-                                    <form class="user" method="post" action="<%= request.getContextPath() %>/Dashboard/adminLoginHandler">
+                                    <form class="user" method="post" action="<%= request.getContextPath() %>/Dashboard/AdminLoginHandler">
                                         <div class="form-group">
                                             <input type="email"
                                             	class='form-control form-control-user ${errorMsgs.get("loginAllowErr") == null ? "": "border-danger"}'
