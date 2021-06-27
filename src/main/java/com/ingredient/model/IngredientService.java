@@ -10,7 +10,7 @@ public class IngredientService {
 		dao = new IngredientJDBCDAO();
 	}
 
-	public IngredientVO addIngredient(String ingredientName) {
+	public synchronized IngredientVO addIngredient(String ingredientName) {
 		IngredientVO vo = new IngredientVO();
 		vo.setIngredientName(ingredientName);
 		int ingredientID = dao.insert(vo);
@@ -22,7 +22,7 @@ public class IngredientService {
 		return vo;
 	}
 	
-	public IngredientVO updateIngredient(int ingredientID, String ingredientName) {
+	public synchronized IngredientVO updateIngredient(int ingredientID, String ingredientName) {
 		IngredientVO vo = new IngredientVO();
 		vo.setIngredientID(ingredientID);
 		vo.setIngredientName(ingredientName);
