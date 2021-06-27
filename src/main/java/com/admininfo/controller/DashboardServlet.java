@@ -1,6 +1,7 @@
 package com.admininfo.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,16 +12,21 @@ import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
+import com.mail.controller.RandomAuthCode;
 
 //我先用WEB.XML註冊
 //@WebServlet("/Dashboard/Account/dashboard.do")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -37,12 +43,19 @@ public class DashboardServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		
 //======================================================
+//後臺回應目錄
+
+
 //收到後台回應處理
-//來自DashboardAccountPage.jsp的增加會員請求
-		if("insertAccountInfo_From_Dashboard".equals(action)) {
+//DashboardAccountPage == 增加會員請求 == insertAccountInfoFromDashboard
+		if("insertAccountInfoFromDashboard".equals(action)) {
+			System.out.println("收到 後台新增會員 請求");
 			
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
+			
+			AccountInfoService accountInfoSvc = new AccountInfoService();
+			AccountInfoVO accountInfoVO = new AccountInfoVO();
 			
 			try {
 				//接收頁面使用者輸入的參數
@@ -51,157 +64,274 @@ public class DashboardServlet extends HttpServlet {
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountNameInput = req.getParameter("accountName");
 				String accountGenderInput = req.getParameter("accountGender");
+				
+				String accountStateInput =req.getParameter("accountState");
+				String accountLevelInput =req.getParameter("accountLevel");
+
 				String accountBirthInput = req.getParameter("accountBirth");
 				String accountPhoneInput = req.getParameter("accountPhone");
-				String accountPicInput = req.getParameter("accountPic");
-				String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
-				String accountIDcardBackInput = req.getParameter("accountIDcardBack");
 				String accountTextInput = req.getParameter("accountText");
+				//註冊時間用NOW account_code隨機給
 				
-				//檢查各項輸入
-				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
-					errorMsgs.put("accountMailError","請輸入會員信箱");
+			//檢查信箱
+				String accountMail = null;
+				//信箱規範表達式
+				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$"); 
+				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
+				try {
+					if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+						errorMsgs.put("accountMailError","請輸入會員信箱");
+					}else if(!accountMailMatcher.matches()){
+						errorMsgs.put("accountMailError","會員信箱格式錯誤");
+					}else if(accountInfoSvc.getAccountMail(accountMailInput) != null) {
+						errorMsgs.put("accountMailError","此信箱已註冊過");
+					}else {
+						accountMail = new String(accountMailInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
-					errorMsgs.put("accountNicknameError","請輸入會員暱稱");
+			//檢查accountNickname輸入
+				String accountNickname = null;
+				//O暱稱規範:兩個字以上，任意 中文 數字 英文大小寫
+				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,8}$");
+				Matcher accountNicknameMatcher = accountNicknamePattern.matcher(accountNicknameInput);
+				try {
+					if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
+						errorMsgs.put("accountNicknameError","請輸入會員暱稱");
+					}else if(!accountNicknameMatcher.matches()){
+						errorMsgs.put("accountNicknameError","會員暱稱格式錯誤");
+					}else if(accountInfoSvc.getAccountNickname(accountNicknameInput) != null) {
+						errorMsgs.put("accountNicknameError","此暱稱已有人使用");
+					}else {
+						accountNickname = new String(accountNicknameInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
-					errorMsgs.put("accountPasswordError","請輸入會員密碼");
+			//檢查accountPassword輸入
+				String accountPassword = null;
+				//O密碼規範:至少8~16碼任意大小寫英文數字
+				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,16}$");
+				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+				try {
+					if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
+						errorMsgs.put("accountPasswordError","請輸入會員密碼");
+					}else if(!accountPasswordMatcher.matches()){
+						errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
+					}else {
+						accountPassword = new String(accountPasswordInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
-					errorMsgs.put("accountNameError","請輸入名稱");
+			//檢查accountName輸入
+				String accountName = null;
+				//O姓名規範:兩個字以上，任意 中文 英文大小寫
+				Pattern accountNamePattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z]{2,6}$");
+				Matcher accountNameMatcher = accountNamePattern.matcher(accountNameInput);
+				try {
+					if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
+						errorMsgs.put("accountNameError","請輸入姓名");
+					}else if(!accountNameMatcher.matches()) {
+						errorMsgs.put("accountNameError","會員姓名格式錯誤");
+					}else {
+						accountName = new String(accountNameInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				if (accountGenderInput == null || (accountGenderInput.trim()).length() == 0) {
-					errorMsgs.put("accountGenderError","請輸入性別");
+			//檢查accountGender輸入
+				Integer accountGender = null;
+				try {
+					if(accountGenderInput == null) {
+						errorMsgs.put("accountGenderError","請輸入性別");
+					}else {
+						accountGender = Integer.parseInt(accountGenderInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				if (accountBirthInput == null || (accountBirthInput.trim()).length() == 0) {
-					errorMsgs.put("accountBirthError","請輸入生日");
+			//檢查accountState輸入
+				Boolean accountState = false;
+				try {
+					if(accountStateInput == null) {
+						errorMsgs.put("accountStateError","請輸入會員狀態");
+					}else {
+						accountState = true;
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-//					if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
-//						errorMsgs.put("accountPhoneError","請輸入電話");
-//					}
+			//檢查accountLevel輸入
+				Integer accountLevel = null;
+				try {
+					if(accountLevelInput == null) {
+						errorMsgs.put("accountLevelError","請輸入會員層級");
+					}else {
+						accountLevel = Integer.parseInt(accountLevelInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountBirth輸入
+				Date accountBirth = null;
+				try {
+					if(accountBirthInput == null) {
+						errorMsgs.put("accountBirthError","請輸入日期");
+					}else {
+						accountBirth = (java.sql.Date.valueOf(accountBirthInput));
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
 				
-//照片檢查後續再補
-				
-				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
-					errorMsgs.put("accountTextError","請輸入自我介紹");
+			//檢查電話輸入
+				String accountPhone = null;
+				//O電話規範:10碼數字前面規定09
+				Pattern accountPhonePattern = Pattern.compile("^[0-9]{10}$");
+				Matcher accountPhoneMatcher = accountPhonePattern.matcher(accountPhoneInput);
+				try {
+					if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
+						errorMsgs.put("accountPhoneError","請輸入電話");
+					}else if(!accountPhoneMatcher.matches()){
+						errorMsgs.put("accountPhoneError","會員電話格式錯誤");
+					}else {
+						accountPhone = new String(accountPhoneInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountText輸入
+				String accountText = null;
+				try {
+					if(accountTextInput == null || (accountTextInput.trim()).length() == 0) {
+						errorMsgs.put("accountTextError","請輸入自我介紹");
+					}else {
+						accountText = new String(accountTextInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//分隔線				
+			//檢查照片輸入
+				//會員大頭照
+				byte[] accountPicBuffer  = null;
+				try {
+					//會員大頭照傳入
+					Part part = req.getPart("accountPic");
+					InputStream in = part.getInputStream();
+					accountPicBuffer = new byte[in.available()];
+					in.read(accountPicBuffer);
+					in.close();
+					req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
+					accountInfoVO.setAccountPic(accountPicBuffer);	
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+
+				//會員身分證正面
+				byte[] accountIDcardFrontBuffer = null;
+				try {
+					Part part = req.getPart("accountIDcardFront");
+					InputStream in = part.getInputStream();
+					accountIDcardFrontBuffer = new byte[in.available()];
+					in.read(accountIDcardFrontBuffer);
+					in.close();
+					req.getSession().setAttribute("accountIDcardFrontBuffer",accountIDcardFrontBuffer);
+					accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);	
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+
+				//會員身分證背面
+				byte[] accountIDcardBackBuffer  = null;
+				try {
+					//會員大頭照傳入
+					Part part = req.getPart("accountIDcardBack");
+					
+					InputStream in = part.getInputStream();
+					accountIDcardBackBuffer = new byte[in.available()];
+					in.read(accountIDcardBackBuffer);
+					in.close();
+					req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
+					accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);	
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
 				
 				//有錯誤就返回
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountRegisterPage.jsp");
+							.getRequestDispatcher("/Dashboard/Account/InsertAccountInfoPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
 				
-				//註冊正則表達式規範
-			//O帳號規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
-				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
-				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
-			//O密碼規範:至少8~16碼任意大小寫英文數字
-				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,16}$");
-				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
-			//O暱稱規範:兩個字以上，任意 中文 數字 英文大小寫
-				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,8}$");
-				Matcher accountNicknameMatcher = accountNicknamePattern.matcher(accountNicknameInput);
-			//O名稱規範:兩個字以上，任意 中文 英文大小寫
-				Pattern accountNamePattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z]{2,6}$");
-				Matcher accountNameMatcher = accountNamePattern.matcher(accountNameInput);
-			//O電話規範:10碼數字前面規定09
-				Pattern accountPhonePattern = Pattern.compile( "^([0-9]{3}-?[0-9]{8}|[0-9]{4}-?[0-9]{7})$");
-				Matcher accountPhoneMatcher = accountPhonePattern.matcher(accountPhoneInput);
-				
-				//準備回傳的值
-				//要驗證
-				String accountMail = null;
-				String accountPassword = null;
-				String accountNickname = null;
-				String accountName = null;
-				String accountPhone = null;
-				//不用驗證
-				Integer accountGender = Integer.parseInt(accountGenderInput);
-				Date accountBirth = (java.sql.Date.valueOf(accountBirthInput));
-				String accountText = accountTextInput;
-
-				//輸入格式驗證
-				try {
-					if (accountMailMatcher.matches()) {
-						accountMail = new String(accountMailInput);
-					}
-				} catch (Exception e) {
-					errorMsgs.put("accountMailError","會員信箱格式錯誤");
-				}
-				
-				try {
-					if (accountPasswordMatcher.matches()) {
-						accountPassword = new String(accountPasswordInput);
-					}
-				} catch (Exception e) {
-					errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
-				}
-				
-				try {
-					if (accountNicknameMatcher.matches()) {
-						accountNickname = new String(accountNicknameInput);
-					}
-				} catch (Exception e) {
-					errorMsgs.put("accountNicknameError","會員暱稱格式錯誤");
-				}
-				
-				try {
-					if (accountNameMatcher.matches()) {
-						accountName = new String(accountNameInput);
-					}
-				} catch (Exception e) {
-					errorMsgs.put("accountPasswordError","會員名稱格式錯誤");
-				}
-				
-				try {
-					if (accountPhoneMatcher.matches()) {
-						accountPhone = new String(accountPhoneInput);
-					}
-				} catch (Exception e) {
-					errorMsgs.put("accountPasswordError","會員電話格式錯誤");
-				}
-				
-				// 有錯誤就返回總表，顯示錯誤訊息
-				if (!errorMsgs.isEmpty()) {
-					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountRegisterPage.jsp");
-					failureView.forward(req, res);
-					return;//程式中斷
-				}
-				
-//補各級驗證標準	
 				//輸入資料無誤的儲存
 				req.setAttribute("accountMail",accountMailInput);
 				req.setAttribute("accountPassword",accountPasswordInput);
 				req.setAttribute("accountNickname",accountNicknameInput);
 				req.setAttribute("accountName",accountNameInput);
-				req.setAttribute("accountGender",accountGender);
-				req.setAttribute("accountBirth",accountBirth);
+				req.setAttribute("accountGender",Integer.parseInt(accountGenderInput));
+				
+				req.setAttribute("accountLevel", Integer.parseInt(accountLevelInput));
+				req.setAttribute("accountState", Integer.parseInt(accountStateInput));
+				
+				req.setAttribute("accountPhone", accountPhoneInput);
+				req.setAttribute("accountBirth",java.sql.Date.valueOf(accountBirthInput));
 				req.setAttribute("accountText",accountTextInput);
-				//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
-				AccountInfoService accountInfoSvc = new AccountInfoService();
-//				accountInfoSvc.setLevelOneAccountInfoFromRegister(
-//						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
-//						accountText);
+
+				//呼叫SERVICE來做事，把值都存到AccountInfoVO物件
+				accountInfoVO.setAccountMail(accountMail);
+				accountInfoVO.setAccountPassword(accountPassword);
+				accountInfoVO.setAccountNickname(accountNickname);
+				accountInfoVO.setAccountName(accountNameInput);
+				accountInfoVO.setAccountGender(accountGender);
+				
+				accountInfoVO.setAccountLevel(accountLevel);
+				accountInfoVO.setAccountState(accountState);
+
+				accountInfoVO.setAccountPhone(accountPhone);
+				accountInfoVO.setAccountBirth(accountBirth);
+				accountInfoVO.setAccountText(accountText);
+				
+				accountInfoVO.setAccountPic(accountPicBuffer);
+				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
+				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
+				
+				String accountCode = new RandomAuthCode().generateCode();
+				accountInfoVO.setAccountCode(accountCode);
+				
+				accountInfoSvc.insertAccountInfo(accountInfoVO);
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
-				String url = "/Account/AccountLoginPage.jsp";
+				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				
 			}catch(Exception e) {
 				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
-						.getRequestDispatcher("/Account/AccountRegisterPage.jsp");
+						.getRequestDispatcher("/Dashboard/Account/InsertAccountInfoPage.jsp");
 				failureView.forward(req, res);
 			}
-		}
+		}//DashboardAccountPage == 增加會員請求 == insertAccountInfoFromDashboard
 
-//來自DashboardPage.jsp的請求 getAll 不用
+//DashboardPage == 查看一個會員資料 == getAll 不用
 		if ("getOneAccountInfo_From_Dashboard".equals(action)) {
 			
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -312,10 +442,13 @@ public class DashboardServlet extends HttpServlet {
 			}	
 		}
 //來自DashboardPage.jsp的請求 updateAccountInfo_From_Dashboard
-		if ("updateAccountInfo_From_Dashboard".equals(action)) {
+		if ("updateAccountInfoFromDashboard".equals(action)) {
 System.out.println("進入更新");
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
+			
+			AccountInfoService accountInfoSvc = new AccountInfoService();
+			AccountInfoVO accountInfoVO = new AccountInfoVO();
 			
 			try {
 System.out.println("開始TRY");
@@ -325,186 +458,272 @@ System.out.println("開始TRY");
 				String accountNicknameInput = req.getParameter("accountNickname");
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountStateInput = req.getParameter("accountState");
+				System.out.println(accountStateInput);
 				String accountLevelInput = req.getParameter("accountLevel");
 				
 				String accountNameInput = req.getParameter("accountName");
 				String accountGenderInput = req.getParameter("accountGender");
 				String accountBirthInput = req.getParameter("accountBirth");
 				String accountPhoneInput = req.getParameter("accountPhone");
-//				String accountPicInput = req.getParameter("accountPic");
-//				
-//				String accountIDcardFrontInput = req.getParameter("accountIDcardFront");
-//				String accountIDcardBackInput = req.getParameter("accountIDcardBack");
+
 				String accountTextInput = req.getParameter("accountText");
-System.out.println("檢查點1");
 
-				//檢查各項輸入
-				if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
-					errorMsgs.put("accountMailError","請輸入會員信箱");
-				}
-				if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
-					errorMsgs.put("accountNicknameError","請輸入會員暱稱");
-				}
-				if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
-					errorMsgs.put("accountPasswordError","請輸入會員密碼");
-				}
-//				if (accountStateInput == null || (accountStateInput.trim()).length() == 0) {
-//					errorMsgs.put("accountStateError","請輸入會員狀態");
-//				}
-				if (accountLevelInput == null || (accountLevelInput.trim()).length() == 0) {
-					errorMsgs.put("accountStateError","請輸入會員層級");
-				}
-				if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
-					errorMsgs.put("accountNameError","請輸入會員名稱");
-				}
-				if (accountGenderInput == null || (accountGenderInput.trim()).length() == 0) {
-					errorMsgs.put("accountGenderError","請輸入會員性別");
-				}
-				if (accountBirthInput == null || (accountBirthInput.trim()).length() == 0) {
-					errorMsgs.put("accountBirthError","請輸入生日");
-				}
-				if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
-					errorMsgs.put("accountPhoneError","請輸入電話");
-				}
-				
-//照片檢查後續再補
-				
-				if (accountTextInput == null || (accountTextInput.trim()).length() == 0) {
-					errorMsgs.put("accountTextError","請輸入自我介紹");
-				}
-System.out.println("檢查點1.1");
-
-				//有錯誤就返回
-				if (!errorMsgs.isEmpty()) {
-					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Dashboard/Account/UpdateAccountInfoPage.jsp");
-					failureView.forward(req, res);
-					return;//程式中斷
-				}
-System.out.println("檢查點1.2");				
-				//註冊正則表達式規範
-			//信箱規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
-				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
-				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
-			//O暱稱規範:兩個字以上，任意 中文 數字 英文大小寫
-				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,8}$");
-				Matcher accountNicknameMatcher = accountNicknamePattern.matcher(accountNicknameInput);
-			//O密碼規範:至少8~16碼任意大小寫英文數字
-				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,16}$");
-				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
-			//O狀態層級前面已檢查
-			//O姓名規範:兩個字以上，任意 中文 英文大小寫
-				Pattern accountNamePattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z]{2,6}$");
-				Matcher accountNameMatcher = accountNamePattern.matcher(accountNameInput);
-				//O性別生日一定有值
-			//O電話規範:10碼數字前面規定09
-				Pattern accountPhonePattern = Pattern.compile( "^([0-9]{3}-?[0-9]{8}|[0-9]{4}-?[0-9]{7})$");
-				Matcher accountPhoneMatcher = accountPhonePattern.matcher(accountPhoneInput);
-System.out.println("檢查點1.3");	
-				//準備回傳的值
-				//要驗證
+			//檢查信箱
 				String accountMail = null;
-				String accountNickname = null;
-				String accountPassword = null;
-				String accountName = null;
-				String accountPhone = null;
-System.out.println("檢查點1.4");
-				//不用驗證
-				Boolean accountState =true;
-//				Boolean accountState = (Integer.parseInt(accountStateInput) == 1 ? true : false );
-System.out.println("檢查點1.5");
-				Integer accountLevel = Integer.parseInt(accountLevelInput);
-				Integer accountGender = Integer.parseInt(accountGenderInput);
-				Date accountBirth = (java.sql.Date.valueOf(accountBirthInput));
-				String accountText = accountTextInput;
-				
-System.out.println("檢查點2");
-
-				//輸入格式驗證
+				//信箱規範表達式
+				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$"); 
+				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
 				try {
-					if (accountMailMatcher.matches()) {
+					if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+						errorMsgs.put("accountMailError","請輸入會員信箱");
+					}else if(!accountMailMatcher.matches()){
+						errorMsgs.put("accountMailError","會員信箱格式錯誤");
+					//判斷原本是不是原本的信箱 是就儲存
+					}else if((accountInfoSvc.getAccountMail(accountMailInput).getAccountMail()).equals(accountMailInput)) {
+						accountMail = new String(accountMailInput);
+					//判斷另外輸入的信箱有沒有人使用
+					}else if(accountInfoSvc.getAccountMail(accountMailInput) != null) {
+						errorMsgs.put("accountMailError","此信箱已註冊過");
+					}else {
 						accountMail = new String(accountMailInput);
 					}
 				} catch (Exception e) {
-					errorMsgs.put("accountMailError","會員信箱格式錯誤");
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				
+			//檢查accountNickname輸入
+				String accountNickname = null;
+				//O暱稱規範:兩個字以上，任意 中文 數字 英文大小寫
+				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,8}$");
+				Matcher accountNicknameMatcher = accountNicknamePattern.matcher(accountNicknameInput);
 				try {
-					if (accountPasswordMatcher.matches()) {
+					System.out.println("檢查暱稱1");
+					if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
+						errorMsgs.put("accountNicknameError","請輸入會員暱稱");
+					}else if(!accountNicknameMatcher.matches()){
+						errorMsgs.put("accountNicknameError","會員暱稱格式錯誤");
+					}else if((accountInfoSvc.getAccountNickname(accountNicknameInput).getAccountNickname()).equals(accountNicknameInput)) {
+						accountNickname = new String(accountNicknameInput);
+					}else if(accountInfoSvc.getAccountNickname(accountNicknameInput) != null) {
+						errorMsgs.put("accountNicknameError","此暱稱已有人使用");
+					}else {
+						accountNickname = new String(accountNicknameInput);
+					}
+					System.out.println("檢查暱稱2");
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountPassword輸入
+				String accountPassword = null;
+				//O密碼規範:至少8~16碼任意大小寫英文數字
+				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,16}$");
+				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+				try {
+					if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
+						errorMsgs.put("accountPasswordError","請輸入會員密碼");
+					}else if(!accountPasswordMatcher.matches()){
+						errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
+					}else {
 						accountPassword = new String(accountPasswordInput);
 					}
 				} catch (Exception e) {
-					errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
-				
+			//檢查accountName輸入
+				String accountName = null;
+				//O姓名規範:兩個字以上，任意 中文 英文大小寫
+				Pattern accountNamePattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z]{2,6}$");
+				Matcher accountNameMatcher = accountNamePattern.matcher(accountNameInput);
 				try {
-					if (accountNicknameMatcher.matches()) {
-						accountNickname = new String(accountNicknameInput);
-					}
-				} catch (Exception e) {
-					errorMsgs.put("accountNicknameError","會員暱稱格式錯誤");
-				}
-				
-				try {
-					if (accountNameMatcher.matches()) {
+					if (accountNameInput == null || (accountNameInput.trim()).length() == 0) {
+						errorMsgs.put("accountNameError","請輸入姓名");
+					}else if(!accountNameMatcher.matches()) {
+						errorMsgs.put("accountNameError","會員姓名格式錯誤");
+					}else {
 						accountName = new String(accountNameInput);
 					}
 				} catch (Exception e) {
-					errorMsgs.put("accountPasswordError","會員名稱格式錯誤");
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountGender輸入
+				Integer accountGender = null;
+				try {
+					if(accountGenderInput == null) {
+						errorMsgs.put("accountGenderError","請輸入性別");
+					}else {
+						accountGender = Integer.parseInt(accountGenderInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountState輸入
+				Boolean accountState = false;
+				try {
+					if(accountStateInput == null) {
+						errorMsgs.put("accountStateError","請輸入會員狀態");
+					}else {
+						accountState = true;
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountLevel輸入
+				Integer accountLevel = null;
+				try {
+					if(accountLevelInput == null) {
+						errorMsgs.put("accountLevelError","請輸入會員層級");
+					}else {
+						accountLevel = Integer.parseInt(accountLevelInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountBirth輸入
+				Date accountBirth = null;
+				try {
+					if(accountBirthInput == null) {
+						errorMsgs.put("accountBirthError","請輸入日期");
+					}else {
+						accountBirth = (java.sql.Date.valueOf(accountBirthInput));
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
 				
+			//檢查電話輸入
+				String accountPhone = null;
+				//O電話規範:10碼數字前面規定09
+				Pattern accountPhonePattern = Pattern.compile("^[0-9]{10}$");
+				Matcher accountPhoneMatcher = accountPhonePattern.matcher(accountPhoneInput);
 				try {
-					if (accountPhoneMatcher.matches()) {
+					if (accountPhoneInput == null || (accountPhoneInput.trim()).length() == 0) {
+						errorMsgs.put("accountPhoneError","請輸入電話");
+					}else if(!accountPhoneMatcher.matches()){
+						errorMsgs.put("accountPhoneError","會員電話格式錯誤");
+					}else {
 						accountPhone = new String(accountPhoneInput);
 					}
 				} catch (Exception e) {
-					errorMsgs.put("accountPasswordError","會員電話格式錯誤");
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//檢查accountText輸入
+				String accountText = null;
+				try {
+					if(accountTextInput == null || (accountTextInput.trim()).length() == 0) {
+						errorMsgs.put("accountTextError","請輸入自我介紹");
+					}else {
+						accountText = new String(accountTextInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+			//分隔線				
+			//檢查照片輸入
+				//會員大頭照
+				byte[] accountPicBuffer  = null;
+				try {
+					//會員大頭照傳入
+					Part part = req.getPart("accountPic");
+					InputStream in = part.getInputStream();
+					accountPicBuffer = new byte[in.available()];
+					in.read(accountPicBuffer);
+					in.close();
+					req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
+					accountInfoVO.setAccountPic(accountPicBuffer);	
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+
+				//會員身分證正面
+				byte[] accountIDcardFrontBuffer = null;
+				try {
+					Part part = req.getPart("accountIDcardFront");
+					InputStream in = part.getInputStream();
+					accountIDcardFrontBuffer = new byte[in.available()];
+					in.read(accountIDcardFrontBuffer);
+					in.close();
+					req.getSession().setAttribute("accountIDcardFrontBuffer",accountIDcardFrontBuffer);
+					accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);	
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+
+				//會員身分證背面
+				byte[] accountIDcardBackBuffer  = null;
+				try {
+					//會員大頭照傳入
+					Part part = req.getPart("accountIDcardBack");
+					
+					InputStream in = part.getInputStream();
+					accountIDcardBackBuffer = new byte[in.available()];
+					in.read(accountIDcardBackBuffer);
+					in.close();
+					req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
+					accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);	
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
 				}
 				
-				// 有錯誤就返回總表，顯示錯誤訊息
+				//有錯誤就返回
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Dashboard/Account/UpdateAccountInfoPage.jsp");
+							.getRequestDispatcher("/Dashboard/Account/InsertAccountInfoPage.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
-System.out.println("檢查點3");
-
+				
 				//輸入資料無誤的儲存
-//				req.setAttribute("accountMail",accountMailInput);
-//				req.setAttribute("accountNickname",accountNicknameInput);
-//				req.setAttribute("accountPassword",accountPasswordInput);
-//				req.setAttribute("accountState",accountState);
-//				req.setAttribute("accountLevel",accountLevel);
-//				req.setAttribute("accountName",accountNameInput);
-//				req.setAttribute("accountGender",accountGender);
-//				req.setAttribute("accountBirth",accountBirth);
-//				req.setAttribute("accountPhone",accountPhone);
-//				req.setAttribute("accountText",accountTextInput);
-				AccountInfoVO accountInfoVO = new AccountInfoVO();
-				accountInfoVO.setAccountMail(accountMailInput);
-				accountInfoVO.setAccountNickname(accountNickname);
+				req.setAttribute("accountMail",accountMailInput);
+				req.setAttribute("accountPassword",accountPasswordInput);
+				req.setAttribute("accountNickname",accountNicknameInput);
+				req.setAttribute("accountName",accountNameInput);
+				req.setAttribute("accountGender",Integer.parseInt(accountGenderInput));
+				
+				req.setAttribute("accountLevel", Integer.parseInt(accountLevelInput));
+				req.setAttribute("accountState", Integer.parseInt(accountStateInput));
+				
+				req.setAttribute("accountPhone", accountPhoneInput);
+				req.setAttribute("accountBirth",java.sql.Date.valueOf(accountBirthInput));
+				req.setAttribute("accountText",accountTextInput);
+
+				//呼叫SERVICE來做事，把值都存到AccountInfoVO物件
+				accountInfoVO.setAccountMail(accountMail);
 				accountInfoVO.setAccountPassword(accountPassword);
-				accountInfoVO.setAccountState(accountState);
-				accountInfoVO.setAccountLevel(accountLevel);
+				accountInfoVO.setAccountNickname(accountNickname);
 				accountInfoVO.setAccountName(accountName);
 				accountInfoVO.setAccountGender(accountGender);
-				accountInfoVO.setAccountBirth(accountBirth);
+				
+				accountInfoVO.setAccountLevel(accountLevel);
+				accountInfoVO.setAccountState(accountState);
+
 				accountInfoVO.setAccountPhone(accountPhone);
-				accountInfoVO.setAccountText(accountTextInput);
-System.out.println("驗證完畢");
-				//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
-				AccountInfoService accountInfoSvc = new AccountInfoService();
+				accountInfoVO.setAccountBirth(accountBirth);
+				accountInfoVO.setAccountText(accountText);
+				
+				accountInfoVO.setAccountPic(accountPicBuffer);
+				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
+				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
+				
 				accountInfoVO.setAccountID(accountID);
-				accountInfoVO = accountInfoSvc.updateAccountInfo(
-						accountMail, accountNickname, accountPassword, accountState, accountLevel,
-						accountName, accountGender, accountBirth, accountPhone,
-						accountText);
+				
+				accountInfoSvc.updateAccountInfo(accountInfoVO);
+				
 				req.setAttribute("accountInfoVO",accountInfoVO);
-System.out.println("req.set");
+				
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Dashboard/Account/DashboardAccountPage.jsp";
-System.out.println("轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				

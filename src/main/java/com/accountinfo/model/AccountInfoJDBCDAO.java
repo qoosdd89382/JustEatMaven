@@ -31,7 +31,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static String password = "justeat";
 	
 	//後臺用，CRUD指令，五個一排，共15個
-	private static final String Insert_Stmt = "Insert into AccountInfo "
+	private static final String Insert_Stmt = "Insert into JustEat.AccountInfo "
 			+ "(account_mail,account_nickname,account_password,account_state,account_level,"
 			+ "account_name,account_gender,account_birth,account_phone,account_pic,"
 			+ "account_idcard_front,account_idcard_back,account_text,account_register_time,account_code)"
@@ -40,7 +40,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static final String Update_Stmt = "Update AccountInfo set "
 			+ "account_mail=?,account_nickname=?,account_password=?,account_state=?,account_level=?,"
 			+ "account_name=?,account_gender=?,account_birth=?,account_phone=?,account_pic=?,"
-			+ "account_idcard_front=?,account_idcard_back=?,account_text=?,account_register_time=?,account_code=?"
+			+ "account_idcard_front=?,account_idcard_back=?,account_text=?"
 			+ "Where account_id=?";
 	private static final String Delete_Stmt = "Delete From AccountInfo Where account_id=?";
 	private static final String Select_Key_Stmt = "Select * From JustEat.AccountInfo Where account_id=?";
@@ -64,6 +64,11 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			+ "account_name=?,account_gender=?,account_birth=?,account_phone=?,"
 			+ "account_pic=?,"
 			+ "account_text=?"
+			+ "Where account_id=?";
+	//會員忘記密碼
+	//會員寄出認證信找回密碼
+	private static final String Update_Account_Code_From_Forget = "Update JustEat.AccountInfo set "
+			+ "account_code=?"
 			+ "Where account_id=?";
 	
 	//註冊用
@@ -132,8 +137,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			pstmt.setBytes(11,accountInfoVO.getAccountIDcardFront());
 			pstmt.setBytes(12,accountInfoVO.getAccountIDcardBack());
 			pstmt.setString(13,accountInfoVO.getAccountText());
-			pstmt.setTimestamp(14,accountInfoVO.getAccountRegisterTime());
-			pstmt.setString(15,accountInfoVO.getAccountCode());
+			pstmt.setString(14,accountInfoVO.getAccountCode());
 			
 			pstmt.executeUpdate();
 			
@@ -197,10 +201,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			pstmt.setBytes(11,accountInfoVO.getAccountIDcardFront());
 			pstmt.setBytes(12,accountInfoVO.getAccountIDcardBack());
 			pstmt.setString(13,accountInfoVO.getAccountText());
-			pstmt.setTimestamp(14,accountInfoVO.getAccountRegisterTime());
-			pstmt.setString(15,accountInfoVO.getAccountCode());
 			
-			pstmt.setInt(16,accountInfoVO.getAccountID());
+			pstmt.setInt(14,accountInfoVO.getAccountID());
 			
 			pstmt.executeUpdate();
 			
@@ -534,7 +536,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			while (rs.next()) {
 				accountInfoVO = new AccountInfoVO();
 				
-				accountInfoVO.setAccountMail(rs.getString("account_nickname"));
+				accountInfoVO.setAccountNickname(rs.getString("account_nickname"));
 			}
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. "
@@ -566,7 +568,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 	
 	@Override
-	//輸入 暱稱值 回傳 含信箱的 VO物件 = 檢查資料庫有沒有這個暱稱
+	//輸入 暱稱值 回傳 含信箱的 VO物件 = 檢查資料庫有沒有這個密碼
 	public AccountInfoVO getAccountCodeByAccountMail(String accountMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -584,7 +586,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			while (rs.next()) {
 				accountInfoVO = new AccountInfoVO();
 				
-				accountInfoVO.setAccountMail(rs.getString("account_code"));
+				accountInfoVO.setAccountCode(rs.getString("account_code"));
 			}
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. "
@@ -667,7 +669,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	
 	@Override
 	//輸入 信箱值 回傳 含密碼 的 VO物件 = 資料庫有該會員，用來確認輸入密碼是否符合資料庫
-	public AccountInfoVO getAccountPassword(String accountMail) {
+	public AccountInfoVO getAccountPasswordByAccountMail(String accountMail) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -757,6 +759,44 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 			}
 		}
 		
+	}
+
+	
+//忘記密碼
+	//收到會員忘記密碼寄出驗證信
+	public void updateAccountCodeFromForget(AccountInfoVO accountInfoVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Update_Account_Code_From_Forget);
+			
+			pstmt.setString(1,accountInfoVO.getAccountCode());
+			pstmt.setInt(2,accountInfoVO.getAccountID());
+			
+			pstmt.executeUpdate();
+
+			System.out.println("updateAccountCodeFromForget completed!");
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		}finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
 	}
 	
 //註冊用

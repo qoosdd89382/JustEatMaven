@@ -6,7 +6,13 @@
 <%
 //登入後產生存在session中的accountInfoVOLogin
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
+//如果SESSIN沒有登入消息的話 就取前面的REQUEST
+// if(accountInfoVO==null){
+// 	accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO");
+// }
 //取得傳回的使用者輸入參數
+// String accountMail = accountInfoVO.getAccountMail();
+// String accountPassword = accountInfoVO.getAccountPassword();
 String accountMail = request.getParameter("accountMail");
 String accountPassword = request.getParameter("accountPassword");
 %>
@@ -31,12 +37,11 @@ String accountPassword = request.getParameter("accountPassword");
 </head>
 
 <style>
+
 div#main_area{
 	margin-top:150px;
 }
-div#intro_area{
 
-}
 div#login_area {
 	background-color:white;
 	list-style: none;
@@ -87,22 +92,21 @@ input#account_register_info {
 	
 	<div class="container">
 
-		
 		<div id="main_area"class="row">
+		
 			<div id="intro_area" class="col col-sm-8">
 			
-				<img src="images/loginTest.jpg" width="730" height="435" border="0">
+				<img src="<%=request.getContextPath()%>/img/header.png" width="730" height="435" border="0">
 
 			</div>
 
 			<div id="login_area" class="col col-sm-4">
 			
 				<strong id="login_area_title">您好，歡迎登入</strong>
-				<span>${errorMsgs}</span>
+				
 				<div id="login_area_input"></div>
 				
 					<form method="post" action="accountInfo.do" name="LoginInfo">
-					<span style="color:red">${errorMsgs.get("UnexceptionError")}</span>
 						<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br>
 						<input id="account_mail_input" type="text" name="accountMail" 
 							value="<%=(accountMail == null) ? "" : accountMail%>">
@@ -113,7 +117,7 @@ input#account_register_info {
 							value="<%=(accountPassword == null) ? "" : accountPassword%>">
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
-					    <span>請輸入驗證碼 (點擊圖片可刷新):測試中後拔VALUE</span><br>
+					    <span>請輸入驗證碼 (點擊圖片可刷新):測試密碼"1111"</span><br>
 					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput" value="1111">
 					    <span style="color:red">${errorMsgs.get("randomNumberError")}</span><br>
 					    
@@ -124,20 +128,9 @@ input#account_register_info {
 						<input id="account_reset_btn" type="reset" value="重置">
 					</form>
 				
-					<form method="post" action="accountInfo.do">
-						<input type="hidden" name="action" value="getAccountInfoForForget">
-						<input id="account_forget_code" type="submit" value="忘記密碼了嗎?">
-
-					</form>
 				
-<!-- 				<h3><a id="account_forget_code" href='#'>忘記密碼了嗎?(X)</a></h3> -->
-				
-<!-- 					<form method="post" action="accountInfo.do"> -->
-<!-- 						<input type="hidden" name="action" value="gotoAccountInfo_For_Register"> -->
-<!-- 						<input id="account_register_info" type="submit" value="還不是會員?"> -->
-<!-- 						<p>連結到註冊會員資料頁面(施工中)</p> -->
-<!-- 					</form> -->
-				
+				<h3><a id="account_forget_code" href='<%=request.getContextPath()%>/Account/AccountForgetPage.jsp'>忘記密碼了嗎?</a></h3>
+								
 				<h3><a id="account_register_info" href='<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp'>還不是會員?</a></h3>
 				
 					
@@ -145,12 +138,12 @@ input#account_register_info {
 		</div>
 	</div>
 	
-	<p>備忘區</p>
-				<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
-	<p>借我標記一下session(EL)=>${accountMail}</p>
-	<p>記得改type password</p>
-	<p>重新整理帶入資料</p>
-	<p>切到這個頁面檢查登入狀態直接到會員中心</p>
+	<p>後台區</p>
+	<span>${errorMsgs}</span>
+	<p>${errorMsgs.get("UnexceptionError")}</p>
+	<p>====</p>
+	
+
 	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

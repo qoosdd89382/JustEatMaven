@@ -15,36 +15,12 @@ public class AccountInfoService {
 		dao = new AccountInfoJDBCDAO();
 	}
 //後臺用
-	public void insertAccountInfo(
-			String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
-			String accountName,Integer accountGender,Date accountBirth,String accountPhone,byte[] accountPic,
-			byte[] accountIDcardFront,byte[] accountIDcardback,String accountText,String accountRegisterTime
-			) {
-		
+	public void insertAccountInfo(AccountInfoVO accountInfoVO) {
+		dao.insert(accountInfoVO);
 	}
 	
-	public AccountInfoVO updateAccountInfo(
-		String accountMail,String accountNickname,String accountPassword,Boolean accountState,Integer accountLevel,
-		String accountName,Integer accountGender,Date accountBirth,String accountPhone,
-		String accountText
-		) {
-		AccountInfoVO accountInfoVO = new AccountInfoVO();
-
-		accountInfoVO.setAccountMail(accountMail);
-		accountInfoVO.setAccountNickname(accountNickname);
-		accountInfoVO.setAccountPassword(accountPassword);
-		accountInfoVO.setAccountState(accountState);
-		accountInfoVO.setAccountLevel(accountLevel);
-		
-		accountInfoVO.setAccountName(accountName);
-		accountInfoVO.setAccountGender(accountGender);
-		accountInfoVO.setAccountBirth(accountBirth);
-		accountInfoVO.setAccountPhone(accountPhone);
-		accountInfoVO.setAccountText(accountText);
-		
+	public void updateAccountInfo(AccountInfoVO accountInfoVO) {
 		dao.update(accountInfoVO);
-		
-		return accountInfoVO;
 	}
 	
 	public AccountInfoVO selectOneAccountInfo(Integer accountID) {
@@ -150,8 +126,8 @@ public class AccountInfoService {
 		return dao.getAccountNickname(accountNickname);
 	}
 	//輸入信箱 回傳該信箱帳號的 含密碼的VO物件 用來比對使用者的輸入資料是否正確
-	public AccountInfoVO getAccountPassword(String accountMail) {
-		return dao.getAccountPassword(accountMail);
+	public AccountInfoVO getAccountPasswordByAccountMail(String accountMail) {
+		return dao.getAccountPasswordByAccountMail(accountMail);
 	}
 	public AccountInfoVO getAccountIDByAccountMail(String accountMail){
 		return dao.getAccountIDByAccountMail(accountMail);
@@ -180,6 +156,16 @@ public class AccountInfoService {
 		
 		dao.updateAccountInfoFromChange(accountInfoVO);
 	}
+	
+//會員忘記密碼
+	public void updateAccountCodeFromForget(
+			String accountCode,Integer accountID){
+		AccountInfoVO accountInfoVO = new AccountInfoVO();
+		accountInfoVO.setAccountCode(accountCode);
+		accountInfoVO.setAccountID(accountID);
+		dao.updateAccountCodeFromForget(accountInfoVO);
+	}
+	
 //註冊用
 	//傳入 可用信箱 帳號 隨機驗證碼到資料庫儲存
 	public AccountInfoVO setBlankAccountInfoFromRegister(String accountMail, String accountNickname, String accountCode) {

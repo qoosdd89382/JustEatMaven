@@ -3,11 +3,9 @@
 
 <%@ page import="com.accountinfo.model.*"%>
 <!DOCTYPE html>
-
-<%
-AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+<% 
+AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
 %>
-
 <html>
 
 <head>
@@ -22,7 +20,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>揪食-會員註冊</title>
+<title>揪食-忘記密碼</title>
 
 <style>
 div#register_area{
@@ -59,7 +57,6 @@ textarea#textarea {
 	resize:none;
 	overflow:hidden;
 }
-
 </style>
 
 </head>
@@ -67,7 +64,7 @@ textarea#textarea {
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-
+	
 	<div class="container">
 	
 		<div id="main_area" class="row">
@@ -75,37 +72,29 @@ textarea#textarea {
 			<div id="register_area" class="col offset-3">
 			
 			<Strong>您好~歡迎來到揪食!</Strong><br>
-			<strong>請輸入您的資料協助您成為我們的一員</strong>
+			<strong>忘記密碼了嗎? 我們將協助您取得密碼 ~</strong>
 			
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 				
-					<span>您的會員信箱為 :</span>${accountInfoVO.accountMail}<br>
-					
-					<span>您的會員暱稱 :</span>${accountInfoVO.accountNickname}<br>
-
-					<span>請輸入驗證碼:</span><br>
-					<input id="input_box" type="text" name="accountCode">
-					<span style="color:red">${errorMsgs.get("accountCodeError")}</span><br> 
-
+					<span style="color:red">*</span><span>請輸入會員信箱 :</span><br>
+					<input id="input_box" type="text" name="accountMail" 
+					value="<%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountMail()%>"
+					placeholder="如JustEat@gmail.com">
+					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 						
-					<input type="hidden" name="action" value="getAccountCode"> 
-					<input id="register_submit_btn" type="submit" value="開始填寫我的詳細資料"> 
-					
+					<input type="hidden" name="action" value="getAccountInfoForForget"> 
+					<input id="register_submit_btn" type="submit" value="送出驗證信"> 
+
 				</form>
 			</div>
 		</div>
 	</div>
-	<P>除錯區</P>
-	<P>全部的訊息${errorMsgs}</P>
-
-	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
-
+	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	
 	<script type="text/javascript">
-	//功能區
 
 	</script>
 
