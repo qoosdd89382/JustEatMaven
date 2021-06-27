@@ -3,11 +3,11 @@
 
 <%@page import="com.recipe.model.RecipeVO"%>
 <%@page import="com.recipe.model.RecipeService"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.*"%>
 
-<%-- ¦¹­¶½m²ß±Ä¥Î EL ªº¼gªk¨ú­È --%>
+<%-- æ­¤é ç·´ç¿’æŽ¡ç”¨ EL çš„å¯«æ³•å–å€¼ --%>
 
 <%
 RecipeService recipesvc = new RecipeService();
@@ -22,7 +22,7 @@ RecipeService recipesvc = new RecipeService();
 
 <html>
 <head>
-<title>­¹ÃÐlistAll</title>
+<title>é£Ÿè­œlistAll</title>
 
 <style>
 table#table-1 {
@@ -68,22 +68,22 @@ th, td {
 
 
 
-	<h4>¦¹­¶½m²ß±Ä¥Î EL ªº¼gªk¨ú­È:</h4>
+	<h4>æ­¤é ç·´ç¿’æŽ¡ç”¨ EL çš„å¯«æ³•å–å€¼:</h4>
 	<table id="table-1">
 		<tr>
 			<td>
-				<h3>­¹ÃÐlistAll</h3>
+				<h3>é£Ÿè­œlistAll</h3>
 				<h4>
 					<a href="select_page.jsp"><img src="images/back1.gif"
-						width="100" height="32" border="0">¦^­º­¶</a>
+						width="100" height="32" border="0">å›žé¦–é </a>
 				</h4>
 			</td>
 		</tr>
 	</table>
 
-	<%-- ¿ù»~ªí¦C --%>
+	<%-- éŒ¯èª¤è¡¨åˆ— --%>
 	<c:if test="${not empty errorMsgs}">
-		<font style="color: red">½Ð­×¥¿¥H¤U¿ù»~:</font>
+		<font style="color: red">è«‹ä¿®æ­£ä»¥ä¸‹éŒ¯èª¤:</font>
 		<ul>
 			<c:forEach var="message" items="${errorMsgs}">
 				<li style="color: red">${message}</li>
@@ -91,21 +91,21 @@ th, td {
 		</ul>
 	</c:if>
 
-	<h1>¼öªù­¹§÷</h1>
+	<h1>ç†±é–€é£Ÿæ</h1>
 
 	<table>
 		<tr>
-			<th>­¹ÃÐ¬y¤ô¸¹</th>
-			<th>­¹ÃÐ¦WºÙ</th>
-			<th>­¹ÃÐÂ²¤¶</th>
-			<th>­¹ÃÐ¸m³»·Ó</th>
-			<th>­¹ÃÐ¤H¥÷</th>
-			<th>­¹ÃÐµoªí®É¶¡</th>
-			<th>­¹ÃÐÂsÄý¤H¦¸</th>
-			<th>«öÆg¤H¼Æ</th>
-			<th>¦¬ÂÃ¤H¼Æ</th>
-			<th>·|­û½s¸¹</th>
-			<th>¬¡°Ê¸Ô±¡</th>
+			<th>é£Ÿè­œæµæ°´è™Ÿ</th>
+			<th>é£Ÿè­œåç¨±</th>
+			<th>é£Ÿè­œç°¡ä»‹</th>
+			<th>é£Ÿè­œç½®é ‚ç…§</th>
+			<th>é£Ÿè­œäººä»½</th>
+			<th>é£Ÿè­œç™¼è¡¨æ™‚é–“</th>
+			<th>é£Ÿè­œç€è¦½äººæ¬¡</th>
+			<th>æŒ‰è®šäººæ•¸</th>
+			<th>æ”¶è—äººæ•¸</th>
+			<th>æœƒå“¡ç·¨è™Ÿ</th>
+			<th>æ´»å‹•è©³æƒ…</th>
 
 		</tr>
 

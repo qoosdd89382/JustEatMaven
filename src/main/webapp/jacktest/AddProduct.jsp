@@ -1,5 +1,5 @@
 <%@page import="com.product.model.ProductVO"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
@@ -10,7 +10,7 @@ ProductVO productVO = (ProductVO) request.getAttribute("ProductVO");
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-<title>­û¤u¸ê®Æ·s¼W - addEmp.jsp</title>
+<title>å“¡å·¥è³‡æ–™æ–°å¢ - addEmp.jsp</title>
 
 <style>
   table#table-1 {
@@ -49,7 +49,7 @@ ProductVO productVO = (ProductVO) request.getAttribute("ProductVO");
 
 
 
-<h3>¸ê®Æ·s¼W:</h3>
+<h3>è³‡æ–™æ–°å¢:</h3>
 
 
 <FORM METHOD="post" ACTION="product.do" name="form1">
@@ -57,29 +57,29 @@ ProductVO productVO = (ProductVO) request.getAttribute("ProductVO");
 
 
 	<tr>
-		<td>°Ó«~¦WºÙ</td>
+		<td>å•†å“åç¨±</td>
 		<td><input type="TEXT" name="producttext" size="45" 
-			 value="<%= (productVO==null)? "ex:µf­X" : productVO.getProductText()%>" /></td>
+			 value="<%= (productVO==null)? "ex:ç•ªèŒ„" : productVO.getProductText()%>" /></td>
 	</tr>
 	<tr>
-		<td>³W®æ</td>
+		<td>è¦æ ¼</td>
 		<td><input type="TEXT" name="productunit" size="45"
-			 value="<%= (productVO==null)? "ex:¤@¥]" : productVO.getProductUnit()%>" /></td>
+			 value="<%= (productVO==null)? "ex:ä¸€åŒ…" : productVO.getProductUnit()%>" /></td>
 	</tr>
 	<tr>
-		<td>­«¶q</td>
+		<td>é‡é‡</td>
 		<td><input type="TEXT" name="productspecification" size="45"
-			 value="<%= (productVO==null)? "ex:200¤½§J" : productVO.getProductSpecification()%>" /></td>
+			 value="<%= (productVO==null)? "ex:200å…¬å…‹" : productVO.getProductSpecification()%>" /></td>
 	</tr>
 	<tr>
-		<td>²£¦a</td>
+		<td>ç”¢åœ°</td>
 		<td><input type="TEXT" name="sal" size="45"
-			 value="<%= (productVO==null)? "ex:¶V«n" : productVO.getProductOrigin()%>" /></td>
+			 value="<%= (productVO==null)? "ex:è¶Šå—" : productVO.getProductOrigin()%>" /></td>
 	</tr>
 	<tr>
-		<td>«O¦s¤è¦¡</td>
+		<td>ä¿å­˜æ–¹å¼</td>
 		<td><input type="TEXT" name="comm" size="45"
-			 value="<%= (productVO==null)? "§NÂÃ" : productVO.getProductStorageMethod()%>" /></td>
+			 value="<%= (productVO==null)? "å†·è—" : productVO.getProductStorageMethod()%>" /></td>
 	</tr>
 
 
@@ -87,12 +87,12 @@ ProductVO productVO = (ProductVO) request.getAttribute("ProductVO");
 </table>
 <br>
 <input type="hidden" name="action" value="insert">
-<input type="submit" value="°e¥X·s¼W"></FORM>
+<input type="submit" value="é€å‡ºæ–°å¢"></FORM>
 </body>
 
 
 
-<!-- =========================================¥H¤U¬° datetimepicker ¤§¬ÛÃö³]©w========================================== -->
+<!-- =========================================ä»¥ä¸‹ç‚º datetimepicker ä¹‹ç›¸é—œè¨­å®š========================================== -->
 
 <% 
 

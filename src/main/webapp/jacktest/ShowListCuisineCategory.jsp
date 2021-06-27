@@ -3,11 +3,11 @@
 
 <%@page import="com.cuisinecategory.model.CuisineCategoryService"%>
 <%@page import="com.cuisinecategory.model.CuisineCategoryVO"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.*"%>
 
-<%-- ¦¹­¶½m²ß±Ä¥Î EL ªº¼gªk¨ú­È --%>
+<%-- æ­¤é ç·´ç¿’æ¡ç”¨ EL çš„å¯«æ³•å–å€¼ --%>
 
 <%
 	CuisineCategoryService cuisinecategorysvc = new CuisineCategoryService();
@@ -20,7 +20,7 @@
 
 <html>
 <head>
-<title>®Æ²z¤ÀÃşlistAll</title>
+<title>æ–™ç†åˆ†é¡listAll</title>
 
 <style>
 table#table-1 {
@@ -67,22 +67,22 @@ th, td {
 
 
 
-	<h4>¦¹­¶½m²ß±Ä¥Î EL ªº¼gªk¨ú­È:</h4>
+	<h4>æ­¤é ç·´ç¿’æ¡ç”¨ EL çš„å¯«æ³•å–å€¼:</h4>
 	<table id="table-1">
 		<tr>
 			<td>
-				<h3>®Æ²z¤ÀÃşlistAll</h3>
+				<h3>æ–™ç†åˆ†é¡listAll</h3>
 				<h4>
 					<a href="select_page.jsp"><img src="images/back1.gif"
-						width="100" height="32" border="0">¦^­º­¶</a>
+						width="100" height="32" border="0">å›é¦–é </a>
 				</h4>
 			</td>
 		</tr>
 	</table>
 
-	<%-- ¿ù»~ªí¦C --%>
+	<%-- éŒ¯èª¤è¡¨åˆ— --%>
 	<c:if test="${not empty errorMsgs}">
-		<font style="color: red">½Ğ­×¥¿¥H¤U¿ù»~:</font>
+		<font style="color: red">è«‹ä¿®æ­£ä»¥ä¸‹éŒ¯èª¤:</font>
 		<ul>
 			<c:forEach var="message" items="${errorMsgs}">
 				<li style="color: red">${message}</li>
@@ -90,13 +90,13 @@ th, td {
 		</ul>
 	</c:if>
 
-	<h1>¼öªù­¹§÷</h1>
+	<h1>ç†±é–€é£Ÿæ</h1>
 
 	<table>
 		<tr>
-			<th>®Æ²z¤ÀÃş</th>
-			<th>®Æ²z¤ÀÃş¦WºÙ</th>
-			<th>­×§ï</th>
+			<th>æ–™ç†åˆ†é¡</th>
+			<th>æ–™ç†åˆ†é¡åç¨±</th>
+			<th>ä¿®æ”¹</th>
 
 		</tr>
 
@@ -104,24 +104,11 @@ th, td {
 
 		<c:forEach var="cuisinecategoryVO" items="${list}">
 			<tr>
-				<td>${cuisinecategoryVO.cuisineCategoryID}</td>
+				<td class="id">${cuisinecategoryVO.cuisineCategoryID}</td>
 				<td>${cuisinecategoryVO.cuisineCategoryName}</td>
-				<td><button class="modify">­×§ï</button></td>
+				<td><button class="modify">ä¿®æ”¹</button></td>
 		</c:forEach>
-
-
-
-
-
-
-
-
-
-
 	</table>
-
-
-
 
 
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
@@ -138,11 +125,12 @@ th, td {
 $(document).on("click", "button.modify",function(){
 	
 		 alert (  $(this).parents("td").prev().text() );
+		 console.log("123");
 		 var vall=  $(this).parents("td").prev().text();
 		 
 		 $(this).parents("td").prev().html("<input type='text'>");
 		 $(this).parents("td").prev().find("input").val(vall); 
-		 $(this).html("½T©w­×§ï");
+		 $(this).html("ç¢ºå®šä¿®æ”¹");
 		 $(this).attr('class',"confirmModify")
 		 
 	});
@@ -151,13 +139,28 @@ $(document).on("click", "button.modify",function(){
 
 $(document).on("click", "button.confirmModify", function(){
 	$(this).parents("td").prev().text($(this).closest("td").prev().find("input").val());
-	 $(this).html("­×§ï");
+	 $(this).html("ä¿®æ”¹");
 	 $(this).attr('class',"modify")
-});
+	 var modifyname = $(this).parents("td").prev().text();
+	 var categoryid = $(this).parent().prev().prev().text();
+		console.log(modifyname);
+		console.log('test'+categoryid);
+		$.ajax({
+			type : 'POST',
+			url : 'http://localhost:8081/justeat-maven/CuisineCategoryListUpdateServlet',
+			data : {
+				modifyname : modifyname,
+				categoryid :categoryid
+			},
+			success : function(result) {
+				console.log(result);
+				
+			}
 
-<input type="hidden" name="action" value="update">
-<input type="hidden" name="empno" value="<%=empVO.getEmpno()%>">
-<input type="submit" value="°e¥X­×§ï"></FORM>
+		});
+		
+	 
+});
 
 
 </script>

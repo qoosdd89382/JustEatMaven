@@ -4,11 +4,11 @@
 <%@page import="com.productpic.model.ProductPicJDBCDAO"%>
 <%@page import="com.product.model.ProductVO"%>
 <%@page import="com.product.model.ProductJDBCDAO"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.*"%>
 
-<%-- �����m�߱ĥ� EL ���g�k���� --%>
+<%-- 此頁練習採用 EL 的寫法取值 --%>
 
 <%
 ProductJDBCDAO dao = new ProductJDBCDAO();
@@ -23,7 +23,7 @@ ProductJDBCDAO dao = new ProductJDBCDAO();
 
 <html>
 <head>
-<title>�Ҧ����u��� - listAllEmp1_byDAO.jsp</title>
+<title>所有員工資料 - listAllEmp1_byDAO.jsp</title>
 
 <style>
 table#table-1 {
@@ -67,30 +67,30 @@ th, td {
 
 
    <FORM METHOD="post" ACTION="emp.do" >
-        <b>�j�M���� </b>
+        <b>搜尋食材 </b>
         <input type="text" name="empno">
         <input type="hidden" name="action" value="getOne_For_Display">
-        <input type="submit" value="�e�X">
+        <input type="submit" value="送出">
     </FORM>
 
 
 
-	<h4>�����m�߱ĥ� EL ���g�k����:</h4>
+	<h4>此頁練習採用 EL 的寫法取值:</h4>
 	<table id="table-1">
 		<tr>
 			<td>
-				<h3>�Ҧ��Ӯa��� - listAllEmp1_byDAO.jsp</h3>
+				<h3>所有商家資料 - listAllEmp1_byDAO.jsp</h3>
 				<h4>
 					<a href="select_page.jsp"><img src="images/back1.gif"
-						width="100" height="32" border="0">�^����</a>
+						width="100" height="32" border="0">回首頁</a>
 				</h4>
 			</td>
 		</tr>
 	</table>
 
-	<%-- ���~���C --%>
+	<%-- 錯誤表列 --%>
 	<c:if test="${not empty errorMsgs}">
-		<font style="color: red">�Эץ��H�U���~:</font>
+		<font style="color: red">請修正以下錯誤:</font>
 		<ul>
 			<c:forEach var="message" items="${errorMsgs}">
 				<li style="color: red">${message}</li>
@@ -98,23 +98,23 @@ th, td {
 		</ul>
 	</c:if>
 
-	<h1>��������</h1>
+	<h1>熱門食材</h1>
 
 	<table>
 		<tr>
-			<th>�ӫ~�y����</th>
-			<th>�Ӯa�y����</th>
-			<th>�ӫ~�W�[���A</th>
-			<th>�ӫ~����</th>
-			<th>�ӫ~�ƶq</th>
-			<th>�ӫ~���</th>
-			<th>�ӫ~�W��</th>
-			<th>�ӫ~���a</th>
-			<th>�ӫ~�O�s�覡</th>
-			<th>�ӫ~�W�[�ɶ�</th>
-			<th>�ӫ~����ɶ�</th>
-			<th>�ӫ~�O�_�馩</th>
-			<th>�ӫ~����</th>
+			<th>商品流水號</th>
+			<th>商家流水號</th>
+			<th>商品上架狀態</th>
+			<th>商品價格</th>
+			<th>商品數量</th>
+			<th>商品單位</th>
+			<th>商品規格</th>
+			<th>商品產地</th>
+			<th>商品保存方式</th>
+			<th>商品上架時間</th>
+			<th>商品到期時間</th>
+			<th>商品是否折扣</th>
+			<th>商品說明</th>
 
 		</tr>
 
