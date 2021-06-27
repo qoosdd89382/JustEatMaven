@@ -171,7 +171,6 @@ ul li{
 			document.getElementById('connect').disabled = true;
 			document.getElementById('disconnect').disabled = false;
 			
-
 			var jsonObj = {
 					"type" : "history",
 					"sender" : self,
@@ -185,7 +184,7 @@ ul li{
 		webSocket.onmessage = function(event) {
 			var jsonObj = JSON.parse(event.data);
 			if ("open" === jsonObj.type) {
-				refreshFriendList(jsonObj);
+// 				refreshFriendList(jsonObj);
 			} else if ("history" === jsonObj.type) {
 				messagesArea.innerHTML = '';
 				var ul = document.createElement('ul');
@@ -213,7 +212,7 @@ ul li{
 					messagesArea.scrollTop = messagesArea.scrollHeight;
 				}
 			} else if ("close" === jsonObj.type) {
-				refreshFriendList(jsonObj);
+// 				refreshFriendList(jsonObj);
 			}
 			
 		};
@@ -238,7 +237,7 @@ ul li{
 				"type" : "chat",
 				"sender" : self,
 				"receiver" : "admin",
-				"time" : (new Date()).format("yyyy-MM-dd hh:mm:ss.S") + "",
+				"time" : (new Date()).format("yyyy-MM-dd hh:mm") + "",
 				"message" : message
 			};
 			webSocket.send(JSON.stringify(jsonObj));
