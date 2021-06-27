@@ -24,6 +24,7 @@ import com.admininfo.model.AdminInfoService;
 import com.admininfo.model.AdminInfoVO;
 import com.mail.controller.MailService;
 import com.mail.controller.RandomAuthCode;
+import com.recipe.model.RecipeVO;
 
 @WebServlet("/Dashboard/admin.do")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 3 * 1024 * 1024)
@@ -106,7 +107,7 @@ public class AdminInfoServlet extends HttpServlet {
 
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/index.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/");
 				failureView.forward(req, res);
 			}
 
@@ -265,11 +266,89 @@ public class AdminInfoServlet extends HttpServlet {
 					res.sendRedirect(location);
 					return;
 				}
+
+				res.sendRedirect(req.getContextPath() + "/Dashboard/");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
+		
+		
+		if ("update".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				
+				int adminID = (int) session.getAttribute("loginAdminID");
+				String adminPassword = req.getParameter("adminPassword");
+				AdminInfoVO adminVO = null;
+				
+				if (adminPassword == null || adminPassword.trim().length() == 0) {
+					errorMsgs.put("adminPasswordErr", "未輸入密碼");
+				} else if (allowUser(adminID, adminPassword) == null) {
+					errorMsgs.put("adminPasswordErr", "舊密碼輸入錯誤");
+				} else {
+					adminVO = allowUser(adminID, adminPassword);
+				}
+				
+				byte[] adminPicBuffer = null;
+				try {
+					Part part = req.getPart("adminPic");
+	
+					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+						System.out.println("使用者沒有上傳置頂圖片");
+						if (req.getSession().getAttribute("recipePicTopBuffer") != null) {
+							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
+						} else {
+							adminPicBuffer = ((AdminInfoVO) adminSvc.getOneAdmin(adminID)).getAdminPic();
+							req.getSession().setAttribute("adminPicBuffer", adminPicBuffer);
+						}
+					} else if (!part.getContentType().startsWith("image")) { 
+						errorMsgs.put("adminPicErr", "請上傳image類型之圖檔");
+						if (req.getSession().getAttribute("adminPicBuffer") != null) {
+							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
+						}
+					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
+						errorMsgs.put("adminPicErr", "請注意檔案尺寸過大");
+						if (req.getSession().getAttribute("adminPicBuffer") != null) {
+							adminPicBuffer = (byte[]) req.getSession().getAttribute("adminPicBuffer");
+						}
+					} else {
+						InputStream in = part.getInputStream();
+						adminPicBuffer = new byte[in.available()];
+						in.read(adminPicBuffer);
+						in.close();
+						req.getSession().setAttribute("adminPicBuffer", adminPicBuffer);
+					}
+				} catch (Exception e) {
+					System.err.println("使用者操作時發生其他例外");
+				}
+				
+//				String adminNickname = req.
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
 
 	}
+	
+
+	protected AdminInfoVO allowUser(int adminID, String adminPassword) {
+		AdminInfoService adminSvc = new AdminInfoService();
+		AdminInfoVO adminVO = adminSvc.getOneAdmin(adminID);
+		if (adminVO != null) {
+			String hashedPassword = adminVO.getAdminPassword();
+			if (BCrypt.checkpw(adminPassword, hashedPassword)) {
+				return adminVO;// 匹配
+			}
+		}
+		return null;	// 無此e-mail
+	}
+
 
 }

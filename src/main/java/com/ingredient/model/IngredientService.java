@@ -18,6 +18,7 @@ public class IngredientService {
 		/************注意：交易問題************/
 		vo.setIngredientSearchCount(dao.getOneByID(ingredientID).getIngredientSearchCount());
 		
+		
 		return vo;
 	}
 	
@@ -27,6 +28,8 @@ public class IngredientService {
 		vo.setIngredientName(ingredientName);
 		/************注意：交易問題************/
 		vo.setIngredientSearchCount(dao.getOneByID(ingredientID).getIngredientSearchCount());
+		
+		dao.update(vo);
 		
 		return vo;
 	}
