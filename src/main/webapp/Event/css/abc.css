@@ -8,6 +8,9 @@ table {
   margin: auto; 
   border-collapse:collapse;
 } 
+title h2 {
+    margin: 20px 0 0 10px;
+}
 th { 
   background-color: orange;
   padding:10px;

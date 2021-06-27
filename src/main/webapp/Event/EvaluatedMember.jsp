@@ -36,7 +36,7 @@
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-
+	<h2>成員評分</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
@@ -61,13 +61,32 @@
 	</tr>
 		<c:forEach var="evaluatedmemberVO" items="${list}" >
 			<tr> 
-				<td>${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountNickname}</td>
+				<td>${accountSvc.selectOneAccountInfo(evaluatedmemberVO.accepterAccountID).accountNickname}</td>
 				<td>
-					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 1}">男</c:if>
-					<c:if test="${accountSvc.getAccountID(evaluatedmemberVO.accepterAccountID).accountGender == 2}">女</c:if>
+					<c:if test="${accountSvc.selectOneAccountInfo(evaluatedmemberVO.accepterAccountID).accountGender == 1}">男</c:if>
+					<c:if test="${accountSvc.selectOneAccountInfo(evaluatedmemberVO.accepterAccountID).accountGender == 2}">女</c:if>
 				</td> 
 				<td>${eventMemberSvc.getAvgScoreByAccountID(evaluatedmemberVO.accepterAccountID)}</td> 
 				<td>${evaluatedmemberVO.giveScore}</td> 
+				<td>
+				 <div class="star_block">
+					<span class="star" data-star="1"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="2"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="3"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="4"><i class="fas fa-star"></i></span>
+		            <span class="star" data-star="5"><i class="fas fa-star"></i></span>	
+					
+				</div>	
+					<form action="<%= request.getContextPath() %>/Event/evaluatedmember.do"method="post">
+						<input type="hidden" name="eventID" value="${eventMemberVO.eventID}">
+						<input type="hidden" name="giverID" value="${account}">
+						<input type="hidden" name="accepterID" value="${accountinfoVO.accountID}">
+						<input type="hidden" name="score" value="0">
+						<input type="hidden" name="action" value="giveScore">
+						<button type="submit">送出評分</button>
+				
+					</form>
+				</td>
 			</tr> 
 		</c:forEach>
 	</table>
@@ -86,6 +105,22 @@
 	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
 	<script src="<%=request.getContextPath()%>/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+	<script>
+			    $(function(){
+			        $("div.star_block").on("click", "span.star", function () {
+			            var star_count = $(this).attr("data-star");
+			            $(this).addClass("-on");
+			            $(this).prevAll().addClass("-on");
+			            $(this).nextAll().removeClass("-on");
+			            $(this).closest("li").attr("data-star", star_count);
+			            $(this).parent().next().find('input[name="starCount"]').val(star_count);
+			        });
+			    });
+    </script>
+	
+	
 	<script>
 
 		$("[name=position]").on("change",function(){

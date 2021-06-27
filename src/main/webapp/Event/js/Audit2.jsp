@@ -33,11 +33,11 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 </head>
 <body>
-	
+
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-	<h2>成員審核</h2>
+	<h2>成員未審核</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
@@ -61,7 +61,7 @@
 		<th>審核</th>
 		
 	</tr>
-		<c:forEach var="eventMemberVO" items="${list}">
+		<c:forEach var="eventMemberVO" items="${list}" >
 			<tr> 
 				<td>${eventMemberVO.accountID}</td> 
 				<td>
@@ -73,11 +73,10 @@
 				<td>${eventMemberSvc.getTotalEventByAccountID(eventMemberVO.accountID)}</td> 	
 				<td>
 					<c:forEach var="dishVO" items="${dishSvc.getAccountIDAndEventID(eventMemberVO.accountID, eventMemberVO.eventID)}">
-						<div id="${dishVO.dishID}">${dishVO.dishName}</div>
+					<div id="${dishVO.dishID}">${dishVO.dishName}</div>
 					</c:forEach>
-				</td>
-				<td>							</td>
-			
+				</td>															
+				
 				
 			</tr> 
 		</c:forEach>

@@ -43,7 +43,7 @@
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-
+	<h2>參加/結束的活動</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
@@ -72,8 +72,8 @@
 	<c:forEach var="eventMemberVO" items="${eventMemberList}">
 		<tr>
 			<td>${eventMemberVO.eventID}</td>
-			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</td>
-			<td>${accountSvc.getAccountID(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountNickname}</td>
+			<td> <a href="<%= request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventMemberVO.eventID}&accountID=100001">${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</a> </td>
+			<td>${accountSvc.selectOneAccountInfo(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountNickname}</td>
 <%-- 			<td>${accountSvc.getOneAccount(eventMemberSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td> --%>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventCurrentCount}</td>
@@ -82,7 +82,10 @@
 		</tr>
 	</c:forEach>
 </table>
-	
+	  <div class="btn_margin" align="right"  >
+	  
+	         <a href="<%= request.getContextPath()%>/Event/EventList.jsp?eventID=${eventID}">返回活動列表</a>   
+	  </div>
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
