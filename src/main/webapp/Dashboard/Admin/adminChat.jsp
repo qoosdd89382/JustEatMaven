@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <%@ page import="java.util.List"%>
 <%@ page import="com.admininfo.model.*" %>
 
@@ -139,7 +143,7 @@ ul li{
 <body onload="connect();" onunload="disconnect();">
 	<h3 id="statusOutput" class="statusOutput"></h3>
 	<div id="row"></div>
-	<div id="messagesArea" class="panel message-area" ></div>
+	<div id="messagesArea" class="panel message-area"></div>
 	<div class="panel input-area">
 		<input id="message" class="text-field" type="text" placeholder="Message" onkeydown="if (event.keyCode == 13) sendMessage();" /> 
 		<input type="submit" id="sendMessage" class="button" value="Send" onclick="sendMessage();" /> 
@@ -180,18 +184,24 @@ ul li{
 				var ul = document.createElement('ul');
 				ul.id = "area";
 				messagesArea.appendChild(ul);
+				
 				// 這行的jsonObj.message是從redis撈出跟好友的歷史訊息，再parse成JSON格式處理
 				var messages = JSON.parse(jsonObj.message);
+				
 				for (var i = 0; i < messages.length; i++) {
 					var historyData = JSON.parse(messages[i]);
 					var showMsg = historyData.message;
+					var showTime = historyData.time;
 					var li = document.createElement('li');
+					
 					// 根據發送者是自己還是對方來給予不同的class名, 以達到訊息左右區分
 					historyData.sender === self ? li.className += 'me' : li.className += 'friend';
-					li.innerHTML = showMsg;
+					li.innerHTML = showMsg + '<span>' + showTime + '</span>';
 					ul.appendChild(li);
 				}
+				
 				messagesArea.scrollTop = messagesArea.scrollHeight;
+				
 			} else if ("chat" === jsonObj.type) {
 				if ( (statusOutput.textContent == jsonObj.sender) || jsonObj.sender == self) {
 					var li = document.createElement('li');
@@ -201,8 +211,10 @@ ul li{
 					document.getElementById("area").appendChild(li);
 					messagesArea.scrollTop = messagesArea.scrollHeight;
 				}
+				
 			} else if ("close" === jsonObj.type) {
 				refreshFriendList(jsonObj);
+				
 			}
 			
 		};
@@ -227,7 +239,7 @@ ul li{
 				"type" : "chat",
 				"sender" : self,
 				"receiver" : friend,
-				"time" : (new Date()).format("yyyy-MM-dd hh:mm:ss.S") + "",
+				"time" : (new Date()).format("yyyy-MM-dd hh:mm") + "",
 				"message" : message
 			};
 			webSocket.send(JSON.stringify(jsonObj));
@@ -243,8 +255,24 @@ ul li{
 		row.innerHTML = '';
 		for (var i = 0; i < friends.length; i++) {
 			if (friends[i] === self) { continue; }
-			row.innerHTML +='<div id=' + i + ' class="column" name="friendName" value=' + friends[i] + ' ><h2>' + friends[i] + '</h2></div>';
+// 			if (friends[i] !== self) { 
+				row.innerHTML ='<div id=' + i + ' class="column" name="friendName" value=' + friends[i] + ' ><h2>' + friends[i] + '</h2></div>' + row.innerHTML;
+				
+// 				if (i == friends.length-1){
+					var jsonObj = {
+						"type" : "history",
+						"sender" : self,
+						"receiver" : friends[i],
+						"time" : "", 
+						"message" : ""
+					};
+					webSocket.send(JSON.stringify(jsonObj));
+					statusOutput.innerHTML = friends[i];
+// 				}
+// 			}
+			
 		}
+		
 		addListener();
 	}
 	// 註冊列表點擊事件並抓取好友名字以取得歷史訊息

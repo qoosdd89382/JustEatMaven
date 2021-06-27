@@ -81,7 +81,14 @@ public class WebScoketAdminChatroom {
 		}
 		
 		Session receiverSession = sessionsMap.get(receiver);
-		if (receiverSession != null && receiverSession.isOpen()) {
+		
+		if ("admin".equals(receiver) && receiverSession == null) {
+			JedisHandleAdminChatroom.saveChatMessage(sender, receiver, message);
+			// 有待觀察中
+			if (userSession != null && userSession.isOpen()) {
+				userSession.getAsyncRemote().sendText(message);
+			}
+		} else if (receiverSession != null && receiverSession.isOpen()) {
 			receiverSession.getAsyncRemote().sendText(message);
 			userSession.getAsyncRemote().sendText(message);
 			JedisHandleAdminChatroom.saveChatMessage(sender, receiver, message);
