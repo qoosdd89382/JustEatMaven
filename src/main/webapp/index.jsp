@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/common/css/adminChat.css">
 <title>${allPageNames.webIndex}</title>
 </head>
 <body>
@@ -107,6 +108,8 @@
         </div>
     </main>
 
+	<%-- include chatbox --%>
+	<%@ include file="/common/adminChat.page"%>
 
 	<%-- include footer --%>
 	<footer>
@@ -123,5 +126,12 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/js/index.js"></script>
+	<script>
+	window.onload = function() {
+		
+		<%@ include file="/common/js/adminChatJs.page"%>
+		
+	}
+	</script>
 </body>
 </html>

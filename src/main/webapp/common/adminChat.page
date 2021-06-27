@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
+	<c:if test="${not empty sessionScope.accountInfoVOLogin}">
+		<span id="startChat" class="rounded-circle">
+			<i class="far fa-comments"></i>
+		</span>
+		
+		
+	    <div id="chatbox" class="none">
+	        <h3 id="statusOutput" class="statusOutput">有問題？快問我！<i class="fas fa-times"></i></h3>
+	        <div id="messagesArea" class="panel message-area ">
+	        </div>
+	        
+	        <div class="panel input-area ">
+				<input id="message" class="form-control form-control-lg text-field" type="text" placeholder="Message" />
+	        </div>
+	    </div>
+    </c:if>

@@ -1,0 +1,141 @@
+@charset "UTF-8";
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #eee;
+        }
+        
+        #startChat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+	        text-align: center;
+	        vertical-align: middle;
+	        display: inline-block;
+	        width: 60px;
+	        height: 60px;
+        	font-size: 35px;
+        	color: #Fff;
+        	background: #F3722C;
+            border: 1px solid #fff;
+        }
+
+        #chatbox {
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+            border: 1px solid #F3722C;
+            z-index: 10;
+        }
+
+        .message-area {
+            resize: none;
+            overflow: auto;
+            background-color: #ffffff;
+            height: 400px;
+            padding: 7px;
+        }
+
+
+        #message {
+            width: calc(100% - 20px)!important;
+            padding: 10px;
+        }
+
+        .input-area input {
+            margin: 10px;
+        }
+
+        .statusOutput {
+            background: #F3722C;
+            text-align: center;
+            color: #ffffff;
+            line-height: 2.5;
+            margin: 0 !important;
+            font-size: 20px;
+        }
+        
+        .statusOutput svg {
+        	float: right;
+        	vertical-align: middle;
+        	margin-right: 15px;
+        	margin-top: 15px;
+        }
+
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul li {
+            display: inline-block;
+            clear: both;
+            margin-bottom: 2px;
+            font-family: Helvetica, Arial, sans-serif;
+            position: relative;
+        }
+
+        .friend {
+            float: left;
+            margin-right: 28px;
+        }
+
+        .me {
+            float: right;
+            color: #fff;
+            margin-left: 28px;
+            text-align: right;
+        }
+
+        .friend span.text,
+        .me span.text {
+            display: inline-block;
+            padding: 12px 15px;
+            border-radius: 20px;
+            background: #0084ff;
+        }
+
+        .friend span.text {
+            background: #eee;
+        }
+
+        .friend span.time,
+        .me span.time {
+            float: right;
+            margin-right: 10px;
+            display: block;
+            font-size: 10px;
+            text-align: right;
+            color: gray;
+            margin-top: 2px;
+            margin-bottom: 3px;
+        }
+
+        .friend span.time {
+            float: left;
+            margin-right: 0px;
+            margin-left: 10px;
+        }
+
+        .friend+.me,
+        .me+.friend {
+            margin-top: 5px;
+        }
+
+        .none {
+            display: none !important;
+        }
+        
