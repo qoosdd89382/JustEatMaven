@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,13 +29,17 @@ import com.adminchatroom.model.AdminChatroomState;
 import com.adminchatroom.model.AdminChatroomVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.websocket.jedis.JedisHandleAdminChatroom;
 
 //@ServerEndpoint("/AdminChat/{adminID}/{accountID}")
 @ServerEndpoint("/AdminChat/{accountID}")
 public class WebScoketAdminChatroom {
 	
-	private static Map<String, Session> sessionsMap = new ConcurrentHashMap<>();
+	private static Map<String, Session> sessionsMap = 
+					new ConcurrentLinkedHashMap.Builder<String, Session>()
+				    	.maximumWeightedCapacity(1000)
+				    	.build();
 	Gson gson = new Gson();
 
 	@OnOpen
@@ -42,7 +47,11 @@ public class WebScoketAdminChatroom {
 		/* save the new user in the map */
 		sessionsMap.put(userID, userSession);
 		/* Sends all the connected users to the new user */
-		Set<String> userIDs = sessionsMap.keySet();
+
+		Set<String> userIDs = new LinkedHashSet<String>();
+		for(Map.Entry<String, Session> entry : sessionsMap.entrySet()) {
+			userIDs.add(entry.getKey());
+		}
 		
 		AdminChatroomState stateMessage = new AdminChatroomState("open", userID, userIDs);
 		String stateMessageJson = gson.toJson(stateMessage);
@@ -104,7 +113,11 @@ public class WebScoketAdminChatroom {
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason) {
 		String userIDClose = null;
-		Set<String> userIDs = sessionsMap.keySet();
+		Set<String> userIDs = new LinkedHashSet<String>();
+		for(Map.Entry<String, Session> entry : sessionsMap.entrySet()) {
+			userIDs.add(entry.getKey());
+		}
+		
 		for (String userID : userIDs) {
 			if (sessionsMap.get(userID).equals(userSession)) {
 				userIDClose = userID;

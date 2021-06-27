@@ -250,6 +250,25 @@ public class AdminInfoServlet extends HttpServlet {
 ////				res.sendRedirect(req.getContextPath());
 //			}
 		}
+		
+		
+		
+		if ("logout".equals(action)) {
+			
+			try {
+				
+				session.removeAttribute("loginAdminID");
+
+				String location = (String) session.getAttribute("location");
+				if (location != null) {
+					session.removeAttribute("location");
+					res.sendRedirect(location);
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
