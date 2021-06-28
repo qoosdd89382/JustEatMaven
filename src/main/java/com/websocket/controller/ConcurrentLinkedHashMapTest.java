@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.websocket.Session;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
-public class Test {
+public class ConcurrentLinkedHashMapTest {
 
 	public static void main(String args[]) {
 

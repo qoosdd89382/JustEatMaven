@@ -13,4 +13,7 @@ public interface NoticeDAOInterface {
     public List<NoticeVO> getAll();
     
     public List<NoticeVO> getAccountNoticeByAccountMail(String account_mail);
+    
+    // ----- WebSocket -----
+    public List<NoticeVO> getAllByAccountID(int accountID);
 }
