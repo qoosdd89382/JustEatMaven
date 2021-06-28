@@ -1,3 +1,4 @@
+<%@page import="com.accountinfo.model.AccountInfoVO"%>
 <%@page import="com.eventcuisinecategory.model.EventCuisineCategoryVO"%>
 <%@page import="com.eventcuisinecategory.model.EventCuisineCategoryService"%>
 <%@page import="com.cuisinecategory.model.CuisineCategoryService"%>
@@ -14,14 +15,30 @@
 <%
 	EventInfoService eventInfoSvc = new EventInfoService();
 	EventInfoVO eventInfoVO = null;
-	List<EventInfoVO> list = eventInfoSvc.getAll();
+	List<EventInfoVO> listAll = eventInfoSvc.getAll();
+	List<EventInfoVO> list = new ArrayList<EventInfoVO>();
+	
+	Date date = new Date();
+	Timestamp timestamp = new Timestamp(date.getTime());
+	
+	for(int i=0;i<listAll.size();i++){
+		EventInfoVO eventInfoVOtemp = listAll.get(i);
+		if(eventInfoVOtemp.getEventStartTime().after(timestamp)){
+			list.add(eventInfoVOtemp);
+		}
+	}
+	
 	pageContext.setAttribute("list", list);
 	
 	CuisineCategoryService cuisineCatSvc = new CuisineCategoryService();
 	String cuisineCatID = request.getParameter("cuisineCatID");
 	List<CuisineCategoryVO> cuisineCatList = (List<CuisineCategoryVO>) request.getAttribute("cuisineCatList");
 	
+	AccountInfoVO accountInfoVO = (AccountInfoVO)session.getAttribute("accountInfoVOLogin");
+	pageContext.setAttribute("accountInfoVO", accountInfoVO);
+
 	EventCuisineCategoryService eventCuisineCategorySvc = new EventCuisineCategoryService();
+	
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,19 +121,19 @@
 					<c:when test="${not empty listfind}">
 						<c:forEach var="eventInfoVO" items="${listfind}" varStatus="i" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 							<c:if test="${eventInfoVO.eventState ==1}">
-								<tr class="row">
-									<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
-									<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
-									<c:if test="${eventInfoVO.groupType == 1}">
-										<td class="col-sm-2 col-2">一人一菜</td>
-									</c:if>
-									<c:if test="${eventInfoVO.groupType == 2}">
-										<td class="col-sm-2 col-2">我當主廚</td>
-									</c:if>
-									<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
-									<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-									<td class="col-sm-2 col-2">1000</td>
-								</tr>
+									<tr class="row">
+										<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
+										<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVO.accountID}">${eventInfoVO.eventName}</a></td>
+										<c:if test="${eventInfoVO.groupType == 1}">
+											<td class="col-sm-2 col-2">一人一菜</td>
+										</c:if>
+										<c:if test="${eventInfoVO.groupType == 2}">
+											<td class="col-sm-2 col-2">我當主廚</td>
+										</c:if>
+										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
+										<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+										<td class="col-sm-2 col-2">1000</td>
+									</tr>
 							</c:if>
 						</c:forEach>
 					</c:when>
@@ -128,19 +145,19 @@
 					<c:otherwise>
 						<c:forEach var="eventInfoVO" items="${list}" varStatus="i" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 							<c:if test="${eventInfoVO.eventState ==1}">
-								<tr class="row">
-									<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoPicServlet?image=${i.index}" class="img"></td>
-									<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=100001">${eventInfoVO.eventName}</a></td>
-									<c:if test="${eventInfoVO.groupType == 1}">
-										<td class="col-sm-2 col-2">一人一菜</td>
-									</c:if>
-									<c:if test="${eventInfoVO.groupType == 2}">
-										<td class="col-sm-2 col-2">我當主廚</td>
-									</c:if>
-									<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
-									<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-									<td class="col-sm-2 col-2">1000</td>
-								</tr>
+									<tr class="row">
+										<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
+										<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVO.accountID}">${eventInfoVO.eventName}</a></td>
+										<c:if test="${eventInfoVO.groupType == 1}">
+											<td class="col-sm-2 col-2">一人一菜</td>
+										</c:if>
+										<c:if test="${eventInfoVO.groupType == 2}">
+											<td class="col-sm-2 col-2">我當主廚</td>
+										</c:if>
+										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
+										<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+										<td class="col-sm-2 col-2">1000</td>
+									</tr>
 							</c:if>
 						</c:forEach>
 					</c:otherwise>
