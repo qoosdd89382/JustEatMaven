@@ -18,6 +18,31 @@ public class RecipeVO implements Serializable {
 	private Integer recipeCollectCount;
 	private Integer accountID;
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((recipeID == null) ? 0 : recipeID.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RecipeVO other = (RecipeVO) obj;
+		if (recipeID == null) {
+			if (other.recipeID != null)
+				return false;
+		} else if (!recipeID.equals(other.recipeID))
+			return false;
+		return true;
+	}
+
 	public RecipeVO() {
 	}
 	
