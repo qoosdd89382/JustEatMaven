@@ -95,7 +95,7 @@
 	                        
                                 <div class="card-body">
                                 
-                                <h4 style="text-align: center; color: #4e73df;">${updateSuccess}！</h4>
+                                <h4 style="text-align: center; color: #4e73df;">${updateSuccess}</h4>
  <form action="<%= request.getContextPath()%>/Dashboard/admin.do" method="post" enctype="multipart/form-data">
   <div class="form-row">
     <div class="form-group col-md-6">

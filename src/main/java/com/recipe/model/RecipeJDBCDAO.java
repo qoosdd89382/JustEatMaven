@@ -988,6 +988,7 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 	public String getWhereConditions(Map<String, String[]> map) {
 		Set<String> keys = map.keySet();
 		StringBuffer whereCondition = new StringBuffer();
+		StringBuffer whereCondition2 = new StringBuffer();
 		
 		for (String key : keys) {
 			String[] value = map.get(key);
@@ -1014,9 +1015,39 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 								+ value[i] + "%') ");
 					}
 				}
+				
+				
+
+				for (int i = 0; i < value.length; i++) {
+					
+					if (value.length > 1) {
+						if (value[i] != null && value[i].trim().length() != 0) {
+							if (i == 0) {
+								whereCondition2.append(" where recipe_introduction in " 
+								+ "(SELECT recipe_introduction FROM Recipe WHERE recipe_introduction like '%"
+								+ value[i] + "%'");
+							} else if (i == value.length - 1) {
+								whereCondition2.append(" or '%" + value[i] + "%') ");
+							} else {
+								whereCondition2.append(" or '%" + value[i] + "%'");
+							}
+						}
+					} else {
+						whereCondition2.append(" where recipe_introduction in " 
+								+ "(SELECT recipe_introduction FROM Recipe WHERE recipe_introduction like '%"
+								+ value[i] + "%') ");
+					}
+				}
+				
+				
+				
+				
+				
 			}
 		}
-		return whereCondition.toString();
+		return whereCondition.toString()
+				+ " UNION SELECT * FROM Recipe "
+				+ whereCondition2.toString();
 	}
 	
 	

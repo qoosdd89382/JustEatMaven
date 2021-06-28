@@ -98,11 +98,11 @@ public class RecipeServlet extends HttpServlet {
 				RecipeIngredientUnitService recipeIngSvc = new RecipeIngredientUnitService();
 				
 				List<RecipeVO> nameSearchResults = null;
-				List<RecipeVO> searchResults = null;
+				Set<RecipeVO> searchResults = null;
 				if (recipeName != null) {
 					nameSearchResults = recipeSvc.getAll(searchMap);
 					if (recipeIngredientIDs != null) {
-						searchResults = new ArrayList<RecipeVO>();
+						searchResults = new LinkedHashSet<RecipeVO>();
 						for (int i = 0; i < nameSearchResults.size(); i++) {
 							List<RecipeIngredientUnitVO> list
 								= recipeIngSvc.getAllByRecipe(nameSearchResults.get(i).getRecipeID());
@@ -114,16 +114,17 @@ public class RecipeServlet extends HttpServlet {
 										equalCount++;
 									}
 								}
+								if (equalCount > 0) {
+									searchResults.add(recipeSvc.getOneRecipe(list.get(j).getRecipeID()));
+								}
 							}
-							if (equalCount > 0)
-								searchResults.add(recipeSvc.getOneRecipe(list.get(i).getRecipeID()));
 						}
 					} else {
-						searchResults = nameSearchResults;
+						searchResults = new LinkedHashSet<RecipeVO>(nameSearchResults);;
 					}
 				} else {
 					if (recipeIngredientIDs != null) {
-						searchResults = new ArrayList<RecipeVO>();
+						searchResults = new LinkedHashSet<RecipeVO>();
 						for (int j = 0; j < recipeIngredientIDs.length; j++) {
 							List<RecipeIngredientUnitVO> list
 								= recipeIngSvc.getAllByIngredient(new Integer(recipeIngredientIDs[j]));
@@ -134,8 +135,8 @@ public class RecipeServlet extends HttpServlet {
 					}
 				}
 				
-				
-				req.setAttribute("list", searchResults); //  複合查詢, 資料庫取出的list物件,存入request
+				List<RecipeVO> list = new ArrayList<RecipeVO>(searchResults);
+				req.setAttribute("list", list); //  複合查詢, 資料庫取出的list物件,存入request
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/searchResult.jsp");
 				successView.forward(req, res);
 				

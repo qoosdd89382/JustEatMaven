@@ -379,4 +379,60 @@ public class NoticeJDBCDAO implements NoticeDAOInterface {
 //		}
 		
 	}
+
+	@Override
+	public List<NoticeVO> getAllByAccountID(int accountID) {
+		List<NoticeVO> list = new ArrayList<NoticeVO>();
+		NoticeVO noticeVO = null;
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_All_Stmt + " WHERE account_id = ?");
+			
+			pstmt.setInt(1, accountID);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				noticeVO = new NoticeVO();
+				noticeVO.setNoticeID(rs.getInt("notice_id"));
+				noticeVO.setAccountID(rs.getInt("account_id"));
+				noticeVO.setNoticeType(rs.getInt("notice_type"));
+				noticeVO.setNoticeText(rs.getString("notice_text"));
+				noticeVO.setNoticeTime(rs.getTimestamp("notice_time"));
+				noticeVO.setNoticeState(rs.getInt("notice_state"));
+				list.add(noticeVO);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return list;
+	}
 }
