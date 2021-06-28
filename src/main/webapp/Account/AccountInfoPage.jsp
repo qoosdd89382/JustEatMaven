@@ -26,11 +26,32 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 
 <title>揪食-會員資料</title>
 <style>
+body{
+/* 	background: #FF8008; */
+/* 	background: -webkit-linear-gradient(to left, #FFC837, #FF8008);  */
+/* 	background: linear-gradient(to left, #FFC837, #FF8008); */
+	
+background: #ffe259;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #ffa751, #ffe259); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
 div#main_block{
 	margin-top:150px;
 }
+div#account_welcom{
+	margin:15px;
+}
 span#accountWelcom{
+	text-align:center;
 	font-size:30px;
+}
+div#account_name{
+	margin:5px;
+	text-align:center;
+}
+div#account_picture{
+	text-align:center;
 }
 div#function_select_area form,
 div#function_select_area a {
@@ -38,13 +59,24 @@ div#function_select_area a {
 	font-size:25px;
 	margin:15px;
 }
-div#account_info_area{
- 	border:1px solid gray;
+div#account_info_area{;
+	background-color: rgba(0,0,0,0.6);
+	color:white;
+	
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+ 	box-shadow:0px 1px 2px 1px #aaaaaa, 
+ 	           inset 0px 1px 1px rgba(255,255,255,0.7); 
+	border-radius: 3px solid orange;
+ 	
 }
 div#account_info_area form,
 div#account_info_area span {
 	font-size:25px;
-	margin:15px;
+	margin:30px;
 }
 
 
@@ -76,10 +108,9 @@ input#account_logout:hover {
 	
 	<div class="container" id="main_block">
 	
-		<div class="row offset-4" id="account_welcom">
-			<div class="col">
-				<span id="accountWelcom">歡迎，用戶${accountInfoVOLogin.accountNickname}</span><br>
-				<span id="accountWelcom">以下是您的資料</span><br>
+		<div class="row justify-content-center" id="account_welcom">
+			<div class="col-8">
+				<span id="accountWelcom">歡迎來到揪食JustEat~!距離您上次登入已經過了</span><br>
 			</div>
 		</div>
 		
@@ -122,13 +153,17 @@ input#account_logout:hover {
 			</div>
 			
 			<div class="col-6" id="account_info_area">
-			
+				<div id="account_name">
+					<span style="text-align:center">用戶  ${accountInfoVOLogin.accountNickname}</span><br>
+					<span style="text-align:center">以下是您的資料</span><br>				
+				</div>
 				<span>用戶信箱:${accountInfoVOLogin.accountMail}</span><br>
 				<span>用戶暱稱:${accountInfoVOLogin.accountNickname}</span><br>
 				<span>用戶名稱:${accountInfoVOLogin.accountName}</span><br>
 				<span>用戶性別:${(accountInfoVOLogin.accountGender==1?"男":"女")}</span><br>
 				<span>用戶生日:${accountInfoVOLogin.accountBirth}</span><br>
 				<span>用戶電話:${accountInfoVOLogin.accountPhone}</span><br>
+				<div id="account_picture">
 				<span>用戶照片:</span><br>					
 				<img src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
 					
@@ -136,7 +171,12 @@ input#account_logout:hover {
 				<img src="<%=request.getContextPath()%>/Account/Pic/Front/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
 				<span>用戶身分證背面:</span><br>
 				<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
+				</div>
+										
+				<div id="account_name">
 				<span>用戶自我介紹:<br>${accountInfoVOLogin.accountText}</span><br>
+				</div>
+				<br>
 				<span>用戶註冊時間:${accountInfoVOLogin.accountRegisterTime}</span><br>
 				
 				<form method="post" action="accountInfo.do">
@@ -153,8 +193,6 @@ input#account_logout:hover {
 		</div>	
 	</div>
 
-	<p>備忘區</p>
-	${errorMsgs}
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>

@@ -26,10 +26,35 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
 <title>揪食-會員註冊</title>
 
 <style>
+body#body_register{
+	background-image:url("images/LoginBackGround.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+/*整個區塊 */
+div#main_area{
+	margin-top:80px;
+}
 div#register_area{
-	margin-top:150px;
-	border:1px solid gray;
-	margin-right:300px;
+	text-align:center;
+	background-color: rgba(0,0,0,0.6);
+	color:white;
+	
+	width: 200px;
+	height: 350px;
+	
+ 	margin: 35px auto; 
+ 	padding: 30px; 
+	
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+ 	box-shadow:0px 1px 2px 1px #aaaaaa, 
+ 	           inset 0px 1px 1px rgba(255,255,255,0.7); 
+	border-radius: 3px solid orange;
 }
 
 input#register_submit_btn,
@@ -64,7 +89,7 @@ textarea#textarea {
 </style>
 
 </head>
-<body>
+<body id="body_register">
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
@@ -73,7 +98,7 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col offset-2">
+			<div id="register_area" class="col-sm-6 align-self-center">
 			
 			<Strong>您好~歡迎來到揪食!</Strong><br>
 			<strong>請輸入您的資料協助您成為我們的一員</strong>
@@ -83,13 +108,13 @@ textarea#textarea {
 					<span style="color:red">*</span><span>請輸入會員信箱 :</span><br>
 					<input id="input_box" type="text" name="accountMail" 
 					value="<%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountMail()%>"
-					placeholder="如JustEat@gmail.com">
+					placeholder="如JustEat@gmail.com"><br>
 					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 					
 					<span style="color:red">*</span><span>請輸入會員暱稱 :</span><br>
 					<input id="input_box" type="text" name="accountNickname" 
 					value="<%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountNickname()%>"
-					placeholder="兩個字以上，任意 中文 數字 英文大小寫">
+					placeholder="兩個字以上，任意 中文 數字 英文大小寫"><br>
 					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
 					
 					<span style="color:red">* 為必填欄位，請填妥欄位資訊</span><br>

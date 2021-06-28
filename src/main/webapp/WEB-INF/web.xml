@@ -27,8 +27,6 @@
 	<filter-mapping>
 		<filter-name>LoginFilter</filter-name>
 		<url-pattern>/Account/AccountInfoPage.jsp</url-pattern>
-		<url-pattern>/Recipe/*</url-pattern>
-		<url-pattern>/Event/*</url-pattern>
 		
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
