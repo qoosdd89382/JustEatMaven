@@ -122,9 +122,7 @@ textarea#textarea {
 					<br>
 					
 					<span style="color:red">*</span><span>請輸入會員自我介紹:</span><br>
-					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)">
-<%-- 					<%=(accountInfoVO == null) ? "" : accountInfoVORequest.getAccountText()%> --%>
-					</textarea><br>
+					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)"><%-- <%=(accountInfoVO == null) ? "" : accountInfoVORequest.getAccountText()%> --%></textarea><br>
 					<span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
 					
 					<span style="color:red">* 為必填欄位，請填妥欄位資訊</span><br>

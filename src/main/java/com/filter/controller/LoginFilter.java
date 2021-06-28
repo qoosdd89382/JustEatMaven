@@ -35,8 +35,11 @@ public class LoginFilter implements Filter {
 		// 【從 session 判斷此user是否登入過】
 		Object isLogin = session.getAttribute("accountInfoVOLogin");
 		if (isLogin == null) {
-			session.setAttribute("location", req.getRequestURI());
+			//記錄前一個頁面的網址
+			session.setAttribute("location",req.getServletPath());
+			//轉接到登入頁面
 			res.sendRedirect(req.getContextPath() + "/Account/AccountLoginPage.jsp");
+			
 			return;
 		} else {
 			chain.doFilter(request, response);

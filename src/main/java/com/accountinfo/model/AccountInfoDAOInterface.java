@@ -11,19 +11,25 @@ public interface AccountInfoDAOInterface {
     public List<AccountInfoVO> selectAllAccountInfo();
 
 //登入用
+    //查詢該帳號密碼取得所有資料
     public AccountInfoVO getAccountMailPasswordForLogin(String accountMail,String accountPassword);
+    //基本找資料
     public AccountInfoVO getAccountMail(String accountMail);
     public AccountInfoVO getAccountNickname(String accountNickname);
-    public AccountInfoVO getAccountPassword(String accountPassword);
+    //用信箱找資料
     public AccountInfoVO getAccountIDByAccountMail(String accountMail);
+    public AccountInfoVO getAccountPasswordByAccountMail(String accountMail);
 	public AccountInfoVO getAccountCodeByAccountMail(String accountMail);
 
     
 //會員修改資料用
     public void updateAccountInfoFromChange(AccountInfoVO accountInfoVO);
+//會員忘記密碼更改驗證碼
+	public void updateAccountCodeFromForget(AccountInfoVO accountInfoVO);
 //註冊用
+	//寄驗證信會產生會員 管理員要手動消除
     public void setBlankAccountInfoFromRegister(AccountInfoVO accountInfoVO);
-    
+    //設定基本會員
     public void setLevelOneAccountInfoFromRegister(AccountInfoVO accountInfoVO);
     
     //暫時沒用===
@@ -32,7 +38,7 @@ public interface AccountInfoDAOInterface {
 			String accountName,Integer accountGender,Date accountBirth,String accountPhone,
 			String accountText
     		);
-    
+    //設定進階會員
     public void setLevelThreeAccountInfoFromRegister(AccountInfoVO accountInfoVO);
     
 }

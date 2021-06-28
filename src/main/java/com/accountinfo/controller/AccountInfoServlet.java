@@ -48,17 +48,23 @@ public class AccountInfoServlet extends HttpServlet {
 //if目錄
 //登入相關
 //首頁  == 點選會員中心請求 == gotoAccountLoginPage review06261500
-//AccountLoginPage == 登入請求 review06261500
+		
+//AccountLoginPage == 登入請求 ==  getAccountInfoForLogin review06261500
+		
+//AccountLoginPage == 忘記密碼 getAccountInfoForForget
+		
 //AccountInfoPage == functionbar收到"會員資料"請求  review06261500
 	
-//在AccountChangePage.jsp收到"提交修改資料的請求 setAccountInfoForChange
-//在AccountInfoPage.jsp收到登出的請求 getAccountLogout
-
+//AccountChangePage == 提交修改資料的請求 == setAccountInfoForChange
+		
+//在AccountInfoPage == 收到登出的請求 == getAccountLogout
+		
 //註冊相關
 //在AccountRegisterPage.jsp收到加入會員的請求 基本會員資料 setAccountInfoForRegister
 		
 		
 //首頁  == 點選會員中心請求 == gotoAccountLoginPage review06261500
+		//用來判斷session裡面有沒有帳號資料沒有的話就給重導到會員登入頁面
 		if("gotoAccountLoginPage".equals(action)) {
 			//取得帳號資料
 			HttpSession session = req.getSession();
@@ -72,9 +78,11 @@ public class AccountInfoServlet extends HttpServlet {
 				successView.forward(req, res);
 			}
 		}//首頁  == 點選會員中心請求 == gotoAccountLoginPage review06261500
-//AccountLoginPage == 登入請求 review06261500
+
+//AccountLoginPage == 登入請求 ==  getAccountInfoForLogin review06261500
+		//使用者點選登入後檢查信箱、密碼、驗證碼資料
 		if ("getAccountInfoForLogin".equals(action)) {
-			System.out.println("收到getAccountInfoForLogin");
+			System.out.println("收到登入請求 getAccountInfoForLogin");
 
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
@@ -151,7 +159,7 @@ public class AccountInfoServlet extends HttpServlet {
 					if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
 						errorMsgs.put("accountMailError","查無此會員資料");
 					//資料庫有該會員，但輸入密碼跟資料庫不符合
-					}else if(!((accountInfoSvc.getAccountPassword(accountMailInput)).getAccountPassword()).equals(accountPassword)) {
+					}else if(!((accountInfoSvc.getAccountPasswordByAccountMail(accountMailInput)).getAccountPassword()).equals(accountPassword)) {
 							errorMsgs.put("accountPasswordError","密碼輸入錯誤");
 						}
 				} catch (Exception e) {
@@ -180,12 +188,21 @@ public class AccountInfoServlet extends HttpServlet {
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				//session的accountInfoVO有該會員的全部資料
 				session.setAttribute("accountInfoVOLogin", accountInfoVO); 
-				System.out.println(accountInfoVO.getAccountID());
-				
+								
 				//成功準備轉交
-				String url = "/Account/AccountInfoPage.jsp";
+//				String url = "/Account/AccountInfoPage.jsp";
+				String originWeb = (String)session.getAttribute("location");
+//				if(!originWeb.equals(url)) {
+//					originWeb = (String) session.getAttribute("location");
+//				}else {
+//					originWeb =url;
+//				}
+				if(((String)session.getAttribute("location"))==null) {
+					originWeb = "/Account/AccountInfoPage.jsp";
+				}
+				System.out.println(originWeb);
 				System.out.println("準備進行轉交");
-				RequestDispatcher successView = req.getRequestDispatcher(url);
+				RequestDispatcher successView = req.getRequestDispatcher(originWeb);
 				successView.forward(req, res);
 				
 			}catch(Exception e) {
@@ -197,6 +214,173 @@ public class AccountInfoServlet extends HttpServlet {
 			}
 		}//AccountLoginPage == 登入請求 review06261500
 		
+//AccountLoginPage == 忘記密碼 == getAccountInfoForForget
+		//登入頁面中點擊忘記密碼 以A標籤到登記信箱頁面
+		//在登記信箱頁面點擊發送驗證碼
+		if("getAccountInfoForForget".equals(action)) {
+			System.out.println("收到 忘記密碼  請求");
+			
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			//產生service、vo物件
+			AccountInfoService accountInfoSvc = new AccountInfoService();
+			AccountInfoVO accountInfoVO = new AccountInfoVO();
+			HttpSession session =req.getSession();
+			
+			try{
+				//取得 使用者想註冊 輸入的資料
+				String accountMailInput = req.getParameter("accountMail");
+			//檢查accountMail輸入
+				String accountMail = null;
+				//O帳號規範:任意大小寫英文(\w)或數字一個以上(+)@任意大小寫英文數字.任意大小寫英文數字
+				Pattern accountMailPattern = Pattern.compile("^\\w+\\@\\w+\\.\\w+$");
+				Matcher accountMailMatcher = accountMailPattern.matcher(accountMailInput);
+				try {
+					if (accountMailInput == null || (accountMailInput.trim()).length() == 0) {
+						errorMsgs.put("accountMailError","請輸入會員信箱");
+					}else if(!accountMailMatcher.matches()){
+						errorMsgs.put("accountMailError","會員信箱格式錯誤");
+					}else if(accountInfoSvc.getAccountMail(accountMailInput) == null) {
+						errorMsgs.put("accountMailError","此信箱未註冊過");
+					}else if(accountInfoSvc.getAccountMail(accountMailInput) != null) {
+						accountMail = new String(accountMailInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+				
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = req
+							.getRequestDispatcher("/Account/AccountForgetPage.jsp");
+					failureView.forward(req, res);
+					return;//程式中斷
+				}
+				
+				String accountCode = new RandomAuthCode().generateCode();
+				Integer accountID =(Integer) (accountInfoSvc.getAccountIDByAccountMail(accountMail)).getAccountID();
+				System.out.println(accountID);
+				System.out.println(accountCode);
+
+				//更改原本會員的驗證碼
+				accountInfoSvc.updateAccountCodeFromForget(accountCode,accountID);
+
+				String accountPassword = (accountInfoSvc.getAccountPasswordByAccountMail(accountMail)).getAccountPassword();
+
+				if (accountInfoSvc != null) {
+					System.out.println("會員更新驗證碼成功");
+
+					MailService mailSvc = new MailService();
+					String subject = "JustEat會員 忘記密碼 認證信";
+					String connect = 
+							"http://localhost:8081/justeat-maven/Account/AccountForgetCodePage.jsp";
+
+					
+					String messageText =
+							"您好，以下是您的驗證資訊" + 
+							"<br>您的密碼為" + accountPassword +
+							"<br>輸入驗證碼" + accountCode +
+//							"<br>馬上點擊" + req.getContextPath()+ "/Account/AccountForgetCodePage.jsp" +
+							//測試用
+							"<br>馬上點擊" + connect +
+							"進行驗證";
+
+					mailSvc.sendMail(accountMail, subject, messageText);
+
+					//新的VO物件用來傳遞信箱資訊到下一個頁面
+					accountInfoVO.setAccountMail(accountMail);
+					accountInfoVO.setAccountCode(accountCode);
+					session.setAttribute("accountInfoVO",accountInfoVO);
+
+					String url = "/Account/AccountForgetCodePage.jsp";
+					RequestDispatcher inputAuthCodeView = req.getRequestDispatcher(url);
+					inputAuthCodeView.forward(req, res);
+				}		
+			}catch(Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+			}
+		}
+//AccountForgetPage == 檢驗驗證碼 ==getAccountForgetCode
+		if("getAccountForgetCode".equals(action)) {
+			System.out.println("收到 忘記密碼檢查驗證碼 請求");
+			
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			//產生service、vo物件
+			HttpSession session = req.getSession();
+			//取出SESSION中的VO物件 裡面有使用者前面填入的信箱
+			AccountInfoVO accountInfoVO =  (AccountInfoVO) session.getAttribute("accountInfoVO");
+			//將驗證碼存在VO物件
+//			accountInfoVO = accountInfoSvc.getAccountCodeByAccountMail(accountInfoVO.getAccountMail());
+			String accountMail = accountInfoVO.getAccountMail();
+			String accountCode =  accountInfoVO.getAccountCode();
+
+			try{
+				System.out.println("開始檢查");
+				
+				String accountPasswordInput = req.getParameter("accountPassword");
+				String accountCodeInput = req.getParameter("accountCode");
+
+			//檢查accountPassword輸入
+				String accountPassword = null;
+				//O密碼規範:至少8~16碼任意大小寫英文數字
+				Pattern accountPasswordPattern = Pattern.compile("^\\w{8,16}$");
+				Matcher accountPasswordMatcher = accountPasswordPattern.matcher(accountPasswordInput);
+				try {
+					if (accountPasswordInput == null || (accountPasswordInput.trim()).length() == 0) {
+						errorMsgs.put("accountPasswordError","請輸入會員密碼");
+					}else if(!accountPasswordMatcher.matches()){
+						errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
+					}else {
+						accountPassword = new String(accountPasswordInput);
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+				
+			//驗證碼檢查
+				try {
+					if (accountCodeInput == null || (accountCodeInput.trim()).length() == 0) {
+						errorMsgs.put("accountCodeError","請輸入驗證碼");
+					}else if(!accountCode.equals(accountCodeInput)){
+						errorMsgs.put("accountCodeError","驗證碼錯誤");
+					}else {
+						System.out.println("驗證碼驗證成功");
+					}
+				} catch (Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+				}
+				
+				//有錯誤就返回
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = req
+							.getRequestDispatcher("/Account/AccountForgetCodePage.jsp");
+					failureView.forward(req, res);
+					return;//程式中斷
+				}
+
+				//記錄使用者輸入的資料到登入頁面給使用者使用
+				accountInfoVO.setAccountMail(accountMail);
+				accountInfoVO.setAccountPassword(accountPassword);
+				req.setAttribute("accountInfoVO", accountInfoVO);
+					
+				//輸入成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
+				String url = "/Account/AccountLoginPage.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+
+			}catch(Exception e) {
+				throw new RuntimeException("A database error occured. "
+						+ e.getMessage());
+			}
+		}
+		
+		
 //AccountInfoPage == functionbar收到"會員資料"請求  review06261500
 		if("gotoAccountInfoPage".equals(action)) {
 			//重新前往頁面
@@ -205,19 +389,17 @@ public class AccountInfoServlet extends HttpServlet {
 			successView.forward(req, res);
 		}//AccountInfoPage == functionbar收到"會員資料"請求  review06261500
 
-//===================================
-//以下施工中
-//===================================
-	
 		
 //AccountInfoPage == 收到"修改會員資料"請求 == 轉接到修改會員資料的頁面  review06261500
+		//看需求也可以轉成A標籤
 		if("gotoAccountChangePage".equals(action)) {
 			String url = "/Account/AccountChangePage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
 		}//AccountInfoPage == 收到"修改會員資料"請求 == 轉接到修改會員資料的頁面  review06261500
 		
-//在AccountChangePage.jsp收到"提交修改資料的請求"
+//AccountChangePage == 提交修改資料的請求 == setAccountInfoForChange review
+		//檢查使用者修改參數
 		if("setAccountInfoForChange".equals(action)) {
 			
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -309,6 +491,7 @@ public class AccountInfoServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
+			//檢查電話輸入
 				String accountPhone = null;
 				//O電話規範:10碼數字前面規定09
 				Pattern accountPhonePattern = Pattern.compile("^[0-9]{10}$");
@@ -325,9 +508,10 @@ public class AccountInfoServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-
+			//檢查照片輸入
 				byte[] accountPicBuffer  = null;
 				try {
+					//會員大頭照傳入
 					Part part = req.getPart("accountPic");
 					
 					InputStream in = part.getInputStream();
@@ -355,7 +539,7 @@ public class AccountInfoServlet extends HttpServlet {
 				//取得原本會員的資料
 				Integer accountID = accountInfoVOLogin.getAccountID();
 				String accountMail =accountInfoVOLogin.getAccountMail();
-				//將會員輸入的資料升級UPDATE
+				//將會員輸入的資料update
 				accountInfoSvc.updateAccountInfoFromChange(
 						accountPassword,accountName,accountGender,accountBirth,accountPhone,
 						accountPicBuffer,accountText,accountID);
@@ -377,13 +561,13 @@ public class AccountInfoServlet extends HttpServlet {
 					e.printStackTrace();
 					errorMsgs.put("UnexceptionError","無法取得資料");
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountPage.jsp");
+							.getRequestDispatcher("/Account/AccountInfoPage.jsp");
 					failureView.forward(req, res);
 				}
-			}//在AccountChangePage.jsp收到"提交修改資料的請求"
+			}//AccountChangePage == 提交修改資料的請求 == setAccountInfoForChange review
 
-		
 //在AccountInfoPage.jsp收到登出的請求 review06261600
+		//會員登出 清除所有在SESSIO的登入資料
 		if("getAccountLogout".equals(action)) {
 			//清除在SESSION中的帳號資料
 			HttpSession session = req.getSession();
@@ -400,6 +584,7 @@ public class AccountInfoServlet extends HttpServlet {
 //註冊相關請求
 //前往註冊頁面為A標籤
 //在AccountRegisterPage.jsp收到加入會員的請求 驗證信箱
+		//檢查帳號暱稱 發送驗證信
 		if ("sendAccountCode".equals(action)) {
 			System.out.println("收到 還不是會員 請求");
 			
@@ -455,6 +640,7 @@ public class AccountInfoServlet extends HttpServlet {
 						+ e.getMessage());
 				}
 				
+				//用來儲存使用者輸入
 				accountInfoVO.setAccountMail(accountMailInput);
 				accountInfoVO.setAccountNickname(accountNicknameInput);
 				req.setAttribute("accountInfoVO",accountInfoVO);
@@ -467,6 +653,7 @@ public class AccountInfoServlet extends HttpServlet {
 					return;//程式中斷
 				}
 				
+				//寄信流程
 				String accountCode = new RandomAuthCode().generateCode();
 
 				accountInfoVO = accountInfoSvc.setBlankAccountInfoFromRegister(accountMail, accountNickname, accountCode);
@@ -478,13 +665,13 @@ public class AccountInfoServlet extends HttpServlet {
 					String subject = "JustEat會員註冊認證信";
 					String messageText =
 							"請點擊本連結，啟用帳號：<br>" + req.getRequestURL() + "?action=auth" + 
-							"&adminID="	+ accountInfoVO.getAccountID() + 
+							"&accountID="	+ accountInfoVO.getAccountID() + 
 							"&authCode=" + accountCode + 
 							"<br><br>或至" +  req.getRequestURL() + "?accountID="	+ accountInfoVO.getAccountID() + 
 							"輸入驗證碼" + accountCode;
 
 					mailSvc.sendMail(accountMail, subject, messageText);
-					
+				//寄信完成 將資料放在SESSION VO物件
 					accountInfoVO.setAccountMail(accountMail);
 					accountInfoVO.setAccountNickname(accountNickname);
 					session.setAttribute("accountInfoVO",accountInfoVO);
@@ -501,6 +688,7 @@ public class AccountInfoServlet extends HttpServlet {
 			}
 		}
 //在AccountRegisterCodePage.jsp收到檢查驗證碼資料
+		//使用者收到驗證碼輸入檢查
 		if("getAccountCode".equals(action)) {
 			System.out.println("收到驗證碼請求");
 			
@@ -511,15 +699,12 @@ public class AccountInfoServlet extends HttpServlet {
 			AccountInfoService accountInfoSvc = new AccountInfoService();
 			HttpSession session = req.getSession();
 			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO");
-
+			
+			//這裡不確定VO物件有沒有帶到CODE
+			
 			try {
-				System.out.println("開始TRY");
+			//驗證碼檢查
 				String accountCodeInput = req.getParameter("accountCode");
-				
-				
-//				accountInfoVO = accountInfoSvc.getAccountCodeByAccountMail(accountInfoVO.getAccountMail());
-
-				
 				try {
 					if (accountCodeInput == null || (accountCodeInput.trim()).length() == 0) {
 						errorMsgs.put("accountCodeError","請輸入驗證碼");
@@ -538,9 +723,6 @@ public class AccountInfoServlet extends HttpServlet {
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
-				//輸入失敗不用把錯誤資料帶回
-//				accountInfoVO.setAccountCode(accountCodeInput);
-//				req.setAttribute("accountInfoVO",accountInfoVO);
 				
 				//輸入成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Account/AccountRegister/AccountRegisterPageLevelOne.jsp";
@@ -568,7 +750,7 @@ public class AccountInfoServlet extends HttpServlet {
 			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO");
 			Integer accountID = 
 					(accountInfoSvc.getAccountIDByAccountMail(accountInfoVO.getAccountMail())).getAccountID();
-			System.out.println("收到註冊請求1");
+
 			try {
 				//取得 基本認證 輸入的資料
 //				String accountMailInput = req.getParameter("accountMail");
@@ -690,7 +872,7 @@ public class AccountInfoServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-				System.out.println("收到註冊請求2");
+
 			// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
@@ -701,23 +883,24 @@ public class AccountInfoServlet extends HttpServlet {
 				
 				//保留使用者確認送出的輸入資料 在VO物件 
 //				accountInfoVO.setAccountMail(accountMailInput);
-				accountInfoVO.setAccountPassword(accountPasswordInput);
 //				accountInfoVO.setAccountNickname(accountNicknameInput);
+				accountInfoVO.setAccountPassword(accountPasswordInput);
 				accountInfoVO.setAccountName(accountNameInput);
 				accountInfoVO.setAccountGender(Integer.parseInt(accountGenderInput));
 				accountInfoVO.setAccountBirth((java.sql.Date.valueOf(accountBirthInput)));
 				accountInfoVO.setAccountText(accountTextInput);
 				req.setAttribute("accountInfoVORequest",accountInfoVO);
-				System.out.println("收到註冊請求3");
+
 				//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
 				accountInfoSvc.setLevelOneAccountInfoFromRegister(
 						accountMail,accountNickname,accountPassword,accountName,
 						accountGender,accountBirth,accountText,accountID);
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Account//AccountRegister/AccountRegisterPageLevelThree.jsp";
-				System.out.println("收到註冊請求4");
+
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
+				
 			}catch(Exception e) {
 				e.printStackTrace();
 				errorMsgs.put("UnexceptionError","無法取得資料");
@@ -775,7 +958,6 @@ public class AccountInfoServlet extends HttpServlet {
 				in.close();
 				req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
 				accountInfoVO.setAccountPic(accountPicBuffer);
-				System.out.println("圖片OK");
 
 				byte[] accountIDcardFrontBuffer  = null;
 				Part part1 = req.getPart("accountIDcardFront");
@@ -786,7 +968,6 @@ public class AccountInfoServlet extends HttpServlet {
 				in1.close();
 				req.getSession().setAttribute("aaccountIDcardFrontBuffer", accountIDcardFrontBuffer);
 				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
-				System.out.println("圖片OK");
 
 				byte[] accountIDcardBackBuffer  = null;
 				Part part2 = req.getPart("accountIDcardBack");
@@ -797,9 +978,8 @@ public class AccountInfoServlet extends HttpServlet {
 				in2.close();
 				req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
 				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
-				System.out.println("圖片OK");
 				
-				//有錯誤就返回
+			//有錯誤就返回
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
 							.getRequestDispatcher("/Account/AccountRegister/AccountRegisterPageLevelThree.jsp");

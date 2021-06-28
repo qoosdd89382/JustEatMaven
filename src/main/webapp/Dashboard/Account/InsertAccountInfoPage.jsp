@@ -42,32 +42,42 @@ div#InsertAccountInfoPage_AccountInfo_Area{
 		<div id="InsertAccountInfoPage_AccountInfo_Area" class="row">
 		
 			<div class="col">
-				<form id="update" method="post" action="dashboard.do">
+				<form id="update" method="post" action="dashboard.do" enctype="multipart/form-data">
 					<span>會員信箱:</span><br> 
-					<%-- <input type="text" name="accountMail" value="<%=(accountMail == null) ? "" : accountMail%>"> --%>
-					${accountInfoVO.accountMail == null?"1":"2"}
-					<input type="text" name="accountMail" value="${accountInfoVO.accountMail == null?"":"2"}">
-<%-- 					<input type="text" name="accountMail" value="${accountInfoVO.accountMail}"> --%>
+					<input type="text" name="accountMail" 
+<%-- 					value="<%=(accountInfoVO.getAccountMail() == null) ? "" : accountInfoVO.getAccountMail()%>" --%>
+					><br>
 					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 					
 					<span>會員暱稱:</span><br> 
-					<input type="text" name="accountNickname" value="${accountInfoVO.accountNickname == null?"":"2"}">
+					<input type="text" name="accountNickname" 
+<%-- 					value="<%=(accountInfoVO.getAccountNickname() == null) ? "" : accountInfoVO.getAccountNickname()%>" --%>
+					><br>
 					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
 					
 					<span>會員密碼:</span><br> 
-					<input type="text" name="accountPassword" value="${accountInfoVO.accountPassword == null?"":"2"}"><br>
+					<input type="text" name="accountPassword" 
+<%-- 					value="<%=(accountInfoVO.getAccountPassword() == null) ? "" : accountInfoVO.getAccountPassword()%>" --%>
+					><br>
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br> 
 					
 					<span>會員狀態:</span>
-					<input type="text" name="accountState" value="${accountInfoVO.accountState == null?"":"2"}"><br>
+					<input type="text" name="accountState" 
+<%-- 					value="<%=(accountInfoVO.getAccountState() == null) ? "" : accountInfoVO.getAccountState()%>" --%>
+					><br>
 					<span style="color:red">${errorMsgs.get("accountStateError")}</span><br>
 					
 					<span>會員層級:</span>
-					<input type="text" name="accountLevel" value="${accountInfoVO.accountLevel == null?"":"2"}"><br>
+					<input type="text" name="accountLevel" 
+<%-- 					value="<%=(accountInfoVO.getAccountLevel() == null) ? "" : accountInfoVO.getAccountLevel()%>" --%>
+					><br>
 					<span style="color:red">${errorMsgs.get("accountLevelError")}</span><br>
 					
 					<span>會員姓名:</span><br>
-					<input type="text" name="accountName" value="${accountInfoVO.accountName == null?"":"2"}"><br>
+					<input type="text" name="accountName" 
+<%-- 					value="<%=(accountInfoVO.getAccountName() == null) ? "" : accountInfoVO.getAccountName()%>" --%>
+					><br>
+					<span style="color:red">${errorMsgs.get("accountNameError")}</span><br>
 					
 					<span>會員性別 :</span> 
 					<input type="radio" name="accountGender" value="1" ${(accountInfoVO.accountGender)== 1?"checked":""}>男
@@ -79,10 +89,12 @@ div#InsertAccountInfoPage_AccountInfo_Area{
 					<span style="color:red">${errorMsgs.get("accountBirthError")}</span><br>
 					
 					<span>會員電話:</span><br>
-					<input type="text" name="accountPhone" value="${accountInfoVO.accountPhone}"><br>
+					<input type="text" name="accountPhone" 
+<%-- 					value="<%=(accountInfoVO.getAccountPhone() == null) ? "" : accountInfoVO.getAccountPhone()%>" --%>
+					><br>
 					<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br>
 					
-					<span>會員照片:(還沒做預覽圖)</span>
+					<span>會員照片:</span>
 					<input type="file" name="accountPic"><br>
 					 
 					<span>會員身分證正面:</span>
@@ -92,74 +104,20 @@ div#InsertAccountInfoPage_AccountInfo_Area{
 					<input type="file" name="accountIDcardBack"><br>
 					
 					<span>會員自我介紹:</span><br>
-					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)">${accountInfoVO.accountText}</textarea><br>
+					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)"
+					>
+<%-- 					<%=(accountInfoVO.getAccountText() == null) ? "" : accountInfoVO.getAccountText()%> --%>
+					</textarea><br>
 					<span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
 					
-					<span>會員註冊時間:</span>
-					<span>${accountInfoVO.accountRegisterTime}</span><br>
-					
-					<span>會員驗證碼:</span>
-					<span>${accountInfoVO.accountCode}</span><br>
-					
-					<input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
-					<input type="hidden" name="action"	value="insertAccountInfo_From_Dashboard">
+					<input type="hidden" name="action"	value="insertAccountInfoFromDashboard">
 					<input id="change_submit_btn" type="submit" value="確認送出"> 
 				</form>
-					<a href="<%=request.getContextPath()%>/Dashboard/Account/DashboardAccountPage.jsp">取消新增</a>
+				
+				<h3><a href="<%=request.getContextPath()%>/Dashboard/Account/DashboardAccountPage.jsp">取消新增</a></h3>>
 			
-			
-<!-- 				<table> -->
-<!-- 					<tr> -->
-<!-- 						<th>會員編號</th> -->
-<!-- 						<th>會員信箱</th> -->
-<!-- 						<th>會員暱稱</th> -->
-<!-- 						<th>會員密碼</th> -->
-<!-- 						<th>會員狀態</th> -->
-						
-<!-- 						<th>會員層級</th> -->
-<!-- 						<th>會員名稱</th> -->
-<!-- 						<th>會員性別</th> -->
-<!-- 						<th>會員生日</th> -->
-<!-- 						<th>會員電話</th> -->
-						
-<!-- 						<th>會員照片</th> -->
-<!-- 						<th>會員身分證正面</th> -->
-<!-- 						<th>會員身分證背面</th> -->
-<!-- 						<th>會員自我介紹</th> -->
-<!-- 						<th>會員註冊時間</th> -->
-<!-- 						<th>會員驗證碼</th> -->
-<!-- 					</tr> -->
-<!-- 					<tr> -->
-<%-- 						<td><%=accountInfoVO.getAccountID()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountMail()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountNickname()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountPassword()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountState()%></td> --%>
-						
-<%-- 						<td><%=accountInfoVO.getAccountLevel()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountName()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountGender()==1?"男":"女"%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountBirth()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountPhone()%></td> --%>
-						
-<%-- 						<td><img src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVO.accountID}" width="300px" height="150px"></td> --%>
-<%-- 						<td><img src="<%=request.getContextPath()%>/Account/Pic/Front/${accountInfoVO.accountID}" width="300px" height="150px"></td> --%>
-<%-- 						<td><img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVO.accountID}" width="300px" height="150px"></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountText()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountRegisterTime()%></td> --%>
-<%-- 						<td><%=accountInfoVO.getAccountCode()%></td> --%>
-<!-- 						<td> -->
-<!-- 						  <form method="post" action="dashboard.do" style="margin-bottom: 0px;"> -->
-<%-- 						     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}"> --%>
-<!-- 						     <input type="hidden" name="action"	value="updateAccountInfo_From_Dashboard"></FORM> -->
-<!-- 						     <input type="submit" value="確認修改"> -->
-<!-- 						</td> -->
-<!-- 						<td> -->
-<%-- 							<a href="<%=request.getContextPath()%>/Dashboard/Account/DashboardAccountPage.jsp">取消修改</a> --%>
-<!-- 						</td> -->
-<!-- 					</tr> -->
-<!-- 				</table>	 -->
-						
+			<p>===</p>
+			<p>${errorMsgs}</p>
 			</div>
 		</div>
 		

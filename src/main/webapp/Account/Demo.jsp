@@ -1,13 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@ page import="com.accountinfo.model.*"%>
+<%@ page import=""%>
 <!DOCTYPE html>
+<% 
+//會員登入頁面紀錄
 
-<%
-AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+
+
+
 %>
-
 <html>
 
 <head>
@@ -22,43 +24,9 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>揪食-會員註冊</title>
+<title>揪食-</title>
 
 <style>
-div#register_area{
-	margin-top:150px;
-	border:1px solid gray;
-	margin-right:300px;
-}
-
-input#register_submit_btn,
-input#register_reset_btn {
-	margin:5px;
-	border:none;
-	-webkit-border-radius: 20;
-	-moz-border-radius: 20;
-	border-radius: 20px;
-	color: #ffffff;
-	font-size: 15px;
-	background: 	#FF8800;
-	padding: 5px 15px 5px 15px;
-	text-decoration: none;
-}
-
-input#register_submit_btn:hover,
-input#register_reset_btn:hover {
-	background:#FFAA33;
-	text-decoration: none;
-}
-form#register_area input#input_box{
-	font-size:10px;
-	width:300px;
-	height:50px;
-}
-textarea#textarea {
-	resize:none;
-	overflow:hidden;
-}
 
 </style>
 
@@ -67,45 +35,35 @@ textarea#textarea {
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-
-	<div class="container">
 	
-		<div id="main_area" class="row">
-		
-			<div id="register_area" class="col offset-3">
-			
-			<Strong>您好~歡迎來到揪食!</Strong><br>
-			<strong>請輸入您的資料協助您成為我們的一員</strong>
-			
-				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
-				
-					<span>您的會員信箱為 :</span>${accountInfoVO.accountMail}<br>
-					
-					<span>您的會員暱稱 :</span>${accountInfoVO.accountNickname}<br>
-
-					<span>請輸入驗證碼:</span><br>
-					<input id="input_box" type="text" name="accountCode">
-					<span style="color:red">${errorMsgs.get("accountCodeError")}</span><br> 
-
-						
-					<input type="hidden" name="action" value="getAccountCode"> 
-					<input id="register_submit_btn" type="submit" value="開始填寫我的詳細資料"> 
-					
-				</form>
-			</div>
-		</div>
-	</div>
-	<P>除錯區</P>
-	<P>全部的訊息${errorMsgs}</P>
-
+	<P>開發紀錄</P>
+	<textarea rows="" cols="">
+	。會員登入
+	。展示檢查會員=>進入註冊區域=>
+	。註冊產生驗證信=>註冊驗證完成登入=>
+	。可以查看資料修改資料=>
+	。忘記密碼送出驗證信修改
+	</textarea>
+	<p>備忘區</p>
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
+	<p>設計登入板塊始終保持置中</p>
+	<p>借我標記一下session(EL)=>${accountMail}</p>
+	<p>記得改type password</p>
+	<p>重新整理帶入資料</p>
+	<p>切到這個頁面檢查登入狀態直接到會員中心</p>
+	<p>新增記住我按鈕 COOKIE</p>
+	<p>新增GOOGLE或FB登入</p>
+	<p></p>
+
+
+
+
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	
 	<script type="text/javascript">
-	//功能區
 
 	</script>
 
