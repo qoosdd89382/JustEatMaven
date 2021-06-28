@@ -114,9 +114,10 @@ public class RecipeServlet extends HttpServlet {
 										equalCount++;
 									}
 								}
+								if (equalCount > 0) {
+									searchResults.add(recipeSvc.getOneRecipe(list.get(j).getRecipeID()));
+								}
 							}
-							if (equalCount > 0)
-								searchResults.add(recipeSvc.getOneRecipe(list.get(i).getRecipeID()));
 						}
 					} else {
 						searchResults = nameSearchResults;

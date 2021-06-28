@@ -341,9 +341,9 @@ window.onload = function() {
 	
 	function disconnect() {
 		webSocket.close();
-		document.getElementById('sendMessage').disabled = true;
-		document.getElementById('connect').disabled = false;
-		document.getElementById('disconnect').disabled = true;
+// 		document.getElementById('sendMessage').disabled = true;
+// 		document.getElementById('connect').disabled = false;
+// 		document.getElementById('disconnect').disabled = true;
 	}
 	
 	$("#message").keydown(function(e){

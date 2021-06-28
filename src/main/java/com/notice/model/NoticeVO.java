@@ -57,4 +57,17 @@ public class NoticeVO implements Serializable{
 	public void setNoticeState(Integer noticeState) {
 		this.noticeState = noticeState;
 	}
+
+	public NoticeVO(Integer noticeID, Integer accountID, Integer noticeType, String noticeText, Timestamp noticeTime,
+			Integer noticeState) {
+		super();
+		this.noticeID = noticeID;
+		this.accountID = accountID;
+		this.noticeType = noticeType;
+		this.noticeText = noticeText;
+		this.noticeTime = noticeTime;
+		this.noticeState = noticeState;
+	}
+	
+	
 }
