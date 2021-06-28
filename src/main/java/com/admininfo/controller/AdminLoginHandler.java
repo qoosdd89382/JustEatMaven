@@ -18,8 +18,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import com.admininfo.model.AdminInfoService;
 import com.admininfo.model.AdminInfoVO;
 
-@WebServlet("/Dashboard/adminLoginHandler")
-public class adminLoginHandler extends HttpServlet {
+@WebServlet("/Dashboard/AdminLoginHandler")
+public class AdminLoginHandler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected AdminInfoVO allowUser(String adminMail, String adminPassword) {

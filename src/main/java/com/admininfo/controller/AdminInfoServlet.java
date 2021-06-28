@@ -24,9 +24,10 @@ import com.admininfo.model.AdminInfoService;
 import com.admininfo.model.AdminInfoVO;
 import com.mail.controller.MailService;
 import com.mail.controller.RandomAuthCode;
+import com.recipe.model.RecipeVO;
 
 @WebServlet("/Dashboard/admin.do")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 3 * 1024 * 1024)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class AdminInfoServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -58,7 +59,7 @@ public class AdminInfoServlet extends HttpServlet {
 
 				String adminNickname = req.getParameter("adminNickname");
 				String adminNicknameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{3,45}$";
-				if (adminNickname.trim() == null || adminMail.trim().length() == 0) {
+				if (adminNickname.trim() == null || adminNickname.trim().length() == 0) {
 					errorMsgs.put("adminNicknameErr", "暱稱不可空白");
 				} else if (!adminNickname.trim().matches(adminNicknameReg)) {
 					errorMsgs.put("adminNicknameErr", "暱稱須為3至45字元");
@@ -106,7 +107,7 @@ public class AdminInfoServlet extends HttpServlet {
 
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/index.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/");
 				failureView.forward(req, res);
 			}
 
@@ -265,11 +266,155 @@ public class AdminInfoServlet extends HttpServlet {
 					res.sendRedirect(location);
 					return;
 				}
+
+				res.sendRedirect(req.getContextPath() + "/Dashboard/");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
+		
+		
+		if ("update".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				
+				int adminID = (int) session.getAttribute("loginAdminID");
+				String adminPassword = req.getParameter("adminPassword");
+				
+				
+				if (adminPassword == null || adminPassword.trim().length() == 0) {
+					errorMsgs.put("adminPasswordErr", "未輸入密碼");
+				} else if (allowUser(adminID, adminPassword) == null) {
+					errorMsgs.put("adminPasswordErr", "舊密碼輸入錯誤");
+				}
+				
+				byte[] adminPicBuffer = null;
+				try {
+					Part part = req.getPart("adminPic");
+	
+					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+						System.out.println("使用者沒有上傳置頂圖片");
+						if (session.getAttribute("adminPicBuffer") != null) {
+							adminPicBuffer = (byte[]) session.getAttribute("adminPicBuffer");
+						} else {
+							adminPicBuffer = ((AdminInfoVO) adminSvc.getOneAdmin(adminID)).getAdminPic();
+							session.setAttribute("adminPicBuffer", adminPicBuffer);
+						}
+					} else if (!part.getContentType().startsWith("image")) { 
+						errorMsgs.put("adminPicErr", "請上傳image類型之圖檔");
+						if (session.getAttribute("adminPicBuffer") != null) {
+							adminPicBuffer = (byte[]) session.getAttribute("adminPicBuffer");
+						}
+					} else if (part.getSize() > 1024 * 1024 * 3) { // 小於 3MB
+						errorMsgs.put("adminPicErr", "請注意檔案尺寸過大");
+						if (session.getAttribute("adminPicBuffer") != null) {
+							adminPicBuffer = (byte[]) session.getAttribute("adminPicBuffer");
+						}
+					} else {
+						InputStream in = part.getInputStream();
+						adminPicBuffer = new byte[in.available()];
+						in.read(adminPicBuffer);
+						in.close();
+						session.setAttribute("adminPicBuffer", adminPicBuffer);
+					}
+				} catch (Exception e) {
+					System.err.println("使用者操作時發生其他例外");
+				}
+				
+				String adminNickname = req.getParameter("adminNickname");
+				String adminNicknameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{3,45}$";
+				if (adminNickname.trim() == null || adminNickname.trim().length() == 0) {
+					errorMsgs.put("adminNicknameErr", "暱稱不可空白");
+				} else if (!adminNickname.trim().matches(adminNicknameReg)) {
+					errorMsgs.put("adminNicknameErr", "暱稱須為3至45字元");
+				} else if (adminSvc.isNicknameExist(adminNickname) && !adminNickname.equals(adminSvc.getOneAdmin(adminID).getAdminNickname())) {
+					errorMsgs.put("adminNicknameErr", "暱稱已被註冊使用");
+				}
+
+				String newPassword = req.getParameter("newPassword");
+				String adminPasswordReg = "^[a-zA-Z0-9]{8,20}$";
+				if (newPassword != null && newPassword.trim().length() != 0) {
+					if (!newPassword.trim().matches(adminPasswordReg)) {
+						errorMsgs.put("newPasswordErr", "密碼須為8-20字英文大小寫與數字");
+						errorMsgs.put("newPasswordRecheckErr", "請再次輸入密碼");
+					} else {
+						String newPasswordRecheck = req.getParameter("newPasswordRecheck");
+						if (newPasswordRecheck == null || newPasswordRecheck.trim().length() == 0) {
+							errorMsgs.put("newPasswordErr", "請再次輸入密碼");
+							errorMsgs.put("newPasswordRecheckErr", "請再次輸入密碼");
+						} else if (!newPasswordRecheck.trim().equals(adminPassword.trim())) {
+							errorMsgs.put("newPasswordErr", "請重新輸入密碼");
+							errorMsgs.put("newPasswordRecheckErr", "與第一次輸入不符");
+						}
+					}
+				}
+//				
+//				if (newPassword == null || newPassword.trim().length() == 0) {
+////					errorMsgs.put("newPasswordErr", "密碼不可空白");
+////					errorMsgs.put("newPasswordRecheckErr", "密碼不可空白");
+//				} else if (!newPassword.trim().matches(adminPasswordReg)) {
+//					errorMsgs.put("newPasswordErr", "密碼須為8-20字英文大小寫與數字");
+//					errorMsgs.put("newPasswordRecheckErr", "請再次輸入密碼");
+//				} else {
+//					String newPasswordRecheck = req.getParameter("newPasswordRecheck");
+//					if (newPasswordRecheck == null || newPasswordRecheck.trim().length() == 0) {
+//						errorMsgs.put("newPasswordRecheckErr", "請再次輸入密碼");
+//					} else if (!newPasswordRecheck.trim().equals(adminPassword.trim())) {
+//						errorMsgs.put("newPasswordErr", "請重新輸入密碼");
+//						errorMsgs.put("newPasswordRecheckErr", "與第一次輸入不符");
+//					}
+//				}
+				
+
+				AdminInfoVO adminVO = new AdminInfoVO();	// 導回用
+				adminVO.setAdminNickname(adminNickname);
+				adminVO.setAdminPic(adminPicBuffer);
+				req.setAttribute("adminVO", adminVO);
+
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = 
+							req.getRequestDispatcher("/Dashboard/Admin/adminInfo.jsp");
+					failureView.forward(req, res);
+					return;
+				}
+
+				// All parameters are correct, so we can send them to db
+				// ==========================
+				if (newPassword != null) {
+					adminPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+				}
+				if (adminSvc.setPasswordAndPic(adminID, adminPassword, adminPicBuffer) > 0) {
+					session.removeAttribute("adminPicBuffer");
+					req.setAttribute("updateSuccess", "資訊已更新成功");
+					RequestDispatcher successView = 
+							req.getRequestDispatcher("/Dashboard/Admin/adminInfo.jsp");
+					successView.forward(req, res);
+					return;
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
 
 	}
+	
+
+	protected AdminInfoVO allowUser(int adminID, String adminPassword) {
+		AdminInfoService adminSvc = new AdminInfoService();
+		AdminInfoVO adminVO = adminSvc.getOneAdmin(adminID);
+		if (adminVO != null) {
+			String hashedPassword = adminVO.getAdminPassword();
+			if (BCrypt.checkpw(adminPassword, hashedPassword)) {
+				return adminVO;// 匹配
+			}
+		}
+		return null;	// 無此e-mail
+	}
+
 
 }

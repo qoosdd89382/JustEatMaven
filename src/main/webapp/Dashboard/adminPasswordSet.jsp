@@ -240,7 +240,7 @@ body {
 						<input type="hidden" name="adminID" value="${adminVO.adminID}">
 						<input type="hidden" name="authCode" value="${authCode}">
 						<input type="hidden" name="action" value="setpwd">
-						<button id="submit" class="btn btn-primary rounded-pill btn-lg btn-block" type="submit">設定密碼</button>
+						<button id="submit" class="btn btn-primary rounded-pill btn-lg btn-block" type="submit">設定密碼並上傳頭像</button>
 					</div>
 				</form>
 			</div>
