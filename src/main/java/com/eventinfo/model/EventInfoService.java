@@ -118,6 +118,11 @@ public class EventInfoService {
 		return dao.getAll();
 	}
 
+	
+	public List<EventInfoVO> getSomeNew() {
+		return dao.getSomeNew();
+	}
+
 	//連鎖菜色
 	public void addDishByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
 			Integer groupType, String groupCity, String groupAddress, String eventRegistartionStartTime,

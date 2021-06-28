@@ -42,7 +42,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 	private static final String Select_Key_Stmt = "Select * From EventInfo Where event_id = ? Order by event_id";
 	private static final String Select_Name_Stmt = "Select * From EventInfo Where event_name Like ? ";
 	private static final String Select_Start_Date_Stmt = "Select * From EventInfo Where event_start_time Like ? ";
-	private static final String Select_All_Stmt = "Select * From EventInfo Order by event_id";
+	private static final String Select_All_Stmt = "Select * From EventInfo";
 
 	static {
 		try {
@@ -415,7 +415,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Select_All_Stmt);
+			pstmt = con.prepareStatement(Select_All_Stmt + " Order by event_id");
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -868,5 +868,65 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 			System.out.println("==================================================");
 		}
 
+	}
+
+	@Override
+	public List<EventInfoVO> getSomeNew() {
+		List<EventInfoVO> list = new ArrayList<EventInfoVO>();
+		EventInfoVO eventVO = null;
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_All_Stmt + " ORDER BY event_start_time DESC LIMIT 6");
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				eventVO = new EventInfoVO();
+				eventVO.setEventID(rs.getInt("event_id"));
+				eventVO.setEventName(rs.getString("event_name"));
+				eventVO.setEventCurrentCount(rs.getInt("event_current_count"));
+				eventVO.setEventDescription(rs.getString("event_description"));
+				eventVO.setGroupType(rs.getInt("group_type"));
+				eventVO.setGroupCity(rs.getString("group_city"));
+				eventVO.setGroupAddress(rs.getString("group_address"));
+				eventVO.setEventRegistartionStartTime(rs.getTimestamp("event_registartion_start_time"));
+				eventVO.setEventRegistartionEndTime(rs.getTimestamp("event_registartion_end_time"));
+				eventVO.setEventStartTime(rs.getTimestamp("event_start_time"));
+				eventVO.setEventEndTime(rs.getTimestamp("event_end_time"));
+				eventVO.setEventState(rs.getInt("event_state"));
+				eventVO.setEventPic(rs.getBytes("event_pic"));
+				list.add(eventVO);
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException("ResultSet發生錯誤" + e.getMessage());
+			}
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
+			}
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
+			}
+		}
+		return list;
 	}
 }
