@@ -47,7 +47,7 @@ public class NoticeTest extends HttpServlet {
 		Gson gson = new Gson();
 		
 		NoticeService noticeSvc = new NoticeService();
-		NoticeVO noticeVO = noticeSvc.addNotice(100001, 3, "測試");
+		NoticeVO noticeVO = noticeSvc.addNotice(100002, 3, "WEBBBBBBBBBBSOCKETTTTTTTTTTT");
 		String message = gson.toJson(noticeVO);
 		
 		WebSocketNotice noticeWS = new WebSocketNotice();
