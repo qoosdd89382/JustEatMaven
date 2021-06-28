@@ -50,13 +50,12 @@ div#main_area{
 }
 /* 登入區塊 */
 div#login_area {	
-
 	text-align:center;
 	background-color: rgba(0,0,0,0.6);
 	color:white;
 	
 	width: 150px;
-	height: 450px;
+	height: 480px;
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -74,17 +73,21 @@ div#login_area {
 strong#login_area_title{
 	color: 	#FF8800;
 
-	font-size:30px;
+	font-size:25px;
 }
 form span#text{
 	color: 	#FF8800;
 	font-size:20px;
 	margin:5px;
 }
+img#login_area_randomnumber_pic{
+	margin:5px;
+}
 
-
-h3 a{
-	font-size:20px;
+span#account_forget_code,
+span#account_register_info{
+	margin:5px;
+	font-size:15px;
 }
 input#account_mail_input,
 input#account_password_input,
@@ -162,9 +165,9 @@ input#account_reset_btn:hover {
 					</form>
 				
 				
-				<h3><a id="account_forget_code" href='<%=request.getContextPath()%>/Account/AccountForgetPage.jsp'>忘記密碼了嗎?</a></h3>
+				<span id="account_forget_code"><a id="account_forget_code" href='<%=request.getContextPath()%>/Account/AccountForgetPage.jsp'>忘記密碼了嗎?</a></span>
 								
-				<h3><a id="account_register_info" href='<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp'>還不是會員?</a></h3>
+				<span id="account_register_info"><a id="account_register_info" href='<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp'>還不是會員?</a></span>
 				
 					
 			</div>
