@@ -1,7 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%@ page import="java.util.*"%>
+<%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.eventinfo.model.*"%>
+
+<jsp:useBean id="eventInfoSvc" scope="page" class="com.eventinfo.model.EventInfoService" />
+
 <%-- <%@ page import="com.*"%> --%>
 
 <%
@@ -24,7 +31,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/common/css/adminChat.css">
-<title>${allPageNames.webIndex}</title>
+<title>Just Eat 揪食 - 揪團共享美食</title>
 </head>
 <body>
 	<%-- include header --%>
@@ -34,22 +41,25 @@
 	
     <!-- search bar -->
     <div class="search">
+    <form action="<%= request.getContextPath() %>/Index/search" method="post">
         <div class="search_inner">
             <h1>你空虛的胃，用揪團填滿</h1>
             <div id="search_bar" class="input-group col-lg-6 col-md-8 col-10">	<!-- boostrap v5 "input-group" class 標籤有長度衝突問題  -->
-                <select class="custom-select col-4">		<!-- boostrap v5: "from-select" -->
-                    <option selected>我想找...</option>
-                    <option value="1">找活動</option>
-                    <option value="2">找食譜</option>
-                    <option value="3">找食材</option>
+                <select class="custom-select col-4" name="searchFor" class='${errorMsgs.get("selectOptionErr") == null ? "" : "border-danger" }'>		<!-- boostrap v5: "from-select" -->
+                    <option selected value="">${errorMsgs.get(selectOptionErr) == null ? "我想找.." : errorMsgs.get("selectOptionErr") }</option>
+                    <option value="event">找活動</option>
+                    <option value="recipe">找食譜</option>
+<!--                     <option value="3">找食材</option> -->
                 </select>
-                <input type="text" class="form-control col-8" placeholder="請輸入搜尋內容"
+                <input type="text" name="searchString" class='form-control col-8 ${errorMsgs.get("emptySearchErr") == null ? "" : "border-danger" }' placeholder="請輸入搜尋內容"
                     aria-label="Text input with segmented dropdown button">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
                 </div>
+                
             </div>
         </div>
+    </form>
         <!-- <form class="search_form" action="#" method="GET">
             <div class="select_outline">
                 <select class="search_type" name="search_type">
@@ -68,42 +78,14 @@
         <div class="hot_events">
             <h3>熱門活動</h3>
             <section class="slider_box multiple-item responsive">
+            <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}">
                 <div>
-                    <div class="img_outer"><img src="img/hot_event_01.jpg"></div>
-                    <span class="popular">10 人</span>
-                    <div class="title"><a href="#">測試測試測試測試測試測試測試測試測試測試測試</a></div>
-                    <div class="datetime"><span class="date">4 月 19 日</span><span class="time">下午 2 時 30 分</span></div>
+                    <div class="img_outer"><img src="<%= request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}"></div>
+                    <span class="popular">${eventInfoVO.eventCurrentCount} 人</span>
+                    <div class="title"><a href="<%= request.getContextPath() %>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVOLogin.accountID}">${eventInfoVO.eventName}</a></div>
+                    <div class="datetime"><span class="date">${eventInfoVO.eventStartTime}</span><span class="time">下午 2 時 30 分</span></div>
                 </div>
-                <div>
-                    <div class="img_outer"><img src="img/hot_event_02.jpg"></div>
-                    <span class="popular">10 人</span>
-                    <div class="title"><a href="#">測試測試測試測試測試測試測試測試測試測試測試</a></div>
-                    <div class="datetime"><span class="date">4 月 19 日</span><span class="time">下午 2 時 30 分</span></div>
-                </div>
-                <div>
-                    <div class="img_outer"><img src="img/hot_event_03.jpg"></div>
-                    <span class="popular">10 人</span>
-                    <div class="title"><a href="#">測試測試測試測試測試測試測試測試測試測試測試</a></div>
-                    <div class="datetime"><span class="date">4 月 19 日</span><span class="time">下午 2 時 30 分</span></div>
-                </div>
-                <div>
-                    <div class="img_outer"><img src="img/hot_event_04.jpg"></div>
-                    <span class="popular">10 人</span>
-                    <div class="title"><a href="#">測試測試測試測試測試測試測試測試測試測試測試</a></div>
-                    <div class="datetime"><span class="date">4 月 19 日</span><span class="time">下午 2 時 30 分</span></div>
-                </div>
-                <div>
-                    <div class="img_outer"><img src="img/hot_event_05.jpg"></div>
-                    <span class="popular">10 人</span>
-                    <div class="title"><a href="#">測試測試測試測試測試測試測試測試測試測試測試</a></div>
-                    <div class="datetime"><span class="date">4 月 19 日</span><span class="time">下午 2 時 30 分</span></div>
-                </div>
-                <div>
-                    <div class="img_outer"><img src="img/hot_event_06.jpg"></div>
-                    <span class="popular">10 人</span>
-                    <div class="title"><a href="#">測試測試測試測試測試測試測試測試測試測試測試</a></div>
-                    <div class="datetime"><span class="date">4 月 19 日</span><span class="time">下午 2 時 30 分</span></div>
-                </div>
+            </c:forEach>
             </section>
         </div>
     </main>

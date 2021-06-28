@@ -16,6 +16,7 @@ public interface EventInfoDAOinterface {
     public List<EventInfoVO> findByName(String eventName);
     public List<EventInfoVO> findByStartDate(String eventStartDate);
     public List<EventInfoVO> getAll();
+    public List<EventInfoVO> getSomeNew();
     
     //連鎖菜色
     public void insertWithDish(EventInfoVO eventInfoVO,List<DishVO> dishList); 

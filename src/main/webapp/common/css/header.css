@@ -11,6 +11,14 @@ html, body {
     position: relative;
 }
 
+.vertical-container {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
 
 select.custom-select, select.form-control, input.form-control, textarea.form-control {
     border-color: #FFDBC0;
@@ -127,7 +135,7 @@ header {
 }
 
 .top {
-    height: 80px;
+    height: 60px;
     width: 100%;
     position: fixed;
     background-color: #F3722C;
@@ -141,8 +149,8 @@ header {
 }
 
 .top h1 a {
-    line-height: 80px;
-    font-size: 28px;
+/*     line-height: 80px; */
+    font-size: 24px;
     letter-spacing: 1px;
     color: #fff;
     margin-left: 20px;

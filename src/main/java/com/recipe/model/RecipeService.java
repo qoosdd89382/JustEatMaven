@@ -77,14 +77,14 @@ public class RecipeService {
 		return recipeVO;
 	}
 	
-	public void updateViewCount(int recipeID) {
+	public synchronized void updateViewCount(int recipeID) {
 		RecipeVO recipeVO = recipeDAO.getOneByPK(recipeID);
 		int count = recipeVO.getRecipeViewCount();
 		recipeVO.setRecipeViewCount(++count);
 		recipeDAO.updateViewCount(recipeVO);
 	}
 
-	public void deleteRecipe(int recipeID) {
+	public synchronized void deleteRecipe(int recipeID) {
 		recipeDAO.delete(recipeID);
 	}
 	
