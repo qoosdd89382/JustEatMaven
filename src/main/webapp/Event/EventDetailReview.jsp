@@ -1,3 +1,5 @@
+<%@page import="com.accountinfo.model.AccountInfoService"%>
+<%@page import="com.accountinfo.model.AccountInfoVO"%>
 <%@page import="com.eventmember.model.EventMemberVO"%>
 <%@page import="com.eventmember.model.EventMemberService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -7,6 +9,8 @@
 	EventMemberService eventMemberSvc = new EventMemberService();
 	EventMemberVO eventMemberVO = eventMemberSvc.getByEventAndMemberID(Integer.parseInt(request.getParameter("eventID")), Integer.parseInt(request.getParameter("accountID")));
 	request.setAttribute("eventMemberVO", eventMemberVO);
+	AccountInfoService accountInfoService = new AccountInfoService();
+	AccountInfoVO accountInfoVO = accountInfoService.selectOneAccountInfo(Integer.parseInt(request.getParameter("accountID")));
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,10 +83,13 @@
 	            		<c:when test="${eventMemberVO.hostIdentifier == true}">
 	            			<input type="button" value="回到活動列表" class="return">
 	                		<input type="submit" name="action" value="活動編輯" class="">
+	                		<input type="submit" name="action" value="活動聊天室" class="eventCharRoom">
+	                		<input type="button" value="成員審核" class="memberCheck">
 	                		<input type="submit" name="action" value="取消活動" class="">
 	            		</c:when>
 	            		<c:when test="${eventMemberVO.hostIdentifier == false}">
 	            			<input type="button" value="回到活動列表" class="return">
+	            			<input type="submit" name="action" value="活動聊天室" class="eventCharRoom">
 	                		<input type="submit" name="action" value="退出活動" class="">
 	            		</c:when>
 	            		<c:otherwise>
@@ -142,7 +149,10 @@
 		});
 		
 		$(".memberList").on("click",function(){
-			location.href = "<%=request.getContextPath()%>/Event/EventMember.jsp?eventID<%=request.getParameter("eventID")%>&accountID=<%=request.getParameter("accountID")%>";
+			location.href = "<%=request.getContextPath()%>/Event/EventMember.jsp?eventID<%=request.getParameter("eventID")%>";
+		});
+		$(".memberCheck").on("click",function(){
+			location.href = "<%=request.getContextPath()%>/Event/成員審核.jsp?eventID<%=request.getParameter("eventID")%>";
 		});
 	});
 	
