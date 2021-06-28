@@ -45,13 +45,12 @@
         <div class="search_inner">
             <h1>你空虛的胃，用揪團填滿</h1>
             <div id="search_bar" class="input-group col-lg-6 col-md-8 col-10">	<!-- boostrap v5 "input-group" class 標籤有長度衝突問題  -->
-                <select class="custom-select col-4" name="searchFor" class='${errorMsgs.get("selectOptionErr") == null ? "" : "border-danger" }'>		<!-- boostrap v5: "from-select" -->
-                    <option selected value="">${errorMsgs.get(selectOptionErr) == null ? "我想找.." : errorMsgs.get("selectOptionErr") }</option>
+                <select class="custom-select col-4" name="searchFor" class=''>		<!-- boostrap v5: "from-select" -->
                     <option value="event">找活動</option>
                     <option value="recipe">找食譜</option>
 <!--                     <option value="3">找食材</option> -->
                 </select>
-                <input type="text" name="searchString" class='form-control col-8 ${errorMsgs.get("emptySearchErr") == null ? "" : "border-danger" }' placeholder="請輸入搜尋內容"
+                <input type="text" name="searchString" class='form-control col-8' placeholder="請輸入搜尋內容"
                     aria-label="Text input with segmented dropdown button">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>

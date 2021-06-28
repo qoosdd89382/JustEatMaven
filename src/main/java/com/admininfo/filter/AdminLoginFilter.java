@@ -49,7 +49,7 @@ public class AdminLoginFilter implements Filter {
 
 		Object loginAdminID = session.getAttribute("loginAdminID");
 		if (loginAdminID == null) {
-			session.setAttribute("location", req.getRequestURI());
+			session.setAttribute("adminLocation", req.getRequestURI());
 			res.sendRedirect(req.getContextPath() + "/Dashboard/login.jsp");
 			return;
 		} else {
