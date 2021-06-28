@@ -38,17 +38,67 @@ String accountPassword = request.getParameter("accountPassword");
 
 <style>
 
-div#main_area{
-	margin-top:150px;
+body#Body_Login{
+	background-image:url("images/LoginBackGround.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 
-div#login_area {
-	background-color:white;
-	list-style: none;
-	border:1px solid gray;
+/*整個區塊 */
+div#main_area{
+	margin-top:80px;
 }
+/* 登入區塊 */
+div#login_area {	
+
+	text-align:center;
+	background-color: rgba(0,0,0,0.6);
+	color:white;
+	
+	width: 150px;
+	height: 450px;
+	
+ 	margin: 35px auto; 
+ 	padding: 30px; 
+	
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+ 	box-shadow:0px 1px 2px 1px #aaaaaa, 
+ 	           inset 0px 1px 1px rgba(255,255,255,0.7); 
+	border-radius: 3px solid orange;
+}
+/* 您好歡迎登入 */
 strong#login_area_title{
+	color: 	#FF8800;
+
 	font-size:30px;
+}
+form span#text{
+	color: 	#FF8800;
+	font-size:20px;
+	margin:5px;
+}
+
+
+h3 a{
+	font-size:20px;
+}
+input#account_mail_input,
+input#account_password_input,
+input#account_randomnumber_input{
+	border-radius:2px;
+	margin:5px;
+}
+
+
+input#account_mail_input:focus,
+input#account_password_input:focus,
+input#account_randomnumber_input:focus{
+	border-color: #FFDBC0;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(252, 146, 76, 0.6);
 }
 
 input#account_login_btn,
@@ -64,27 +114,14 @@ input#account_reset_btn {
 	padding: 5px 15px 5px 15px;
 	text-decoration: none;
 }
-
 input#account_login_btn:hover,
 input#account_reset_btn:hover {
 	background:#FFAA33;
 	text-decoration: none;
 }
-
-input#account_forget_code,
-input#account_register_info {
-	border:none;
-	font-family: Arial;
-	color:#0000FF;
-	font-size: 20px;
-	padding: 10px 20px 10px 20px;
-	background: #FFFFFF;
-	text-decoration: underline;
-}
-
 </style>
 
-<body>
+<body id="Body_Login">
 
 	<header>
 		<%@ include file="/common/header.jsp"%>
@@ -94,30 +131,26 @@ input#account_register_info {
 
 		<div id="main_area"class="row">
 		
-			<div id="intro_area" class="col col-sm-8">
-			
-				<img src="<%=request.getContextPath()%>/img/header.png" width="730" height="435" border="0">
-
-			</div>
-
-			<div id="login_area" class="col col-sm-4">
+			<div id="login_area" class="col-sm-3 align-self-center">
 			
 				<strong id="login_area_title">您好，歡迎登入</strong>
 				
 				<div id="login_area_input"></div>
 				
 					<form method="post" action="accountInfo.do" name="LoginInfo">
-						<span>請輸入會員信箱 (如JerryMouse@gmail.com):</span><br>
+						<span id="text">會員信箱 </span><br>
 						<input id="account_mail_input" type="text" name="accountMail" 
-							value="<%=(accountMail == null) ? "" : accountMail%>">
+							value="<%=(accountMail == null) ? "" : accountMail%>"
+							placeholder="請輸入...">
 						<span style="color:red">${errorMsgs.get("accountMailError")}</span><br>
 						
-						<span>請輸入會員密碼 (至少8~16碼任意大小寫英文數字):</span><br>
+						<span id="text">會員密碼 </span><br>
 						<input id="account_password_input" type="text" name="accountPassword"
-							value="<%=(accountPassword == null) ? "" : accountPassword%>">
+							value="<%=(accountPassword == null) ? "" : accountPassword%>"
+							placeholder="請輸入...">
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
-					    <span>請輸入驗證碼 (點擊圖片可刷新):測試密碼"1111"</span><br>
+					    <span id="text">驗證碼</span><br>
 					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput" value="1111">
 					    <span style="color:red">${errorMsgs.get("randomNumberError")}</span><br>
 					    
@@ -138,33 +171,14 @@ input#account_register_info {
 		</div>
 	</div>
 	
-	<p>後台區</p>
-	<span>${errorMsgs}</span>
-	<p>${errorMsgs.get("UnexceptionError")}</p>
-	<p>====</p>
-	
-
-	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>
 	
 	<script type="text/javascript">
-	//互動區
-	$("#login_area_randomnumber_pic").on("click",function(){
-		LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
-	})
 
-	//功能區
-		//頁面載入執行
-// 		function window.onload(){
-// 			if(window.sessionStorage){
-// 				var 
-// 			}
-// 		}
-	
-		//驗證碼圖片更新
-	    function refresh() {
+	//驗證碼圖片更新
+	function refresh() {
 	    	LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();
 	    }
 	</script>
