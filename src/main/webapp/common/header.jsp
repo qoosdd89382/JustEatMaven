@@ -7,13 +7,13 @@
     <nav class="navigator -tog">
         <ul>
             <li><a href="<%=request.getContextPath()%>" id="homepage_btn">首頁</a></li>
-            <li><a href="<%=request.getContextPath()%>/Recipe/home.jsp" id="recipe_btn">食譜</a></li>
+            <li><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp" id="recipe_btn">食譜</a></li>
             <li><a href="#" id="party_btn">揪飯</a></li>
             <li><a href="#" id="shop_btn">商城</a></li>
-            <li><a href="<%=request.getContextPath()%>/Account/accountInfo.do?action=gotoAccountLoginPage" class="select">會員中心</a></li>
-<%--             <c:if test="${sessionScope.accountInfoVOLogin}"> --%>
+            <li><a href="<%=request.getContextPath()%>/Account/accountInfo.do?action=gotoAccountLoginPage" class="select">${sessionScope.accountInfoVOLogin == null ? "登入" : "會員中心" }</a></li>
+            <c:if test="${not empty sessionScope.accountInfoVOLogin}">
             	<li><img class="profile_pic" src="<%=request.getContextPath()%>/img/test_profile.jpg" alt=""></li>
-<%--             </c:if> --%>
+            </c:if>
         </ul>
     </nav>
     <button type="button" class="menu-btn">

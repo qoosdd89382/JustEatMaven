@@ -25,6 +25,6 @@
 <div class="copyright">
     <span class="copyright_text">
         <span>Just Eat 揪食 <i class="fas fa-utensils fa-lg"></i></span>
-        <span><a href="admin.html" target="_blank">後臺管理</a></span>
+        <span><a href="<%= request.getContextPath() %>/Dashboard" target="_blank">後臺管理</a></span>
     </span>
 </div>

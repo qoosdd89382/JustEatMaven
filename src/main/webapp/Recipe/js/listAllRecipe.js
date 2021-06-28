@@ -54,14 +54,14 @@ $(function () {
 	$(".recipe-block").on("mouseleave", function() {
 		$(this).removeClass("mouseenter");
 	});
-
-	$(".img-outer").on("mouseenter", function () {
-		$(this).css("cursor", "pointer");
-	});
-	
-	$(".img-outer").on("mouseleave", function () {
-		$(this).css("cursor", "auto");
-	});
+//
+//	$(".img-outer").on("mouseenter", function () {
+//		$(this).css("cursor", "pointer");
+//	});
+//	
+//	$(".img-outer").on("mouseleave", function () {
+//		$(this).css("cursor", "auto");
+//	});
 	
 	$(".img-outer").on("click", function () {
 		$(this).closest(".recipe-block").find(".readmore").find("a")[0].click();

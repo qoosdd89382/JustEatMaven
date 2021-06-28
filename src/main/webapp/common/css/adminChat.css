@@ -74,20 +74,6 @@
         }
 
 
-        ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        ul li {
-            display: inline-block;
-            clear: both;
-            margin-bottom: 2px;
-            font-family: Helvetica, Arial, sans-serif;
-            position: relative;
-        }
-
         .friend {
             float: left;
             margin-right: 28px;
