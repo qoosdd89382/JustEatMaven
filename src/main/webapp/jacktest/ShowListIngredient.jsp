@@ -3,11 +3,11 @@
 
 <%@page import="com.ingredient.model.IngredientVO"%>
 <%@page import="com.ingredient.model.IngredientService"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.*"%>
 
-<%-- ¦¹­¶½m²ß±Ä¥Î EL ªº¼gªk¨ú­È --%>
+<%-- æ­¤é ç·´ç¿’æ¡ç”¨ EL çš„å¯«æ³•å–å€¼ --%>
 
 <%
 IngredientService ingredientsvc = new IngredientService();
@@ -22,7 +22,7 @@ IngredientService ingredientsvc = new IngredientService();
 
 <html>
 <head>
-<title>­¹§÷¼ĞÅÒlistAll</title>
+<title>é£Ÿææ¨™ç±¤listAll</title>
 
 <style>
 table#table-1 {
@@ -69,22 +69,22 @@ th, td {
 
 
 
-	<h4>¦¹­¶½m²ß±Ä¥Î EL ªº¼gªk¨ú­È:</h4>
+	<h4>æ­¤é ç·´ç¿’æ¡ç”¨ EL çš„å¯«æ³•å–å€¼:</h4>
 	<table id="table-1">
 		<tr>
 			<td>
-				<h3>­¹§÷¼ĞÅÒlistAll</h3>
+				<h3>é£Ÿææ¨™ç±¤listAll</h3>
 				<h4>
 					<a href="select_page.jsp"><img src="images/back1.gif"
-						width="100" height="32" border="0">¦^­º­¶</a>
+						width="100" height="32" border="0">å›é¦–é </a>
 				</h4>
 			</td>
 		</tr>
 	</table>
 
-	<%-- ¿ù»~ªí¦C --%>
+	<%-- éŒ¯èª¤è¡¨åˆ— --%>
 	<c:if test="${not empty errorMsgs}">
-		<font style="color: red">½Ğ­×¥¿¥H¤U¿ù»~:</font>
+		<font style="color: red">è«‹ä¿®æ­£ä»¥ä¸‹éŒ¯èª¤:</font>
 		<ul>
 			<c:forEach var="message" items="${errorMsgs}">
 				<li style="color: red">${message}</li>
@@ -92,12 +92,12 @@ th, td {
 		</ul>
 	</c:if>
 
-	<h1>¼öªù­¹§÷</h1>
+	<h1>ç†±é–€é£Ÿæ</h1>
 
 	<table>
 		<tr>
-			<th>®Æ²z¤ÀÃş</th>
-			<th>®Æ²z¤ÀÃş¦WºÙ</th>
+			<th>æ–™ç†åˆ†é¡</th>
+			<th>æ–™ç†åˆ†é¡åç¨±</th>
 			
 
 		</tr>
@@ -106,9 +106,9 @@ th, td {
 
 		<c:forEach var="ingredientVO" items="${list}">
 			<tr>
-				<td>${ingredientVO.ingredientID}</td>  
+				<td class="id">${ingredientVO.ingredientID}</td>  
 				<td>${ingredientVO.ingredientName}</td>  
-				
+				<td><button class="modify">ä¿®æ”¹</button></td>
 
 		</c:forEach>
 		
@@ -123,8 +123,60 @@ th, td {
 		
 	</table>
 	
+	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+	<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js"></script> --%>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/vendors/slick/slick.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
+	
+	
+	<script>
+	$(document).on("click", "button.modify",function(){
+	
+		 alert (  $(this).parents("td").prev().text() );
+		 console.log("123");
+		 var vall=  $(this).parents("td").prev().text();
+		 
+		 $(this).parents("td").prev().html("<input type='text'>");
+		 $(this).parents("td").prev().find("input").val(vall); 
+		 $(this).html("ç¢ºå®šä¿®æ”¹");
+		 $(this).attr('class',"confirmModify")
+		 
+	});
+  
+  
+
+$(document).on("click", "button.confirmModify", function(){
+	$(this).parents("td").prev().text($(this).closest("td").prev().find("input").val());
+	 $(this).html("ä¿®æ”¹");
+	 $(this).attr('class',"modify")
+	 var modifyname = $(this).parents("td").prev().text();
+	 var ingredientid = $(this).parent().prev().prev().text();
+		console.log(modifyname);
+		console.log('test'+ingredientid);
+		$.ajax({
+			type : 'POST',
+			url : 'http://localhost:8081/justeat-maven/IngredientListUpdateServlet',
+			data : {
+				modifyname : modifyname,
+				ingredientid :ingredientid
+			},
+			success : function(result) {
+				console.log(result);
+				
+			}
+
+		});
+		
+	 
+});
+	
 	
 
+</script>
 
 </body>
 </html>
