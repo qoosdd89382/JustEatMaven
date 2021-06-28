@@ -52,12 +52,7 @@ public class WebSocketNotice {
 	
 	@OnMessage
 	public void onMessage(String message) {
-		NoticeVO aNotice = gson.fromJson(message, NoticeVO.class);
-		System.out.println("====");
-		System.out.println(message);
-		System.out.println("====");
-		System.out.println(accountConnectionMap.isEmpty());
-		
+		NoticeVO aNotice = gson.fromJson(message, NoticeVO.class);		
 		for (WebSocketNotice item : accountConnectionMap.values()) { 
 			
 			if (item.accountID.equals(aNotice.getAccountID().toString())) {

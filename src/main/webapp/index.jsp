@@ -126,6 +126,7 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/js/index.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/dateFormat.js"></script>
 	<script>
 	window.onload = function() {
 		
