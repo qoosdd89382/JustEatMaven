@@ -2,6 +2,8 @@ package com.cuisinecategory.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,8 +32,21 @@ public class CuisineCategoryListUpdateServlet extends HttpServlet  {
 		String modifyname = req.getParameter("modifyname");
 		Integer test=  new Integer( (String) req.getParameter("categoryid"));
 		CuisineCategoryService ccsve = new CuisineCategoryService();
-		 ccsve.updateCategory(test, modifyname);
+		 
 		
+			String regEx="^[A-z\\u4e00-\\u9fa5]*$";
+			Pattern p=Pattern.compile(regEx);
+			Matcher m=p.matcher(modifyname);
+			if(!m.matches()) {
+				PrintWriter out = res.getWriter();
+				out.print("不得含有特殊字符或數字");
+				System.out.println("含有特殊字符");
+			}else {
+				ccsve.updateCategory(test, modifyname);
+				System.out.println("沒有特殊字符");
+			}
+	
+		 
 //		PrintWriter out = res.getWriter();
 //		out.print("hello"+modifyname);
 		
