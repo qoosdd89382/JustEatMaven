@@ -79,8 +79,7 @@
 				</ol>
 			</div> 
 			
-			<div class="recipe-full row" data-id="${recipeVO.recipeID}">
-				
+			<div class="recipe-full row" id="${recipeVO.recipeID}">
 
 				<div class="title col-12">
 					<i class="fas fa-utensils"></i>
@@ -99,11 +98,11 @@
 					<div class="img-outer clearfix">
 						<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}">
 					</div>
-					<div class="count">
-						<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-						<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeVO.recipeLikeCount}</span>
-						<span class="favcount"><i class="fas fa-heart"></i>${recipeVO.recipeCollectCount}</span>
-					</div>
+							<div class="count">
+								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
+								<span class='likecount ${thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+								<span class='favcount ${favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+							</div>
 				</div>
 				
 				<div class="info col-12 col-lg-8 margin-top">
@@ -149,6 +148,32 @@
 				
 			</div>
 
+
+		
+<!-- Modal -->
+<div class="modal fade" id="notLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">糟糕，哪裡出錯囉！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        	本站會員才可使用本功能，請先登入或註冊！
+      </div>
+      <div class="modal-footer">
+<!--         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+        <a href="<%= request.getContextPath() %>/Account/AccountLoginPage.jsp" class="btn btn-primary">登入</a>
+        <a href="<%= request.getContextPath() %>/Account/AccountRegister/AccountRegisterPage.jsp" class="btn btn-primary">註冊</a>
+      </div>
+    </div>
+  </div>
+</div>			
+
+
+
 		</div>
 
 		<%-- include sidebar --%>
@@ -169,8 +194,19 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js"></script> --%>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/vendors/slick/slick.js"></script>
+	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
-<%-- 	<script src="<%=request.getContextPath()%>/Recipe/js/recipe.js"></script> --%>
+	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
+
+	<script>
+
+	$(function(){
+
+		<%@ include file="/Recipe/js/recipeFavThumb.page"%>
+		<%@ include file="/Recipe/searchAutoComplIng.file"%>
+	});
+	
+	</script>
 </body>
 </html>

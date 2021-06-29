@@ -1,7 +1,6 @@
 
 $(function () {
 	
-	
 //	function textLenChange() {
 //		var len = 41; // 超過?個字以"..."取代
 //		// $(this).width()) 與 document.body.clientWidth) 相等

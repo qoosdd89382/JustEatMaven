@@ -97,14 +97,14 @@ try {
 							</div>
 							<div class="count">
 								<span class="viewcount"><i class="fas fa-eye"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeViewCount}</span>
-								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeLikeCount}</span>
-								<span class="favcount"><i class="fas fa-heart"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeCollectCount}</span>
+								<span class='likecount ${thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeIngUnit.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeIngUnit.recipeID)}</span></span>
+								<span class='favcount ${favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeIngUnit.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeIngUnit.recipeID)}</span></span>
 							</div>
 						</div>
 						
 						<div class="info col-12 col-lg-7">
 							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeName}</a></h4></div>
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID).accountNickname}</a></div>
+							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID).accountNickname}</a></div>
 							<div class="intro"><div class="intro-text">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeIntroduction}</div></div>
 							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID}">
 								<div class="change form-group">
@@ -131,6 +131,27 @@ try {
 			<%@ include file="pages/page2.file"%>
 			</div>
 			
+<!-- Modal -->
+<div class="modal fade" id="notLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">糟糕，哪裡出錯囉！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        	本站會員才可使用本功能，請先登入或註冊！
+      </div>
+      <div class="modal-footer">
+<!--         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+        <a href="<%= request.getContextPath() %>/Account/AccountLoginPage.jsp" class="btn btn-primary">登入</a>
+        <a href="<%= request.getContextPath() %>/Account/AccountRegister/AccountRegisterPage.jsp" class="btn btn-primary">註冊</a>
+      </div>
+    </div>
+  </div>
+</div>			
 
 		</div>
 
@@ -156,6 +177,12 @@ try {
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
 	<script>
+
+	$(function(){
+
+		<%@ include file="/Recipe/js/recipeFavThumb.page"%>
+		<%@ include file="/Recipe/searchAutoComplIng.file"%>
+	});
 	
 	</script>
 </body>

@@ -33,6 +33,7 @@ public class FavoriteRecipeJDBCDAO implements FavoriteRecipeDAOInterface {
 	// 順序寫死，時間降冪；前端可依抓出屬性排列?
 	private static final String SELECT_ALL_BY_ACCOUNT = "SELECT * FROM FavoriteRecipe WHERE account_id = ? ORDER BY fav_time DESC";
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM FavoriteRecipe WHERE fav_recipe_id = ? ORDER BY fav_time DESC";
+	private static final String COUNT_ALL_BY_RECIPE = "SELECT COUNT(*) FROM FavoriteRecipe WHERE fav_recipe_id = ?";
 
 	@Override
 	public int insert(FavoriteRecipeVO favoriteRecipe) {
@@ -377,6 +378,54 @@ public class FavoriteRecipeJDBCDAO implements FavoriteRecipeDAOInterface {
 			System.out.println("食譜" + one.getFavRecipeID() + "於" + one.getFavTime() + "被使用者" + one.getAccountID() + "收藏\n========");
 		}
 
+	}
+
+	@Override
+	public int countAllByRecipe(int favRecipeID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(COUNT_ALL_BY_RECIPE);
+
+			pstmt.setInt(1, favRecipeID);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return count;
 	}
 
 }

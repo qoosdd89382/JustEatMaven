@@ -82,15 +82,15 @@
 							</div>
 							<div class="count">
 								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeVO.recipeLikeCount}</span>
-								<span class="favcount"><i class="fas fa-heart"></i>${recipeVO.recipeCollectCount}</span>
+								<span class='likecount ${thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+								<span class='favcount ${favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
 							</div>
 						</div>
 						<!-- 應該要找時間處理驗證，若非本人不得刪除 -->
 						<div class="info col-12 col-lg-7">
 							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
 <!-- 							<div class="row"> -->
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
+							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
 <!-- 							<div class="col-6">test</div> -->
 <!-- 							</div> -->
 							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
@@ -123,6 +123,28 @@
 			</div>
 			
 
+<!-- Modal -->
+<div class="modal fade" id="notLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">糟糕，哪裡出錯囉！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        	本站會員才可使用本功能，請先登入或註冊！
+      </div>
+      <div class="modal-footer">
+<!--         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+        <a href="<%= request.getContextPath() %>/Account/AccountLoginPage.jsp" class="btn btn-primary">登入</a>
+        <a href="<%= request.getContextPath() %>/Account/AccountRegister/AccountRegisterPage.jsp" class="btn btn-primary">註冊</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 		</div>
 
 		<%-- include sidebar --%>
@@ -150,7 +172,8 @@
 	<script>
 
 	$(function(){
-		
+
+		<%@ include file="/Recipe/js/recipeFavThumb.page"%>
 		<%@ include file="/Recipe/searchAutoComplIng.file"%>
 	});
 	

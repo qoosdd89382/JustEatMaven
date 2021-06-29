@@ -32,6 +32,7 @@ public class ThumbsupRecipeJDBCDAO implements ThumbsupRecipeDAOInterface {
 	// 順序寫死，時間降冪；前端可依抓出屬性排列?
 	private static final String SELECT_ALL_BY_ACCOUNT = "SELECT * FROM ThumbsupRecipe WHERE account_id = ? ORDER BY thmup_time DESC";
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM ThumbsupRecipe WHERE thmup_recipe_id = ? ORDER BY thmup_time DESC";
+	private static final String COUNT_ALL_BY_RECIPE = "SELECT COUNT(*) FROM ThumbsupRecipe WHERE thmup_recipe_id = ?";
 	
 	@Override
 	public int insert(ThumbsupRecipeVO thumbsupRecipe) {
@@ -336,5 +337,55 @@ public class ThumbsupRecipeJDBCDAO implements ThumbsupRecipeDAOInterface {
 //			System.out.println("食譜" + one.getThmupRecipeID() + "於" + one.getThmupTime() + "被使用者" + one.getAccountID() + "按讚\n========");
 //		}
 		
+	}
+
+
+
+	@Override
+	public int countAllByRecipe(int thmupRecipeID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(COUNT_ALL_BY_RECIPE);
+
+			pstmt.setInt(1, thmupRecipeID);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return count;
 	}
 }

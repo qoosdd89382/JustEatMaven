@@ -94,12 +94,37 @@ div.recipe-full div.count {
     font-size: 20px;
     color: black;
     background: #F3722C;
-    padding: 10px;
+   	padding: 5px 0 5px 10px;
 }
 
-div.recipe-full div.count span svg {
+
+.recipe-full .count > span {
 	margin-right: 10px;
 }
+
+
+div.recipe-full div.count > span svg {
+	margin-right: 10px;
+}
+
+
+.recipe-full .count > span {
+	margin-right: 10px;
+}
+
+
+.recipe-full .count > span svg {
+	margin-right: 10px;
+}
+
+.recipe-full .count span.favcount.click svg {
+	color: #FF79C6;	
+}
+.recipe-full .count span.likecount.click svg {
+	color: #435DFF;
+}
+
+
 
 
 
