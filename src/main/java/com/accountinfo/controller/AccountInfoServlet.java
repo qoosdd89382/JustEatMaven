@@ -250,7 +250,7 @@ public class AccountInfoServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-				
+				req.setAttribute("accountMailInput",accountMailInput);
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
 							.getRequestDispatcher("/Account/AccountForgetPage.jsp");
@@ -287,7 +287,7 @@ public class AccountInfoServlet extends HttpServlet {
 							"進行驗證";
 
 					mailSvc.sendMail(accountMail, subject, messageText);
-
+					
 					//新的VO物件用來傳遞信箱資訊到下一個頁面
 					accountInfoVO.setAccountMail(accountMail);
 					accountInfoVO.setAccountCode(accountCode);
@@ -876,7 +876,7 @@ public class AccountInfoServlet extends HttpServlet {
 			// 有錯誤就返回總表，顯示錯誤訊息
 				if (!errorMsgs.isEmpty()) {
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Account/AccountRegister/AccountRegisterPageLevelTwo.jsp");
+							.getRequestDispatcher("/Account/AccountRegister/AccountRegisterPageLevelOne.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
@@ -997,7 +997,6 @@ public class AccountInfoServlet extends HttpServlet {
 //				req.setAttribute("accountBirth",accountBirth);
 //				req.setAttribute("accountText",accountTextInput);
 				//呼叫SERVICE來做事，把上面的值都存到AccountInfoVO物件
-				System.out.println("準備轉交");
 //				accountInfoSvc.setLevelOneAccountInfoFromRegister(
 //						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
 //						accountText);
@@ -1011,7 +1010,7 @@ public class AccountInfoServlet extends HttpServlet {
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Account/AccountLoginPage.jsp";
-				System.out.println("???");
+				System.out.println("註冊完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				

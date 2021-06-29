@@ -27,10 +27,35 @@ AccountInfoVO accountInfoVORequest = (AccountInfoVO) request.getAttribute("accou
 <title>揪食-會員註冊</title>
 
 <style>
+body#body_register{
+	background: #ffe259; 
+	background: -webkit-linear-gradient(to left, #ffa751, #ffe259); 
+	background: linear-gradient(to left, #ffa751, #ffe259);
+}
+
+/*整個區塊 */
+div#main_area{
+	margin-top:80px;
+}
 div#register_area{
-	margin-top:150px;
-	border:1px solid gray;
-	margin-right:300px;
+	text-align:center;
+	background-color: rgba(0,0,0,0.6);
+	color:white;
+	
+	width: 200px;
+	height: 700px;
+	
+ 	margin: 35px auto; 
+ 	padding: 30px; 
+	
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+ 	box-shadow:0px 1px 2px 1px #aaaaaa, 
+ 	           inset 0px 1px 1px rgba(255,255,255,0.7); 
+	border-radius: 3px solid orange;
 }
 
 input#register_submit_btn,
@@ -65,7 +90,7 @@ textarea#textarea {
 </style>
 
 </head>
-<body>
+<body id="body_register">
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
@@ -74,10 +99,10 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col offset-3">
+			<div id="register_area" class="col-sm-6 align-self-center">
 			
 			<Strong>您好~歡迎來到揪食!</Strong><br>
-			<strong>請輸入您的資料協助您成為我們的一員</strong>
+			<strong>請輸入以下資料協助您成為我們的一員</strong>
 			
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
 				
@@ -135,15 +160,6 @@ textarea#textarea {
 			</div>
 		</div>
 	</div>
-	<P>除錯區</P>
-	<P>全部的訊息${errorMsgs}</P>
-	<P>寄驗證信修改密碼</P>
-	<P>備忘錄</P>
-	<p>加入會員是否已存在的功能</p>
-	<P>會員自我介紹框自動伸縮</P>
-	<P>圖片要能夠預覽</P>	
-
-	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

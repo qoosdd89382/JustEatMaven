@@ -27,14 +27,9 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <title>揪食-會員資料</title>
 <style>
 body{
-/* 	background: #FF8008; */
-/* 	background: -webkit-linear-gradient(to left, #FFC837, #FF8008);  */
-/* 	background: linear-gradient(to left, #FFC837, #FF8008); */
-	
-background: #ffe259;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #ffa751, #ffe259); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+	background: #ffe259; 
+	background: -webkit-linear-gradient(to left, #ffa751, #ffe259); 
+	background: linear-gradient(to left, #ffa751, #ffe259);
 }
 div#main_block{
 	margin-top:150px;

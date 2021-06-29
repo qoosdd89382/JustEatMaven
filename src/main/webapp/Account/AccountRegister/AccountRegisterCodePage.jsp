@@ -41,7 +41,7 @@ div#register_area{
 	color:white;
 	
 	width: 200px;
-	height: 300px;
+	height: 320px;
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -54,6 +54,17 @@ div#register_area{
  	box-shadow:0px 1px 2px 1px #aaaaaa, 
  	           inset 0px 1px 1px rgba(255,255,255,0.7); 
 	border-radius: 3px solid orange;
+}
+input#input_box{
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+div#register_area_title{
+	color: 	#FF8800;
+	font-size:20px;
 }
 
 input#register_submit_btn,
@@ -98,9 +109,10 @@ textarea#textarea {
 		<div id="main_area" class="row">
 		
 			<div id="register_area" class="col-sm-6 align-self-center">
-			
+			<div id="register_area_title">
 			<Strong>您好!您所輸入的信箱跟暱稱可以使用</Strong><br>
 			<strong>請至您的信箱查看驗證碼</strong>
+			</div>
 			
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 				

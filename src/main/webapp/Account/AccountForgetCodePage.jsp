@@ -23,10 +23,46 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 <title>揪食-忘記密碼-接收驗證碼</title>
 
 <style>
+body#body_forget{
+	background-image:url("images/LoginBackGround.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+/*整個區塊 */
+div#main_area{
+	margin-top:80px;
+}
 div#register_area{
-	margin-top:150px;
-	border:1px solid gray;
-	margin-right:300px;
+	text-align:center;
+	background-color: rgba(0,0,0,0.6);
+	color:white;
+	
+	width: 200px;
+	height: 320px;
+	
+ 	margin: 35px auto; 
+ 	padding: 30px; 
+	
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+ 	box-shadow:0px 1px 2px 1px #aaaaaa, 
+ 	           inset 0px 1px 1px rgba(255,255,255,0.7); 
+	border-radius: 3px solid orange;
+}
+input#input_box{
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+div#register_area_title{
+	color: 	#FF8800;
+	font-size:20px;
 }
 
 input#register_submit_btn,
@@ -60,7 +96,7 @@ textarea#textarea {
 </style>
 
 </head>
-<body>
+<body id="body_forget">
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
@@ -68,11 +104,11 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col offset-3">
-			
-			<Strong>您好~歡迎來到揪食!</Strong><br>
-			
+			<div id="register_area" class="col-sm-4 align-self-center">
+			<div id="register_area_title">
+			<Strong>您好~歡迎來到揪食!</Strong><br>			
 			<strong>請輸入您信箱中的密碼與驗證碼</strong>
+			</div>
 			
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 				
@@ -85,7 +121,7 @@ textarea#textarea {
 					placeholder="至少8~16碼任意大小寫英文數字">
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 
-					<span>請輸入驗證碼:</span><br>
+					<span style="color:red">*</span><span>請輸入驗證碼:</span><br>
 					<input id="input_box" type="text" name="accountCode"
 					placeholder="請至您指定之信箱接收驗證碼">
 					<span style="color:red">${errorMsgs.get("accountCodeError")}</span><br> 
