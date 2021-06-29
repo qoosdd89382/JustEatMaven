@@ -96,6 +96,7 @@ th, td {
 
 	<h1>熱門食材</h1>
 	<h2 id="error"></h2>
+	<h2 id="error2"></h2>
 	<table>
 		<tr>
 			<th>料理分類</th>
@@ -136,15 +137,19 @@ $(document).on("click", "button.modify",function(){
 		 $(this).parents("td").prev().find("input").val(vall); 
 		 $(this).html("確定修改");
 		 $(this).attr('class',"confirmModify")
+		 $('#error').html("");
+		
 		 
 	});
   
   
 
 $(document).on("click", "button.confirmModify", function(){
+	var that = this;
 	$(this).parents("td").prev().text($(this).closest("td").prev().find("input").val());
 	 $(this).html("修改");
-	 $(this).attr('class',"modify")
+	 $(this).attr('class',"modify");
+	 $(this).parents("td").prev().attr('class',"modify2");
 	 var modifyname = $(this).parents("td").prev().text();
 	 var categoryid = $(this).parent().prev().prev().text();
 		console.log(modifyname);
@@ -157,7 +162,10 @@ $(document).on("click", "button.confirmModify", function(){
 				categoryid :categoryid
 			},
 			success : function(result) {
-				$('#error').html(result);
+				var aa= result.split('@');
+				console.log(aa[1]+"aa");
+				$('#error').html(aa[0]);
+				$(that).parents("td").prev().html(aa[1]);
 				console.log(result);
 			}
 		});

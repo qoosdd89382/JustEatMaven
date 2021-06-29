@@ -92,12 +92,12 @@ th, td {
 		</ul>
 	</c:if>
 
-	<h1>熱門食材</h1>
-
+	<h1>食材標籤</h1>
+	<button id="add">新增食材標籤</button>
 	<table>
 		<tr>
-			<th>料理分類</th>
-			<th>料理分類名稱</th>
+			<th>食材標籤流水號</th>
+			<th>食材標籤名稱</th>
 			
 
 		</tr>
@@ -111,15 +111,6 @@ th, td {
 				<td><button class="modify">修改</button></td>
 
 		</c:forEach>
-		
-	
-	
-			
-				
-
-		
-		
-		
 		
 	</table>
 	
@@ -170,9 +161,27 @@ $(document).on("click", "button.confirmModify", function(){
 			}
 
 		});
+});
+
+
+$(document).on("click", "button#add", function(){
+		$.ajax({
+			type : 'POST',
+			url : 'http://localhost:8081/justeat-maven/IngredientListUpdateServlet',
+			data : {
+				modifyname : modifyname,
+				ingredientid :ingredientid
+			},
+			success : function(result) {
+				console.log(result);
+				
+			}
+
+		});
 		
 	 
 });
+	
 	
 	
 
