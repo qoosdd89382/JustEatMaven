@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cuisinecategory.model.CuisineCategoryService;
+import com.cuisinecategory.model.CuisineCategoryVO;
 
 @WebServlet("/CuisineCategoryListUpdateServlet")
 public class CuisineCategoryListUpdateServlet extends HttpServlet  {
@@ -39,8 +40,12 @@ public class CuisineCategoryListUpdateServlet extends HttpServlet  {
 			Matcher m=p.matcher(modifyname);
 			if(!m.matches()) {
 				PrintWriter out = res.getWriter();
-				out.print("不得含有特殊字符或數字");
+				CuisineCategoryVO currentvo= ccsve.getOneCategory(test);
+				String st= currentvo.getCuisineCategoryName();
+				out.print("更新失敗,不得含有特殊字符或數字@"+st);
 				System.out.println("含有特殊字符");
+				
+				
 			}else {
 				ccsve.updateCategory(test, modifyname);
 				System.out.println("沒有特殊字符");
