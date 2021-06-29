@@ -82,8 +82,8 @@
 							</div>
 							<div class="count">
 								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-								<span class="likecount"><i class="fas fa-thumbs-up"></i>${recipeVO.recipeLikeCount}</span>
-								<span class="favcount"><i class="fas fa-heart"></i>${recipeVO.recipeCollectCount}</span>
+								<span class='likecount ${accountInfoVOLogin == null ? "" : (thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+								<span class='favcount ${accountInfoVOLogin == null ? "" : (favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
 							</div>
 						</div>
 						
@@ -95,16 +95,20 @@
 <!-- 							</div> -->
 							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
 							<div class="change form-group">
-								<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="getOneForUpdate">
-									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
-									<button class="btn btn-primary" type="submit">編輯</button>
-								</form>
-								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="delete">
-									<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
-									<button class="btn btn-primary" type="submit">刪除</button>
-								</form>
+							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeVO.accountID}">
+								<div class="change form-group">
+									<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="getOneForUpdate">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">編輯</button>
+									</form>
+									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="delete">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">刪除</button>
+									</form>
+								</div>
+							</c:if>
 							</div>
 							<div class="readmore">
 								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
@@ -116,8 +120,10 @@
 				</c:forEach>
 			<%@ include file="pages/page2.file"%>
 			</div>
+	
+			<%-- include notMemberAlertModal --%>
+			<%@ include file="/Recipe/notMemberAlertModal.page"%>
 			
-
 		</div>
 
 		<%-- include sidebar --%>
@@ -145,7 +151,8 @@
 	<script>
 
 	$(function(){
-		
+
+		<%@ include file="/Recipe/js/recipeFavThumb.page"%>
 		<%@ include file="/Recipe/searchAutoComplIng.file"%>
 	});
 	

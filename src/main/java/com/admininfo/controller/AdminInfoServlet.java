@@ -260,10 +260,10 @@ public class AdminInfoServlet extends HttpServlet {
 				
 				session.removeAttribute("loginAdminID");
 
-				String location = (String) session.getAttribute("location");
-				if (location != null) {
-					session.removeAttribute("location");
-					res.sendRedirect(location);
+				String adminLocation = (String) session.getAttribute("adminLocation");
+				if (adminLocation != null) {
+					session.removeAttribute("adminLocation");
+					res.sendRedirect(adminLocation);
 					return;
 				}
 

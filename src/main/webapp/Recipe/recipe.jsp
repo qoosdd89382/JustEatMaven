@@ -100,8 +100,8 @@
 					</div>
 							<div class="count">
 								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-								<span class='likecount ${thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
-								<span class='favcount ${favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm"}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+								<span class='likecount ${accountInfoVOLogin == null ? "" : (thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+								<span class='favcount ${accountInfoVOLogin == null ? "" : (favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
 							</div>
 				</div>
 				
@@ -148,32 +148,8 @@
 				
 			</div>
 
-
-		
-<!-- Modal -->
-<div class="modal fade" id="notLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">糟糕，哪裡出錯囉！</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        	本站會員才可使用本功能，請先登入或註冊！
-      </div>
-      <div class="modal-footer">
-<!--         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-        <a href="<%= request.getContextPath() %>/Account/AccountLoginPage.jsp" class="btn btn-primary">登入</a>
-        <a href="<%= request.getContextPath() %>/Account/AccountRegister/AccountRegisterPage.jsp" class="btn btn-primary">註冊</a>
-      </div>
-    </div>
-  </div>
-</div>			
-
-
-
+			<%-- include notMemberAlertModal --%>
+			<%@ include file="/Recipe/notMemberAlertModal.page"%>
 		</div>
 
 		<%-- include sidebar --%>
