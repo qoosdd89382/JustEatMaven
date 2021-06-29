@@ -4,11 +4,16 @@ import java.util.*;
 
 public interface AccountInfoDAOInterface {
 //後臺用
-    public void insert(AccountInfoVO accountInfoVO);
+    //CRUD
+	public void insert(AccountInfoVO accountInfoVO);
     public void update(AccountInfoVO accountInfoVO);
     public void delete(Integer accountID);
     public AccountInfoVO selectOneAccountInfo(Integer accountID);
     public List<AccountInfoVO> selectAllAccountInfo();
+    //停權
+    public void freezeAccountInfo(Integer accountID);
+    public void activeAccountInfo(Integer accountID);
+
 
 //登入用
     //查詢該帳號密碼取得所有資料
