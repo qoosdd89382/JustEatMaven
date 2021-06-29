@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.accountinfo.model.AccountInfoVO;
 import com.cuisinecategory.model.CuisineCategoryService;
 import com.cuisinecategory.model.CuisineCategoryVO;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryService;
@@ -153,6 +154,7 @@ public class RecipeServlet extends HttpServlet {
 			req.setAttribute("errorMsgs", errorMsgs);
 
 			try {
+				
 				String recipeName = req.getParameter("recipeName");
 				String recipeNameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{3,45}$"; // 逗號後面不可以亂空白，REX的規定
 				if (recipeName == null || recipeName.trim().length() == 0) {
@@ -424,12 +426,13 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				// All parameters are correct, so we can send them to db ==========================
+				int accountID = ((AccountInfoVO) req.getSession().getAttribute("accountInfoVOLogin")).getAccountID();
 				RecipeService recipeSvc = new RecipeService();
 				recipeVO = null;
 				recipeVO = recipeSvc.addRecipeWithDetails(
 										recipeName, recipeIntroduction, 
 										recipePicTopBuffer, recipeServe, 
-										100001, recipeCatVOs, recipeIngUnitVOs, recipeStepVOs);
+										accountID, recipeCatVOs, recipeIngUnitVOs, recipeStepVOs);
 				
 				if (recipeVO != null) {
 					System.out.println("新增成功");
@@ -441,7 +444,7 @@ public class RecipeServlet extends HttpServlet {
 				
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/addRecipe.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
 			}
 		}

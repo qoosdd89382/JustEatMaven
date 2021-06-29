@@ -106,18 +106,20 @@ try {
 							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeName}</a></h4></div>
 							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID).accountNickname}</a></div>
 							<div class="intro"><div class="intro-text">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeIntroduction}</div></div>
-							<div class="change form-group">
-								<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="getOneForUpdate">
-									<input type="hidden" name="recipeID"  value="${recipeIngUnit.recipeID}">
-									<button class="btn btn-primary" type="submit">編輯</button>
-								</form>
-								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="delete">
-									<input type="hidden" name="recipeID"  value="${recipeIngUnit.recipeID}">
-									<button class="btn btn-primary" type="submit">刪除</button>
-								</form>
-							</div>
+							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID}">
+								<div class="change form-group">
+									<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="getOneForUpdate">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">編輯</button>
+									</form>
+									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="delete">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">刪除</button>
+									</form>
+								</div>
+							</c:if>
 							<div class="readmore">
 								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
 							</div>

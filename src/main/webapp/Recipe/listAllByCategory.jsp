@@ -107,16 +107,20 @@ try {
 							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeCatVO.recipeID).accountID).accountNickname}</a></div>
 							<div class="intro"><div class="intro-text">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeIntroduction}</div></div>
 							<div class="change form-group">
-								<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="getOneForUpdate">
-									<input type="hidden" name="recipeID"  value="${recipeCatVO.recipeID}">
-									<button class="btn btn-primary" type="submit">編輯</button>
-								</form>
-								<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-									<input type="hidden" name="action" value="delete">
-									<input type="hidden" name="recipeID"  value="${recipeCatVO.recipeID}">
-									<button class="btn btn-primary" type="submit">刪除</button>
-								</form>
+							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeSvc.getOneRecipe(recipeCatVO.recipeID).accountID}">
+								<div class="change form-group">
+									<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="getOneForUpdate">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">編輯</button>
+									</form>
+									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="delete">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">刪除</button>
+									</form>
+								</div>
+							</c:if>
 							</div>
 							<div class="readmore">
 								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeCatVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
