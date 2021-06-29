@@ -274,6 +274,7 @@
 				</label>
 				<span class="errorSpan">${errorMsgs.get("agreementErr")}</span>
 				<input type="hidden" name="action" value="update">
+				<input type="hidden" name="accountID" value="update">
 				<button id="btnSubmit" class="btn btn-primary" type="submit">送出</button>
 			</form>
 
