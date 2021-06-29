@@ -14,8 +14,8 @@ public class RecipeVO implements Serializable {
 	private Integer recipeServe;
 	private Timestamp recipeTime;
 	private Integer recipeViewCount;
-	private Integer recipeLikeCount;
-	private Integer recipeCollectCount;
+//	private Integer recipeLikeCount;
+//	private Integer recipeCollectCount;
 	private Integer accountID;
 	
 	@Override
@@ -88,18 +88,18 @@ public class RecipeVO implements Serializable {
 	public void setRecipeViewCount(Integer recipeViewCount) {
 		this.recipeViewCount = recipeViewCount;
 	}
-	public Integer getRecipeLikeCount() {
-		return recipeLikeCount;
-	}
-	public void setRecipeLikeCount(Integer likeCount) {
-		this.recipeLikeCount = likeCount;
-	}
-	public Integer getRecipeCollectCount() {
-		return recipeCollectCount;
-	}
-	public void setRecipeCollectCount(Integer collectCount) {
-		this.recipeCollectCount = collectCount;
-	}
+//	public Integer getRecipeLikeCount() {
+//		return recipeLikeCount;
+//	}
+//	public void setRecipeLikeCount(Integer likeCount) {
+//		this.recipeLikeCount = likeCount;
+//	}
+//	public Integer getRecipeCollectCount() {
+//		return recipeCollectCount;
+//	}
+//	public void setRecipeCollectCount(Integer collectCount) {
+//		this.recipeCollectCount = collectCount;
+//	}
 	public Integer getAccountID() {
 		return accountID;
 	}

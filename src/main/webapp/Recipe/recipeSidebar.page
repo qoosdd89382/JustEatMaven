@@ -15,7 +15,7 @@
 	</div>
 	<div class="sidebar-list">
 		<c:forEach var="categoryVO" items="${categoryList}">
-			<a class="btn btn-primary" href="<%= request.getContextPath() %>/Recipe/listAllByCategory.jsp?id=${categoryVO.cuisineCategoryID}" role="button">${categoryVO.cuisineCategoryName}</a>
+			<a class="btn btn-primary" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByCategory&id=${categoryVO.cuisineCategoryID}" role="button">${categoryVO.cuisineCategoryName}</a>
 		</c:forEach>
 	</div>
 </section>
@@ -27,17 +27,17 @@
 		<a class="more" href="#">更多 <i class="fas fa-angle-double-right"></i></a>
 	</div>
 	<div class="sidebar row">
-		<ol class="col-12 col-xl-6">
+		<ol class="col-6">
 			<c:forEach var="ingredientVO" items="${ingredientList}" begin="0" end="4">
 				<li>
-					<a class="" href="<%= request.getContextPath() %>/Recipe/listAllByIngredient.jsp?id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a>
+					<a class="" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a>
 				</li>
 			</c:forEach>
 		</ol>
-		<ol class="col-12 col-xl-6" start="5">
+		<ol class="col-6" start="6">
 			<c:forEach var="ingredientVO" items="${ingredientList}" begin="5" end="9">
 				<li>
-					<a class="" href="<%= request.getContextPath() %>/Recipe/listAllByIngredient.jsp?id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a>
+					<a class="" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a>
 				</li>
 			</c:forEach>
 		</ol>

@@ -13,8 +13,12 @@ import com.favoriterecipe.model.FavoriteRecipeService;
 import com.favoriterecipe.model.FavoriteRecipeVO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.notice.model.NoticeService;
+import com.notice.model.NoticeVO;
+import com.recipe.model.RecipeService;
 import com.thumbsuprecipe.model.ThumbsupRecipeService;
 import com.thumbsuprecipe.model.ThumbsupRecipeVO;
+import com.websocket.controller.WebSocketNotice;
 
 @WebServlet("/Recipe/recipeFavThumb.do")
 public class recipeFavThumbAjaxServlet extends HttpServlet {
@@ -30,6 +34,8 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		
 		Gson gson = new Gson();
+		NoticeService noticeSvc = new NoticeService();
+		RecipeService recipeSvc = new RecipeService();
 		
 		String action = req.getParameter("action");
 		String accountID = req.getParameter("accountID");
@@ -59,6 +65,14 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 						jsonObj.addProperty("recipeID", recipeID);
 						jsonObj.addProperty("count", count);
 						out.print(jsonObj.toString());
+
+						int authorID = recipeSvc.getOneRecipe(new Integer(recipeID)).getAccountID();
+						String recipeName = recipeSvc.getOneRecipe(new Integer(recipeID)).getRecipeName();
+						
+						NoticeVO noticeVO = noticeSvc.addNotice(authorID, 3, accountID + "收藏您的食譜" + recipeName);
+						String message = gson.toJson(noticeVO);
+						WebSocketNotice noticeWS = new WebSocketNotice();
+						noticeWS.onMessage(message);
 					}
 				} else {
 					int row = favRecipeSvc.deleteFavoriteRecipe(new Integer(accountID), new Integer(recipeID));
