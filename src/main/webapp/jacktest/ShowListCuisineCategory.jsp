@@ -39,6 +39,10 @@ h4 {
 	color: blue;
 	display: inline;
 }
+
+#error {
+color:red;
+}
 </style>
 
 <style>
@@ -91,7 +95,7 @@ th, td {
 	</c:if>
 
 	<h1>熱門食材</h1>
-
+	<h2 id="error"></h2>
 	<table>
 		<tr>
 			<th>料理分類</th>
@@ -153,13 +157,10 @@ $(document).on("click", "button.confirmModify", function(){
 				categoryid :categoryid
 			},
 			success : function(result) {
+				$('#error').html(result);
 				console.log(result);
-				
 			}
-
 		});
-		
-	 
 });
 
 
