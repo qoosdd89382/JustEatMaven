@@ -345,7 +345,7 @@ public class AdminInfoServlet extends HttpServlet {
 						if (newPasswordRecheck == null || newPasswordRecheck.trim().length() == 0) {
 							errorMsgs.put("newPasswordErr", "請再次輸入密碼");
 							errorMsgs.put("newPasswordRecheckErr", "請再次輸入密碼");
-						} else if (!newPasswordRecheck.trim().equals(adminPassword.trim())) {
+						} else if (!newPasswordRecheck.trim().equals(newPassword.trim())) {
 							errorMsgs.put("newPasswordErr", "請重新輸入密碼");
 							errorMsgs.put("newPasswordRecheckErr", "與第一次輸入不符");
 						}
@@ -383,7 +383,7 @@ public class AdminInfoServlet extends HttpServlet {
 
 				// All parameters are correct, so we can send them to db
 				// ==========================
-				if (newPassword != null) {
+				if (newPassword != null || newPassword.trim().length() != 0) {
 					adminPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 				}
 				if (adminSvc.setPasswordAndPic(adminID, adminPassword, adminPicBuffer) > 0) {

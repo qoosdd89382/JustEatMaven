@@ -12,7 +12,7 @@ public class AdminInfoVO implements Serializable {
 	private String adminPassword;
 	private byte[] adminPic;
 	private Timestamp adminRegisterTime;
-	private Boolean adminState;
+	private Integer adminState;
 	public Integer getAdminID() {
 		return adminID;
 	}
@@ -49,10 +49,10 @@ public class AdminInfoVO implements Serializable {
 	public void setAdminRegisterTime(Timestamp adminRegisterTime) {
 		this.adminRegisterTime = adminRegisterTime;
 	}
-	public Boolean getAdminState() {
+	public Integer getAdminState() {
 		return adminState;
 	}
-	public void setAdminState(Boolean adminState) {
+	public void setAdminState(Integer adminState) {
 		this.adminState = adminState;
 	}
 	
