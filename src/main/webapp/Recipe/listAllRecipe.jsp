@@ -75,7 +75,7 @@
     		</section>
     		
 			<div class="list">
-    		<%@ include file="pages/page1.file"%>
+    		<%@ include file="/Recipe/pages/page1.file"%>
 				<c:forEach var="recipeVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 				
 					<div class="recipe-block row" id="${recipeVO.recipeID}">
@@ -127,7 +127,7 @@
 					</div>
 					
 				</c:forEach>
-			<%@ include file="pages/page2.file"%>
+			<%@ include file="/Recipe/pages/page2.file"%>
 			</div>
 			
 			<%-- include notMemberAlertModal --%>

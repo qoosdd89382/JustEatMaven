@@ -1,9 +1,31 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ include file="/Recipe/recipeImport.jsp"%>
 
 <%
-	List<RecipeVO> list = (List<RecipeVO>) request.getAttribute("list");
+Map<String, String> errorMsgs = new HashMap<String, String>();
+request.setAttribute("errorMsgs", errorMsgs);
+
+List<RecipeIngredientUnitVO> list = null;
+String ingredientID = null;
+
+try {
+	
+	ingredientID = request.getParameter("id");
+	if (ingredientID == null) {
+		throw new Exception();
+	}
+	ingredientSvc.updateSearchCount(new Integer(ingredientID));
+	list = recipeIngUnitSvc.getAllByIngredient(new Integer(ingredientID));
+	
+} catch (Exception e) {
+	errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
+	e.printStackTrace();
+	RequestDispatcher failureView = request.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+	failureView.forward(request, response);
+	return;
+}
+	pageContext.setAttribute("ingredientID", ingredientID);
 	pageContext.setAttribute("list", list);
 %>
 
@@ -19,19 +41,10 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vendors/slick/slick.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vendors/slick/slick-theme.css" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/listAllRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
-<style>
-.ui-autocomplete {
-	max-height: 100px;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-</style>
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
 	
 </head>
@@ -43,14 +56,8 @@
 	
 	<%-- include navbar --%>
 	
-	
 	<%-- main --%>
     <main class="row col-12 col-md-10 justify-content-between" style="margin: 0 auto;">
-	
-	<%-- include searchbar --%>
-	<div class="searchbar col-12">
-		<%@ include file="/Recipe/recipeSearchbar.page"%>
-	</div>
     
 		<div class="content col-xl-9 col-12">
 			<%-- breadcrumbs --%>
@@ -62,40 +69,44 @@
 				</ol>
 			</div> 
     	
-    		<section class="error">
-    			${errorMsgs.get("UnknowErr")}
+<!--     		<section class="error"> -->
+<%--     			${errorMsgs.get("UnknowErr")} --%>
+<!--     		</section> -->
+
+    		<section class="searchResult">
+				<c:if test="${not empty list}">
+	    			系統為您尋找 <b>${ingredientSvc.getOneIngredient(ingredientID).ingredientName}</b> 食材，符合條件的食譜共有 <b>${fn:length(list)}</b> 筆：
+	    		</c:if>
+	    		<c:if test="${empty list}">
+	    			系統為您尋找 <b>${ingredientSvc.getOneIngredient(ingredientID).ingredientName}</b> 食材，抱歉，暫時沒有食譜符合條件！
+	    		</c:if>
     		</section>
     		
 			<div class="list">
-    		<%@ include file="pages/page1.file"%>
-				<c:forEach var="recipeVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+    		<%@ include file="/Recipe/pages/page1.file"%>
+				<c:forEach var="recipeIngUnit" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 				
-					<div class="recipe-block row" id="${recipeVO.recipeID}">
+					<div class="recipe-block row" id="${recipeIngUnit.recipeID}">
 					
 						<div class="pic col-12 col-lg-5">
 							<div class="time">
-								<fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd"/>
-								<%-- yyyy.MM.dd a KK:mm --%>
+								<fmt:formatDate value="${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeTime}" pattern="yyyy.MM.dd"/>
 							</div>
 							<div class="img-outer">
-								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}">
+								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeIngUnit.recipeID}">
 							</div>
 							<div class="count">
-								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-								<span class='likecount ${accountInfoVOLogin == null ? "" : (thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
-								<span class='favcount ${accountInfoVOLogin == null ? "" : (favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+								<span class="viewcount"><i class="fas fa-eye"></i>${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeViewCount}</span>
+								<span class='likecount ${accountInfoVOLogin == null ? "" : (thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeIngUnit.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeIngUnit.recipeID)}</span></span>
+								<span class='favcount ${accountInfoVOLogin == null ? "" : (favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeIngUnit.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeIngUnit.recipeID)}</span></span>
 							</div>
 						</div>
 						
 						<div class="info col-12 col-lg-7">
-							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
-<!-- 							<div class="row"> -->
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSrv.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
-<!-- 							<div class="col-6">test</div> -->
-<!-- 							</div> -->
-							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
-							<div class="change form-group">
-							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeVO.accountID}">
+							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">${recipeSvc.getOneRecipe(recipeIngUnit.recipeID).recipeName}</a></h4></div>
+							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID).accountNickname}</a></div>
+							<div class="intro"><div class="intro-text">${recipeSvc.getOneRecipe(recipeCatVO.recipeID).recipeIntroduction}</div></div>
+							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeSvc.getOneRecipe(recipeIngUnit.recipeID).accountID}">
 								<div class="change form-group">
 									<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 										<input type="hidden" name="action" value="getOneForUpdate">
@@ -109,21 +120,19 @@
 									</form>
 								</div>
 							</c:if>
-							</div>
 							<div class="readmore">
-								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
+								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeIngUnit.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
 							</div>
 						</div>
 						
 					</div>
 					
 				</c:forEach>
-			<%@ include file="pages/page2.file"%>
+			<%@ include file="/Recipe/pages/page2.file"%>
 			</div>
-	
+
 			<%-- include notMemberAlertModal --%>
 			<%@ include file="/Recipe/notMemberAlertModal.page"%>
-			
 		</div>
 
 		<%-- include sidebar --%>
@@ -144,7 +153,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js"></script> --%>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/vendors/slick/slick.js"></script>
-	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
