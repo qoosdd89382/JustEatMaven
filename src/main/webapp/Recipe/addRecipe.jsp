@@ -341,7 +341,7 @@ div.temp_loading{
 						
 // 					}
 					$.ajax({
-						  url: "deleteRecipeStep.do?delOrder=" + delOrder.toString(),           // 資料請求的網址
+						  url: '<c:url value="/Recipe/deleteRecipeStep.do?delOrder="/>' + delOrder.toString(),           // 資料請求的網址
 						  type: "GET",                  // GET | POST | PUT | DELETE | PATCH
 // 						  beforeSend: function(){       // 在 request 發送之前執行
 // 							  $("table").append(`<div class="temp_loading"><div class="loader3"></div></div>`);

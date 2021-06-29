@@ -41,8 +41,8 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 	private static final String SELECT_ALL = "SELECT * FROM Recipe ";
 	
 	private static final String NEWEST = " ORDER BY recipe_time DESC ";
-	private static final String HOTTEST_YESTERDAY = " WHERE YEARWEEK(date_format(recipe_time,'%Y-%m-%d')) = YEARWEEK(now())-1 ORDER BY recipe_view_count DESC ";
-	private static final String BEST_LAST_WEEK = " WHERE TO_DAYS(NOW()) - TO_DAYS(recipe_time) <= 1 ORDER BY SUM(recipe_view_count + recipe_like_count + recipe_collect_count) DESC ";
+//	private static final String HOTTEST_YESTERDAY = " WHERE YEARWEEK(date_format(recipe_time,'%Y-%m-%d')) = YEARWEEK(now())-1 ORDER BY recipe_view_count DESC ";
+//	private static final String BEST_LAST_WEEK = " WHERE TO_DAYS(NOW()) - TO_DAYS(recipe_time) <= 1 ORDER BY SUM(recipe_view_count + recipe_like_count + recipe_collect_count) DESC ";
 	private static final String LIMIT = " Limit 10 ";
 	
 	@Override
@@ -214,8 +214,8 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 				recipe.setRecipeServe(rs.getInt("recipe_serve"));
 				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
 				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
 				recipe.setAccountID(rs.getInt("account_id"));
 			}
 
@@ -390,8 +390,8 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 				recipe.setRecipeServe(rs.getInt("recipe_serve"));
 				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
 				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
 				recipe.setAccountID(rs.getInt("account_id"));
 				recipes.add(recipe);
 			}
@@ -449,8 +449,8 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 				recipe.setRecipeServe(rs.getInt("recipe_serve"));
 				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
 				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
 				recipe.setAccountID(rs.getInt("account_id"));
 				allRecipe.add(recipe);
 			}
@@ -508,8 +508,8 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 				recipe.setRecipeServe(rs.getInt("recipe_serve"));
 				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
 				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
 				recipe.setAccountID(rs.getInt("account_id"));
 				allRecipe.add(recipe);
 			}
@@ -546,121 +546,121 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 	}
 
 
-	@Override
-	public List<RecipeVO> getSomeHot() {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<RecipeVO> allRecipe = new ArrayList<RecipeVO>();
+//	@Override
+//	public List<RecipeVO> getSomeHot() {
+//		Connection con = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		List<RecipeVO> allRecipe = new ArrayList<RecipeVO>();
+//
+//		try {
+//			con = DriverManager.getConnection(url, userid, passwd);
+//			pstmt = con.prepareStatement(SELECT_ALL + HOTTEST_YESTERDAY + LIMIT);
+//
+//			rs = pstmt.executeQuery();
+//			while (rs.next()) {
+//				RecipeVO recipe = new RecipeVO();
+//				recipe.setRecipeID(rs.getInt("recipe_id"));
+//				recipe.setRecipeName(rs.getString("recipe_name"));
+//				recipe.setRecipeIntroduction(rs.getString("recipe_introduction"));
+//				recipe.setRecipePicTop(rs.getBytes("recipe_pic_top"));
+//				recipe.setRecipeServe(rs.getInt("recipe_serve"));
+//				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
+//				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setAccountID(rs.getInt("account_id"));
+//				allRecipe.add(recipe);
+//			}
+//
+//		} catch (SQLException se) {
+//			throw new RuntimeException("A database error occured. "
+//					+ se.getMessage());
+//		} finally {
+//
+//			if (rs != null) {
+//				try {
+//					rs.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (pstmt != null) {
+//				try {
+//					pstmt.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (con != null) {
+//				try {
+//					con.close();
+//				} catch (Exception e) {
+//					e.printStackTrace(System.err);
+//				}
+//			}
+//
+//		}
+//		return allRecipe;
+//	}
 
-		try {
-			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(SELECT_ALL + HOTTEST_YESTERDAY + LIMIT);
-
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				RecipeVO recipe = new RecipeVO();
-				recipe.setRecipeID(rs.getInt("recipe_id"));
-				recipe.setRecipeName(rs.getString("recipe_name"));
-				recipe.setRecipeIntroduction(rs.getString("recipe_introduction"));
-				recipe.setRecipePicTop(rs.getBytes("recipe_pic_top"));
-				recipe.setRecipeServe(rs.getInt("recipe_serve"));
-				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
-				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
-				recipe.setAccountID(rs.getInt("account_id"));
-				allRecipe.add(recipe);
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. "
-					+ se.getMessage());
-		} finally {
-
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-
-		}
-		return allRecipe;
-	}
-
-	@Override
-	public List<RecipeVO> getSomeBest() {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<RecipeVO> allRecipe = new ArrayList<RecipeVO>();
-
-		try {
-			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(BEST_LAST_WEEK + LIMIT);
-
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				RecipeVO recipe = new RecipeVO();
-				recipe.setRecipeID(rs.getInt("recipe_id"));
-				recipe.setRecipeName(rs.getString("recipe_name"));
-				recipe.setRecipeIntroduction(rs.getString("recipe_introduction"));
-				recipe.setRecipePicTop(rs.getBytes("recipe_pic_top"));
-				recipe.setRecipeServe(rs.getInt("recipe_serve"));
-				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
-				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
-				recipe.setAccountID(rs.getInt("account_id"));
-				allRecipe.add(recipe);
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. "
-					+ se.getMessage());
-		} finally {
-
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-
-		}
-		return allRecipe;
-	}
+//	@Override
+//	public List<RecipeVO> getSomeBest() {
+//		Connection con = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		List<RecipeVO> allRecipe = new ArrayList<RecipeVO>();
+//
+//		try {
+//			con = DriverManager.getConnection(url, userid, passwd);
+//			pstmt = con.prepareStatement(BEST_LAST_WEEK + LIMIT);
+//
+//			rs = pstmt.executeQuery();
+//			while (rs.next()) {
+//				RecipeVO recipe = new RecipeVO();
+//				recipe.setRecipeID(rs.getInt("recipe_id"));
+//				recipe.setRecipeName(rs.getString("recipe_name"));
+//				recipe.setRecipeIntroduction(rs.getString("recipe_introduction"));
+//				recipe.setRecipePicTop(rs.getBytes("recipe_pic_top"));
+//				recipe.setRecipeServe(rs.getInt("recipe_serve"));
+//				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
+//				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setAccountID(rs.getInt("account_id"));
+//				allRecipe.add(recipe);
+//			}
+//
+//		} catch (SQLException se) {
+//			throw new RuntimeException("A database error occured. "
+//					+ se.getMessage());
+//		} finally {
+//
+//			if (rs != null) {
+//				try {
+//					rs.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (pstmt != null) {
+//				try {
+//					pstmt.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (con != null) {
+//				try {
+//					con.close();
+//				} catch (Exception e) {
+//					e.printStackTrace(System.err);
+//				}
+//			}
+//
+//		}
+//		return allRecipe;
+//	}
 
 	
 	// 測試
@@ -946,8 +946,8 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 				recipe.setRecipeServe(rs.getInt("recipe_serve"));
 				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
 				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
-				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
-				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
+//				recipe.setRecipeLikeCount(rs.getInt("recipe_like_count"));
+//				recipe.setRecipeCollectCount(rs.getInt("recipe_collect_count"));
 				recipe.setAccountID(rs.getInt("account_id"));
 				allRecipe.add(recipe);
 			}

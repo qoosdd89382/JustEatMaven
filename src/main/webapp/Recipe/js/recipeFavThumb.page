@@ -23,7 +23,7 @@
 			
 			$.ajax({
 				type : 'POST',
-				url : 'recipeFavThumb.do',
+				url : '<c:url value="/Recipe/recipeFavThumb.do"/>',
 				data : {
 					'action': "insertThumbsupRecipe",
 					'accountID': accountID,

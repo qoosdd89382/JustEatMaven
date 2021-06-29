@@ -33,8 +33,8 @@ public interface RecipeDAOInterface {
 	public List<RecipeVO> getAll(Map<String, String[]> map);
 
 	public List<RecipeVO> getSomeNew();
-	public List<RecipeVO> getSomeHot();
-	public List<RecipeVO> getSomeBest();
+//	public List<RecipeVO> getSomeHot();
+//	public List<RecipeVO> getSomeBest();
 	// 首頁輪播要做 set?
 
 }

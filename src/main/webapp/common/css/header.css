@@ -132,7 +132,7 @@ header {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
     z-index: 10!important;
 }
 
@@ -227,8 +227,8 @@ header {
     .menu-btn {
         display: block;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 10px;
+        right: 10px;
         font-size: 40px;
         line-height: 40px;
         color: white;

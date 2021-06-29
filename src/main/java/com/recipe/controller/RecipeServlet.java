@@ -21,6 +21,7 @@ import javax.servlet.http.Part;
 import com.accountinfo.model.AccountInfoVO;
 import com.cuisinecategory.model.CuisineCategoryService;
 import com.cuisinecategory.model.CuisineCategoryVO;
+import com.ingredient.model.IngredientService;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryService;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryVO;
 import com.recipeingredientunit.model.RecipeIngredientUnitService;
@@ -44,15 +45,105 @@ public class RecipeServlet extends HttpServlet {
 
 		String action = req.getParameter("action");
 		
+		if ("listAllByIngredient".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				String ingredientID = req.getParameter("id");
+				if (ingredientID == null) {
+					throw new Exception();
+				}
+				
+				RecipeIngredientUnitService recipeIngSvc = new RecipeIngredientUnitService();
+				RecipeService recipeSvc = new RecipeService();
+				IngredientService ingSvc = new IngredientService();
+				
+				List<RecipeIngredientUnitVO> ingRecipeList = recipeIngSvc.getAllByIngredient(new Integer(ingredientID));
+				List<RecipeVO> list = new ArrayList<RecipeVO>();
+				for (RecipeIngredientUnitVO ingRecipeVO : ingRecipeList) {
+					list.add(recipeSvc.getOneRecipe(ingRecipeVO.getRecipeID()));
+				}
+				
+				req.setAttribute("list", list);
+				
+				String successMsg = "";
+				if (list.size() > 0) {
+					successMsg = "系統為您尋找食材" + 
+									"<b>" + ingSvc.getOneIngredient(new Integer(ingredientID)).getIngredientName() + 
+									"</b>，符合條件的食譜共有" + list.size() + "筆：";
+				} else {
+					successMsg = "系統為您尋找食材" + 
+							"<b>" + ingSvc.getOneIngredient(new Integer(ingredientID)).getIngredientName() + 
+							"</b>......很抱歉，暫時沒有食譜符合條件！";
+				}
+				req.setAttribute("successMsg", successMsg);
+				
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				successView.forward(req, res);
+			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				e.printStackTrace();
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+		}
+		
+		if ("listAllByCategory".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				String cuisineCategoryID = req.getParameter("id");
+				if (cuisineCategoryID == null) {
+					throw new Exception();
+				}
+				
+				RecipeCuisineCategoryService reicpeCatSvc = new RecipeCuisineCategoryService();
+				RecipeService recipeSvc = new RecipeService();
+				CuisineCategoryService categorySvc = new CuisineCategoryService();
+				
+				List<RecipeCuisineCategoryVO> catRecipeList = reicpeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
+				List<RecipeVO> list = new ArrayList<RecipeVO>();
+				for (RecipeCuisineCategoryVO catRecipeVO : catRecipeList) {
+					list.add(recipeSvc.getOneRecipe(catRecipeVO.getRecipeID()));
+				}
+				
+				req.setAttribute("list", list);
+				
+				String successMsg = "";
+				if (list.size() > 0) {
+					successMsg = "系統為您尋找料理分類" + 
+									"<b>" + categorySvc.getOneCategory(new Integer(cuisineCategoryID)).getCuisineCategoryName() + 
+									"</b>，符合條件的食譜共有" + list.size() + "筆：";
+				} else {
+					successMsg = "系統為您尋找料理分類" + 
+							"<b>" + categorySvc.getOneCategory(new Integer(cuisineCategoryID)).getCuisineCategoryName() + 
+							"</b>......很抱歉，暫時沒有食譜符合條件！";
+				}
+				req.setAttribute("successMsg", successMsg);
+				
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				successView.forward(req, res);
+			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				e.printStackTrace();
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+		}
+		
 		if ("search".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 			
-//			try {
+			try {
 				
 				if ((req.getParameter("recipeName") == null || req.getParameter("recipeName").trim().length() == 0)
 						&& (req.getParameter("ingredientIDs") == null || req.getParameter("ingredientIDs").trim().length() == 0)) {
-					errorMsgs.put("UnknowErr", "請輸入搜尋關鍵字或食材標籤");
+					errorMsgs.put("UnknowErr", "請輸入搜尋關鍵字或食材標籤！");
 					RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 					failureView.forward(req, res);
 					return;
@@ -137,15 +228,27 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				List<RecipeVO> list = new ArrayList<RecipeVO>(searchResults);
-				req.setAttribute("list", list); //  複合查詢, 資料庫取出的list物件,存入request
-				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/searchResult.jsp");
-				successView.forward(req, res);
+//				if (list.size() == 0) errorMsgs.put("UnknowErr", "很抱歉，未有符合條件的食譜！");
+				String successMsg = "";
+				if (list.size() > 0) {
+					successMsg = "系統為您找出符合條件的食譜，共有" + list.size() + "筆：";
+				} else {
+					successMsg = "......很抱歉，暫時沒有食譜符合條件！";
+				}
+				req.setAttribute("successMsg", successMsg);
 				
-//			} catch (Exception e) {
-//				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-//				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/addRecipe.jsp");
-//				failureView.forward(req, res);
-//			}
+				req.setAttribute("list", list); //  複合查詢, 資料庫取出的list物件,存入request
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+//				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/searchResult.jsp");
+				successView.forward(req, res);
+
+			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				e.printStackTrace();
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+				return;
+			}
 		}
 			
 		/**********************新增食譜**********************/

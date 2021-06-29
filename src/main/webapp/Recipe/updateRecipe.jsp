@@ -338,7 +338,7 @@
 					var recipeID = $('input[name="recipeID"]').val();
 			  		console.log(recipeID);
 					$.ajax({
-						  url: "deleteRecipeStep.do?update=" + recipeID + "&delOrder=" + delOrder.toString(),
+						  url: '<c:url value="/Recipe/deleteRecipeStep.do?update="/>' + recipeID + "&delOrder=" + delOrder.toString(),
 						  type: "GET",
 						  success: function(data){
 							$(that).closest("tr.recipe").remove();

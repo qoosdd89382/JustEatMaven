@@ -3,7 +3,12 @@
 <%@ include file="/Recipe/recipeImport.jsp"%>
 
 <%
-	List<RecipeVO> list = recipeSvc.getAll();
+	List<RecipeVO> list = null;
+	if (request.getAttribute("list") == null) {
+		list = recipeSvc.getAll();
+	} else {
+		list = (List<RecipeVO>) request.getAttribute("list");
+	}
 	pageContext.setAttribute("list", list);
 %>
 
@@ -57,13 +62,16 @@
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe">食譜</a></li>
 					<li class="breadcrumb-item active" aria-current="page">食譜列表</li>
 				</ol>
 			</div> 
     	
     		<section class="error">
     			${errorMsgs.get("UnknowErr")}
+    		</section>
+    		<section class="searchResult">
+				${successMsg}
     		</section>
     		
 			<div class="list">
