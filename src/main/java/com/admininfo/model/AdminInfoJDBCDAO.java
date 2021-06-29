@@ -102,7 +102,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			pstmt.setString(2, adminInfo.getAdminNickname());
 			pstmt.setString(3, adminInfo.getAdminPassword());
 			pstmt.setBytes(4, adminInfo.getAdminPic());
-			pstmt.setBoolean(5, adminInfo.getAdminState());
+			pstmt.setInt(5, adminInfo.getAdminState());
 			pstmt.setInt(6, adminInfo.getAdminID());
 
 			updateRow = pstmt.executeUpdate();
@@ -152,7 +152,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				adminInfo.setAdminPassword(rs.getString("admin_password"));
 				adminInfo.setAdminPic(rs.getBytes("admin_pic"));
 				adminInfo.setAdminRegisterTime(rs.getTimestamp("admin_register_time"));
-				adminInfo.setAdminState(rs.getBoolean("admin_state"));
+				adminInfo.setAdminState(rs.getInt("admin_state"));
 			}
 			
 		} catch (SQLException se) {
@@ -206,7 +206,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				adminInfo.setAdminPassword(rs.getString("admin_password"));
 				adminInfo.setAdminPic(rs.getBytes("admin_pic"));
 				adminInfo.setAdminRegisterTime(rs.getTimestamp("admin_register_time"));
-				adminInfo.setAdminState(rs.getBoolean("admin_state"));
+				adminInfo.setAdminState(rs.getInt("admin_state"));
 				allAdminInfo.add(adminInfo);				
 			}		
 
@@ -266,7 +266,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				}
 			}
 		}
-		admin.setAdminState(true);
+		admin.setAdminState(1);
 		int insertSuccess = dao.insert(admin);
 		if (insertSuccess == 1)
 			System.out.println("成功");
@@ -360,7 +360,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				adminVO.setAdminPassword(rs.getString("admin_password"));
 				adminVO.setAdminPic(rs.getBytes("admin_pic"));
 				adminVO.setAdminRegisterTime(rs.getTimestamp("admin_register_time"));
-				adminVO.setAdminState(rs.getBoolean("admin_state"));
+				adminVO.setAdminState(rs.getInt("admin_state"));
 			}
 			
 		} catch (SQLException se) {
@@ -462,7 +462,7 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 				adminVO.setAdminPassword(rs.getString("admin_password"));
 				adminVO.setAdminPic(rs.getBytes("admin_pic"));
 				adminVO.setAdminRegisterTime(rs.getTimestamp("admin_register_time"));
-				adminVO.setAdminState(rs.getBoolean("admin_state"));
+				adminVO.setAdminState(rs.getInt("admin_state"));
 			}
 
 		} catch (SQLException se) {

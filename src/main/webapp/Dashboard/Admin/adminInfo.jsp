@@ -6,6 +6,12 @@
 
 <%
 	AdminInfoVO adminVO = (AdminInfoVO) request.getAttribute("adminVO");
+	if (request.getParameter("adminVO") != null) {
+		adminVO = (AdminInfoVO) request.getAttribute("adminVO");
+	} else {
+		session.removeAttribute("adminPicBuffer");
+		pageContext.setAttribute("isNewAdmin", "yes");
+	}
 %>
 
 <!DOCTYPE html>

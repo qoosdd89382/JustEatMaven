@@ -13,6 +13,8 @@
 	List<AdminInfoVO> list = adminSvc.getAll();
 	pageContext.setAttribute("list", list);
 %>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,9 +62,9 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">管理員列表</h1>
-                    <p class="mb-4">
-						本列表共有 ${fn:length(list)} 名管理員：
-					</p>
+<!--                     <p class="mb-4"> -->
+						
+<!-- 					</p> -->
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -70,6 +72,12 @@
                             <h6 class="m-0 font-weight-bold text-primary">管理員列表</h6>
                         </div>
                         <div class="card-body">
+                        本列表共有 ${fn:length(list)} 名管理員：
+                        	<div class="editBtn row mx-2">
+	                        <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 2}">
+	                        	<button type="button" class="btn btn-primary mb-3 ml-auto" id="deleteAdminBtn">刪除管理員</button>
+							</c:if>
+							</div>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -79,16 +87,30 @@
                                             <th>E-mail</th>
                                             <th>註冊時間</th>
                                             <th>認證狀態</th>
+                                            <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 2}">
+                                            	<th>批次刪除</th>
+                                            </c:if>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     	<c:forEach var="adminVO" items="${list}">
                                         <tr>
                                             <td>${adminVO.adminID}</td>
-                                            <td>${adminVO.adminNickname}</td>
+                                            <td>
+                                            	${adminVO.adminNickname}
+                                            	<c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 2 || loginAdminID == adminVO.adminID }">
+                                            		<button type="button" class="btn btn-primary btn-sm float-right" value="${adminVO.adminID}" name="updateAdminNckname">編輯</button>
+                                            	</c:if>
+                                            </td>
                                             <td>${adminVO.adminMail}</td>
                                             <td><fmt:formatDate value="${adminVO.adminRegisterTime}" pattern="yyyy.MM.dd a KK:mm"/></td>
-                                            <td>${adminVO.adminState ? "已通過" : "未通過" }</td>
+                                            <td>${adminVO.adminState == 0 ? "認證中" : (adminVO.adminState == 1 ? "已通過" : "總管理員") }</td>
+                                            <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 2 && adminVO.adminState != 2}">
+                                            	<td><label><input type="checkbox" value="${adminVO.adminID}" name="deleteAdminID">選取</label></td>
+                                            </c:if>
+                                            <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 2 && adminVO.adminState == 2}">
+                                            	<td></td>
+                                            </c:if>
                                         </tr>
                                         </c:forEach>
                                     </tbody>
@@ -129,5 +151,35 @@
     <!-- Custom scripts for all pages-->
     <script src="<%=request.getContextPath()%>/Dashboard/js/sb-admin-2.js"></script>
     <script src="<%=request.getContextPath()%>/Dashboard/js/datatables-demo.js"></script>
+    
+    <script>
+    $(function(){
+    	
+    	$("#deleteAdminBtn").on("click", function () {
+    		var deleteAdminID = $("input[name='deleteAdminID']");
+    		var arr = new Array();
+    		$(deleteAdminID).each(function(index, element) {
+    			if ($(element).is(":checked")) {
+					arr.push($(element).val());
+    			}
+    		});
+    		var arrJson = JSON.stringify(arr);
+    		$.ajax({
+    			url: '<c:url value="/Dashboard/admin.do" />',
+    			data : {
+    				'action': "deleteAdmin",
+    				'adminID': arrJson,
+    			},
+// 				dataType: "json",
+				success: function(data){
+					console.log(data);
+				}
+    		});
+    		
+    	});    	
+    	
+    	
+    });
+    </script>
 </body>
 </html>
