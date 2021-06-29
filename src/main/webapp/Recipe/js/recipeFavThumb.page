@@ -1,0 +1,90 @@
+
+		$("span.likecount").on("mouseover", "svg", function() {
+			$(this).css('cursor', 'pointer'); 
+			$(this).parent().addClass("click");
+		});
+		
+		$("span.likecount").on("mouseout", "svg", function() {
+			$(this).css('cursor', 'auto');
+			if (!$(this).parent().hasClass("confirm")) {
+				$(this).parent().removeClass("click");
+			}
+		});
+			
+		$("span.likecount").on("click", "svg", function() {
+			var that = this;
+			var accountID = "${accountInfoVOLogin.accountID}";
+			var recipeID = $(that).closest(".row").attr("id");
+			
+			if (accountID == "") {
+				$('#notLogin').modal();
+				return;
+			}
+			
+			$.ajax({
+				type : 'POST',
+				url : 'recipeFavThumb.do',
+				data : {
+					'action': "insertThumbsupRecipe",
+					'accountID': accountID,
+					'recipeID': recipeID
+				},
+				success : function(data) {
+					var jsonObj = JSON.parse(data);
+					$(that).next().text(jsonObj.count);
+					if ("insertSucess" == jsonObj.status) {
+						$(that).parent().addClass("click");
+						$(that).parent().addClass("confirm");
+					} else if ("deleteSucess" == jsonObj.status) {
+						$(that).parent().removeClass("click");
+						$(that).parent().removeClass("confirm");
+					}
+				}
+			});
+		});
+
+		
+
+		$("span.favcount").on("mouseover", "svg", function() {
+			$(this).css('cursor', 'pointer'); 
+			$(this).parent().addClass("click");
+		});
+		
+		$("span.favcount").on("mouseout", "svg", function() {
+			$(this).css('cursor', 'auto'); 
+			if (!$(this).parent().hasClass("confirm")) {
+				$(this).parent().removeClass("click");
+			}
+		});
+			
+		$("span.favcount").on("click", "svg", function() {
+			var that = this;
+			var accountID = "${accountInfoVOLogin.accountID}";
+			var recipeID = $(that).closest(".row").attr("id");
+			
+			if (accountID == "") {
+				$('#notLogin').modal();
+				return;
+			}
+			
+			$.ajax({
+				type : 'POST',
+				url : 'recipeFavThumb.do',
+				data : {
+					'action': "insertFavoriteRecipe",
+					'accountID': accountID,
+					'recipeID': recipeID
+				},
+				success : function(data) {
+					var jsonObj = JSON.parse(data);
+					$(that).next().text(jsonObj.count);
+					if ("insertSucess" == jsonObj.status) {
+						$(that).parent().addClass("click");
+						$(that).parent().addClass("confirm");
+					} else if ("deleteSucess" == jsonObj.status) {
+						$(that).parent().removeClass("click");
+						$(that).parent().removeClass("confirm");
+					}
+				}
+			});
+		});

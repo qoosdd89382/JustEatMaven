@@ -13,4 +13,5 @@ public interface ThumbsupRecipeDAOInterface {
 	public Timestamp isExist(ThumbsupRecipeVO thumbsupRecipe);
 	public List<ThumbsupRecipeVO> getAllByAccount(int accountID);
 	public List<ThumbsupRecipeVO> getAllByRecipe(int thmupRecipeID);
+	public int countAllByRecipe(int thmupRecipeID);
 }

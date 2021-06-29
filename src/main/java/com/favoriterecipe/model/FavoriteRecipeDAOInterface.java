@@ -19,5 +19,6 @@ public interface FavoriteRecipeDAOInterface {
 	
 	public List<FavoriteRecipeVO> getAllByAccount(int accountID);
 	public List<FavoriteRecipeVO> getAllByRecipe(int favRecipeID);
+	public int countAllByRecipe(int favRecipeID);
 
 }

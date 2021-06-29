@@ -13,8 +13,10 @@
 <%@ page import="com.recipecuisinecategory.model.*"%>
 <%@ page import="com.recipeingredientunit.model.*"%>
 <%@ page import="com.recipestep.model.*"%>
+<%@ page import="com.thumbsuprecipe.model.*"%>
+<%@ page import="com.favoriterecipe.model.*"%>
 
-<jsp:useBean id="accountSrv" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
 <jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
@@ -24,4 +26,6 @@
 <jsp:useBean id="recipeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" />
 <jsp:useBean id="recipeStepSvc" scope="page" class="com.recipestep.model.RecipeStepService" />
 
+<jsp:useBean id="thmupRecipeSvc" scope="page" class="com.thumbsuprecipe.model.ThumbsupRecipeService" />
+<jsp:useBean id="favRecipeSvc" scope="page" class="com.favoriterecipe.model.FavoriteRecipeService" />
 <!-- 基本上意思和java區塊new、放進Page scope是一樣的 -->

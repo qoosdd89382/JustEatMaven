@@ -10,7 +10,7 @@ public class FavoriteRecipeService {
 		dao = new FavoriteRecipeJDBCDAO();
 	}
 
-	public FavoriteRecipeVO insertFavoriteRecipe(Integer accountid, Integer recipeid) {
+	public FavoriteRecipeVO addFavoriteRecipe(Integer accountid, Integer recipeid) {
 		FavoriteRecipeVO vo = new FavoriteRecipeVO();
 		vo.setAccountID(accountid);
 		vo.setFavRecipeID(recipeid);
@@ -18,17 +18,16 @@ public class FavoriteRecipeService {
 		return vo;
 	}
 
-	public FavoriteRecipeVO deleteFavoriteRecipe(Integer accountid, Integer recipeid) {
+	public int deleteFavoriteRecipe(Integer accountid, Integer recipeid) {
 		FavoriteRecipeVO vo = new FavoriteRecipeVO();
 		vo.setAccountID(accountid);
 		vo.setFavRecipeID(recipeid);
-		dao.delete(vo);
-		return vo;
-
+		
+		return dao.delete(vo);
 	}
 	
 	
-	public Timestamp isExistFavoriteRecipe( Integer accountid, Integer recipeid) {
+	public Timestamp isExist( Integer accountid, Integer recipeid) {
 		FavoriteRecipeVO vo = new FavoriteRecipeVO();
 		vo.setAccountID(accountid);
 		vo.setFavRecipeID(recipeid);
@@ -37,28 +36,29 @@ public class FavoriteRecipeService {
 		
 	}
 	
-	public int updateTimeFavoriteRecipe(Integer accountid, Integer recipeid) {
-		FavoriteRecipeVO vo = new FavoriteRecipeVO();
-		vo.setAccountID(accountid);
-		vo.setFavRecipeID(recipeid);
-		
-		return dao.updateTime(vo);
-		
-	};
+//	public int updateTimeFavoriteRecipe(Integer accountid, Integer recipeid) {
+//		FavoriteRecipeVO vo = new FavoriteRecipeVO();
+//		vo.setAccountID(accountid);
+//		vo.setFavRecipeID(recipeid);
+//		
+//		return dao.updateTime(vo);
+//		
+//	};
 	
+	
+//	
 	
 	public List<FavoriteRecipeVO> getAllByAccount(Integer accountID){
 		return dao.getAllByAccount(accountID);
-		
 	}
-	
-	
 	
 	public List<FavoriteRecipeVO> getAllByRecipe(Integer favRecipeID){
 		return dao.getAllByRecipe(favRecipeID);
-		
-	};
+	}
 	
+	public int countAllByRecipe(int favRecipeID) {
+		return dao.countAllByRecipe(favRecipeID);
+	}
 	
 
 }

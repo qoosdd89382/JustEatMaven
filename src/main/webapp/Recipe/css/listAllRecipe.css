@@ -90,18 +90,28 @@ section.error {
 
 .recipe-block .count {
     position: absolute;
-    top: 200px;
+    top: 185px;
     margin-left: 15px;
+   	background: #F3722C;
+   	padding: 5px 0 5px 10px;
+/*    	padding-left: 10px; */
 }
 
 
-.recipe-block .count span {
+.recipe-block .count > span {
 	margin-right: 10px;
 }
 
 
-.recipe-block .count span svg {
+.recipe-block .count > span svg {
 	margin-right: 10px;
+}
+
+.recipe-block .count span.favcount.click svg {
+	color: #FF79C6;	
+}
+.recipe-block .count span.likecount.click svg {
+	color: #435DFF;
 }
 
 .recipe-block .info {
