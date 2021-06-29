@@ -35,6 +35,7 @@ import com.eventcuisinecategory.model.EventCuisineCategoryVO;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
 import com.eventmember.model.EventMemberService;
+import com.eventmember.model.EventMemberVO;
 import com.ingredient.model.IngredientService;
 import com.ingredient.model.IngredientVO;
 
@@ -566,10 +567,24 @@ public class EventInfoActionServlet extends HttpServlet {
 		}
 //===========================活動詳情相關==========================================
 		if ("加入活動".equals(action)) {
+			Map<String,String> errorMsgs = new HashMap<String, String>();
+			request.setAttribute("errorMsgs", errorMsgs);
 			String eventID = request.getParameter("eventID");
+			String accountID = request.getParameter("accountID");
 			System.out.println(eventID);
-			RequestDispatcher JoinView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
-			JoinView.forward(request, response);
+			System.out.println(accountID);
+			
+			if(accountID.isEmpty()) {
+				errorMsgs.put("accountIDisEmpty","加入活動前，需要先進行登入");
+			}
+			
+			if(!errorMsgs.isEmpty()) {
+				RequestDispatcher errorView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
+				errorView.forward(request, response);
+			}else {
+				RequestDispatcher JoinView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
+				JoinView.forward(request, response);
+			}
 		}
 
 		if ("新增菜色".equals(actionJoin)) {
@@ -967,6 +982,13 @@ public class EventInfoActionServlet extends HttpServlet {
 			}
 			RequestDispatcher exitView = request.getRequestDispatcher("/Event/EventList.jsp");
 			exitView.forward(request, response);
+		}
+		
+		//=========================活動聊天室========================================================
+		if("活動聊天室".equals(action)) {
+			
+			RequestDispatcher eventChatView = request.getRequestDispatcher("/Event/EventChatPage.jsp?eventID="+request.getParameter("eventID")+"&accountID="+request.getParameter("accountID"));
+			eventChatView.forward(request, response);
 		}
 	}
 
