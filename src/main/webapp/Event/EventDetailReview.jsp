@@ -7,10 +7,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	EventMemberService eventMemberSvc = new EventMemberService();
-	EventMemberVO eventMemberVO = eventMemberSvc.getByEventAndMemberID(Integer.parseInt(request.getParameter("eventID")), Integer.parseInt(request.getParameter("accountID")));
-	request.setAttribute("eventMemberVO", eventMemberVO);
-	AccountInfoService accountInfoService = new AccountInfoService();
-	AccountInfoVO accountInfoVO = accountInfoService.selectOneAccountInfo(Integer.parseInt(request.getParameter("accountID")));
+	AccountInfoVO accountInfoVO = (AccountInfoVO)session.getAttribute("accountInfoVOLogin");
+	if(accountInfoVO != null){
+		EventMemberVO eventMemberVO = eventMemberSvc.getByEventAndMemberID(Integer.parseInt(request.getParameter("eventID")), accountInfoVO.getAccountID());
+		request.setAttribute("eventMemberVO", eventMemberVO);
+	}
+	
+	pageContext.setAttribute("accountInfoVO", accountInfoVO);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,9 +44,10 @@
 	    <div class="title">
 	        <h2>活動詳情</h2>
 	    </div>
+	    <span class="error">${errorMsgs.get("accountIDisEmpty")}</span>
 	    <div class="temp_data">
 	    	<input type="hidden" name="eventID" value="${param.eventID}">
-	    	<input type="hidden" name="accountID" value="${param.accountID}">
+	    	<input type="hidden" name="accountID" value="${accountInfoVO.accountID}">
 	    </div>
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="event_content_left col-6 col-lg-6">
@@ -97,6 +101,9 @@
 		                	<input type="submit" name="action" value="加入活動" class="joinEvent">
 	            		</c:otherwise>
 	            	</c:choose>	
+	            </div>
+	            <div id="preview_img">
+	            	<img src="<%=request.getContextPath()%>/Event/EventInfoForOnePic?eventID=${param.eventID}">
 	            </div>
 	        </div>
 	        <div class="event_content_right col-6 col-lg-6">
