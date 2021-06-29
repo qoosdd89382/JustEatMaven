@@ -45,6 +45,13 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static final String Delete_Stmt = "Delete From AccountInfo Where account_id=?";
 	private static final String Select_Key_Stmt = "Select * From JustEat.AccountInfo Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.AccountInfo";
+	
+	//停權帳號
+	private static final String Update_FreezeAccountInfo_Stmt = "Update JustEat.AccountInfo set "
+			+ "account_state=? Where account_id=?";
+	//啟用帳號
+	private static final String Update_ActiveAccountInfo_Stmt = "Update JustEat.AccountInfo set "
+			+ "account_state=? Where account_id=?";
 	//1review0622
 	
 	
@@ -397,6 +404,81 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 		return list;
 	}
+//後台用 停權
+	public void freezeAccountInfo(Integer accountID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Update_FreezeAccountInfo_Stmt);	
+			
+			pstmt.setInt(1,new Integer(0));
+			pstmt.setInt(2,accountID);
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("AccountInfo freeze completed!");
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+	}
+//後台用 啟用
+public void activeAccountInfo(Integer accountID) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			
+			try {
+				con = DriverManager.getConnection(url, userid, password);
+				pstmt = con.prepareStatement(Update_ActiveAccountInfo_Stmt);	
+				
+				pstmt.setInt(1,new Integer(1));
+				pstmt.setInt(2,accountID);
+				
+				pstmt.executeUpdate();
+				
+				System.out.println("AccountInfo active completed!");
+
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. "
+						+ se.getMessage());
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+	
+	
+	
 //=======================================================================================
 //review
 //登入用

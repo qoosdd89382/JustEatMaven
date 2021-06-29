@@ -118,11 +118,20 @@ th, td {
 							</td>
 							<td>
 							${accountInfoVO.accountID}
+							<c:if test="${accountInfoVO.accountState == false}">
+							  <form method="post" action="dashboard.do" style="margin-bottom: 0px;">
+							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
+							     <input type="hidden" name="action" value="activeAccountInfo">
+							     <input type="submit" value="啟用">
+							  </form>
+							</c:if>
+							<c:if test="${accountInfoVO.accountState == true}">
 							  <form method="post" action="dashboard.do" style="margin-bottom: 0px;">
 							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
 							     <input type="hidden" name="action" value="freezeAccountInfo">
 							     <input type="submit" value="停權">
-							   </form>
+							  </form>
+							</c:if>
 							</td>
 						</tr>
 					</c:forEach>

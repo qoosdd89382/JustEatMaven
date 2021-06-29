@@ -57,7 +57,16 @@ div#register_area{
  	           inset 0px 1px 1px rgba(255,255,255,0.7); 
 	border-radius: 3px solid orange;
 }
-
+div#register_area_title{
+	color: 	#FF8800;
+	font-size:20px;
+}
+input#input_box{
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
 input#register_submit_btn,
 input#register_reset_btn {
 	margin:5px;
@@ -100,17 +109,18 @@ textarea#textarea {
 		<div id="main_area" class="row">
 		
 			<div id="register_area" class="col-sm-6 align-self-center">
-			
+			<div id="register_area_title">
 			<Strong>您好~歡迎來到揪食!</Strong><br>
 			<strong>請輸入以下資料協助您成為我們的一員</strong>
+			</div>
 			
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
 				
-					<span style="color:red">*</span><span>會員信箱 :</span>
+					<span>會員信箱 :</span>
 					<span><%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountMail()%></span><br>
 
 					
-					<span style="color:red">*</span><span>會員暱稱 :</span>
+					<span>會員暱稱 :</span>
 					<span><%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountNickname()%></span><br>
 					
 					<span style="color:red">*</span><span>請輸入會員密碼:</span><br>

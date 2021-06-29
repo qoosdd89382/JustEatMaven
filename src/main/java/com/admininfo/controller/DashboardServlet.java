@@ -443,7 +443,7 @@ public class DashboardServlet extends HttpServlet {
 		}
 //來自DashboardPage.jsp的請求 updateAccountInfo_From_Dashboard
 		if ("updateAccountInfoFromDashboard".equals(action)) {
-System.out.println("進入更新");
+			System.out.println("後台 更新會員資料");
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 			
@@ -451,7 +451,6 @@ System.out.println("進入更新");
 			AccountInfoVO accountInfoVO = new AccountInfoVO();
 			
 			try {
-System.out.println("開始TRY");
 				//接收頁面使用者輸入的參數
 				Integer accountID = new Integer(req.getParameter("accountID"));
 				String accountMailInput = req.getParameter("accountMail");
@@ -497,7 +496,6 @@ System.out.println("開始TRY");
 				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,8}$");
 				Matcher accountNicknameMatcher = accountNicknamePattern.matcher(accountNicknameInput);
 				try {
-					System.out.println("檢查暱稱1");
 					if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
 						errorMsgs.put("accountNicknameError","請輸入會員暱稱");
 					}else if(!accountNicknameMatcher.matches()){
@@ -509,7 +507,6 @@ System.out.println("開始TRY");
 					}else {
 						accountNickname = new String(accountNicknameInput);
 					}
-					System.out.println("檢查暱稱2");
 				} catch (Exception e) {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
@@ -724,6 +721,7 @@ System.out.println("開始TRY");
 				
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Dashboard/Account/DashboardAccountPage.jsp";
+				System.out.println("後台 更新會員 完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				
@@ -732,6 +730,59 @@ System.out.println("開始TRY");
 				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
 						.getRequestDispatcher("/Dashboard/Account/DashboardAccountPage.jsp");
+				failureView.forward(req, res);
+			}
+		}
+		
+//收到後台會員停權通知
+		if ("freezeAccountInfo".equals(action)) {
+			System.out.println("收到 停權會員 請求");
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			AccountInfoService accountInfoSvc = new AccountInfoService();
+			
+			try {
+				//取得停權請求的ID
+				Integer accountID = Integer.parseInt(req.getParameter("accountID"));
+				System.out.println(accountID);
+				accountInfoSvc.freezeAccountInfo(accountID);
+				
+				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
+				System.out.println("後台 停權會員 完成準備轉交");
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+			}catch(Exception e) {
+				e.printStackTrace();
+				errorMsgs.put("UnexceptionError","無法取得資料");
+				RequestDispatcher failureView = req
+						.getRequestDispatcher("/Dashboard/Account/ListAllAccountInfoPage.jsp");
+				failureView.forward(req, res);
+			}
+		}
+//收到後台會員啟用通知
+		if ("activeAccountInfo".equals(action)) {
+			System.out.println("收到 啟用會員 請求");
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			AccountInfoService accountInfoSvc = new AccountInfoService();
+			
+			try {
+				//取得停權請求的ID
+				Integer accountID = Integer.parseInt(req.getParameter("accountID"));
+				System.out.println(accountID);
+				accountInfoSvc.activeAccountInfo(accountID);
+				
+				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
+				System.out.println("後台 停權會員 完成準備轉交");
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+			}catch(Exception e) {
+				e.printStackTrace();
+				errorMsgs.put("UnexceptionError","無法取得資料");
+				RequestDispatcher failureView = req
+						.getRequestDispatcher("/Dashboard/Account/ListAllAccountInfoPage.jsp");
 				failureView.forward(req, res);
 			}
 		}

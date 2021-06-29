@@ -60,7 +60,12 @@ div#register_area_title{
 	color: 	#FF8800;
 	font-size:20px;
 }
-
+input#input_box{
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
 
 input#register_submit_btn,
 input#register_reset_btn {

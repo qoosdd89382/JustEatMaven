@@ -30,9 +30,17 @@ public class AccountInfoService {
 	public List<AccountInfoVO> selectAllAccountInfo(){
 		return dao.selectAllAccountInfo();
 	}
-	
+	//暫時用不到
 	public void deleteAccountInfo(Integer accountID) {
 		dao.delete(accountID);
+	}
+	//停權帳號
+	public void freezeAccountInfo(Integer accountID) {
+		dao.freezeAccountInfo(accountID);
+	}
+	//啟用帳號
+	public void activeAccountInfo(Integer accountID) {
+		dao.activeAccountInfo(accountID);
 	}
 	
 //=====待修正
