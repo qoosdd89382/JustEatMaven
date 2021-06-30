@@ -29,8 +29,9 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 	private static final String SELECT_ONE = "SELECT * FROM AdminInfo WHERE admin_id = ?";
 	private static final String SELECT_ALL = "SELECT * FROM AdminInfo";
 	private static final String UPDATE_PW_PIC = "UPDATE AdminInfo SET admin_password = ?, admin_pic = ?, admin_state = 1 WHERE admin_id = ?";
-	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
-//	private static final String UPDATE = "UPDATE AdminInfo SET admin_mail = ?, admin_nickname = ?, admin_password = ?, admin_pic = ?, admin_state = ? WHERE admin_id = ?";
+	private static final String UPDATE = "UPDATE AdminInfo SET admin_nickname = ?, admin_password = ?, admin_pic = ? WHERE admin_id = ?";
+	private static final String UPDATE_STATE = "UPDATE AdminInfo SET admin_state = ? WHERE admin_id = ? ";
+	private static final String UPDATE_NICKNAME = "UPDATE AdminInfo SET admin_nickname = ? WHERE admin_id = ?";
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM AdminInfo WHERE admin_nickname = ?";
 	private static final String SELECT_ONE_BY_MAIL = "SELECT * FROM AdminInfo WHERE admin_mail = ?";
 	private static final String SELECT_ONE_BY_EMAIL_PW = "SELECT * FROM AdminInfo WHERE admin_mail = ? and admin_password = ?";
@@ -98,12 +99,12 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(UPDATE);
 			
-			pstmt.setString(1, adminInfo.getAdminMail());
-			pstmt.setString(2, adminInfo.getAdminNickname());
-			pstmt.setString(3, adminInfo.getAdminPassword());
-			pstmt.setBytes(4, adminInfo.getAdminPic());
-			pstmt.setInt(5, adminInfo.getAdminState());
-			pstmt.setInt(6, adminInfo.getAdminID());
+//			pstmt.setString(1, adminInfo.getAdminMail());
+			pstmt.setString(1, adminInfo.getAdminNickname());
+			pstmt.setString(2, adminInfo.getAdminPassword());
+			pstmt.setBytes(2, adminInfo.getAdminPic());
+//			pstmt.setInt(5, adminInfo.getAdminState());
+			pstmt.setInt(3, adminInfo.getAdminID());
 
 			updateRow = pstmt.executeUpdate();
 
@@ -396,8 +397,40 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 
 	@Override
 	public int updateState(AdminInfoVO adminInfo) {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int updateRow = 0;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(UPDATE_STATE);
+			
+			pstmt.setInt(1, adminInfo.getAdminState());
+			pstmt.setInt(2, adminInfo.getAdminID());
+
+			updateRow = pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return updateRow;
 	}
 
 	@Override
@@ -494,6 +527,44 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			}
 		}
 		return adminVO;
+	}
+
+	@Override
+	public int updateNickname(AdminInfoVO adminInfo) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int updateRow = 0;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(UPDATE_NICKNAME);
+			
+			pstmt.setString(1, adminInfo.getAdminNickname());
+			pstmt.setInt(2, adminInfo.getAdminID());
+
+			updateRow = pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return updateRow;
 	}
 }
 

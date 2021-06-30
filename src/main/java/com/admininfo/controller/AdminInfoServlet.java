@@ -41,6 +41,7 @@ public class AdminInfoServlet extends HttpServlet {
 
 		String action = req.getParameter("action");
 		HttpSession session = req.getSession();
+		
 
 		if ("insert".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();

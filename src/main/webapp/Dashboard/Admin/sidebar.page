@@ -39,8 +39,7 @@
                 		aria-labelledby="headingAccount"
                 		data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">會員列表管理</a>
-                        <a class="collapse-item" href="cards.html">商家認證審核</a>
+                        <a class="collapse-item" href="<%= request.getContextPath() %>/Dashboard/Admin/listAllAccount.jsp">會員列表管理</a>
                     </div>
                 </div>
             </li>
@@ -77,10 +76,8 @@
                 		aria-labelledby="headingEvent"
                 		data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="utilities-color.html">食譜列表管理</a>
-                        <a class="collapse-item" href="utilities-border.html">食材列表管理</a>
-                        <a class="collapse-item" href="utilities-animation.html">食材分類列表管理</a>
-                        <a class="collapse-item" href="utilities-other.html">料理分類列表管理</a>
+                        <a class="collapse-item" href="utilities-color.html">活動列表管理</a>
+                        <a class="collapse-item" href="utilities-border.html">活動成員管理</a>
                     </div>
                 </div>
             </li>
@@ -109,7 +106,7 @@
                     </div>
                 </div>
             </li>
-<%--%
+<%--
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
@@ -127,24 +124,24 @@
             </li>
 --%>
 
-            <!-- Divider -->
+            <!-- Divider 
             <hr class="sidebar-divider">
+-->
 
-
-            <!-- Nav Item - Charts -->
+            <!-- Nav Item - Charts 
             <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>瀏覽紀錄</span></a>
             </li>
-
-            <!-- Nav Item - Tables -->
+-->
+            <!-- Nav Item - Tables 
             <li class="nav-item">
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>數據報表</span></a>
             </li>
-
+-->
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
