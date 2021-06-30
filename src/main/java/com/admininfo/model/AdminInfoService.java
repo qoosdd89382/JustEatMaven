@@ -39,7 +39,6 @@ public class AdminInfoService {
 		return dao.isNicknameExist(adminNickname);
 	}
 	
-
 	public int setPasswordAndPic(int adminID, String adminPassword, byte[] adminPic) {
 		AdminInfoVO vo = new AdminInfoVO();
 		vo.setAdminPassword(adminPassword);
@@ -51,7 +50,22 @@ public class AdminInfoService {
 	public List<AdminInfoVO> getAll() {
 		return dao.getAll();
 	}
+
+	public int updateNickname(int adminID, String adminNickname) {
+		AdminInfoVO vo = new AdminInfoVO();
+		vo.setAdminNickname(adminNickname);
+		vo.setAdminID(adminID);
+		
+		return dao.updateNickname(vo);		
+	}
 	
+	public int updateState(int adminID, int adminState) {
+		AdminInfoVO vo = new AdminInfoVO();
+		vo.setAdminState(adminState);
+		vo.setAdminID(adminID);
+		
+		return dao.updateState(vo);		
+	}
 	
 //	public int updateAdmin(String adminMail, String adminNickname,
 //								String adminPassword, byte[] adminPic) {

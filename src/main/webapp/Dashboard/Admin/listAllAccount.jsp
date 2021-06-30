@@ -6,11 +6,12 @@
 
 <%@ page import="java.util.List"%>
 <%@ page import="com.admininfo.model.*" %>
+<%@ page import="com.accountinfo.model.*" %>
 
-<jsp:useBean id="adminSvc" class="com.admininfo.model.AdminInfoService" />
+<jsp:useBean id="accountInfoSvc" class="com.accountinfo.model.AccountInfoService" />
 
 <%
-	List<AdminInfoVO> list = adminSvc.getAll();
+	List<AccountInfoVO> list = accountInfoSvc.selectAllAccountInfo();
 	pageContext.setAttribute("list", list);
 %>
 
@@ -61,7 +62,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">管理員列表</h1>
+                    <h1 class="h3 mb-2 text-gray-800">會員列表</h1>
 <!--                     <p class="mb-4"> -->
 						
 <!-- 					</p> -->
@@ -69,50 +70,61 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">管理員列表</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">會員列表</h6>
                         </div>
                         <div class="card-body">
-                        本列表共有 ${fn:length(list)} 名管理員：
-	                        <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 3}">
+                       	 本站共有 ${fn:length(list)} 名會員：
+                       	 ${ errorMsgs.get("UnexceptionError") }
                         	<div class="editBtn row">
-		                        <select name="action" class="custom-select col- lg-1 col-md-2 col-3 ml-auto mb-2">
-		                        	<option value="promote">總管理員</option>
-		                        	<option value="demote">一般管理員</option>
-		                        	<option value="suspend">停權</option>
+		                        <select name="action" class="custom-select col-lg-1 col-md-2 col-3 ml-auto mb-2">
+		                        	<option value="activeAccountInfo">啟用</option>
+		                        	<option value="freezeAccountInfo">停權</option>
 		                       	</select>
-		                        <button type="button" class="btn btn-primary col- lg-1 col-md-2 col-3 ml-2 mb-2" id="adminAction">批次操作</button>
+		                        <button type="button" class="btn btn-primary col- lg-1 col-md-2 col-3 ml-2 mb-2" id="accountAction">批次操作</button>
 							</div>
-							</c:if>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>暱稱</th>
-                                            <th>E-mail</th>
-                                            <th>註冊時間</th>
-                                            <th>認證狀態</th>
-                                            <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 3}">
-                                            	<th>批次操作</th>
-                                            </c:if>
+                                           <th>編號</th>
+                                           <th>信箱</th>
+                                           <th>暱稱</th>
+                                           <th>註冊時間</th>
+                                           <th>操作</th>
+                                           <th>批次操作</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    	<c:forEach var="adminVO" items="${list}">
-                                        <tr data-id="${adminVO.adminID}">
-                                            <td>${adminVO.adminID}</td>
-                                            <td class="adminNickname">
-                                            	${adminVO.adminNickname}
-<%--                                             	<c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 3 || loginAdminID == adminVO.adminID }"> --%>
-<%--                                             		<button type="button" class="btn btn-primary btn-sm float-right" value="${adminVO.adminID}" name="updateAdminNckname">編輯</button> --%>
-<%--                                             	</c:if> --%>
+                                    	<c:forEach var="accountInfoVO" items="${list}">
+                                        <tr data-id="${accountInfoVO.accountID}">
+                                            <td>${accountInfoVO.accountID}</td>
+                                            <td>${accountInfoVO.accountMail}</td>
+                                            <td>
+                                            	<a href="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do?action=gotoUpdateAccountInfo&accountID=${accountInfoVO.accountID}">
+                                            		${accountInfoVO.accountNickname}
+                                            	</a>
                                             </td>
-                                            <td>${adminVO.adminMail}</td>
-                                            <td><fmt:formatDate value="${adminVO.adminRegisterTime}" pattern="yyyy.MM.dd a KK:mm"/></td>
-                                            <td  class="adminState">${adminVO.adminState == 0 ? "停權" : (adminVO.adminState == 1 ? "審核中" : (adminVO.adminState == 2 ? "已通過" : "總管理員")) }</td>
-                                            <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 3}">
-                                            	<td><label><input type="checkbox" value="${adminVO.adminID}" name="adminID">選取</label></td>
-                                            </c:if>
+                                            <td><fmt:formatDate value="${accountInfoVO.accountRegisterTime}" pattern="yyyy.MM.dd a KK:mm"/></td>
+                                            <td>
+
+							<c:if test="${accountInfoVO.accountState == false}">
+							  <form method="post" action="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do" style="margin-bottom: 0px;">
+							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
+							     <input type="hidden" name="action" value="activeAccountInfo">
+							     <button type="submit" class="btn btn-sm btn-primary">啟用</button>
+							  </form>
+							</c:if>
+							<c:if test="${accountInfoVO.accountState == true}">
+							  <form method="post" action="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do" style="margin-bottom: 0px;">
+							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
+							     <input type="hidden" name="action" value="freezeAccountInfo">
+							     <button type="submit" class="btn btn-sm btn-primary">停權</button>
+							  </form>
+							</c:if>
+											</td>
+                                            <td>
+                                            	<label><input type="checkbox" value="${accountInfoVO.accountID}" name="accountIDforSelect">選取</label>
+                                            </td>
                                         </tr>
                                         </c:forEach>
                                     </tbody>
@@ -157,42 +169,34 @@
     <script>
     $(function(){
     	
-    	$("#adminAction").on("click", function () {
+    	$("#accountAction").on("click", function () {
     		var action = $('select[name="action"]').find("option:selected").val();
-    		var actionStr = "";
+    		var actionToggleStr = "";
+    		var actionToggleAction = "";
     		
-    		if (action == "promote") { actionStr = "總管理員"; }
-    		else if (action == "demote") { actionStr = "已通過"; }
-    		else if (action == "suspend") { actionStr = "停權"; }
+    		if (action == "freezeAccountInfo") { actionToggleStr = "啟用"; actionToggleAction = "activeAccountInfo"; }
+    		else if (action == "activeAccountInfo") { actionToggleStr = "停權"; actionToggleAction = "freezeAccountInfo"; }
     		
-    		var arr = new Array();
-    		$("input[name='adminID']").each(function(index, element) {
+//     		var arr = new Array();
+    		$("input[name='accountIDforSelect']").each(function(index, element) {
     			if ($(element).is(":checked")) {
-					arr.push($(element).val());
+// 					arr.push($(element).val());
+					$.ajax({
+						type : 'POST',
+		    			url: '<c:url value="/Dashboard/Account/dashboard.do" />',
+		    			data : {
+		    				'action': action,
+		    				'accountID': $(element).val()
+		    			},
+						success: function(data){
+							console.log($("tr[data-id='" + $(element).val() + "']").find("button[type='submit']").text());
+							$("tr[data-id='" + $(element).val() + "']").find("button[type='submit']").text(actionToggleStr);
+							$("tr[data-id='" + $(element).val() + "']").find("input[name='action']").value(actionToggleAction);
+							$("#successModal").modal();
+						},
+						
+		    		});
     			}
-    		});
-    		
-			if (arr.length == 0) {
-				return;
-			}
-			
-    		var adminIDs = JSON.stringify(arr);
-    		
-    		$.ajax({
-				type : 'POST',
-    			url: '<c:url value="/Dashboard/adminAjax.do" />',
-    			data : {
-    				'action': action,
-    				'adminIDs': adminIDs
-    			},
-				success: function(data){
-					var json = JSON.parse(data);
-					$(json).each(function(index, element) {
-						$("tr[data-id='" + element + "']").find("td.adminState").text(actionStr);
-					});
-					$("#successModal").modal();
-				},
-				
     		});
     		
     	});    	

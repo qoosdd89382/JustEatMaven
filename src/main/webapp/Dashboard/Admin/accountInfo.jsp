@@ -2,16 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ page import="com.admininfo.model.*" %>
-<jsp:useBean id="adminSvc" class="com.admininfo.model.AdminInfoService" />
+<%@ page import="com.accountinfo.model.*" %>
+
+<jsp:useBean id="accountInfoSvc" class="com.accountinfo.model.AccountInfoService" />
 
 <%
-	AdminInfoVO adminVO = adminSvc.getOneAdmin((int) session.getAttribute("loginAdminID"));
-	if (request.getParameter("adminVO") != null) {
-		adminVO = (AdminInfoVO) request.getAttribute("adminVO");
-	} else {
-		session.removeAttribute("adminPicBuffer");
-		pageContext.setAttribute("isNewAdmin", "yes");
-	}
+AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
 %>
 
 <!DOCTYPE html>
@@ -82,7 +78,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">管理員資訊</h1>
+                        <h1 class="h3 mb-0 text-gray-800">會員資訊</h1>
                     </div>
 	
                     <!-- Content Row -->
@@ -95,62 +91,95 @@
                             <div class="card shadow mb-4">
 		                        <div class="card-header py-3">
 		                        	<h6 class="m-0 font-weight-bold text-primary">
-										管理員 ${adminSvc.getOneAdmin(loginAdminID).adminNickname} 的個人資訊
+										會員 ${accountInfoVO.accountNickname} 的個人資訊
 									</h6>
 		                        </div>
 	                        
                                 <div class="card-body">
                                 
                                 <h4 style="text-align: center; color: #4e73df;">${updateSuccess}</h4>
- <form action="<%= request.getContextPath()%>/Dashboard/admin.do" method="post" enctype="multipart/form-data">
+ <form action="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do" method="post" enctype="multipart/form-data">
   <div class="form-row">
+  
     <div class="form-group col-md-6">
-      <label for="adminID">ID</label>
-      <input type="text" class="form-control" value="${ adminSvc.getOneAdmin(loginAdminID).adminID }" disabled>
+      <label for="accountID">ID</label>
+      <input type="text" class="form-control" value="${accountInfoVO.accountID}" disabled>
     </div>
+    
     <div class="form-group col-md-6">
       <label for="adminNickname">暱稱
 			<span class="errorSpan"><font color="red">${errorMsgs.get("adminNicknameErr")}</font></span>
        </label>
-      <input type="text" class='form-control ${errorMsgs.get("adminNicknameErr") == null ? "": "border-danger"}' id="adminNickname" value="${adminVO == null ? adminSvc.getOneAdmin(loginAdminID).adminNickname : adminVO.adminNickname }" name="adminNickname">
+      <input type="text"
+	      	class='form-control ${errorMsgs.get("adminNicknameErr") == null ? "": "border-danger"}'
+	      	id="accountNickname"
+	      	value="${accountInfoVO.accountNickname}"
+	      	name="accountNickname">
     </div>
-  <div class="form-group col-md-12">
-    <label for="adminMail">E-mail</label>
-    <input type="email" class="form-control" id="adminMail" value="${adminSvc.getOneAdmin(loginAdminID).adminMail}" disabled>
-  </div>
+    
+   <div class="form-group col-md-6">
+    <label for="accountMail">E-mail</label>
+    <input type="email" class="form-control" id="accountMail"
+    		value="${accountInfoVO.accountMail}"
+    		name="accountMail">
+   </div>
+  
     <div class="form-group col-md-6">
-      <label for="newPassword">新密碼
+      <label for="accountPassword">密碼
 			<span class="errorSpan"><font color="red">${errorMsgs.get("newPasswordErr")}</font></span>
       </label>
-      <input type="password" autocomplete="new-password" class='form-control ${errorMsgs.get("newPasswordErr") == null ? "": "border-danger"}' id="newPassword" name="newPassword">
+      <input type="password" autocomplete="accountPassword" 
+	      	class='form-control ${errorMsgs.get("newPasswordErr") == null ? "": "border-danger"}'
+	      	id="accountPassword" name="accountPassword">
     </div>
-    <div class="form-group col-md-6">
-      <label for="newPasswordRecheck">再次輸入新密碼
-			<span class="errorSpan"><font color="red">${errorMsgs.get("newPasswordRecheckErr")}</font></span>
-      </label>
-      <input type="password" autocomplete="new-password" class='form-control ${errorMsgs.get("newPasswordRecheckErr") == null ? "": "border-danger"}' id="newPasswordRecheck" name="newPasswordRecheck">
-    </div>
-    <hr>
+    
+  
+   <div class="form-group col-md-6">
+    <label for="accountName">姓名</label>
+    <input type="text" class="form-control" id="accountName"
+    		value="${accountInfoVO.accountName}"
+    		name="accountName">
+   </div>
+  
+   <div class="form-group col-md-6">
+    <label for="accountGender">性別</label>
+    <select name="accountGender" class="custom-select">
+	    <option value='1' ${accountInfoVO.accountGender == 1 ? "selected":""}>男</option>
+	    <option value='0' ${accountInfoVO.accountGender == 0 ? "selected":""}>女</option>
+    </select>
+   </div>
+   
+   <div class="form-group col-md-6">
+     <label for="accountState">狀態</label>
+    <select name="accountState" class="custom-select">
+	    <option value='1' ${accountInfoVO.accountState == true ? "selected":""}>啟用中</option>
+	    <option value='0' ${accountInfoVO.accountState == false ? "selected":""}>停權中</option>
+    </select>
+   </div>
+   
+<!--    <div class="form-group col-md-6"> -->
+<!--      <label for="accountLevel">目前狀態</label> -->
+<!--       <input type="text" class="form-control" -->
+<%--       		value='${accountInfoVO.accountLevel == 1 ? "一般會員" : "特權會員" }' disabled> --%>
+<!--    </div> -->
+   
+    <div class="col-md-6"></div>
+    
     <div class="col-md-6 vertical-container">
-		<label for="adminPic">頭像上傳
+		<label for="accountPic">頭像上傳
 			<span class="errorSpan"><font color="red">${errorMsgs.get("adminPicErr")}</font></span>
 		</label>
-		<input id="adminPic" accept="image/*" type="file" name="adminPic" style="display:none">
-		<button id="upload-btn" class="btn btn-secondary btn-lg form-control btn-block" type="button" id="button-addon2">上傳檔案</button>
+		<input id="accountPic" accept="image/*" type="file" name="accountPic" style="display:none">
+		<button id="upload-btn" class="btn btn-secondary form-control btn-block" type="button" id="button-addon2">上傳檔案</button>
 		<div class="input-element col-12 input-group mb-3 upload-block">
 			<div class="col-12 preview text-center rounded">
-				<img src="<%= request.getContextPath() %>/Dashboard/Admin/Pic?adminID=${loginAdminID}" class="preview_img">
+				<img src="<%= request.getContextPath() %>/Account/Pic/Pic/${accountInfoVO.accountID}" class="preview_img">
 			</div>
 		</div>
     </div>
-    <div class="col-md-6"></div>
     
-	<div class="form-group col-md-6">
-	 <label for="adminPassword">修改資料，請輸入目前密碼 <font color="red">* ${errorMsgs.get("adminPasswordErr")}</font></label>
-	 <input type="password" autocomplete="new-password" class="form-control ${errorMsgs.get("adminPasswordErr") == null ? "": "border-danger"}" id="adminPassword" name="adminPassword">
-	</div>
     <div class="col-md-6"></div>
-	<input type="hidden" name="action" value="update">
+	<input type="hidden" name="action" value="updateAccountInfoFromDashboard">
   	<button id="submit" type="submit" class="col-md-6 btn btn-primary">送出修改</button>
   </div>
 </form>
@@ -194,21 +223,6 @@
     
     <script>
 
-
-    if (sessionStorage.getItem("form_data") != null) {
-    	session_history = JSON.parse(sessionStorage.getItem("form_data"));
-		
-    	if (session_history.preview_img != null) {
-            $('.preview').empty().append('<img src="'+ session_history.preview_img +'" class="preview_img">');
-    	}
-    	
-    }
-    
-	var isNewAdmin = "${isNewAdmin}";
-	if (isNewAdmin == "yes") {
-		sessionStorage.clear();
-	}
-    
 	$('.visible-pw').on("click", function(e){
 		e.preventDefault();
 		var type = $(this).parent().prev().attr("type");
@@ -218,15 +232,15 @@
 			$(this).parent().prev().attr("type", "password");
 		}
 	});
-	
 
 	$('#upload-btn').on("click", function(e){
 		e.preventDefault();
-    	$('input[name="adminPic"]').trigger("click");
+    	$('input[name="accountPic"]').trigger("click");
 	});
 	
 
-	$('input[name="adminPic"]').on("change", function(e) {
+
+	$('input[name="accountPic"]').on("change", function(e) {
         	previewerPic(e.target.files[0]);
     });
     
@@ -241,17 +255,6 @@
         });
     };
     
-
-    $("#submit").on("click", function() {
-    	var session_history = new Object();
-    	var step_pic = new Array();
-    	
-        if ($('.preview_img') != null) {
-            session_history['preview_img'] = $(".preview_img").attr("src");
-        }
-        sessionStorage.setItem("form_data", JSON.stringify(session_history));
-        
-    });
     
     </script>
 </body>

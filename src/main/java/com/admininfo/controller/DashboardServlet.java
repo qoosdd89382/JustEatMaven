@@ -40,6 +40,7 @@ public class DashboardServlet extends HttpServlet {
 		
 		//設定編碼與確認回應
 		req.setCharacterEncoding("UTF-8");
+		res.setContentType("text/html; charset=UTF-8");
 		String action = req.getParameter("action");
 		
 //======================================================
@@ -430,14 +431,16 @@ public class DashboardServlet extends HttpServlet {
 				AccountInfoVO accountInfoVO = accountInfoSvc.selectOneAccountInfo(accountID);
 				req.setAttribute("accountInfoVO", accountInfoVO); 
 				
-				String url = "/Dashboard/Account/UpdateAccountInfoPage.jsp";
+//				String url = "/Dashboard/Account/UpdateAccountInfoPage.jsp";
+				String url = "/Dashboard/Admin/accountInfo.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 			
 			}catch(Exception e) {
 				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
-						.getRequestDispatcher("/Dashboard/Account/DashboardAccountPage.jsp");
+//						.getRequestDispatcher("/Dashboard/Account/DashboardAccountPage.jsp");
+						.getRequestDispatcher("/Dashboard/Admin/listAllAccount.jsp");
 				failureView.forward(req, res);
 			}	
 		}
@@ -748,7 +751,8 @@ public class DashboardServlet extends HttpServlet {
 				System.out.println(accountID);
 				accountInfoSvc.freezeAccountInfo(accountID);
 				
-				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
+//				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
+				String url = "/Dashboard/Admin/listAllAccount.jsp";
 				System.out.println("後台 停權會員 完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
@@ -756,7 +760,8 @@ public class DashboardServlet extends HttpServlet {
 				e.printStackTrace();
 				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
-						.getRequestDispatcher("/Dashboard/Account/ListAllAccountInfoPage.jsp");
+//						.getRequestDispatcher("/Dashboard/Account/ListAllAccountInfoPage.jsp");
+						.getRequestDispatcher("/Dashboard/Admin/listAllAccount.jsp");
 				failureView.forward(req, res);
 			}
 		}
@@ -774,15 +779,17 @@ public class DashboardServlet extends HttpServlet {
 				System.out.println(accountID);
 				accountInfoSvc.activeAccountInfo(accountID);
 				
-				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
-				System.out.println("後台 停權會員 完成準備轉交");
+//				String url = "/Dashboard/Account/ListAllAccountInfoPage.jsp";
+				String url = "/Dashboard/Admin/listAllAccount.jsp";
+				System.out.println("後台 啟用會員 完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 			}catch(Exception e) {
 				e.printStackTrace();
 				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
-						.getRequestDispatcher("/Dashboard/Account/ListAllAccountInfoPage.jsp");
+//						.getRequestDispatcher("/Dashboard/Account/ListAllAccountInfoPage.jsp");
+						.getRequestDispatcher("/Dashboard/Admin/listAllAccount.jsp");
 				failureView.forward(req, res);
 			}
 		}
