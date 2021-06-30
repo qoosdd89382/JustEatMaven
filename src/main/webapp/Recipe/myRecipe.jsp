@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/listAllRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
+<link href="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <style>
 .ui-autocomplete {
 	max-height: 100px;
@@ -76,62 +77,58 @@
     		<section class="searchResult">
 				${successMsg}
     		</section>
-    		
-			<div class="list">
-    		<%@ include file="/Recipe/pages/page1.file"%>
-				<c:forEach var="recipeVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
-				
-					<div class="recipe-block row" id="${recipeVO.recipeID}">
-					
-						<div class="pic col-12 col-lg-5">
-							<div class="time">
-								<fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd"/>
-								<%-- yyyy.MM.dd a KK:mm --%>
+    			
+	                        <c:if test="${list.get(0).accountID == accountInfoVOLogin.accountID}">
+                        	<div class="editBtn row">
+		                        <select name="recipeAction" class="custom-select col- lg-1 col-md-2 col-3 ml-auto mb-2">
+		                        	<option value="delete">刪除</option>
+		                       	</select>
+		                        <button type="button" class="btn btn-primary col- lg-1 col-md-2 col-3 ml-2 mb-2" id="recipeAction">批次操作</button>
 							</div>
-							<div class="img-outer">
-								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}">
-							</div>
-							<div class="count">
-								<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
-								<span class='likecount ${accountInfoVOLogin == null ? "" : (thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
-								<span class='favcount ${accountInfoVOLogin == null ? "" : (favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
-							</div>
-						</div>
-						<!-- 應該要找時間處理驗證，若非本人不得刪除 -->
-						<div class="info col-12 col-lg-7">
-							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
-<!-- 							<div class="row"> -->
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
-<!-- 							<div class="col-6">test</div> -->
-<!-- 							</div> -->
-							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>
-							
-							<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID == recipeVO.accountID}">
-								<div class="change form-group">
-									<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-										<input type="hidden" name="action" value="getOneForUpdate">
-										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
-										<button class="btn btn-primary" type="submit">編輯</button>
-									</form>
-									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
-										<input type="hidden" name="action" value="delete">
-										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
-										<button class="btn btn-primary" type="submit">刪除</button>
-									</form>
-								</div>
 							</c:if>
-							
-							
-							<div class="readmore">
-								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a>
-							</div>
-						</div>
-						
-					</div>
-					
+				<div class="table-responsive">
+					<table class="table table-bordered" id="myRecipeList" width="100%" cellspacing="0" class="display">
+						<thead>
+							<tr>
+<!-- 								<th>編號</th> -->
+								<th>標題</th>
+								<th>發表時間</th>
+								<th>瀏覽人次</th>
+								<th>按讚人次</th>
+								<th>收藏人次</th>
+								<th>批次處理</th>
+							</tr>
+						</thead>
+						<tbody>
+				<c:forEach var="recipeVO" items="${list}" varStatus="status">
+						<tr data-id="${recipeVO.recipeID}">
+<%-- 							<td>${status.count}</td> --%>
+							<td><a href="<%=request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></td>
+							<td><fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd"/></td>
+							<td>${recipeVO.recipeViewCount}</span>
+							<td>${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td>
+							<td>${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td>
+						<c:if test="${accountInfoVOLogin.accountID == recipeVO.accountID}">
+                            <td><label><input type="checkbox" value="${recipeVO.recipeID}" name="recipeID"> 選取</label></td>
+                        </c:if>
+                        <c:if test="${accountInfoVOLogin.accountID != recipeVO.accountID}">
+                            <td></td>
+                        </c:if>
+						</tr>
 				</c:forEach>
-			<%@ include file="/Recipe/pages/page2.file"%>
-			</div>
+						</tbody>
+					</table>
+				</div>
+
+					
+						
+							
+							
+<!-- 							<div class="readmore"> -->
+<%-- 								<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">繼續閱讀 <i class="fas fa-angle-double-right"></i></a> --%>
+<!-- 							</div> -->
+						
+					
 			
 			<%-- include notMemberAlertModal --%>
 			<%@ include file="/Recipe/notMemberAlertModal.page"%>
@@ -160,9 +157,63 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
+<script src="<%=request.getContextPath()%>/vendors/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 	<script>
 
 	$(function(){
+		$("#myRecipeList").DataTable({
+		    "searching": true, //搜尋功能, 預設是開啟
+		    "paging": true, //分頁功能, 預設是開啟
+		    "ordering": true, //排序功能, 預設是開啟
+		    "lengthMenu": [10, 20],
+		    "language": {
+		        "processing": "處理中...",
+		        "loadingRecords": "載入中...",
+		        "lengthMenu": "顯示 _MENU_ 項結果",
+		        "zeroRecords": "沒有符合的結果",
+		        "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+		        "infoEmpty": "顯示第 0 至 0 項結果，共 0 項",
+		        "infoFiltered": "(從 _MAX_ 項結果中過濾)",
+		        "infoPostFix": "",
+		        "search": "搜尋:",
+		        "paginate": {
+		            "first": "第一頁",
+		            "previous": "上一頁",
+		            "next": "下一頁",
+		            "last": "最後一頁"
+		        },
+		        "aria": {
+		            "sortAscending": ": 升冪排列",
+		            "sortDescending": ": 降冪排列"
+		        }
+		    }
+		});
+
+    	$("#recipeAction").on("click", function () {
+    		var action = $('select[name="recipeAction"]').find("option:selected").val();
+    		
+    		$("input[name='recipeID']").each(function(index, element) {
+    			if ($(element).is(":checked")) {
+    				var that = this;
+					$.ajax({
+						type : 'POST',
+		    			url: '<c:url value="/Recipe/recipe.do" />',
+		    			data : {
+		    				'action': action,
+		    				'recipeID': $(element).val()
+		    			},
+						success: function(data){
+							$("#actionSuccess").modal();
+							$(that).closest("tr[data-id='" + $(element).val() + "']").remove();
+						},
+						
+		    		});
+    			}
+    		});
+    		
+    	});    	
+    	
 
 		<%@ include file="/Recipe/js/recipeFavThumb.page"%>
 		<%@ include file="/Recipe/searchAutoComplIng.file"%>

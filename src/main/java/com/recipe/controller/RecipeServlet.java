@@ -18,9 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
 import com.cuisinecategory.model.CuisineCategoryService;
 import com.cuisinecategory.model.CuisineCategoryVO;
+import com.favoriterecipe.model.FavoriteRecipeService;
+import com.favoriterecipe.model.FavoriteRecipeVO;
 import com.ingredient.model.IngredientService;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryService;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryVO;
@@ -42,8 +45,87 @@ public class RecipeServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
+		res.setContentType("text/html; charset=UTF-8");
 
 		String action = req.getParameter("action");
+		
+		if ("myRecipe".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				String accountID = req.getParameter("id");
+				if (accountID == null) {
+					throw new Exception();
+				}
+				
+				RecipeService recipeSvc = new RecipeService();
+				AccountInfoService accountSvc = new AccountInfoService();
+				
+				List<RecipeVO> list = recipeSvc.getAllByWriter(new Integer(accountID));
+				String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountName();
+				req.setAttribute("list", list);
+				
+				String successMsg = "";
+				if (list.size() > 0) {
+					successMsg = accountName + "發表的食譜共有" + list.size() + "筆：";
+				} else {
+					successMsg = "......很抱歉，" + accountName + "暫時沒有發表食譜......";
+				}
+				req.setAttribute("successMsg", successMsg);
+				req.setAttribute("successTitle", ": 會員食譜");
+				
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/myRecipe.jsp");
+				successView.forward(req, res);
+			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				e.printStackTrace();
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+		}
+		
+		if ("listAllMyFavorite".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				String accountID = req.getParameter("id");
+				if (accountID == null) {
+					throw new Exception();
+				}
+				
+				FavoriteRecipeService favRecipeSvc = new FavoriteRecipeService();
+				RecipeService recipeSvc = new RecipeService();
+				
+				List<FavoriteRecipeVO> favRecipeList = favRecipeSvc.getAllByAccount(new Integer(accountID));
+				List<RecipeVO> list = new ArrayList<RecipeVO>();
+				for (FavoriteRecipeVO favRecipeVO : favRecipeList) {
+					list.add(recipeSvc.getOneRecipe(favRecipeVO.getFavRecipeID()));
+				}
+				
+				req.setAttribute("list", list);
+				
+				String successMsg = "";
+				if (list.size() > 0) {
+					successMsg = "您收藏的食譜共有" + list.size() + "筆：";
+				} else {
+					successMsg = "......很抱歉，您暫時沒有收藏食譜，回到<a href='../Recipe'>所有食譜列表</a>探索一下吧～！";
+				}
+				req.setAttribute("successMsg", successMsg);
+				req.setAttribute("successTitle", ": 收藏食譜");
+				
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				successView.forward(req, res);
+			} catch (Exception e) {
+				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				e.printStackTrace();
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+		}
 		
 		if ("listAllByIngredient".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -78,6 +160,7 @@ public class RecipeServlet extends HttpServlet {
 							"</b>......很抱歉，暫時沒有食譜符合條件！";
 				}
 				req.setAttribute("successMsg", successMsg);
+				req.setAttribute("successTitle", ": 搜尋結果");
 				
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				successView.forward(req, res);
@@ -123,6 +206,7 @@ public class RecipeServlet extends HttpServlet {
 							"</b>......很抱歉，暫時沒有食譜符合條件！";
 				}
 				req.setAttribute("successMsg", successMsg);
+				req.setAttribute("successTitle", ": 搜尋結果");
 				
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				successView.forward(req, res);
@@ -236,6 +320,7 @@ public class RecipeServlet extends HttpServlet {
 					successMsg = "......很抱歉，暫時沒有食譜符合條件！";
 				}
 				req.setAttribute("successMsg", successMsg);
+				req.setAttribute("successTitle", ": 搜尋結果");
 				
 				req.setAttribute("list", list); //  複合查詢, 資料庫取出的list物件,存入request
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");

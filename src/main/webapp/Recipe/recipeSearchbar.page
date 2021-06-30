@@ -38,13 +38,16 @@
                             <button type="submit" class="btn btn-primary btn-block">搜尋食譜</button>
                         </div>
                         <div class="col-xl-1 col-md-4 col-sm-12 px-1 my-1">
-                        	<a id="newRecipe" class="btn btn-secondary btn-block" href="<%=request.getContextPath()%>/Recipe/addRecipe.jsp">新增食譜<a>
+                        	<a id="newRecipe" class="btn btn-secondary btn-block"
+                        		href="<%=request.getContextPath()%>/Recipe/addRecipe.jsp">新增食譜<a>
                         </div>
                         <div class="col-xl-1 col-md-4 col-sm-12 px-1 my-1">
-                        	<a id="myRecipe" class="btn btn-secondary btn-block">我的食譜<a>
+                        	<a id="myRecipe" class="btn btn-secondary btn-block"
+                        		href="<%= request.getContextPath()%>/Recipe/recipe.do?action=myRecipe&id=${accountInfoVOLogin.accountID}">我的食譜<a>
                         </div>
                         <div class="col-xl-1 col-md-4 col-sm-12 px-1 my-1">
-                        	<a id="myfavoriteRecipe" class="btn btn-secondary btn-block">收藏食譜<a>
+                        	<a id="myfavoriteRecipe" class="btn btn-secondary btn-block"
+                        		href="<%= request.getContextPath()%>/Recipe/recipe.do?action=listAllMyFavorite&id=${accountInfoVOLogin.accountID}">收藏食譜<a>
                         </div>
                     </div>
                 </div>
