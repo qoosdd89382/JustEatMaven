@@ -94,7 +94,9 @@
 								<th>瀏覽人次</th>
 								<th>按讚人次</th>
 								<th>收藏人次</th>
+								<c:if test="${accountInfoVOLogin.accountID == param.id}">
 								<th>批次處理</th>
+								 </c:if>
 							</tr>
 						</thead>
 						<tbody>
@@ -108,9 +110,6 @@
 							<td>${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td>
 						<c:if test="${accountInfoVOLogin.accountID == recipeVO.accountID}">
                             <td><label><input type="checkbox" value="${recipeVO.recipeID}" name="recipeID"> 選取</label></td>
-                        </c:if>
-                        <c:if test="${accountInfoVOLogin.accountID != recipeVO.accountID}">
-                            <td></td>
                         </c:if>
 						</tr>
 				</c:forEach>
@@ -155,8 +154,8 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
-<script src="<%=request.getContextPath()%>/vendors/datatables/jquery.dataTables.min.js"></script>
-<script src="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath()%>/vendors/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 	<script>
 
 	$(function(){
