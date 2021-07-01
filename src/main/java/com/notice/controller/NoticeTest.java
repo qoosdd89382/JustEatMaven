@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
 import com.google.gson.Gson;
 import com.notice.model.NoticeService;
@@ -29,7 +30,8 @@ public class NoticeTest extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		
-		testSend();
+//		testSend();
+		testSendToAll();
 		
 	}
 	
@@ -51,5 +53,20 @@ public class NoticeTest extends HttpServlet {
 		
 		WebSocketNotice noticeWS = new WebSocketNotice();
 		noticeWS.onMessage(message);
+	}
+	
+	public static void testSendToAll() {
+		Gson gson = new Gson();
+		AccountInfoService accountSvc = new AccountInfoService();
+		NoticeService noticeSvc = new NoticeService();
+		
+		List<AccountInfoVO> list = accountSvc.selectAllAccountInfo();
+		for (AccountInfoVO vo : list) {
+			NoticeVO noticeVO = noticeSvc.addNotice(vo.getAccountID(), "系統", "歡迎註冊成為本站會員！");
+			String message = gson.toJson(noticeVO);
+			WebSocketNotice noticeWS = new WebSocketNotice();
+			noticeWS.onMessage(message);
+			
+		}
 	}
 }

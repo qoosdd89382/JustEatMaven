@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.accountinfo.model.AccountInfoService;
 import com.favoriterecipe.model.FavoriteRecipeService;
 import com.favoriterecipe.model.FavoriteRecipeVO;
 import com.google.gson.Gson;
@@ -54,6 +55,7 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 			
 			if ("insertFavoriteRecipe".equals(action)) {
 				FavoriteRecipeService favRecipeSvc = new FavoriteRecipeService();
+				AccountInfoService accountSvc = new AccountInfoService();
 				
 				if (favRecipeSvc.isExist(new Integer(accountID), new Integer(recipeID)) == null) {
 					FavoriteRecipeVO favRecipeVO = favRecipeSvc.addFavoriteRecipe(new Integer(accountID), new Integer(recipeID));
@@ -68,8 +70,12 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 
 						int authorID = recipeSvc.getOneRecipe(new Integer(recipeID)).getAccountID();
 						String recipeName = recipeSvc.getOneRecipe(new Integer(recipeID)).getRecipeName();
+						String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountName();
 						
-						NoticeVO noticeVO = noticeSvc.addNotice(authorID, "食譜", accountID + "收藏您的食譜" + recipeName);
+						NoticeVO noticeVO = noticeSvc.addNotice(authorID, "食譜", 
+								accountName
+								+ "收藏您的食譜<a href='" + req.getContextPath() + "/Recipe/recipe.jsp?id="+ recipeID + "'>"
+								+ recipeName + "</a>");
 						String message = gson.toJson(noticeVO);
 						WebSocketNotice noticeWS = new WebSocketNotice();
 						noticeWS.onMessage(message);
