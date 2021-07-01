@@ -74,9 +74,18 @@
         }
 
 
+        ul#area li {
+            display: inline-block;
+            clear: both;
+            margin-bottom: 2px;
+            font-family: Helvetica, Arial, sans-serif;
+            position: relative;
+        }
+
         .friend {
             float: left;
             margin-right: 28px;
+/*             width: 100%; */
         }
 
         .me {
@@ -84,6 +93,7 @@
             color: #fff;
             margin-left: 28px;
             text-align: right;
+/*             width: 100%; */
         }
 
         .friend span.text,
