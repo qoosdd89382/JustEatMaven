@@ -410,10 +410,11 @@ header {
 	background: #FDFFD7 !important;
 }
 #msgsList {
-	position: absolute;
+	position: fixed;
 	top: 60px;
 	right: 30px;
 	overflow: hidden;
+	z-index: 10;
 }
 #msgsList > div {
 	padding: 10px 15px;
@@ -468,14 +469,14 @@ header {
 	#alertBellSmall { 
 		display: block!important;
 		cursor: pointer!important;
-		position: relative;
+/* 		position: relative; */
         font-size: 40px;
 		color: #fff;
 /* 		line-height:43px; */
 /* 		width: 45px; */
 /* 		height: 45px; */
 /* 		border: 1px solid #fff; */
-        position: absolute;
+        position: fixed;
         right: 75px;
 		z-index:11;
 	}

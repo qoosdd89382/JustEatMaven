@@ -1,0 +1,15 @@
+	<c:if test="${not empty sessionScope.accountInfoVOLogin}">
+
+	$(function(){
+
+			<%@ include file="/common/js/adminChatJs.page"%>
+			<%@ include file="/common/js/noticeWebSocketJs.page"%>
+		
+	});
+	
+	$(window).on("unload", function(e) {
+		disconnectForNotice();
+		disconnect();
+	});
+	
+	</c:if>

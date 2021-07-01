@@ -24,8 +24,16 @@ header {
 	margin-bottom: 0!important;
 }
 
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #F3722C;
+    border-color: #F3722C;
+}
 
-
+.table-responsive {
+	margin-bottom: 40px;
+}
 
 
 
