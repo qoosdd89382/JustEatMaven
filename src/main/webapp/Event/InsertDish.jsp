@@ -66,9 +66,9 @@
 	
     <nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動詳情</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventList.jsp">活動列表</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/CreateEvent.jsp">建立活動</a></li>
 			<li class="breadcrumb-item active" aria-current="page">新增菜色</li>
 		</ol>
 	</nav>

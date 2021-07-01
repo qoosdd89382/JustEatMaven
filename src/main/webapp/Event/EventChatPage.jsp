@@ -99,110 +99,111 @@ h1 {
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-	
-	var MyPoint = "/EventChatRoom/${param.eventID}/${accountInfoVO.accountID}";
-	var host = window.location.host;
-	var path = window.location.pathname;
-	console.log(host);
-	console.log(path);
-	var webCtx = path.substring(0, path.indexOf('/', 1));
-	console.log(webCtx);
-	var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
+	console.log(new Date());
+	var MyPointForEventChatroom = "/EventChatRoom/${param.eventID}/${accountInfoVO.accountID}";
+	var hostForEventChatroom = window.location.host;
+	var pathForEventChatroom = window.location.pathname;
+	console.log(hostForEventChatroom);
+	console.log(pathForEventChatroom);
+	var webCtxForEventChatroom = pathForEventChatroom.substring(0, pathForEventChatroom.indexOf('/', 1));
+	console.log(webCtxForEventChatroom);
+	var endPointURL = "ws://" + hostForEventChatroom + webCtxForEventChatroom + MyPointForEventChatroom;
 	// ws://localhost:8081/justeat-maven/Event/accountID
-	var statusOutput = document.getElementById("statusOutput");
-	var webSocket;
+	var webSocketForEventChatroom;
 	var eventID = "${param.eventID}";
 	var accountID = "${accountInfoVO.accountID}";
 	
-	function connect(){
-		webSocket = new WebSocket(endPointURL);
+	function connectForEventChatroom(){
+		webSocketForEventChatroom = new WebSocket(endPointURL);
 		
-		webSocket.onopen = function(event){
+		webSocketForEventChatroom.onopen = function(event){
 			console.log("WebSocket連線成功");
 			$("#messagesArea").val("");
 			$("#sendMessage").prop("disabled","");
 			$("#connect").attr("disabled",true);
 			$("#disconnect").prop("disabled","");
 			
-			var jsonObj = {
+			var jsonObjForEventChatroom = {
 				"type" : "history",
 				"eventID" : eventID,
 				"senderID" : accountID,
 				"senderName" : "",
-				"message" : ""
+				"message" : "",
+				"sendTime":""
 			};
-			webSocket.send(JSON.stringify(jsonObj));
+			webSocketForEventChatroom.send(JSON.stringify(jsonObjForEventChatroom));
 		}
 		
-		webSocket.onmessage = function(event){
-			var jsonObj = JSON.parse(event.data);
-			var messagesArea = $("#messagesArea");
+		webSocketForEventChatroom.onmessage = function(event){
+			var jsonObjForEventChatroom = JSON.parse(event.data);
+			var messagesAreaForEventChatroom = $("#messagesArea");
 			console.log(event.data);
-			if("history" === jsonObj["type"]){
-				for(var i =0;jsonObj.length;i++){
-					var message = jsonObj['senderName']+":"+jsonObj['message'] +"\r\n";
-					messagesArea.val(messagesArea.val()+message);
+			if("history" === jsonObjForEventChatroom["type"]){
+				for(var i =0;jsonObjForEventChatroom.length;i++){
+					var message = jsonObjForEventChatroom['senderName']+":"+jsonObjForEventChatroom['message'] +"\r\n"+jsonObjForEventChatroom['sendTime']+"\r\n";
+					messagesAreaForEventChatroom.val(messagesAreaForEventChatroom.val()+message);
 				}
-				messagesArea.scrollTop(messagesArea.attr("scrollHeight"));
-			}else if("chat"===jsonObj["type"]){
-				var message = jsonObj['senderName']+":"+jsonObj['message'] +"\r\n";
-				messagesArea.val(messagesArea.val()+message);
-				messagesArea.scrollTop(messagesArea.attr("scrollHeight"));	
+				messagesAreaForEventChatroom.scrollTop(messagesAreaForEventChatroom.attr("scrollHeight"));
+			}else if("chat"===jsonObjForEventChatroom["type"]){
+				var message = jsonObjForEventChatroom['senderName']+":"+jsonObjForEventChatroom['message'] +"\r\n" + jsonObjForEventChatroom['sendTime']+"\r\n";
+				messagesAreaForEventChatroom.val(messagesAreaForEventChatroom.val()+message);
+				messagesAreaForEventChatroom.scrollTop(messagesAreaForEventChatroom.attr("scrollHeight"));	
 			}
 		}
 		
-		webSocket.onclose = function(event){
+		webSocketForEventChatroom.onclose = function(event){
 			console.log("WebSocket連線關閉");
 		}
 	}
 	
-	function sendMessage(){
-		var userName = $("#userName").text();
-		var message = $("#message").val();
+	function sendMessageForEventChatroom(){
+		var userNameForEventChatroom = $("#userName").text();
+		var messageForEventChatroom = $("#message").val();
 		
-		var jsonObj = {
+		var jsonObjForEventChatroom = {
 			"type" : "chat",
 			"eventID" : eventID,
 			"senderID" : accountID,
-			"senderName" : userName,
-			"message" : message
+			"senderName" : userNameForEventChatroom,
+			"message" : messageForEventChatroom,
+			"sendTime": new Date().toLocaleString()
 		};
-		webSocket.send(JSON.stringify(jsonObj));
+		webSocketForEventChatroom.send(JSON.stringify(jsonObjForEventChatroom));
 		$("#message").val("");
 		$("#message").focus();
 	}
 		
-	function disconnect(){
-		webSocket.close();
+	function disconnectForEventChatroom(){
+		webSocketForEventChatroom.close();
 		$("#sendMessage").prop("disabled","disabled");
 		$("#connect").attr("disabled",false);
 		$("#disconnect").prop("disabled","disabled");
 	}
 	
 	$("#sendMessage").on("click",function(){
-		sendMessage();
+		sendMessageForEventChatroom();
 	});
 	
 	$("#message").on("keydown",function(event){
 		if(event.keyCode==13){
-			sendMessage();
+			sendMessageForEventChatroom();
 		}
 	});
 	
 	$("#connect").on("click",function(){
-		connect();
+		connectForEventChatroom();
 	});
 	
 	$("#disconnect").on("click",function(){
-		disconnect();
+		disconnectForEventChatroom();
 	});
 	
 	$(function(){
-		connect();
+		connectForEventChatroom();
 	});
 	
 	$(window).on("unload",function(){
-		disconnect();
+		disconnectForEventChatroom();
 	});
 	</script>
 </html>
