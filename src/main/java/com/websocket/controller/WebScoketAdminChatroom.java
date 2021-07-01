@@ -138,6 +138,7 @@ public class WebScoketAdminChatroom {
 		String text = String.format("session ID = %s, disconnected; close code = %d%nuserIDs: %s", userSession.getId(),
 				reason.getCloseCode().getCode(), userIDs);
 		System.out.println(text);
+		System.out.println("closed by adminchatroom");
 	}
 	
 

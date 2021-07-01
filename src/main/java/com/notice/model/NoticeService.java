@@ -23,7 +23,7 @@ public class NoticeService {
 	}
 	
 	public NoticeVO addNotice(
-			Integer accountID, Integer noticeType, String noticeText
+			Integer accountID, String noticeType, String noticeText
 			) {
 //			, Timestamp noticeTime, Integer noticeState) {
 		NoticeVO vo = new NoticeVO();
@@ -32,11 +32,13 @@ public class NoticeService {
 		vo.setNoticeText(noticeText);
 		vo.setNoticeTime(new Timestamp(new Date().getTime()));	// 預設為現在
 		vo.setNoticeState(0);	// 預設未讀
-		
-		dao.insert(vo);
+		vo.setNoticeID(dao.insert(vo));
 		
 		return vo;
 	}
-	
+
+    public void updateState(int noticeID) {
+    	dao.updateState(noticeID);
+    }
 	
 }
