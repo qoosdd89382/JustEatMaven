@@ -1,0 +1,70 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+    
+	
+	$("#alertBell").on("click", function(){
+		$("#msgsList").toggleClass("-none");
+		$("#msgRedDot").addClass("-none");
+		$("#msgRedDotSmall").addClass("-none");
+		$(".msgOne").each(function(ele, idx){
+			console.log(ele);
+			if ($(ele).hasClass("-unread")) {
+				console.log($(ele));
+			}			
+		});
+	});
+	$("#alertBellSmall").on("click", function(){
+		$("#alertBell").trigger("click");
+	});
+	
+	var myPointForNotice = "/Notify/${sessionScope.accountInfoVOLogin.accountID}";
+	var hostForNotice = window.location.host;
+	var pathForNotice = window.location.pathname;
+	var webCtxForNotice = pathForNotice.substring(0, pathForNotice.indexOf('/', 1));
+	var endPointURLForNotice = "ws://" + hostForNotice + webCtxForNotice + myPointForNotice;
+	var webSocketForNotice;
+	
+	function connectForNotice() {
+		webSocketForNotice = new WebSocket(endPointURLForNotice);
+
+		webSocketForNotice.onopen = function(event) {
+			console.log("Connect Success!");
+		};
+		
+		webSocketForNotice.onmessage = function(event) {
+			var jsonObj = JSON.parse(event.data);
+			if (Array.isArray(jsonObj)) {
+				for (var i = 0; i < jsonObj.length; i++) {
+					outputMessage(jsonObj[i]);
+				}
+				$(".msgOne").removeClass("-unread");
+				$("#msgRedDot").addClass("-none");
+				$("#msgRedDotSmall").addClass("-none");
+			} else {
+				outputMessage(jsonObj);
+			}
+		};
+		
+		webSocketForNotice.onclose = function(event) {
+			console.log("Disconnected!");
+		};
+	}
+	
+	connectForNotice();
+	
+	function outputMessage(obj) {
+		
+		$("#msgsListInner").prepend(
+			'<div class="msgOne -unread" data-id="' + obj.noticeID + '">' + 
+				'<div class="msgTitle"><b>' + obj.noticeType + '通知</b></div>' + 
+				'<div class="msgContent">' + obj.noticeText + '</div>' + 
+				'<div class="msgTime">' + obj.noticeTime + '</div>' +
+				'</div>' +
+			'</div>'
+			);
+		$("#msgRedDot").removeClass("-none");
+		$("#msgRedDotSmall").removeClass("-none");
+	}
+	
+	function disconnectForNotice() {
+		webSocketForNotice.close();
+	}

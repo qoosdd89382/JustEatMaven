@@ -69,7 +69,7 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 						int authorID = recipeSvc.getOneRecipe(new Integer(recipeID)).getAccountID();
 						String recipeName = recipeSvc.getOneRecipe(new Integer(recipeID)).getRecipeName();
 						
-						NoticeVO noticeVO = noticeSvc.addNotice(authorID, 3, accountID + "收藏您的食譜" + recipeName);
+						NoticeVO noticeVO = noticeSvc.addNotice(authorID, "食譜", accountID + "收藏您的食譜" + recipeName);
 						String message = gson.toJson(noticeVO);
 						WebSocketNotice noticeWS = new WebSocketNotice();
 						noticeWS.onMessage(message);

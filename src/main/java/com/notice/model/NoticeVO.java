@@ -12,7 +12,7 @@ public class NoticeVO implements Serializable{
 //	private static final long serialVersionUID = 1L;
 	private Integer noticeID;
 	private Integer accountID;
-	private Integer noticeType;
+	private String noticeType;
 	private String noticeText;
 	private Timestamp noticeTime;
 	private Integer noticeState;
@@ -33,10 +33,10 @@ public class NoticeVO implements Serializable{
 	public void setAccountID(Integer accountID) {
 		this.accountID = accountID;
 	}
-	public Integer getNoticeType() {
+	public String getNoticeType() {
 		return noticeType;
 	}
-	public void setNoticeType(Integer noticeType) {
+	public void setNoticeType(String noticeType) {
 		this.noticeType = noticeType;
 	}
 	public String getNoticeText() {
@@ -58,7 +58,7 @@ public class NoticeVO implements Serializable{
 		this.noticeState = noticeState;
 	}
 
-	public NoticeVO(Integer noticeID, Integer accountID, Integer noticeType, String noticeText, Timestamp noticeTime,
+	public NoticeVO(Integer noticeID, Integer accountID, String noticeType, String noticeText, Timestamp noticeTime,
 			Integer noticeState) {
 		super();
 		this.noticeID = noticeID;

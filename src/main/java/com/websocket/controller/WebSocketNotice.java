@@ -69,6 +69,8 @@ public class WebSocketNotice {
 	@OnClose
 	public void onClose() {
 		accountConnectionMap.remove(accountID); 
+		System.out.println(accountID + " close the connection");
+		System.out.println("closed by notice");
 	}
 	
     public static synchronized Map<String, WebSocketNotice> getClients() { 

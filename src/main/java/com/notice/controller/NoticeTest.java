@@ -30,24 +30,23 @@ public class NoticeTest extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		
 		testSend();
-
 		
 	}
 	
-	public static void testFormat() {
-		NoticeService noticeSvc = new NoticeService();
-		Gson gson = new Gson();
-		
-		List<NoticeVO> historyData = noticeSvc.getAllByAccountID(new Integer(100001));
-		String historyMsg = gson.toJson(historyData);
-		System.out.println(historyMsg);
-	}
+//	public static void testFormat() {
+//		NoticeService noticeSvc = new NoticeService();
+//		Gson gson = new Gson();
+//		
+//		List<NoticeVO> historyData = noticeSvc.getAllByAccountID(new Integer(100001));
+//		String historyMsg = gson.toJson(historyData);
+//		System.out.println(historyMsg);
+//	}
 	
 	public static void testSend() {
 		Gson gson = new Gson();
 		
 		NoticeService noticeSvc = new NoticeService();
-		NoticeVO noticeVO = noticeSvc.addNotice(100002, 3, "WEBBBBBBBBBBSOCKETTTTTTTTTTT");
+		NoticeVO noticeVO = noticeSvc.addNotice(100001, "系統", "歡迎註冊成為本站會員！");
 		String message = gson.toJson(noticeVO);
 		
 		WebSocketNotice noticeWS = new WebSocketNotice();
