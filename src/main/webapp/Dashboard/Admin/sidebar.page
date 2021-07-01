@@ -56,7 +56,7 @@
                 		aria-labelledby="headingRecipe"
                 		data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="utilities-color.html">食譜列表管理</a>
+                        <a class="collapse-item" href="<%=request.getContextPath()%>/Dashboard/Admin/listAllRecipe.jsp">食譜列表管理</a>
                         <a class="collapse-item" href="<%=request.getContextPath()%>/Dashboard/Admin/listAllIngredient.jsp">食材列表管理</a>
                         <!-- <a class="collapse-item" href="utilities-border.html">食材分類列表管理</a> -->
                         <a class="collapse-item" href="<%=request.getContextPath()%>/Dashboard/Admin/listAllCategory.jsp">料理分類列表管理</a>
