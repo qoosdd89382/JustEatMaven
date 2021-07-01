@@ -79,9 +79,10 @@
 
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
-			<li class="breadcrumb-item active" aria-current="page">建立活動</li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventList.jsp">活動列表</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=<%=request.getParameter("eventID")%>">活動詳情</a></li>
+			<li class="breadcrumb-item active" aria-current="page">編輯活動</li>
 		</ol>
 	</nav>
 	
@@ -101,7 +102,7 @@
 	                請選擇揪團類型
 	                <label>
 	                    <input type="radio" name="choose_type" value="1" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==1)?"checked":"" %>>一人一菜
-	                    <input type="radio" name="choose_type" value="2" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==2)?"checked":"" %>>我當主廚
+<%-- 	                    <input type="radio" name="choose_type" value="2" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==2)?"checked":"" %>>我當主廚 --%>
 	                </label>
 					<span class="error">${errorMsgs.get("GroupTypeIsNull")}</span>
 	            </div>

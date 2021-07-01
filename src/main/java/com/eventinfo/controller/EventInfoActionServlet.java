@@ -459,6 +459,11 @@ public class EventInfoActionServlet extends HttpServlet {
 				}
 			}
 			
+			String accountID = request.getParameter("accountID");
+			System.out.println(accountID);
+			if(accountID==null || accountID.isEmpty()) {
+				errorMsgs.put("accountIDIsNull","建立活動前 請先登入");
+			}
 			
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);

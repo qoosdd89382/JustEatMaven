@@ -15,18 +15,18 @@
 <%
 	EventInfoService eventInfoSvc = new EventInfoService();
 	EventInfoVO eventInfoVO = null;
-	List<EventInfoVO> listAll = eventInfoSvc.getAll();
-	List<EventInfoVO> list = new ArrayList<EventInfoVO>();
+	List<EventInfoVO> list = eventInfoSvc.getAll();
+// 	List<EventInfoVO> list = new ArrayList<EventInfoVO>();
 	
-	Date date = new Date();
-	Timestamp timestamp = new Timestamp(date.getTime());
+// 	Date date = new Date();
+// 	Timestamp timestamp = new Timestamp(date.getTime());
 	
-	for(int i=0;i<listAll.size();i++){
-		EventInfoVO eventInfoVOtemp = listAll.get(i);
-		if(eventInfoVOtemp.getEventStartTime().after(timestamp)){
-			list.add(eventInfoVOtemp);
-		}
-	}
+// 	for(int i=0;i<listAll.size();i++){
+// 		EventInfoVO eventInfoVOtemp = listAll.get(i);
+// 		if(eventInfoVOtemp.getEventStartTime().after(timestamp)){
+// 			list.add(eventInfoVOtemp);
+// 		}
+// 	}
 	
 	pageContext.setAttribute("list", list);
 	
@@ -39,6 +39,8 @@
 
 	EventCuisineCategoryService eventCuisineCategorySvc = new EventCuisineCategoryService();
 	
+	Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
+	pageContext.setAttribute("today", timestampNow);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,14 +63,15 @@
 
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
 			<li class="breadcrumb-item active" aria-current="page">活動列表</li>
 		</ol>
 	</nav>
 
 	<div class="add_Event">
 		<div class="Create_or_Join_Event col-10">
-			<button type="button" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent">建立活動</button>
+			<button type="submit" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent">建立活動</button>
+			<span class="error"></span>
 		</div>
 	</div>
 	<div class="event_list_content row">
@@ -123,7 +126,12 @@
 							<c:if test="${eventInfoVO.eventState ==1}">
 									<tr class="row">
 										<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
-										<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVO.accountID}">${eventInfoVO.eventName}</a></td>
+										<td class="col-sm-2 col-2">
+											<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a>
+											<c:if test="${today > eventInfoVO.eventEndTime}">
+												<span class="badge badge-secondary">已結束</span>
+											</c:if>
+										</td>
 										<c:if test="${eventInfoVO.groupType == 1}">
 											<td class="col-sm-2 col-2">一人一菜</td>
 										</c:if>
@@ -147,7 +155,12 @@
 							<c:if test="${eventInfoVO.eventState ==1}">
 									<tr class="row">
 										<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
-										<td class="col-sm-2 col-2"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVO.accountID}">${eventInfoVO.eventName}</a></td>
+										<td class="col-sm-2 col-2">
+											<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a>
+											<c:if test="${today > eventInfoVO.eventEndTime}">
+												<span class="badge badge-secondary">已結束</span>
+											</c:if>
+										</td>
 										<c:if test="${eventInfoVO.groupType == 1}">
 											<td class="col-sm-2 col-2">一人一菜</td>
 										</c:if>
@@ -189,7 +202,7 @@
 		});
 		
 		$(".createEvent").on("click",function(){
-			location.href = "<%=request.getContextPath()%>/Event/CreateEvent.jsp";
+			location.href= "<%=request.getContextPath()%>/Event/CreateEvent.jsp?accountID=${accountInfoVO.accountID}";
 		});
 		
 		$(function(){

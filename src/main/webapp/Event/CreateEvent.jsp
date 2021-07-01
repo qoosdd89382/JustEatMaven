@@ -1,3 +1,4 @@
+<%@page import="com.accountinfo.model.AccountInfoVO"%>
 <%@page import="com.cuisinecategory.model.CuisineCategoryService"%>
 <%@page import="com.cuisinecategory.model.CuisineCategoryVO"%>
 <%@page import="java.util.ArrayList"%>
@@ -47,6 +48,8 @@
 		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
 	}
 	
+	AccountInfoVO accountInfoVO = (AccountInfoVO)session.getAttribute("accountInfoVOLogin");
+	pageContext.setAttribute("accountInfoVO", accountInfoVO);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,8 +74,8 @@
 
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventList.jsp">活動列表</a></li>
 			<li class="breadcrumb-item active" aria-current="page">建立活動</li>
 		</ol>
 	</nav>
@@ -83,15 +86,18 @@
 	   	<form method="post" action="<%= request.getContextPath()%>/Event/EventInfo.do" enctype="multipart/form-data">
 	   	<div class="temp_data">
 	   		<input type="hidden" name="dishAndIngJson" value="<%=replaceDishAndIngJson==null?"":replaceDishAndIngJson%>">
+	   		<input type="hidden" name="accountID" value="${accountInfoVO.accountID}">
 	   	</div>
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="info col-6 col-lg-6">
-	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")}${errorMsgs.get("eventPicError")}</span>
+	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")} </span>
+	        <span class="error">${errorMsgs.get("eventPicError")} </span>
+	        <span class="error">${errorMsgs.get("accountIDIsNull")} </span>
 	            <div class="title_separate">
 	                請選擇揪團類型
 	                <label>
 	                    <input type="radio" name="choose_type" value="1" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==1)?"checked":"" %>>一人一菜
-	                    <input type="radio" name="choose_type" value="2" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==2)?"checked":"" %>>我當主廚
+<%-- 	                    <input type="radio" name="choose_type" value="2" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==2)?"checked":"" %>>我當主廚 --%>
 	                </label>
 					<span class="error">${errorMsgs.get("GroupTypeIsNull")}</span>
 	            </div>
