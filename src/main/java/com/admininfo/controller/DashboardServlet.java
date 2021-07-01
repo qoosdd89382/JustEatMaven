@@ -3,6 +3,7 @@ package com.admininfo.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -447,6 +448,7 @@ public class DashboardServlet extends HttpServlet {
 //來自DashboardPage.jsp的請求 updateAccountInfo_From_Dashboard
 		if ("updateAccountInfoFromDashboard".equals(action)) {
 			System.out.println("後台 更新會員資料");
+
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 			
@@ -455,12 +457,14 @@ public class DashboardServlet extends HttpServlet {
 			
 			try {
 				//接收頁面使用者輸入的參數
-				Integer accountID = new Integer(req.getParameter("accountID"));
+				Integer accountID = Integer.parseInt(req.getParameter("accountID"));
+				
 				String accountMailInput = req.getParameter("accountMail");
 				String accountNicknameInput = req.getParameter("accountNickname");
+				
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountStateInput = req.getParameter("accountState");
-				System.out.println(accountStateInput);
+				
 				String accountLevelInput = req.getParameter("accountLevel");
 				
 				String accountNameInput = req.getParameter("accountName");
@@ -469,7 +473,10 @@ public class DashboardServlet extends HttpServlet {
 				String accountPhoneInput = req.getParameter("accountPhone");
 
 				String accountTextInput = req.getParameter("accountText");
-
+				
+				String accountRegisterTime =req.getParameter("accountRegisterTime");
+				String accountCode =req.getParameter("accountCode");
+				
 			//檢查信箱
 				String accountMail = null;
 				//信箱規範表達式
@@ -496,7 +503,7 @@ public class DashboardServlet extends HttpServlet {
 			//檢查accountNickname輸入
 				String accountNickname = null;
 				//O暱稱規範:兩個字以上，任意 中文 數字 英文大小寫
-				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,8}$");
+				Pattern accountNicknamePattern = Pattern.compile("^[\\u4E00-\\u9FA5a-zA-Z0-9]{2,20}$");
 				Matcher accountNicknameMatcher = accountNicknamePattern.matcher(accountNicknameInput);
 				try {
 					if (accountNicknameInput == null || (accountNicknameInput.trim()).length() == 0) {
@@ -531,6 +538,7 @@ public class DashboardServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
+
 			//檢查accountName輸入
 				String accountName = null;
 				//O姓名規範:兩個字以上，任意 中文 英文大小寫
@@ -585,6 +593,7 @@ public class DashboardServlet extends HttpServlet {
 						+ e.getMessage());
 				}
 			//檢查accountBirth輸入
+
 				Date accountBirth = null;
 				try {
 					if(accountBirthInput == null) {
@@ -596,7 +605,7 @@ public class DashboardServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-				
+
 			//檢查電話輸入
 				String accountPhone = null;
 				//O電話規範:10碼數字前面規定09
@@ -614,6 +623,7 @@ public class DashboardServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
+
 			//檢查accountText輸入
 				String accountText = null;
 				try {
@@ -626,19 +636,32 @@ public class DashboardServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-			//分隔線				
+			//分隔線	
+
 			//檢查照片輸入
 				//會員大頭照
 				byte[] accountPicBuffer  = null;
 				try {
 					//會員大頭照傳入
 					Part part = req.getPart("accountPic");
-					InputStream in = part.getInputStream();
-					accountPicBuffer = new byte[in.available()];
-					in.read(accountPicBuffer);
-					in.close();
-					req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
-					accountInfoVO.setAccountPic(accountPicBuffer);	
+					//如果使用者沒有圖片 抓不到檔名
+					//把存在SESSION中的BUFFER存入
+					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+						System.out.println("沒有上傳會員圖片");
+						//現在沒抓到這個
+						if (req.getSession().getAttribute("accountPicBuffer") != null) {
+							accountPicBuffer = (byte[]) req.getSession().getAttribute("accountPicBuffer");
+						} else {
+							errorMsgs.put("accountPicErr", "請上傳會員圖片");
+						}
+					} else {
+						InputStream in = part.getInputStream();
+						accountPicBuffer = new byte[in.available()];
+						in.read(accountPicBuffer);
+						in.close();
+						req.getSession().setAttribute("accountPicBuffer", accountPicBuffer);
+						accountInfoVO.setAccountPic(accountPicBuffer);							
+					}	
 				} catch (Exception e) {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
@@ -648,12 +671,22 @@ public class DashboardServlet extends HttpServlet {
 				byte[] accountIDcardFrontBuffer = null;
 				try {
 					Part part = req.getPart("accountIDcardFront");
-					InputStream in = part.getInputStream();
-					accountIDcardFrontBuffer = new byte[in.available()];
-					in.read(accountIDcardFrontBuffer);
-					in.close();
-					req.getSession().setAttribute("accountIDcardFrontBuffer",accountIDcardFrontBuffer);
-					accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);	
+					
+					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+						System.out.println("沒有上傳身分證正面");
+						if (req.getSession().getAttribute("accountIDcardFrontBuffer") != null) {
+							accountIDcardFrontBuffer = (byte[]) req.getSession().getAttribute("accountIDcardFrontBuffer");
+						} else {
+							errorMsgs.put("accountIDcardFrontErr", "請上傳身分證正面");
+						}
+					} else {
+						InputStream in = part.getInputStream();
+						accountIDcardFrontBuffer = new byte[in.available()];
+						in.read(accountIDcardFrontBuffer);
+						in.close();
+						req.getSession().setAttribute("accountIDcardFrontBuffer",accountIDcardFrontBuffer);
+						accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);	
+					}
 				} catch (Exception e) {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
@@ -664,26 +697,36 @@ public class DashboardServlet extends HttpServlet {
 				try {
 					//會員大頭照傳入
 					Part part = req.getPart("accountIDcardBack");
-					
-					InputStream in = part.getInputStream();
-					accountIDcardBackBuffer = new byte[in.available()];
-					in.read(accountIDcardBackBuffer);
-					in.close();
-					req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
-					accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);	
+					//input沒有東西
+					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
+						System.out.println("沒有上傳身分證背面");
+						//如果session裡面有東西
+						if (req.getSession().getAttribute("accountIDcardBackBuffer") != null) {
+							accountIDcardBackBuffer = (byte[]) req.getSession().getAttribute("accountIDcardBackBuffer");
+						} else {
+							errorMsgs.put("accountIDcardBackBuffer", "請上傳身分證背面");
+						}
+					} else {
+						InputStream in = part.getInputStream();
+						accountIDcardBackBuffer = new byte[in.available()];
+						in.read(accountIDcardBackBuffer);
+						in.close();
+						req.getSession().setAttribute("accountIDcardBackBuffer", accountIDcardBackBuffer);
+						accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);	
+					}
 				} catch (Exception e) {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-				
 				//有錯誤就返回
 				if (!errorMsgs.isEmpty()) {
+					System.out.println(errorMsgs);
 					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Dashboard/Account/InsertAccountInfoPage.jsp");
+							.getRequestDispatcher("/Dashboard/Admin/accountInfo.jsp");
 					failureView.forward(req, res);
 					return;//程式中斷
 				}
-				
+
 				//輸入資料無誤的儲存
 				req.setAttribute("accountMail",accountMailInput);
 				req.setAttribute("accountPassword",accountPasswordInput);
@@ -697,6 +740,9 @@ public class DashboardServlet extends HttpServlet {
 				req.setAttribute("accountPhone", accountPhoneInput);
 				req.setAttribute("accountBirth",java.sql.Date.valueOf(accountBirthInput));
 				req.setAttribute("accountText",accountTextInput);
+				
+				req.setAttribute("accountRegisterTime", accountRegisterTime);
+				req.setAttribute("accountCode", accountCode);
 
 				//呼叫SERVICE來做事，把值都存到AccountInfoVO物件
 				accountInfoVO.setAccountMail(accountMail);
@@ -715,15 +761,15 @@ public class DashboardServlet extends HttpServlet {
 				accountInfoVO.setAccountPic(accountPicBuffer);
 				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
 				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
-				
+								
 				accountInfoVO.setAccountID(accountID);
 				
 				accountInfoSvc.updateAccountInfo(accountInfoVO);
 				
 				req.setAttribute("accountInfoVO",accountInfoVO);
-				
+
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
-				String url = "/Dashboard/Account/DashboardAccountPage.jsp";
+				String url = "/Dashboard/Admin/accountInfo.jsp";
 				System.out.println("後台 更新會員 完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
@@ -732,7 +778,7 @@ public class DashboardServlet extends HttpServlet {
 				e.printStackTrace();
 				errorMsgs.put("UnexceptionError","無法取得資料");
 				RequestDispatcher failureView = req
-						.getRequestDispatcher("/Dashboard/Account/DashboardAccountPage.jsp");
+						.getRequestDispatcher("/Dashboard/Admin/accountInfo.jsp");
 				failureView.forward(req, res);
 			}
 		}
