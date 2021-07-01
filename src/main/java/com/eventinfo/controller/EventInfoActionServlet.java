@@ -178,14 +178,14 @@ public class EventInfoActionServlet extends HttpServlet {
 				findView.forward(request, response);
 			}
 		}
-		
-		if("cuisineCatSearch".equals(action)) {
-			
+
+		if ("cuisineCatSearch".equals(action)) {
+
 			List<String> errMsg = new LinkedList<String>();
 			request.setAttribute("errMsg", errMsg);
-			
+
 			String str = request.getParameter("cuisineCatSearch");
-			
+
 			if (str == null || (str.trim().length() == 0)) {
 				RequestDispatcher notthingView = request.getRequestDispatcher("/Event/EventList.jsp");
 				notthingView.forward(request, response);
@@ -195,35 +195,39 @@ public class EventInfoActionServlet extends HttpServlet {
 			EventInfoService eventInfoSvc = new EventInfoService();
 			EventCuisineCategoryService eventCuisineCategoryService = new EventCuisineCategoryService();
 			CuisineCategoryService cuisineCategoryService = new CuisineCategoryService();
-			
+
 			List<EventInfoVO> eventInfoList = new ArrayList<EventInfoVO>();
 			List<String[]> cuisineCatAndEventIDList = new ArrayList<String[]>();
 			List<String[]> sameCuisineCatNameList = new ArrayList<String[]>();
 
-			for(EventInfoVO eventInfoVO : eventInfoSvc.getAll()) {
-				for(EventCuisineCategoryVO eventCuisineCategoryVO: eventCuisineCategoryService.getAllByEventID(eventInfoVO.getEventID())) {
-					String[] tempArray = {cuisineCategoryService.getOneCategory(eventCuisineCategoryVO.getCuisinecategoryID()).getCuisineCategoryName().toString(),eventInfoVO.getEventID().toString()};
+			for (EventInfoVO eventInfoVO : eventInfoSvc.getAll()) {
+				for (EventCuisineCategoryVO eventCuisineCategoryVO : eventCuisineCategoryService
+						.getAllByEventID(eventInfoVO.getEventID())) {
+					String[] tempArray = {
+							cuisineCategoryService.getOneCategory(eventCuisineCategoryVO.getCuisinecategoryID())
+									.getCuisineCategoryName().toString(),
+							eventInfoVO.getEventID().toString() };
 					cuisineCatAndEventIDList.add(tempArray);
 				}
 			}
-			
-			for(String[] temp : cuisineCatAndEventIDList) {
-				if(temp[0].equals(str)) {
+
+			for (String[] temp : cuisineCatAndEventIDList) {
+				if (temp[0].equals(str)) {
 					sameCuisineCatNameList.add(temp);
 				}
 			}
-			
-			for(int i=0;i<sameCuisineCatNameList.size();i++) {
+
+			for (int i = 0; i < sameCuisineCatNameList.size(); i++) {
 				EventInfoVO eventInfoVO = new EventInfoVO();
 				eventInfoVO = eventInfoSvc.getEventID(Integer.parseInt(sameCuisineCatNameList.get(i)[1]));
 				eventInfoList.add(eventInfoVO);
 			}
-			
+
 			request.setAttribute("listfind", eventInfoList);
 			RequestDispatcher findView = request.getRequestDispatcher("/Event/EventList.jsp");
 			findView.forward(request, response);
 		}
-		
+
 //========================================建立活動相關===============================
 		if ("新增菜色".equals(action)) {
 			EventInfoVO eventInfoVO = new EventInfoVO();
@@ -320,6 +324,22 @@ public class EventInfoActionServlet extends HttpServlet {
 			String eventDescription = request.getParameter("event_description");
 			String TimeRegex = "[0-9]{1,}[-]{1,1}[01]?[0-9]{1,1}[-]{1,1}[0-3]?[0-9]{1,1}[\\s]{1,1}[012]{1,1}[0-9]{1,1}[:]{1,1}[0-5]{1,1}[0-9]{1,1}[:]?[0-9]{0,2}";
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime StartDateTime = null;
+			LocalDateTime EndDateTime = null;
+			LocalDateTime RegStartDateTime = null;
+			LocalDateTime RegEndDateTime = null;
+			if (!eventStart.isEmpty()) {
+				StartDateTime = LocalDateTime.parse(eventStart, formatter);
+			}
+			if (!eventEnd.isEmpty()) {
+				EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+			}
+			if (!eventRegStart.isEmpty()) {
+				RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
+			}
+			if (!eventRegEnd.isEmpty()) {
+				RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+			}
 
 			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
 				errorMsgs.put("GroupTypeIsNull", "請選擇其中一項類型");
@@ -347,7 +367,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventStart.matches(TimeRegex)) {
 				errorMsgs.put("EventStartTimeNotConform", "請輸入正確的活動開始時間");
 			} else {
-				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
+
 				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
 			}
 
@@ -356,7 +376,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventEnd.matches(TimeRegex)) {
 				errorMsgs.put("EventEndTimeNotConform", "請輸入正確的活動結束時間");
 			} else {
-				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+
 				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
 			}
 
@@ -366,7 +386,6 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventRegStart.matches(TimeRegex)) {
 				errorMsgs.put("EventRegStartTimeNotConform", "請輸入正確的活動報名開始時間");
 			} else {
-				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
 				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
 			}
 
@@ -376,7 +395,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventRegEnd.matches(TimeRegex)) {
 				errorMsgs.put("EventRegEndTimeNotConform", "請輸入正確的活動報名結束時間");
 			} else {
-				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+
 				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
 			}
 
@@ -391,7 +410,18 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
-
+//===============================日期判斷================================
+			if (StartDateTime != null && EndDateTime != null && RegStartDateTime != null && RegEndDateTime != null) {
+				if (RegEndDateTime.isBefore(RegStartDateTime) || RegEndDateTime.isEqual(RegStartDateTime)) {
+					errorMsgs.put("RegEndMustAfterRegStart", "活動報名結束日期 必須大於 活動報名開始日期");
+				}
+				if (StartDateTime.isBefore(RegEndDateTime)) {
+					errorMsgs.put("StartMustAfterRegStart", "活動開始日期 必須大於 活動報名結束日期");
+				}
+				if (EndDateTime.isBefore(StartDateTime)) {
+					errorMsgs.put("EndMustAfterStart", "活動結束日期 必須大於 活動開始日期");
+				}
+			}
 			String dishAndIngJson = request.getParameter("dishAndIngJson");
 			System.out.println(dishAndIngJson);
 			Integer[][] ingID = null;
@@ -421,29 +451,29 @@ public class EventInfoActionServlet extends HttpServlet {
 			if (dishAndIngJson.length() == 2 || dishAndIngJson.equals("")) {
 				errorMsgs.put("dishAndIngredientIsNull", "請新增至少一個菜色");
 			}
-			
-			//===================================建立活動的圖片處理=============================
+
+			// ===================================建立活動的圖片處理=============================
 			Part eventPic = request.getPart("eventPic");
 			byte[] eventPicToByte = null;
-			if(eventPic.getSubmittedFileName().length() ==0||eventPic.getContentType() ==null) {
+			if (eventPic.getSubmittedFileName().length() == 0 || eventPic.getContentType() == null) {
 				System.out.println("使用者沒有上傳活動圖片");
-			}else if(!eventPic.getContentType().startsWith("image")) {
-				errorMsgs.put("eventPicError","上傳必須是image類型");
-			}else if(eventPic.getSize() > 1024*1024*3) {
-				errorMsgs.put("eventPicError","image檔案需要小於3MB");
-			}else {
+			} else if (!eventPic.getContentType().startsWith("image")) {
+				errorMsgs.put("eventPicError", "上傳必須是image類型");
+			} else if (eventPic.getSize() > 1024 * 1024 * 3) {
+				errorMsgs.put("eventPicError", "image檔案需要小於3MB");
+			} else {
 				InputStream is = eventPic.getInputStream();
 				BufferedInputStream bis = new BufferedInputStream(is);
 				eventPicToByte = new byte[bis.available()];
 				bis.read(eventPicToByte);
 				bis.close();
 				is.close();
-			}		
-			
-			//=======================================類型============================
+			}
+
+			// =======================================類型============================
 			String cuisineCatJson = request.getParameter("cuisineCatJson");
 			Integer[] cuisineCatID = null;
-			if (cuisineCatJson!=null) {
+			if (cuisineCatJson != null) {
 				try {
 					JSONArray jsonArray = new JSONArray(cuisineCatJson);
 					cuisineCatID = new Integer[jsonArray.length()];
@@ -455,16 +485,16 @@ public class EventInfoActionServlet extends HttpServlet {
 //					System.out.println(Arrays.deepToString(cuisineCatID));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					errorMsgs.put("cuisineCatError","請至少選擇一個類型");
+					errorMsgs.put("cuisineCatError", "請至少選擇一個類型");
 				}
 			}
-			
+
 			String accountID = request.getParameter("accountID");
 			System.out.println(accountID);
-			if(accountID==null || accountID.isEmpty()) {
-				errorMsgs.put("accountIDIsNull","建立活動前 請先登入");
+			if (accountID == null || accountID.isEmpty()) {
+				errorMsgs.put("accountIDIsNull", "建立活動前 請先登入");
 			}
-			
+
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
 				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
@@ -473,13 +503,13 @@ public class EventInfoActionServlet extends HttpServlet {
 				EventInfoService eventInfoSvc = new EventInfoService();
 				eventInfoSvc.addDishAndIngredientByEventInfo(eventName, Integer.parseInt(eventMember), eventDescription,
 						Integer.parseInt(groupType), groupCity, groupAddress, eventRegStart, eventRegEnd, eventStart,
-						eventEnd, 1, eventPicToByte, dishName, ingID,cuisineCatID);
+						eventEnd, 1, eventPicToByte, dishName, ingID, cuisineCatID);
 				System.out.println("新增成功");
 				RequestDispatcher successView = request.getRequestDispatcher("/Event/EventList.jsp");
 				successView.forward(request, response);
 			}
 		}
-		
+
 		if ("邀請好友".equals(action)) {
 
 		}
@@ -562,7 +592,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			}
 
 			Part eventPic = request.getPart("eventPic");
-			
+
 //			String dishAndIngJson = request.getParameter("dishAndIngJson");
 //			System.out.println(request.getParameter("dishAndIngJson"));
 
@@ -572,21 +602,21 @@ public class EventInfoActionServlet extends HttpServlet {
 		}
 //===========================活動詳情相關==========================================
 		if ("加入活動".equals(action)) {
-			Map<String,String> errorMsgs = new HashMap<String, String>();
+			Map<String, String> errorMsgs = new HashMap<String, String>();
 			request.setAttribute("errorMsgs", errorMsgs);
 			String eventID = request.getParameter("eventID");
 			String accountID = request.getParameter("accountID");
 			System.out.println(eventID);
 			System.out.println(accountID);
-			
-			if(accountID.isEmpty()) {
-				errorMsgs.put("accountIDisEmpty","加入活動前，需要先進行登入");
+
+			if (accountID.isEmpty()) {
+				errorMsgs.put("accountIDisEmpty", "加入活動前，需要先進行登入");
 			}
-			
-			if(!errorMsgs.isEmpty()) {
+
+			if (!errorMsgs.isEmpty()) {
 				RequestDispatcher errorView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
 				errorView.forward(request, response);
-			}else {
+			} else {
 				RequestDispatcher JoinView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 				JoinView.forward(request, response);
 			}
@@ -665,8 +695,6 @@ public class EventInfoActionServlet extends HttpServlet {
 			RequestDispatcher notfullView = request.getRequestDispatcher("/Event/InsertDishByJoin.jsp");
 			notfullView.forward(request, response);
 		}
-
-		
 
 		if ("菜色確認".equals(actionInsert)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -752,7 +780,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
-			
+
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/ConfirmJoin.jsp");
 			returnView.forward(request, response);
@@ -839,7 +867,23 @@ public class EventInfoActionServlet extends HttpServlet {
 			String eventDescription = request.getParameter("event_description");
 			String TimeRegex = "[0-9]{1,}[-]{1,1}[01]?[0-9]{1,1}[-]{1,1}[0-3]?[0-9]{1,1}[\\s]{1,1}[012]{1,1}[0-9]{1,1}[:]{1,1}[0-5]{1,1}[0-9]{1,1}[:]?[0-9]{0,2}";
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+			LocalDateTime StartDateTime = null;
+			LocalDateTime EndDateTime = null;
+			LocalDateTime RegStartDateTime = null;
+			LocalDateTime RegEndDateTime = null;
+			if (!eventStart.isEmpty()) {
+				StartDateTime = LocalDateTime.parse(eventStart, formatter);
+			}
+			if (!eventEnd.isEmpty()) {
+				EndDateTime = LocalDateTime.parse(eventEnd, formatter);
+			}
+			if (!eventRegStart.isEmpty()) {
+				RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
+			}
+			if (!eventRegEnd.isEmpty()) {
+				RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
+			}
+			
 			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
 				errorMsgs.put("GroupTypeIsNull", "請選擇其中一項類型");
 			} else {
@@ -866,7 +910,6 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventStart.matches(TimeRegex)) {
 				errorMsgs.put("EventStartTimeNotConform", "請輸入正確的活動開始時間");
 			} else {
-				LocalDateTime StartDateTime = LocalDateTime.parse(eventStart, formatter);
 				eventInfoVO.setEventStartTime(Timestamp.valueOf(StartDateTime));
 			}
 
@@ -875,7 +918,6 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventEnd.matches(TimeRegex)) {
 				errorMsgs.put("EventEndTimeNotConform", "請輸入正確的活動結束時間");
 			} else {
-				LocalDateTime EndDateTime = LocalDateTime.parse(eventEnd, formatter);
 				eventInfoVO.setEventEndTime(Timestamp.valueOf(EndDateTime));
 			}
 
@@ -885,7 +927,6 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventRegStart.matches(TimeRegex)) {
 				errorMsgs.put("EventRegStartTimeNotConform", "請輸入正確的活動報名開始時間");
 			} else {
-				LocalDateTime RegStartDateTime = LocalDateTime.parse(eventRegStart, formatter);
 				eventInfoVO.setEventRegistartionStartTime(Timestamp.valueOf(RegStartDateTime));
 			}
 
@@ -895,7 +936,6 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else if (!eventRegEnd.matches(TimeRegex)) {
 				errorMsgs.put("EventRegEndTimeNotConform", "請輸入正確的活動報名結束時間");
 			} else {
-				LocalDateTime RegEndDateTime = LocalDateTime.parse(eventRegEnd, formatter);
 				eventInfoVO.setEventRegistartionEndTime(Timestamp.valueOf(RegEndDateTime));
 			}
 
@@ -911,28 +951,40 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
 			
-			//===================================編輯活動的圖片處理=============================
+			if (StartDateTime != null && EndDateTime != null && RegStartDateTime != null && RegEndDateTime != null) {
+				if (RegEndDateTime.isBefore(RegStartDateTime) || RegEndDateTime.isEqual(RegStartDateTime)) {
+					errorMsgs.put("RegEndMustAfterRegStart", "活動報名結束日期 必須大於 活動報名開始日期");
+				}
+				if (StartDateTime.isBefore(RegEndDateTime)) {
+					errorMsgs.put("StartMustAfterRegStart", "活動開始日期 必須大於 活動報名結束日期");
+				}
+				if (EndDateTime.isBefore(StartDateTime)) {
+					errorMsgs.put("EndMustAfterStart", "活動結束日期 必須大於 活動開始日期");
+				}
+			}
+
+			// ===================================編輯活動的圖片處理=============================
 			Part eventPic = request.getPart("eventPic");
 			byte[] eventPicToByte = null;
-			if(eventPic.getSubmittedFileName().length() ==0||eventPic.getContentType() ==null) {
+			if (eventPic.getSubmittedFileName().length() == 0 || eventPic.getContentType() == null) {
 				System.out.println("使用者沒有上傳活動圖片");
-			}else if(!eventPic.getContentType().startsWith("image")) {
-				errorMsgs.put("eventPicError","上傳必須是image類型");
-			}else if(eventPic.getSize() > 1024*1024*3) {
-				errorMsgs.put("eventPicError","image檔案需要小於3MB");
-			}else {
+			} else if (!eventPic.getContentType().startsWith("image")) {
+				errorMsgs.put("eventPicError", "上傳必須是image類型");
+			} else if (eventPic.getSize() > 1024 * 1024 * 3) {
+				errorMsgs.put("eventPicError", "image檔案需要小於3MB");
+			} else {
 				InputStream is = eventPic.getInputStream();
 				BufferedInputStream bis = new BufferedInputStream(is);
 				eventPicToByte = new byte[bis.available()];
 				bis.read(eventPicToByte);
 				bis.close();
 				is.close();
-			}		
-			
-			//=======================================類型============================
+			}
+
+			// =======================================類型============================
 			String cuisineCatJson = request.getParameter("cuisineCatJson");
 			Integer[] cuisineCatID = null;
-			if (cuisineCatJson!=null) {
+			if (cuisineCatJson != null) {
 				try {
 					JSONArray jsonArray = new JSONArray(cuisineCatJson);
 					cuisineCatID = new Integer[jsonArray.length()];
@@ -944,32 +996,30 @@ public class EventInfoActionServlet extends HttpServlet {
 //					System.out.println(Arrays.deepToString(cuisineCatID));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					errorMsgs.put("cuisineCatError","請至少選擇一個類型");
+					errorMsgs.put("cuisineCatError", "請至少選擇一個類型");
 				}
 			}
 
-			
-			
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
-				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
+				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/EventDetailEdit.jsp");
 				notfullView.forward(request, response);
 			} else {
 				EventInfoService eventInfoSvc = new EventInfoService();
 				eventInfoSvc.updateEventInfo(Integer.parseInt(request.getParameter("eventID")), eventName,
 						Integer.parseInt(eventMember), eventDescription, Integer.parseInt(groupType), groupCity,
 						groupAddress, eventRegStart, eventRegEnd, eventStart, eventEnd, 1, eventPicToByte);
-				
+
 				RequestDispatcher detailView = request.getRequestDispatcher("/Event/EventDetailReview.jsp");
 				detailView.forward(request, response);
 			}
 		}
-		
-		if("取消活動".equals(action)) {
+
+		if ("取消活動".equals(action)) {
 			EventInfoService eventInfoSvc = new EventInfoService();
 			eventInfoSvc.updateEventInfo(Integer.parseInt(request.getParameter("eventID")), 0);
 			System.out.println("取消成功");
-			
+
 			RequestDispatcher eventListView = request.getRequestDispatcher("/Event/EventList.jsp");
 			eventListView.forward(request, response);
 		}
@@ -988,11 +1038,12 @@ public class EventInfoActionServlet extends HttpServlet {
 			RequestDispatcher exitView = request.getRequestDispatcher("/Event/EventList.jsp");
 			exitView.forward(request, response);
 		}
-		
-		//=========================活動聊天室========================================================
-		if("活動聊天室".equals(action)) {
-			
-			RequestDispatcher eventChatView = request.getRequestDispatcher("/Event/EventChatPage.jsp?eventID="+request.getParameter("eventID")+"&accountID="+request.getParameter("accountID"));
+
+		// =========================活動聊天室========================================================
+		if ("活動聊天室".equals(action)) {
+
+			RequestDispatcher eventChatView = request.getRequestDispatcher("/Event/EventChatPage.jsp?eventID="
+					+ request.getParameter("eventID") + "&accountID=" + request.getParameter("accountID"));
 			eventChatView.forward(request, response);
 		}
 	}
