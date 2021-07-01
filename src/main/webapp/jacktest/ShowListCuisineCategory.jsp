@@ -97,11 +97,17 @@ th, td {
 	<h1>熱門食材</h1>
 	<h2 id="error"></h2>
 	<h2 id="error2"></h2>
+	
+	
+	<ul>
+  <li><a href='AddCuisineCategory.jsp'>Add</a> a new CuisineCategory.</li>
+</ul>
 	<table>
 		<tr>
 			<th>料理分類</th>
 			<th>料理分類名稱</th>
 			<th>修改</th>
+			<th>刪除</th>
 
 		</tr>
 
@@ -112,6 +118,12 @@ th, td {
 				<td class="id">${cuisinecategoryVO.cuisineCategoryID}</td>
 				<td>${cuisinecategoryVO.cuisineCategoryName}</td>
 				<td><button class="modify">修改</button></td>
+				<td>
+				  <FORM METHOD="post" ACTION="addcuisine.do" style="margin-bottom: 0px;">
+			     <input type="submit" value="刪除">
+			     <input type="hidden" name="categoryID"  value="${cuisinecategoryVO.cuisineCategoryID}">
+			     <input type="hidden" name="action" value="delete"></FORM>
+			</td>
 		</c:forEach>
 	</table>
 

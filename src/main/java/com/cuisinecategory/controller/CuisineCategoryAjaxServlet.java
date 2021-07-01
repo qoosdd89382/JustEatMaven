@@ -33,7 +33,7 @@ public class CuisineCategoryAjaxServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = res.getWriter();
-
+		out.write("okkk");
 		Gson gson = new Gson();
 		CuisineCategoryService catSvc = new CuisineCategoryService();
 		RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
@@ -43,7 +43,7 @@ public class CuisineCategoryAjaxServlet extends HttpServlet {
 
 		if ("delete".equals(action)) {
 			String categoryID = req.getParameter("categoryID");
-System.out.println(categoryID);
+			System.out.println(categoryID);
 			if (eventCatSvc.getALLByCuisineCategoryID(new Integer(categoryID)).size() != 0
 					|| recipeCatSvc.getAllByCuisineCategory(new Integer(categoryID)).size() != 0) {
 				out.print("此分類下有食譜或活動，不可刪除");
