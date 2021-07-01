@@ -136,4 +136,15 @@
 		<servlet-name>EventInfoTestOnePic</servlet-name>
 		<url-pattern>/EventTestOnePic/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddCuisine</servlet-name>
+		<servlet-class>com.cuisinecategory.controller.CuisineCategoryAjaxServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddCuisine</servlet-name>
+		<url-pattern>/jacktest/addcuisine.do</url-pattern>
+	</servlet-mapping>
+	
+	
 </web-app>
