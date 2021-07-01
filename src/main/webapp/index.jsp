@@ -109,21 +109,7 @@
 	<script src="<%=request.getContextPath()%>/js/index.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/dateFormat.js"></script>
 	<script>
-	<c:if test="${not empty sessionScope.accountInfoVOLogin}">
-
-	$(function(){
-
-			<%@ include file="/common/js/adminChatJs.page"%>
-			<%@ include file="/common/js/noticeWebSocketJs.page"%>
-		
-	});
-	
-	$(window).on("unload", function(e) {
-		disconnectForNotice();
-		disconnect();
-	});
-	
-	</c:if>
+		<%@ include file="/common/js/scriptFooter.page"%>
 	</script>
 </body>
 </html>
