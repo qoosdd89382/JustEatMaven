@@ -1,0 +1,37 @@
+@charset "UTF-8";
+.recipe-web-header {
+	height: 300px;
+	width: 100%;
+    background-image: url("/justeat-maven/img/hot_event_06.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: rgba(255, 173, 105, 0.6);
+    background-blend-mode: multiply;
+    margin-bottom: 10px;
+}
+
+.recipe-web-header h1 {
+	font-size: 48px;
+	font-weight: bold;
+	color: #fff;
+	margin: 0 auto;
+	border-bottom: 5px solid #fff;
+	padding-bottom: 10px;
+}
+
+header {
+	margin-bottom: 0!important;
+}
+
+
+
+
+
+
+
+
+
+
+
+

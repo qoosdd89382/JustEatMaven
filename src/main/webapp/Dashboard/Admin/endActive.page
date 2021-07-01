@@ -41,7 +41,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">更新已成功</div>
+                <div class="modal-body">操作已成功</div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" data-dismiss="modal">確定</button>
                 </div>

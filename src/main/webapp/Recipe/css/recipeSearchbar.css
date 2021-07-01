@@ -5,3 +5,33 @@
 	margin-bottom: 20px;
 }
 
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.searchResult {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.error {
+	text-align: center;
+	color: #ff0000;	
+	font-size: 18px;
+	margin-bottom: 30px;
+}
+.vertical-container {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
+
+
+
+

@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/listAllRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeHeader.css">
 <link href="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <style>
 .ui-autocomplete {
@@ -48,10 +49,7 @@
 	</header>
 	
 	<%-- include navbar --%>
-	<div class="recipe-web-header vertical-container">
-		<h1>揪食譜${successTitle}</h1>
-	</div>
-	
+	<%@ include file="/Recipe/recipeHeader.page"%>
 	
 	<%-- main --%>
     <main class="row col-12 col-md-10 justify-content-between" style="margin: 0 auto;">

@@ -30,12 +30,8 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/listAllRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeHeader.css">
 <style>
-.ui-autocomplete {
-	max-height: 100px;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
 </style>
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
 	
@@ -47,10 +43,7 @@
 	</header>
 	
 	<%-- include navbar --%>
-	<div class="recipe-web-header vertical-container">
-		<h1>揪食譜${successTitle}</h1>
-	</div>
-	
+	<%@ include file="/Recipe/recipeHeader.page"%>
 	
 	<%-- main --%>
     <main class="row col-12 col-md-10 justify-content-between" style="margin: 0 auto;">
@@ -88,7 +81,7 @@
 								<fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd"/>
 								<%-- yyyy.MM.dd a KK:mm --%>
 							</div>
-							<div class="img-outer">
+							<div class="img-outer img-enter">
 								<img src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}">
 							</div>
 							<div class="count">
