@@ -3,6 +3,7 @@ package com.admininfo.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -454,8 +455,6 @@ public class DashboardServlet extends HttpServlet {
 			AccountInfoService accountInfoSvc = new AccountInfoService();
 			AccountInfoVO accountInfoVO = new AccountInfoVO();
 			
-			
-			
 			try {
 				//接收頁面使用者輸入的參數
 				Integer accountID = Integer.parseInt(req.getParameter("accountID"));
@@ -474,6 +473,10 @@ public class DashboardServlet extends HttpServlet {
 				String accountPhoneInput = req.getParameter("accountPhone");
 
 				String accountTextInput = req.getParameter("accountText");
+				
+				String accountRegisterTime =req.getParameter("accountRegisterTime");
+				String accountCode =req.getParameter("accountCode");
+				
 			//檢查信箱
 				String accountMail = null;
 				//信箱規範表達式
@@ -641,7 +644,8 @@ public class DashboardServlet extends HttpServlet {
 				try {
 					//會員大頭照傳入
 					Part part = req.getPart("accountPic");
-					//如果使用者沒有圖片
+					//如果使用者沒有圖片 抓不到檔名
+					//把存在SESSION中的BUFFER存入
 					if (part.getSubmittedFileName().length() == 0 || part.getContentType() == null) {
 						System.out.println("沒有上傳會員圖片");
 						//現在沒抓到這個
@@ -737,6 +741,9 @@ public class DashboardServlet extends HttpServlet {
 				req.setAttribute("accountBirth",java.sql.Date.valueOf(accountBirthInput));
 				req.setAttribute("accountText",accountTextInput);
 				
+				req.setAttribute("accountRegisterTime", accountRegisterTime);
+				req.setAttribute("accountCode", accountCode);
+
 				//呼叫SERVICE來做事，把值都存到AccountInfoVO物件
 				accountInfoVO.setAccountMail(accountMail);
 				accountInfoVO.setAccountPassword(accountPassword);
@@ -754,7 +761,7 @@ public class DashboardServlet extends HttpServlet {
 				accountInfoVO.setAccountPic(accountPicBuffer);
 				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
 				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
-				
+								
 				accountInfoVO.setAccountID(accountID);
 				
 				accountInfoSvc.updateAccountInfo(accountInfoVO);
@@ -762,7 +769,7 @@ public class DashboardServlet extends HttpServlet {
 				req.setAttribute("accountInfoVO",accountInfoVO);
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
-				String url = "/Dashboard/Admin/listAllAccount.jsp";
+				String url = "/Dashboard/Admin/accountInfo.jsp";
 				System.out.println("後台 更新會員 完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);

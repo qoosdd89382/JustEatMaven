@@ -278,6 +278,9 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
   <div class="col-md-6"></div>
     <input type="hidden" name="accountID" value="${accountInfoVO.accountID}">
     <input type="hidden" name="accountPassword" value="${accountInfoVO.accountPassword}">
+    <input type="hidden" name="accountRegisterTime" value="${accountInfoVO.accountRegisterTime}">
+    <input type="hidden" name="accountCode" value="${accountInfoVO.accountCode}">
+    
 	<input type="hidden" name="action" value="updateAccountInfoFromDashboard">
   	<button id="submit" type="submit" class="col-md-6 btn btn-primary">送出修改</button>
   </div>
