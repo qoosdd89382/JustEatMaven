@@ -175,10 +175,10 @@
     				var that = element;
 					$.ajax({
 						type : 'POST',
-		    			url: '<c:url value="/Dashboard/Category/category.do" />',
+		    			url: '<c:url value="/Dashboard/Ingredient/ingredient.do" />',
 		    			data : {
 		    				'action': action,
-		    				'categoryID': $(that).val()
+		    				'ingredientID': $(that).val()
 		    			},
 						success: function(data){
 							if (data != "success") {
