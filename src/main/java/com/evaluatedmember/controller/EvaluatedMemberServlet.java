@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.evaluatedmember.model.EvaluatedMemberService;
 
 
-@WebServlet("/EvaluatedMemberServlet")
+@WebServlet("/Event/evaluatedMember.do")
 public class EvaluatedMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

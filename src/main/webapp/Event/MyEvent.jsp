@@ -12,7 +12,6 @@
 <%@ page import="com.admininfo.model.*"%>
 <%@ page import="com.eventinfo.model.*"%>
 
-
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="admininfoSvc" scope="page" class="com.admininfo.model.AdminInfoService" />
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
@@ -22,8 +21,21 @@
 	String accountID = request.getParameter("accountID");
 	List<EventMemberVO> eventMemberList = eventMemberSvc.getAllByAccount(new Integer(accountID));
 	pageContext.setAttribute("eventMemberList", eventMemberList);
-
-		 
+	
+// 	for(EventMemberVO Abc:Eventlist)
+// 	List<EventMemberVO> eventMemberList1 = eventInfoSvc.getEventID(eventMemberVO.eventID).eventStartTime);
+	
+// 	Date date = new Date();
+// 	Timestamp timestamp = new Timestamp(date.getTime());
+	
+	
+// 	for(int i=0;i<listAll.size();i++){
+// 		EventInfoVo eventInfoVOtemp = listALL.get(i);
+// 		if(eventInfoVotemp.getEventStarTime().after(timestamp)){
+// 			list.add(eventInfoVOtemp);
+// 			}
+// 		}
+		
 %>
 
 <!DOCTYPE html>
@@ -65,6 +77,7 @@
 		<th>地區</th>
 		<th>人數</th>
 		<th>活動開始日期</th>
+		<th>活動結束日期</th>
 		<th>狀態</th>
 		<th>評鑑</th>
 		
@@ -78,7 +91,55 @@
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventCurrentCount}</td>
 			<td><fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventStartTime}" pattern="yyyy-MM-dd hh:mm"/></td> 
-			<td></td>
+			<td><fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" pattern="yyyy-MM-dd hh:mm"/></td> 
+			<td>
+				
+			
+			
+				<fmt:parseDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" pattern="yyyy-MM-dd HH:mm" var="endDate"/>
+				
+				<% Date nowDate = new Date(); request.setAttribute("nowDate", nowDate); %>
+				<c:if test="${nowDate > endDate}">
+				    <font class="">已結束</font>
+				</c:if>
+ 					<c:if test="${nowDate < endDate}">
+					  <font class="">進行中</font>
+				</c:if>
+
+<%-- 				<fmt:formatDate value="${now}" type="both" dateStyle="long" pattern="yyyy-MM-dd " var="nowDate"/>  --%>
+<%-- 				<fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" type="both" dateStyle="long" pattern="yyyy-MM-dd " var="Edt"/>  --%>
+<%-- 					<c:if test="${nowDate gt Edt}" var="rs"> --%>
+<!-- 						已結束 -->
+<%-- 					</c:if> --%>
+<%-- 					<c:if test="${!rs}"> --%>
+<!-- 						進行中 -->
+<%-- 					</c:if> --%>
+<%-- 				<fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" type="both" dateStyle="long" pattern="yyyy-MM-dd hh:mm" var="Edt"/>   --%>
+<%-- 				<c:if test="${nowDate gt std & lt edt }" var="rs"> --%>
+<!-- 				進行中 -->
+<%-- 				</c:if> --%>
+<%-- 				<c:if test="${nowDate gt edt  }" var="re"> --%>
+<!-- 				已結束 -->
+<%-- 				</c:if> --%>
+<%-- 				<c:if test="${nowDate lt std }"var="rd"> --%>
+<!-- 				尚未開始 -->
+													
+			</td>
+			<td>  
+			
+				<fmt:parseDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" pattern="yyyy-MM-dd HH:mm" var="endDate"/>
+				
+				<% Date nowDate1 = new Date(); request.setAttribute("nowDate", nowDate); %>
+				<c:if test="${nowDate < endDate}">
+				
+					  <font class="">未評鑑</font>
+				
+				</c:if>
+ 					<c:if test="${nowDate > endDate}">
+					<a href="<%= request.getContextPath()%>/Event/EvaluatedMember.jsp?eventID=${eventMemberVO.eventID}">評鑑</a>   	
+			</c:if>
+			</td>
+			
 		</tr>
 	</c:forEach>
 </table>

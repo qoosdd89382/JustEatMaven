@@ -13,7 +13,8 @@
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 <%
-	List<EvaluatedMemberVO> list = evaluatedmemberSvc.getAllByEventID(300002);
+	String eventID = request.getParameter("eventID");
+	List<EvaluatedMemberVO> list = evaluatedmemberSvc.getAllByEventID(new Integer(eventID));
 	pageContext.setAttribute("list", list);
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
@@ -30,6 +31,19 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
+<style>
+
+        /* ===== 重要性的星號 ===== */
+        div.star_block > span.star {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 3px;
+        }
+
+        div.star_block > span.star.-on {
+            color: yellow;
+        }
+</style>
 </head>
 <body>
 
@@ -77,10 +91,10 @@
 		            <span class="star" data-star="5"><i class="fas fa-star"></i></span>	
 					
 				</div>	
-					<form action="<%= request.getContextPath() %>/Event/evaluatedmember.do"method="post">
-						<input type="hidden" name="eventID" value="${eventMemberVO.eventID}">
-						<input type="hidden" name="giverID" value="${account}">
-						<input type="hidden" name="accepterID" value="${accountinfoVO.accountID}">
+					<form action="<%= request.getContextPath() %>/Event/evaluatedMember.do"method="post">
+						<input type="hidden" name="eventID" value="${param.eventID}">
+						<input type="hidden" name="giverID" value="${accountInfoVOLogin.accountID}">
+						<input type="hidden" name="accepterID" value="${evaluatedmemberVO.accepterAccountID}">
 						<input type="hidden" name="score" value="0">
 						<input type="hidden" name="action" value="giveScore">
 						<button type="submit">送出評分</button>
@@ -103,8 +117,8 @@
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
-	<script src="<%=request.getContextPath()%>/js/header.js"></script>
-	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
+	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script>
@@ -115,13 +129,9 @@
 			            $(this).prevAll().addClass("-on");
 			            $(this).nextAll().removeClass("-on");
 			            $(this).closest("li").attr("data-star", star_count);
-			            $(this).parent().next().find('input[name="starCount"]').val(star_count);
+			            $(this).parent().next().find('input[name="score"]').val(star_count);
 			        });
 			    });
-    </script>
-	
-	
-	<script>
 
 		$("[name=position]").on("change",function(){
 			if($(this).is(":checked")){

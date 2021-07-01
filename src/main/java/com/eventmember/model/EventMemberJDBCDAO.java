@@ -35,9 +35,9 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			"WHERE\r\n" + 
 			" participation_state = 3\r\n" + 
 			" and accepter_account_id = ?";
-	private static final String Select_Totalevent_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 3 or participation_state = 4)";
-	private static final String Select_TotalAttendance_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 3 )";
-	private static final String Select_EventStatus_Stmt ="SELECT COUNT(*)FROM EventMember WHERE account_id = ? and (participation_state = 1 or participation_state = 2)";
+	private static final String Select_Totalevent_Stmt ="SELECT COUNT(*) FROM EventMember WHERE account_id = ? and (participation_state = 3 or participation_state = 4)";
+	private static final String Select_TotalAttendance_Stmt ="SELECT COUNT(*) FROM EventMember WHERE account_id = ? and (participation_state = 3 )";
+	private static final String Select_EventStatus_Stmt ="SELECT * FROM EventMember WHERE account_id = ? and (participation_state = 1 or participation_state = 2)";
 	private static final String Select_Account_Stmt ="SELECT * FROM EventMember WHERE account_id = ?";
 	private static final String Select_EventandHost_Stmt ="SELECT account_id FROM EventMember WHERE event_id = ? and host_identifier = 1";
 	
@@ -528,7 +528,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 
 		try {
 			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(Select_TotalAttendance_Stmt);
+			pstmt = con.prepareStatement(Select_EventStatus_Stmt);
 			pstmt.setInt(1,  accountID);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {	

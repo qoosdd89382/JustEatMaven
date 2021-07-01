@@ -33,7 +33,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 </head>
 <body>
-
+	
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
@@ -61,7 +61,7 @@
 		<th>審核</th>
 		
 	</tr>
-		<c:forEach var="eventMemberVO" items="${list}" >
+		<c:forEach var="eventMemberVO" items="${list}">
 			<tr> 
 				<td>${eventMemberVO.accountID}</td> 
 				<td>
@@ -73,17 +73,18 @@
 				<td>${eventMemberSvc.getTotalEventByAccountID(eventMemberVO.accountID)}</td> 	
 				<td>
 					<c:forEach var="dishVO" items="${dishSvc.getAccountIDAndEventID(eventMemberVO.accountID, eventMemberVO.eventID)}">
-					<div id="${dishVO.dishID}">${dishVO.dishName}</div>
+						<div id="${dishVO.dishID}">${dishVO.dishName}</div>
 					</c:forEach>
-				</td>															
-				
+				</td>
+				<td>	 <a href="<%= request.getContextPath()%>/Event/AuditPass.jsp?eventID=${eventID}&accountID=${eventMemberVO.accountID}&">通過</a>            <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">不通過</a> 	</td>
+			
 				
 			</tr> 
 		</c:forEach>
 	</table>
 	  <div class="btn_margin" align="right"  >
 	  
-	              <input type ="button" onclick="history.back()" value="確認"></input>
+	          <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">確認</a> 	
 
 	  </div>
 			
