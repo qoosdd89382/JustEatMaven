@@ -315,31 +315,26 @@ public class RecipeCuisineCategoryJDBCDAO implements RecipeCuisineCategoryDAOInt
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// TODO Auto-generated catch block
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
 		} finally {
-
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
+		
 			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("PrepareStatement關閉錯誤" + e.getMessage());
 				}
 			}
 			if (con != null) {
 				try {
 					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new RuntimeException("資料庫連線關閉錯誤" + e.getMessage());
 				}
 			}
-
 		}
 		return allRecipeCuisineCategory;
 	}

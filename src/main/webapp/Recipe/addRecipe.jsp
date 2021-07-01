@@ -35,6 +35,8 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeHeader.css">
 <style>
 .loader3{
 	margin:20px auto;
@@ -104,17 +106,23 @@ div.temp_loading{
 	</header>
 
 	<%-- include navbar --%>
+	<%@ include file="/Recipe/recipeHeader.page"%>
 
 	<%-- main --%>
 	<main class="row col-12 col-md-10 justify-content-between"
 		style="margin: 0 auto;">
 
+	<%-- include searchbar --%>
+	<div class="searchbar col-12">
+		<%@ include file="/Recipe/recipeSearchbar.page"%>
+	</div>
+    
 		<div class="content col-md-9 col-12">
 			<%-- breadcrumbs --%>
 			<div class="breadcrumbs" aria-label="breadcrumb">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe">食譜</a></li>
 					<li class="breadcrumb-item active" aria-current="page">新增食譜</li>
 				</ol>
 			</div>

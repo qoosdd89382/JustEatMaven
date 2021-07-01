@@ -169,7 +169,7 @@
     <script>
     $(function(){
     	
-    	$("#accountAction").on("click", function () {
+    	$(document).on("click", "#accountAction", function () {
     		var action = $('select[name="action"]').find("option:selected").val();
     		var actionToggleStr = "";
     		var actionToggleAction = "";

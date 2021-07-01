@@ -13,12 +13,6 @@ div {
     clear:both;
 }
   
-section.error {
-	text-align: center;
-	color: #ff0000;	
-	font-size: 18px;
-	margin-bottom: 30px;
-}
 
 /* div.breadcrumbs  ol.breadcrumb li.breadcrumb-item a { */
 /*     color: #F3722C; */
@@ -34,10 +28,6 @@ section.error {
 /* 	border: 1px solid gray; */
 }
 
-
-.sidebar {
-/*     background-color: #999; */
-}
 
 
 .recipe-block {
@@ -265,11 +255,6 @@ section.error {
 }
 
 
-.searchResult {
-	text-align: center;
-	margin-bottom: 30px;
-}
-
 .vertical-container {
 	display: -webkit-flex;
 	display: flex;
@@ -278,43 +263,6 @@ section.error {
 	-webkit-justify-content: center;
 	justify-content: center;
 }
-
-.recipe-web-header {
-	height: 300px;
-	width: 100%;
-    background-image: url("/justeat-maven/img/hot_event_06.jpg");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: rgba(255, 173, 105, 0.6);
-    background-blend-mode: multiply;
-    margin-bottom: 10px;
-}
-
-.recipe-web-header h1 {
-	font-size: 48px;
-	font-weight: bold;
-	color: #fff;
-	margin: 0 auto;
-	border-bottom: 5px solid #fff;
-	padding-bottom: 10px;
-}
-
-header {
-	margin-bottom: 0!important;
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

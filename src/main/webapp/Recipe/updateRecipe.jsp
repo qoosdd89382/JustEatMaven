@@ -46,6 +46,8 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeHeader.css">
 <title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
 <style>
 </style>
@@ -58,10 +60,14 @@
 	</header>
 
 	<%-- include navbar --%>
+	<%@ include file="/Recipe/recipeHeader.page"%>
 
 	<%-- main --%>
-	<main class="row col-12 col-xl-10 justify-content-between"
-		style="margin: 0 auto;">
+	<main class="row col-12 col-xl-10 justify-content-between" style="margin: 0 auto;">
+	<%-- include searchbar --%>
+	<div class="searchbar col-12">
+		<%@ include file="/Recipe/recipeSearchbar.page"%>
+	</div>
 
 		<div class="content col-md-9 col-12">
 			<%-- breadcrumbs --%>

@@ -157,7 +157,7 @@
     <script>
     $(function(){
     	
-    	$("#adminAction").on("click", function () {
+    	$(document).on("click", "#adminAction", function () {
     		var action = $('select[name="action"]').find("option:selected").val();
     		var actionStr = "";
     		
