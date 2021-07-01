@@ -41,6 +41,11 @@ h4 {
 	color: blue;
 	display: inline;
 }
+
+
+#error {
+color:red;
+}
 </style>
 
 <style>
@@ -93,6 +98,8 @@ th, td {
 	</c:if>
 
 	<h1>食材標籤</h1>
+	<h2 id="error"></h2>
+	<h2 id="error2"></h2>
 	<button id="add">新增食材標籤</button>
 	<table>
 		<tr>
@@ -135,6 +142,7 @@ th, td {
 		 $(this).parents("td").prev().find("input").val(vall); 
 		 $(this).html("確定修改");
 		 $(this).attr('class',"confirmModify")
+		 $('#error').html("");
 		 
 	});
   
@@ -144,6 +152,7 @@ $(document).on("click", "button.confirmModify", function(){
 	$(this).parents("td").prev().text($(this).closest("td").prev().find("input").val());
 	 $(this).html("修改");
 	 $(this).attr('class',"modify")
+	  $(this).parents("td").prev().attr('class',"modify2");
 	 var modifyname = $(this).parents("td").prev().text();
 	 var ingredientid = $(this).parent().prev().prev().text();
 		console.log(modifyname);
@@ -156,6 +165,10 @@ $(document).on("click", "button.confirmModify", function(){
 				ingredientid :ingredientid
 			},
 			success : function(result) {
+				var aa= result.split('@');
+				console.log(aa[1]+"aa");
+				$('#error').html(aa[0]);
+				$(that).parents("td").prev().html(aa[1]);
 				console.log(result);
 				
 			}
