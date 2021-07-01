@@ -12,7 +12,7 @@
 	<div id="msgRedDotSmall" class="-none"></div>
 	<i class="fas fa-bell"></i>
 </div>
-
+</c:if>
 
 <div class="top -scroll">
     <h1><a href="<%=request.getContextPath()%>">Just Eat 揪食<i style="margin-left:10px; color: white; width: 20px;" class="fas fa-utensils"></i></a>
@@ -40,4 +40,3 @@
 		<i class="fas fa-bars"></i>
 	</button>
 </div>
-</c:if>
