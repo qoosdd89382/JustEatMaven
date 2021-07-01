@@ -43,8 +43,8 @@ public class IngredientService {
 	}
 
 
-	public void deleteIngredient(int ingredientID) {
-		dao.delete(ingredientID);
+	public int deleteIngredient(int ingredientID) {
+		return dao.delete(ingredientID);
 	}
 	public void deleteIngredients(int[] ingredientIDs) {
 		dao.delete(ingredientIDs);

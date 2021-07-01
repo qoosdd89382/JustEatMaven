@@ -51,7 +51,7 @@ System.out.println(ingredientID);
 				return;
 			}
 
-			ingSvc.deleteIngredient(new Integer(ingredientID));
+			ingSvc.deleteIngredient(new Integer(ingredientID)); 
 			System.out.println(ingredientID + "刪除成功");
 			out.print("success");
 			return;
