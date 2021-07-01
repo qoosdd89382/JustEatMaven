@@ -12,7 +12,7 @@
             <li><a href="#" id="shop_btn">商城</a></li>
             <li><a href="<%=request.getContextPath()%>/Account/accountInfo.do?action=gotoAccountLoginPage" class="select">${sessionScope.accountInfoVOLogin == null ? "登入" : "會員中心" }</a></li>
             <c:if test="${not empty sessionScope.accountInfoVOLogin}">
-            	<li><img class="profile_pic" src="<%=request.getContextPath()%>/img/test_profile.jpg" alt=""></li>
+            	<li><div class="profile_pic_outer"><img class="profile_pic" src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVOLogin.accountID}" alt=""></div></li>
             </c:if>
         </ul>
     </nav>
