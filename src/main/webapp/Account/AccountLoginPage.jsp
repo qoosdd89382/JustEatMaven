@@ -134,7 +134,7 @@ input#account_reset_btn:hover {
 
 		<div id="main_area"class="row">
 		
-			<div id="login_area" class="col-sm-3 align-self-center">
+			<div id="login_area" class="col-10 col-sm-6 col-md-6 col-lg-4 col-xl-3 align-self-center">
 			
 				<strong id="login_area_title">您好，歡迎登入</strong>
 				

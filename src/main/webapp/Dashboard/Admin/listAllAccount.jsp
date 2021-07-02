@@ -20,7 +20,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin register page</title>
+<title>Admin listAllAccount page</title>
     <!-- Custom fonts for this template-->
     <link href="<%=request.getContextPath()%>/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -111,7 +111,7 @@
 							  <form method="post" action="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do" style="margin-bottom: 0px;">
 							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
 							     <input type="hidden" name="action" value="activeAccountInfo">
-							     <button type="submit" class="btn btn-sm btn-primary">啟用</button>
+							     <button type="submit" class="btn btn-sm btn-primary" style="background-color:red;">啟用</button>
 							  </form>
 							</c:if>
 							<c:if test="${accountInfoVO.accountState == true}">
