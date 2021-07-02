@@ -4,13 +4,19 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
 <%@ page import="com.likeingredient.model.*"%>
+<%@ page import="com.dislikeingredient.model.*"%>
 <jsp:useBean id="likeIngredientSvc" scope="page" class="com.likeingredient.model.LikeIngredientService" />
+<jsp:useBean id="dislikeIngredientSvc" scope="page" class="com.dislikeingredient.model.DislikeIngredientService" />
+<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 
 <%
 //儲存所有資料的accountInfoVO
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
 Integer accountID = accountInfoVO.getAccountID();
 List<LikeIngredientVO> likeIngredientVOs = likeIngredientSvc.getAccountLikeIngredient(accountID);
+pageContext.setAttribute("likeIngredientVOs",likeIngredientVOs);
+List<DislikeIngredientVO> dislikeIngredientVOs = dislikeIngredientSvc.getAccountDislikeIngredient(accountID);
+pageContext.setAttribute("dislikeIngredientVOs",dislikeIngredientVOs);
 %>
 <!DOCTYPE html>
 
@@ -174,6 +180,16 @@ input#account_logout:hover {
 				
 				<div>
 				<span>用戶喜歡的食材</span>
+					<c:forEach var="LikeIngredientVO" items="${likeIngredientVOs}">
+						<div>${ingredientSvc.getOneIngredient(LikeIngredientVO.likeIngredientID).ingredientName}</div>
+					</c:forEach>
+				</div>
+				
+				<div>
+				<span>用戶討厭的食材</span>
+					<c:forEach var="DislikeIngredientVO" items="${dislikeIngredientVOs}">
+						<div>${ingredientSvc.getOneIngredient(DislikeIngredientVO.dislikeIngredientID).ingredientName}</div>
+					</c:forEach>
 				</div>
 				
 										
