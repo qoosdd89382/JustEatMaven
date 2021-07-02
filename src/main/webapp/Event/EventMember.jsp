@@ -14,9 +14,12 @@
 
 <%
 	String eventID = request.getParameter("eventID");
-	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
-	pageContext.setAttribute("eventID", 300002);
+	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(new Integer(eventID));
 	pageContext.setAttribute("list", list);
+
+// 	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
+// 	pageContext.setAttribute("eventID", 300002);
+// 	pageContext.setAttribute("list", list);
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
 
