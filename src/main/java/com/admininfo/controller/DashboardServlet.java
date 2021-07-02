@@ -301,7 +301,7 @@ public class DashboardServlet extends HttpServlet {
 				accountInfoVO.setAccountMail(accountMail);
 				accountInfoVO.setAccountPassword(accountPassword);
 				accountInfoVO.setAccountNickname(accountNickname);
-				accountInfoVO.setAccountName(accountNameInput);
+				accountInfoVO.setAccountName(accountName);
 				accountInfoVO.setAccountGender(accountGender);
 				
 				accountInfoVO.setAccountLevel(accountLevel);
@@ -464,7 +464,6 @@ public class DashboardServlet extends HttpServlet {
 				
 				String accountPasswordInput = req.getParameter("accountPassword");
 				String accountStateInput = req.getParameter("accountState");
-				
 				String accountLevelInput = req.getParameter("accountLevel");
 				
 				String accountNameInput = req.getParameter("accountName");
@@ -476,6 +475,7 @@ public class DashboardServlet extends HttpServlet {
 				
 				String accountRegisterTime =req.getParameter("accountRegisterTime");
 				String accountCode =req.getParameter("accountCode");
+								
 				
 			//檢查信箱
 				String accountMail = null;
@@ -488,12 +488,15 @@ public class DashboardServlet extends HttpServlet {
 					}else if(!accountMailMatcher.matches()){
 						errorMsgs.put("accountMailError","會員信箱格式錯誤");
 					//判斷原本是不是原本的信箱 是就儲存
-					}else if((accountInfoSvc.getAccountMail(accountMailInput).getAccountMail()).equals(accountMailInput)) {
+					}else if((accountInfoSvc.selectOneAccountInfo(accountID).getAccountMail()).equals(accountMailInput)) {
+						System.out.println("是原本信箱");
 						accountMail = new String(accountMailInput);
 					//判斷另外輸入的信箱有沒有人使用
 					}else if(accountInfoSvc.getAccountMail(accountMailInput) != null) {
+						System.out.println("信箱有人用");
 						errorMsgs.put("accountMailError","此信箱已註冊過");
 					}else {
+						System.out.println("更換信箱");
 						accountMail = new String(accountMailInput);
 					}
 				} catch (Exception e) {
@@ -569,10 +572,12 @@ public class DashboardServlet extends HttpServlet {
 						+ e.getMessage());
 				}
 			//檢查accountState輸入
-				Boolean accountState = false;
+				Boolean accountState = null;
 				try {
 					if(accountStateInput == null) {
 						errorMsgs.put("accountStateError","請輸入會員狀態");
+					}else if(Integer.parseInt(accountStateInput) == 0){
+						accountState = false;
 					}else {
 						accountState = true;
 					}
@@ -651,7 +656,9 @@ public class DashboardServlet extends HttpServlet {
 						//現在沒抓到這個
 						if (req.getSession().getAttribute("accountPicBuffer") != null) {
 							accountPicBuffer = (byte[]) req.getSession().getAttribute("accountPicBuffer");
-						} else {
+						} else if(req.getSession().getAttribute("accountPicBuffer") == null){
+							accountPicBuffer = accountInfoSvc.selectOneAccountInfo(accountID).getAccountPic();
+						}else {
 							errorMsgs.put("accountPicErr", "請上傳會員圖片");
 						}
 					} else {
@@ -666,7 +673,6 @@ public class DashboardServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-
 				//會員身分證正面
 				byte[] accountIDcardFrontBuffer = null;
 				try {
@@ -676,6 +682,8 @@ public class DashboardServlet extends HttpServlet {
 						System.out.println("沒有上傳身分證正面");
 						if (req.getSession().getAttribute("accountIDcardFrontBuffer") != null) {
 							accountIDcardFrontBuffer = (byte[]) req.getSession().getAttribute("accountIDcardFrontBuffer");
+						}else if(req.getSession().getAttribute("accountIDcardFrontBuffer") == null){
+							accountIDcardFrontBuffer = accountInfoSvc.selectOneAccountInfo(accountID).getAccountIDcardFront();
 						} else {
 							errorMsgs.put("accountIDcardFrontErr", "請上傳身分證正面");
 						}
@@ -703,6 +711,8 @@ public class DashboardServlet extends HttpServlet {
 						//如果session裡面有東西
 						if (req.getSession().getAttribute("accountIDcardBackBuffer") != null) {
 							accountIDcardBackBuffer = (byte[]) req.getSession().getAttribute("accountIDcardBackBuffer");
+						} else if(req.getSession().getAttribute("accountIDcardBackBuffer") == null){
+							accountIDcardBackBuffer = accountInfoSvc.selectOneAccountInfo(accountID).getAccountIDcardBack();
 						} else {
 							errorMsgs.put("accountIDcardBackBuffer", "請上傳身分證背面");
 						}
@@ -718,32 +728,7 @@ public class DashboardServlet extends HttpServlet {
 				throw new RuntimeException("A database error occured. "
 						+ e.getMessage());
 				}
-				//有錯誤就返回
-				if (!errorMsgs.isEmpty()) {
-					System.out.println(errorMsgs);
-					RequestDispatcher failureView = req
-							.getRequestDispatcher("/Dashboard/Admin/accountInfo.jsp");
-					failureView.forward(req, res);
-					return;//程式中斷
-				}
-
-				//輸入資料無誤的儲存
-				req.setAttribute("accountMail",accountMailInput);
-				req.setAttribute("accountPassword",accountPasswordInput);
-				req.setAttribute("accountNickname",accountNicknameInput);
-				req.setAttribute("accountName",accountNameInput);
-				req.setAttribute("accountGender",Integer.parseInt(accountGenderInput));
 				
-				req.setAttribute("accountLevel", Integer.parseInt(accountLevelInput));
-				req.setAttribute("accountState", Integer.parseInt(accountStateInput));
-				
-				req.setAttribute("accountPhone", accountPhoneInput);
-				req.setAttribute("accountBirth",java.sql.Date.valueOf(accountBirthInput));
-				req.setAttribute("accountText",accountTextInput);
-				
-				req.setAttribute("accountRegisterTime", accountRegisterTime);
-				req.setAttribute("accountCode", accountCode);
-
 				//呼叫SERVICE來做事，把值都存到AccountInfoVO物件
 				accountInfoVO.setAccountMail(accountMail);
 				accountInfoVO.setAccountPassword(accountPassword);
@@ -761,12 +746,40 @@ public class DashboardServlet extends HttpServlet {
 				accountInfoVO.setAccountPic(accountPicBuffer);
 				accountInfoVO.setAccountIDcardFront(accountIDcardFrontBuffer);
 				accountInfoVO.setAccountIDcardBack(accountIDcardBackBuffer);
+				
+				accountInfoVO.setAccountRegisterTime(accountInfoSvc.selectOneAccountInfo(accountID).getAccountRegisterTime());
+				accountInfoVO.setAccountCode(accountInfoSvc.selectOneAccountInfo(accountID).getAccountCode());
+
 								
 				accountInfoVO.setAccountID(accountID);
 				
-				accountInfoSvc.updateAccountInfo(accountInfoVO);
 				
 				req.setAttribute("accountInfoVO",accountInfoVO);
+				
+				//有錯誤就返回
+				if (!errorMsgs.isEmpty()) {
+					System.out.println(errorMsgs);
+					RequestDispatcher failureView = req
+							.getRequestDispatcher("/Dashboard/Admin/accountInfo.jsp");
+					failureView.forward(req, res);
+					return;//程式中斷
+				}
+
+				//輸入資料無誤的儲存 這個功能先不用
+//				req.setAttribute("accountMail",accountMailInput);
+//				req.setAttribute("accountPassword",accountPasswordInput);
+//				req.setAttribute("accountNickname",accountNicknameInput);
+//				req.setAttribute("accountName",accountNameInput);
+//				req.setAttribute("accountGender",Integer.parseInt(accountGenderInput));
+//				
+//				req.setAttribute("accountLevel", Integer.parseInt(accountLevelInput));
+//				req.setAttribute("accountState", Integer.parseInt(accountStateInput));
+//				
+//				req.setAttribute("accountPhone", accountPhoneInput);
+//				req.setAttribute("accountBirth",java.sql.Date.valueOf(accountBirthInput));
+//				req.setAttribute("accountText",accountTextInput);
+				
+				accountInfoSvc.updateAccountInfo(accountInfoVO);
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
 				String url = "/Dashboard/Admin/accountInfo.jsp";

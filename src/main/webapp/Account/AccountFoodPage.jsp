@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <% 
 //會員登入頁面紀錄
-
+// Integer accountID = (Integer) request.getAttribute("accountID");
 
 
 
@@ -153,13 +153,13 @@ input#food_reset_btn:hover {
 						<span style="color:red">*</span><span>請輸入您討厭的食材:</span>
 						<span style="color:red">${errorMsgs.get("dislikeIngredientIDError")}</span><br>	
 						<div class="ui-widget">
-							<input id="ingAutoCompl" class="form-control" type="text" name="dislikeIngredientID" placeholder="輸入或選擇食材標籤">
+							<input id="ingAutoCompl_dislike" class="form-control" type="text" name="dislikeIngredientID" placeholder="輸入或選擇食材標籤">
 						</div>
 						<!--使用者原本有輸入的話 -->
-						<div class="ingAutoOutput">
+						<div class="ingAutoOutput_dislike">
 							<ul>
 								<c:if test="${not empty dislikeIngredientVOs}">
-									<c:forEach var="likeIngredientVOs" items="${dislikeIngredientVOs}">
+									<c:forEach var="dislikeIngredientVOs" items="${dislikeIngredientVOs}">
 										<li class='row' data-id='${dislikeIngredientVO.ingredientID}'>
 											<div class='col-4 vertical-container'>${ingredientSvc.getOneIngredient(dislikeIngredientVO.ingredientID).ingredientName}</div>
 											<div class="vertical-container"><i class='fas fa-times'></i></div>
@@ -167,12 +167,12 @@ input#food_reset_btn:hover {
 									</c:forEach>
 								</c:if>
 							</ul>
-							<input class="ingAutoInput" name="dislikeIngredientIDs" type="hidden" 
+							<input class="ingAutoInput_dislike" name="dislikeIngredientIDs" type="hidden" 
 							<%-- value="<%=(likeIngredientIDs == null) ? "" : likeIngredientIDs%>" --%>
 							>
 						</div>
 					</div>		
-					
+<%-- 					<input type="hidden" name="accountID" value="<%=accountID%>>"> --%>
 					<input type="hidden" name="action" value="getAccountFood"> 
 					<input id="food_submit_btn" type="submit" value="確認送出前往食譜專區"> 
 					<input id="food_reset_btn" type="reset" value="重置">

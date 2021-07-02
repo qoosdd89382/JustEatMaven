@@ -9,6 +9,7 @@
 <%
 AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
 
+
 %>
 
 <!DOCTYPE html>
@@ -109,21 +110,21 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
     
     <div class="form-group col-md-6">
       <label for="adminNickname">暱稱
-			<span class="errorSpan"><font color="red">${errorMsgs.get("accountNicknameErr")}</font></span>
+			<span class="errorSpan"><font color="red">${errorMsgs.get("accountNicknameError")}</font></span>
        </label>
       <input type="text"
-	      	class='form-control ${errorMsgs.get("accountNicknameErr") == null ? "": "border-danger"}'
+	      	class='form-control ${errorMsgs.get("accountNicknameError") == null ? "": "border-danger"}'
 	      	id="accountNickname"
 	      	value="${accountInfoVO.accountNickname}"
-	      	name="accountNickname">
+	      	name="accountNickname" disabled>
     </div>
     
    <div class="form-group col-md-6">
     <label for="accountMail">信箱
-    		<span class="errorSpan"><font color="red">${errorMsgs.get("accountMailErr")}</font></span>
+    		<span class="errorSpan"><font color="red">${errorMsgs.get("accountMailError")}</font></span>
     </label>
     <input type="email" 
-    	class='form-control ${errorMsgs.get("accountMailErr") == null ? "": "border-danger"}' 
+    	class='form-control ${errorMsgs.get("accountMailError") == null ? "": "border-danger"}' 
     	id="accountMail"
    		value="${accountInfoVO.accountMail}"
    		name="accountMail">
@@ -131,10 +132,10 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
   
     <div class="form-group col-md-6">
       <label for="accountPassword">密碼
-			<span class="errorSpan"><font color="red">${errorMsgs.get("newPasswordErr")}</font></span>
+			<span class="errorSpan"><font color="red">${errorMsgs.get("newPasswordError")}</font></span>
       </label>
       <input type="password" autocomplete="accountPassword" 
-	      	class='form-control ${errorMsgs.get("newPasswordErr") == null ? "": "border-danger"}'
+	      	class='form-control ${errorMsgs.get("newPasswordError") == null ? "": "border-danger"}'
 	      	value="${accountInfoVO.accountPassword}"
 	      	id="accountPassword" name="accountPassword" disabled>
     </div>
@@ -142,10 +143,10 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
   
    <div class="form-group col-md-6">
     <label for="accountName">姓名
-        <span class="errorSpan"><font color="red">${errorMsgs.get("accountNameErr")}</font></span>
+        <span class="errorSpan"><font color="red">${errorMsgs.get("accountNameError")}</font></span>
     </label>
     <input type="text" 
-	    class='form-control ${errorMsgs.get("accountNameErr") == null ? "": "border-danger"}' 
+	    class='form-control ${errorMsgs.get("accountNameError") == null ? "": "border-danger"}' 
 	    id="ccountName" 
    		value="${accountInfoVO.accountName}"
    		name="accountName">
@@ -153,7 +154,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
   
    <div class="form-group col-md-6">
     <label for="accountGender">性別
-    	<span class="errorSpan"><font color="red">${errorMsgs.get("accountGenderErr")}</font></span>
+    	<span class="errorSpan"><font color="red">${errorMsgs.get("accountGenderError")}</font></span>
     </label>
     <select name="accountGender" class="custom-select">
 	    <option value='1' ${accountInfoVO.accountGender == 1 ? "selected":""}>男</option>
@@ -163,7 +164,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
    
    <div class="form-group col-md-6">
      <label for="accountLevel">層級
-         <span class="errorSpan"><font color="red">${errorMsgs.get("accountLevelErr")}</font></span>
+         <span class="errorSpan"><font color="red">${errorMsgs.get("accountLevelError")}</font></span>
      </label>
     <select name="accountLevel" class="custom-select">
 	    <option value='3' ${accountInfoVO.accountLevel == 3 ? "selected":""}>特權會員</option>
@@ -173,7 +174,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
    
    <div class="form-group col-md-6">
      <label for="accountState">狀態
-     	<span class="errorSpan"><font color="red">${errorMsgs.get("accountStateErr")}</font></span>
+     	<span class="errorSpan"><font color="red">${errorMsgs.get("accountStateError")}</font></span>
      </label>
     <select name="accountState" class="custom-select">
 	    <option value='1' ${accountInfoVO.accountState == true ? "selected":""}>啟用中</option>
@@ -183,10 +184,10 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
    
    <div class="form-group col-md-6">
     <label for="accountBirth">生日
-		<span class="errorSpan"><font color="red">${errorMsgs.get("accountBirthErr")}</font></span> 
+		<span class="errorSpan"><font color="red">${errorMsgs.get("accountBirthError")}</font></span> 
     </label>
     <input type="date" 
-	    class='form-control ${errorMsgs.get("accountBirthErr") == null ? "": "border-danger"}'
+	    class='form-control ${errorMsgs.get("accountBirthError") == null ? "": "border-danger"}'
 	    id="accountBirth"
 		value="${accountInfoVO.accountBirth}"
 		name="accountBirth">
@@ -194,10 +195,10 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
    
    <div class="form-group col-md-6">
     <label for="accountPhone">電話
-		<span class="errorSpan"><font color="red">${errorMsgs.get("accountPhoneErr")}</font></span> 
+		<span class="errorSpan"><font color="red">${errorMsgs.get("accountPhoneError")}</font></span> 
     </label>
     <input type="text" 
-	    class='form-control ${errorMsgs.get("accountPhoneErr") == null ? "": "border-danger"}'
+	    class='form-control ${errorMsgs.get("accountPhoneError") == null ? "": "border-danger"}'
 	    id="accountPhone"
 		value="${accountInfoVO.accountPhone}"
 		name="accountPhone">
@@ -205,10 +206,10 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
    
    <div class="form-group col-md-6">
     <label for="accountText">自我介紹
-		<span class="errorSpan"><font color="red">${errorMsgs.get("accountTextErr")}</font></span> 
+		<span class="errorSpan"><font color="red">${errorMsgs.get("accountTextError")}</font></span> 
     </label>
     <input type="text" 
-	    class='form-control ${errorMsgs.get("accountTextErr") == null ? "": "border-danger"}'
+	    class='form-control ${errorMsgs.get("accountTextError") == null ? "": "border-danger"}'
 	    id="accountText"
 		value="${accountInfoVO.accountText}"
 		name="accountText">
@@ -217,7 +218,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
        
     <div id="pic" class="col-md-6 vertical-container">
 		<label for="accountPic">頭像上傳
-			<span class="errorSpan"><font color="red">${errorMsgs.get("accountPicErr")}</font></span>
+			<span class="errorSpan"><font color="red">${errorMsgs.get("accountPicError")}</font></span>
 		</label>
 		<input id="accountPic" accept="image/*" type="file" name="accountPic" style="display:none">
 		<button id="upload-btn-pic" class="btn btn-secondary form-control btn-block" type="button" id="button-addon2">上傳檔案</button>
@@ -230,7 +231,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
     
     <div id="front" class="col-md-6 vertical-container">
 		<label for="accountIDcardFront">大頭貼正面上傳
-			<span class="errorSpan"><font color="red">${errorMsgs.get("accountIDcardFrontErr")}</font></span>
+			<span class="errorSpan"><font color="red">${errorMsgs.get("accountIDcardFrontError")}</font></span>
 		</label>
 		<input id="accountIDcardFront" accept="image/*" type="file" name="accountIDcardFront" style="display:none">
 		<button id="upload-btn-front" class="btn btn-secondary form-control btn-block" type="button" id="button-addon2">上傳檔案</button>
@@ -243,7 +244,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
     
        <div id="back" class="col-md-6 vertical-container">
 		<label for="accountIDcardBack">大頭貼背面上傳
-			<span class="errorSpan"><font color="red">${errorMsgs.get("accountIDcardBackErr")}</font></span>
+			<span class="errorSpan"><font color="red">${errorMsgs.get("accountIDcardBackError")}</font></span>
 		</label>
 		<input id="accountIDcardBack" accept="image/*" type="file" name="accountIDcardBack" style="display:none">
 		<button id="upload-btn-back" class="btn btn-secondary form-control btn-block" type="button" id="button-addon2">上傳檔案</button>
@@ -275,14 +276,24 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
    </div>
     
     
-  <div class="col-md-6"></div>
+  <div class="col-md-6">
     <input type="hidden" name="accountID" value="${accountInfoVO.accountID}">
+    <input type="hidden" name="accountNickname" value="${accountInfoVO.accountNickname}">
     <input type="hidden" name="accountPassword" value="${accountInfoVO.accountPassword}">
     <input type="hidden" name="accountRegisterTime" value="${accountInfoVO.accountRegisterTime}">
     <input type="hidden" name="accountCode" value="${accountInfoVO.accountCode}">
     
 	<input type="hidden" name="action" value="updateAccountInfoFromDashboard">
   	<button id="submit" type="submit" class="col-md-6 btn btn-primary">送出修改</button>
+  </div>
+  <div class="col-md-6">
+  	<a href="<%=request.getContextPath()%>/Dashboard/Admin/listAllAccount.jsp">取消修改返回上一頁</a>
+  	
+  </div>
+  
+  	
+  	
+  	
   </div>
 </form>
 

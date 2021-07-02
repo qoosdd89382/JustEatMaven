@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +27,13 @@ import org.hibernate.Session;
 
 import com.accountinfo.model.AccountInfoService;
 import com.accountinfo.model.AccountInfoVO;
+import com.dislikeingredient.model.DislikeIngredientService;
+import com.ingredient.model.IngredientVO;
+import com.likeingredient.model.LikeIngredientService;
+import com.likeingredient.model.LikeIngredientVO;
 import com.mail.controller.MailService;
 import com.mail.controller.RandomAuthCode;
+import com.recipeingredientunit.model.RecipeIngredientUnitVO;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class AccountInfoServlet extends HttpServlet {
@@ -911,7 +917,7 @@ public class AccountInfoServlet extends HttpServlet {
 		}
 // 在AccountRegisterPageLevelOne 收到進階註冊資料
 		if ("setLevelThreeAccountInfoForRegister".equals(action)) {
-			System.out.println("進入");
+			System.out.println("收到 進階註冊 請求");
 			
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
@@ -1000,6 +1006,7 @@ public class AccountInfoServlet extends HttpServlet {
 //				accountInfoSvc.setLevelOneAccountInfoFromRegister(
 //						accountMail,accountNickname,accountPassword,accountName,accountGender,accountBirth,accountPhone,
 //						accountText);
+				
 				//測試用
 				accountInfoSvc.setLevelThreeAccountInfoFromRegister(
 						accountPhone,
@@ -1009,7 +1016,7 @@ public class AccountInfoServlet extends HttpServlet {
 						accountID);
 
 				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
-				String url = "/Account/AccountLoginPage.jsp";
+				String url = "/Account/AccountFoodPage.jsp";
 				System.out.println("註冊完成準備轉交");
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
@@ -1021,8 +1028,74 @@ public class AccountInfoServlet extends HttpServlet {
 				failureView.forward(req, res);
 			}
 		}
+//AccountFoodPage.jsp收到getAccountFood
+		if("getAccountFood".equals(action)) {
+			
+			System.out.println("收到 選取食物 請求");
+			
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			AccountInfoService accountInfoSvc = new AccountInfoService();
+			HttpSession session =req.getSession();
+			AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO");
+			Integer accountID = 
+					(accountInfoSvc.getAccountIDByAccountMail(accountInfoVO.getAccountMail())).getAccountID();
+			System.out.println(accountID);
+			LikeIngredientService likeIngredientService = new LikeIngredientService();
+			DislikeIngredientService dislikeIngredientService = new DislikeIngredientService();
 
-		
+			
+			try {
+				//這個陣列儲存使用者喜歡的食材
+				List<IngredientVO> likeIngredientVOs = new ArrayList<IngredientVO>();
+				//取得使用者輸入的標籤
+				String likeIngredientIDString = req.getParameter("likeIngredientIDs");
+				if(likeIngredientIDString == null || likeIngredientIDString.trim().length()==0) {
+					errorMsgs.put("likeIngredientIDError", "請至少選取一個喜歡的食材");
+				}else {
+					//喜歡的食物字串集合
+					String[] likeIngredientIDs = likeIngredientIDString.trim().split(" ");
+					for(String likeIngredientID : likeIngredientIDs) {
+						IngredientVO ingredientVO = new IngredientVO();
+						ingredientVO.setIngredientID(new Integer(likeIngredientID));
+						likeIngredientVOs.add(ingredientVO);
+					}
+				}
+				System.out.println(likeIngredientVOs);
+				//這個陣列儲存使用者不喜歡的食材
+				List<IngredientVO> dislikeIngredientVOs = new ArrayList<IngredientVO>();
+				//取得使用者輸入的標籤
+				String dislikeIngredientIDString = req.getParameter("dislikeIngredientIDs");
+				if(dislikeIngredientIDString == null || dislikeIngredientIDString.trim().length()==0) {
+					errorMsgs.put("dislikeIngredientIDError", "請至少選取一個喜歡的食材");
+				}else {
+					//喜歡的食物字串集合
+					String[] dislikeIngredientIDs = dislikeIngredientIDString.trim().split(" ");
+					for(String dislikeIngredientID : dislikeIngredientIDs) {
+						IngredientVO ingredientVO = new IngredientVO();
+						ingredientVO.setIngredientID(new Integer(dislikeIngredientID));
+						dislikeIngredientVOs.add(ingredientVO);
+					}
+				}
+				System.out.println(dislikeIngredientVOs);
+				
+				likeIngredientService.addAccountLikeIngredient(likeIngredientVOs, accountID);
+				dislikeIngredientService.addAccountDislikeIngredient(dislikeIngredientVOs, accountID);
+
+				//註冊成功就可以到登入畫面登入看自己的資料，req會順便把登入成功的資料放在登入頁面
+				String url = "/Account/AccountLoginPage.jsp";
+				System.out.println("食物完成準備轉交");
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);
+				
+			}catch(Exception e) {
+				errorMsgs.put("UnexceptionError","無法取得資料");
+				RequestDispatcher failureView = req
+						.getRequestDispatcher("/Account/AccountFoodPage.jsp");
+				failureView.forward(req, res);
+			}
+		}//getAccountFood
 		
 		
 //===	

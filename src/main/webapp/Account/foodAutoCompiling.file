@@ -59,10 +59,73 @@
 		var selectName = $(this).closest("li.row").find("div").html();
 		console.log(selectStr + "," + selectName)
 		
-        var tempStr = $(".ingAutoInput").val();
+        var tempStr = $(".ingAutoInput_like").val();
         var newStr = tempStr.replace(" " + selectStr, "");
         
-        $(".ingAutoInput").val(newStr);
+        $(".ingAutoInput_like").val(newStr);
+        
+        var addBackIngObj = new Object();
+		addBackIngObj.id = selectStr;
+		addBackIngObj.value = selectName;
+		ingredientArr.push(addBackIngObj);
+
+		$(this).closest("li").remove();		
+	});
+	//不喜愛的食材
+	
+	//使用者輸入的地方
+		function putIngInIDsDislike(id, value) {
+		var tempIngHtml = "<li class='row ui-widget' data-id='" + id + "'><div  id='userIngredient' class='col-3 vertical-container'>" + value + "</div>"
+						  ;
+						
+		var tempIngHtml2 = "<div class='vertical-container'><i class='fas fa-times'></i></div>";
+		
+		//
+		$(".ingAutoOutput_dislike").find("ul").append(tempIngHtml);
+		$(".ingAutoOutput_dislike").find("ul").find("li").last().append(tempIngHtml2);
+   		
+   		//如果沒有輸入的話
+        if ($(".ingAutoInput_dislike").val() == "") {
+            $(".ingAutoInput_dislike").val(" " + id);
+        } else {
+            var tempIngStr = $(".ingAutoInput_dislike").val();
+            tempIngStr += " " + id;
+            $(".ingAutoInput_dislike").val(tempIngStr);
+        }
+	}
+	
+	$("#ingAutoCompl_dislike")
+	    .on("keydown", function (event) {
+	        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+	            event.preventDefault();
+	        }
+	    })
+	    .autocomplete({
+	        minLength: 0,
+	        source: ingredientArr,
+	        select: function (event, ui) {
+		        ingredientArr.forEach(function(item, index, array){
+        		  if (ui.item.value == array[index].value) {
+        			  array.splice(index, 1);
+        		  }
+        		});
+	        	
+	            putIngInIDsDislike(ui.item.id, ui.item.value);
+				$("#ingAutoCompl_dislike").val("");
+	            return false;
+	        }
+	    });
+	    
+	    $(".ingAutoOutput_dislike").on("click", "svg", function(e) {
+		
+		var selectStr = $(this).closest("li.row").attr("data-id");
+		var selectName = $(this).closest("li.row").find("div").html();
+		console.log(selectStr + "," + selectName)
+		
+        var tempStr = $(".ingAutoInput_dislike").val();
+        var newStr = tempStr.replace(" " + selectStr, "");
+        
+        $(".ingAutoInput_dislike").val(newStr);
         
         var addBackIngObj = new Object();
 		addBackIngObj.id = selectStr;
