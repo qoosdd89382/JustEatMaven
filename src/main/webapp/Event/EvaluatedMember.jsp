@@ -7,14 +7,28 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.*"%>
 <%@ page import="com.evaluatedmember.model.*"%>
+<%@ page import="com.eventmember.model.*"%>
 <%@ page import="com.accountinfo.model.*"%>
 
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="evaluatedmemberSvc" scope="page" class="com.evaluatedmember.model.EvaluatedMemberService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
-<%
+<%	
 	String eventID = request.getParameter("eventID");
 	List<EvaluatedMemberVO> list = evaluatedmemberSvc.getAllByEventID(new Integer(eventID));
+	if (list.size() == 0) {
+		List<EventMemberVO> membetList = eventMemberSvc.getAllByEventID(new Integer(eventID));
+		for (EventMemberVO memberVO : membetList) {
+			for (int i = 0; i < membetList.size(); i++) {
+				if (memberVO.getAccountID() != membetList.get(i).getAccountID()) {
+					evaluatedmemberSvc.addEvaluatedMember(
+						memberVO.getAccountID(), membetList.get(i).getAccountID(), 
+						new Integer(eventID), 0);
+				}
+			}
+		}
+		list = evaluatedmemberSvc.getAllByEventID(new Integer(eventID));
+	}
 	pageContext.setAttribute("list", list);
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
@@ -40,7 +54,7 @@
             margin-right: 3px;
         }
 
-        div.star_block > span.star.-on {
+        div.star_block > span.star.-on, div.star_block > span.nonChangeStar.-on{
             color: yellow;
         }
 </style>
@@ -83,14 +97,25 @@
 				<td>${eventMemberSvc.getAvgScoreByAccountID(evaluatedmemberVO.accepterAccountID)}</td> 
 				<td>${evaluatedmemberVO.giveScore}</td> 
 				<td>
-				 <div class="star_block">
-					<span class="star" data-star="1"><i class="fas fa-star"></i></span>
-		            <span class="star" data-star="2"><i class="fas fa-star"></i></span>
-		            <span class="star" data-star="3"><i class="fas fa-star"></i></span>
-		            <span class="star" data-star="4"><i class="fas fa-star"></i></span>
-		            <span class="star" data-star="5"><i class="fas fa-star"></i></span>	
+				<c:if test="${not empty accountInfoVOLogin && accountInfoVOLogin.accountID != evaluatedmemberVO.accepterAccountID}">
 					
-				</div>	
+					<c:if test="${evaluatedmemberVO.giveScore > 0}">
+					<div class="star_block">
+						<span class='nonChangeStar ${evaluatedmemberVO.giveScore >= 1 ? "-on" : ""}' data-star="1"><i class="fas fa-star"></i></span>
+						<span class='nonChangeStar ${evaluatedmemberVO.giveScore >= 2 ? "-on" : ""}' data-star="2"><i class="fas fa-star"></i></span>
+						<span class='nonChangeStar ${evaluatedmemberVO.giveScore >= 3 ? "-on" : ""}' data-star="3"><i class="fas fa-star"></i></span>
+						<span class='nonChangeStar ${evaluatedmemberVO.giveScore >= 4 ? "-on" : ""}' data-star="4"><i class="fas fa-star"></i></span>
+						<span class='nonChangeStar ${evaluatedmemberVO.giveScore >= 5 ? "-on" : ""}' data-star="5"><i class="fas fa-star"></i></span>	
+					</div>
+					</c:if>
+					<c:if test="${evaluatedmemberVO.giveScore == 0}">
+					<div class="star_block">
+						<span class='star' data-star="1"><i class="fas fa-star"></i></span>
+						<span class='star' data-star="2"><i class="fas fa-star"></i></span>
+						<span class='star' data-star="3"><i class="fas fa-star"></i></span>
+						<span class='star' data-star="4"><i class="fas fa-star"></i></span>
+						<span class='star' data-star="5"><i class="fas fa-star"></i></span>	
+					</div>
 					<form action="<%= request.getContextPath() %>/Event/evaluatedMember.do"method="post">
 						<input type="hidden" name="eventID" value="${param.eventID}">
 						<input type="hidden" name="giverID" value="${accountInfoVOLogin.accountID}">
@@ -98,17 +123,16 @@
 						<input type="hidden" name="score" value="0">
 						<input type="hidden" name="action" value="giveScore">
 						<button type="submit">送出評分</button>
-				
 					</form>
+					</c:if>
+				</c:if>
 				</td>
 			</tr> 
 		</c:forEach>
 	</table>
-	  <div class="btn_margin" align="center"  >
-	  
-	              <input type ="button" onclick="history.back()" value="確定送出"></input>
-
-	  </div>
+<!-- 	  <div class="btn_margin" align="center"  > -->
+<!-- 	              <input type ="button" onclick="history.back()" value="確定送出"></input> -->
+<!-- 	  </div> -->
 			
 			
 	<footer>
@@ -122,6 +146,7 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script>
+	
 			    $(function(){
 			        $("div.star_block").on("click", "span.star", function () {
 			            var star_count = $(this).attr("data-star");
@@ -132,7 +157,7 @@
 			            $(this).parent().next().find('input[name="score"]').val(star_count);
 			        });
 			    });
-
+	
 		$("[name=position]").on("change",function(){
 			if($(this).is(":checked")){
 				$(".positionSubmit").submit();

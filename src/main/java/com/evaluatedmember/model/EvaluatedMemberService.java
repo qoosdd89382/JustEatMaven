@@ -15,14 +15,15 @@ public class EvaluatedMemberService {
 		evaluatedMemberVO.setGiverAccountID(giverAccountID);
 		evaluatedMemberVO.setEventID(eventID);
 		evaluatedMemberVO.setGiveScore(giveScore);
-		evaluatedMemberVO.setGiveScore(eventID);
+//		evaluatedMemberVO.setGiveScore(eventID);
 		dao.insert(evaluatedMemberVO);
 		return evaluatedMemberVO;
 	}
 	
-	public EvaluatedMemberVO updateEvaluatedMember(int accepterAccountID,int eventID,int giveScore) {
+	public EvaluatedMemberVO updateEvaluatedMember(int accepterAccountID,int giverAccountID,int eventID,int giveScore) {
 		EvaluatedMemberVO evaluatedMemberVO = new EvaluatedMemberVO();
 		evaluatedMemberVO.setAccepterAccountID(accepterAccountID);
+		evaluatedMemberVO.setGiverAccountID(giverAccountID);
 		evaluatedMemberVO.setEventID(eventID);
 		evaluatedMemberVO.setGiveScore(giveScore);
 		dao.update(evaluatedMemberVO);
