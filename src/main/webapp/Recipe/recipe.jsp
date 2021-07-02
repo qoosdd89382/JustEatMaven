@@ -20,7 +20,7 @@
 		
 		request.setAttribute("recipeVO", recipeVO);
 		
-		RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
+// 		RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
 		List<RecipeCuisineCategoryVO> recipeCatList = recipeCatSvc.getAllByRecipe(recipeID);
 		request.setAttribute("recipeCatList", recipeCatList);
 		
@@ -151,7 +151,10 @@
 						<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
 						<div class="data row">
 							<div class="col-6">${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div> 
-							<div class="col-3">${recipeIngUnitVO.unitAmount} </div>
+<%-- 							<div class="col-3">${recipeIngUnitVO.unitAmount} </div> --%>
+							<div class="col-3">
+								<fmt:formatNumber value="${recipeIngUnitVO.unitAmount}" type="currency" pattern="#.##"/>
+							</div>
 							<div class="col-3">${unitSvc.getOneUnit(recipeIngUnitVO.unitID).unitName}</div>
 						</div>
 						</c:forEach>

@@ -16,7 +16,7 @@
 		request.getSession().removeAttribute("recipeStepPicBuffers");
 	}
 	
-	List<RecipeCuisineCategoryVO> orgRecipeCatVOs = reicpeCatSvc.getAllByRecipe(recipeVO.getRecipeID());
+	List<RecipeCuisineCategoryVO> orgRecipeCatVOs = recipeCatSvc.getAllByRecipe(recipeVO.getRecipeID());
 	List<RecipeIngredientUnitVO> orgRecipeIngUnitVOs = recipeIngUnitSvc.getAllByRecipe(recipeVO.getRecipeID());
 	List<RecipeStepVO> orgRecipeStepVOs = recipeStepSvc.getAllByRecipe(recipeVO.getRecipeID());
 	request.setAttribute("orgRecipeCatVOs", orgRecipeCatVOs);
@@ -99,7 +99,7 @@
 					<div class="catAutoOutput">
 						<ul>
 							<c:if test="${empty recipeCatVOs}">
-<%-- 								<c:forEach var="recipeCatVO" items="${reicpeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
+<%-- 								<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
 								<c:forEach var="recipeCatVO" items="${orgRecipeCatVOs}">
 									<li data-id='${recipeCatVO.cuisineCategoryID}'>
 										<span>${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
@@ -117,7 +117,7 @@
 							</c:if>
 						</ul>
 						<c:if test="${empty recipeCatVOs}">
-<%-- 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${reicpeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>"> --%>
+<%-- 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>"> --%>
 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${orgRecipeCatVOs}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>">
 						</c:if>
 						<c:if test="${not empty recipeCatVOs}">

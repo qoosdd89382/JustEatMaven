@@ -38,6 +38,14 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+td > span {
+    background: #eee;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
 </style>
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
 	
@@ -90,12 +98,16 @@
 							<tr>
 <!-- 								<th>編號</th> -->
 								<th>標題</th>
-								<th>發表時間</th>
-								<th>瀏覽人次</th>
-								<th>按讚人次</th>
-								<th>收藏人次</th>
+								<th>料理分類</th>
+								<th>食材</th>
+								<th>發表日期</th>
+								<th>數據</th>
+<!-- 								<th>瀏覽</th> -->
+<!-- 								<th>讚數</th> -->
+<!-- 								<th>收藏</th> -->
 								<c:if test="${accountInfoVOLogin.accountID == param.id}">
-								<th>批次處理</th>
+								<th>操作</th>
+								<th>批次</th>
 								 </c:if>
 							</tr>
 						</thead>
@@ -104,11 +116,45 @@
 						<tr data-id="${recipeVO.recipeID}">
 <%-- 							<td>${status.count}</td> --%>
 							<td><a href="<%=request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></td>
+							<td>
+								<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}">
+									<span class="searchable">
+										${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}
+									</span>
+								</c:forEach>	
+							</td>
+							<td>
+								<c:forEach var="recipeIngVO" items="${recipeIngUnitSvc.getAllByRecipe(recipeVO.recipeID)}">
+									<span class="searchable">
+										${ingredientSvc.getOneIngredient(recipeIngVO.ingredientID).ingredientName}
+									</span>
+								</c:forEach>	
+							</td>
 							<td><fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd"/></td>
-							<td>${recipeVO.recipeViewCount}</span>
-							<td>${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td>
-							<td>${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td>
+<%-- 							<td><fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd KK:mm"/></td> --%>
+							<td>
+								<i class="fas fa-eye"></i> ${recipeVO.recipeViewCount}<br>
+								<i class="fas fa-thumbs-up"></i> ${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}<br>
+								<i class="fas fa-heart"></i> ${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}
+							</td>
+<%-- 							<td>${recipeVO.recipeViewCount}</span> --%>
+<%-- 							<td>${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td> --%>
+<%-- 							<td>${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</td> --%>
 						<c:if test="${accountInfoVOLogin.accountID == recipeVO.accountID}">
+							<td>
+								<div class="change form-group">
+									<form class="update" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="getOneForUpdate">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary mb-2" type="submit">編輯</button>
+									</form>
+									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
+										<input type="hidden" name="action" value="delete">
+										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<button class="btn btn-primary" type="submit">刪除</button>
+									</form>
+								</div>
+							</td>
                             <td><label><input type="checkbox" value="${recipeVO.recipeID}" name="recipeID"> 選取</label></td>
                         </c:if>
 						</tr>
@@ -186,6 +232,13 @@
 		        }
 		    }
 		});
+
+    	$(document).on("click", ".searchable", function(){
+    		var oldKeyword = $("#myRecipeList_filter").find("input[type='search']").val();
+    		var newKeyword = $(this).text().trim();
+    		$('#myRecipeList').DataTable().search((oldKeyword + " " + newKeyword).trim()).draw();
+    		
+    	});
 
     	$("#recipeAction").on("click", function () {
     		var action = $('select[name="recipeAction"]').find("option:selected").val();

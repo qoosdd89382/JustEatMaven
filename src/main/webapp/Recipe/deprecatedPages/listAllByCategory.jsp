@@ -9,12 +9,11 @@ request.setAttribute("errorMsgs", errorMsgs);
 List<RecipeCuisineCategoryVO> list = null;
 
 try {
-	
 	String cuisineCategoryID = request.getParameter("id");
 	if (cuisineCategoryID == null) {
 		throw new Exception();
 	}
-	list = reicpeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
+	list = recipeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
 	pageContext.setAttribute("cuisineCategoryID", cuisineCategoryID);
 	pageContext.setAttribute("list", list);
 	

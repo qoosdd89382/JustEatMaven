@@ -49,7 +49,14 @@
     <link href="<%=request.getContextPath()%>/Dashboard/css/sb-admin-2.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <style>
-
+td > span {
+    background: #eee;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
 </style>
 </head>
 
@@ -108,7 +115,8 @@
 											<th>作者</th>
 											<th>料理分類</th>
 											<th>食材</th>
-											<th>刪除</th>
+											<th>發表時間</th>
+											<th>修改/刪除</th>
 											<th>批次操作</th>
                                         </tr>
                                     </thead>
@@ -120,19 +128,27 @@
 											<td><a href="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do?action=gotoUpdateAccountInfo&accountID=${recipeVO.accountID}">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></td>
 											<td>
 												<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}">
-													<span>
+													<span class="searchable">
 														${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}
 													</span>
 												</c:forEach>	
 											</td>
 											<td>
 												<c:forEach var="recipeIngVO" items="${recipeIngUnitSvc.getAllByRecipe(recipeVO.recipeID)}">
-													<span>
+													<span class="searchable">
 														${ingredientSvc.getOneIngredient(recipeIngVO.ingredientID).ingredientName}
 													</span>
 												</c:forEach>	
 											</td>
-											<td><button class="deleteOne btn btn-primary">刪除</button></td>
+											<td><fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd KK:mm"/></td>
+											<td>
+												<form action="<%=request.getContextPath()%>/Dashboard/Recipe/recipe.do" method="post">
+													<input type="hidden" name="action" value="getOneForUpdate">
+													<input type="hidden" name="recipeID" value="${recipeVO.recipeID}">
+													<button type="submit" class="deleteOne btn btn-primary">修改</button>
+												</form>
+												<button class="deleteOne btn btn-secondary mt-1">刪除</button>
+											</td>
                                             <td>
                                             	<label><input type="checkbox" value="${recipeVO.recipeID}" name="recipeID">選取</label>
                                             </td>
@@ -177,12 +193,19 @@
     <script src="<%=request.getContextPath()%>/Dashboard/js/sb-admin-2.js"></script>
     
     <script>
-
     
     $(function(){
     	
     	$('#dataTable').DataTable({
     		  order: [[ 0, 'desc' ]],
+    	});
+    	
+    	$(document).on("click", ".searchable", function(){
+    		var oldKeyword = $("#dataTable_filter").find("input[type='search']").val();
+    		var newKeyword = $(this).text().trim();
+    		$('#dataTable').DataTable().search((oldKeyword + " " + newKeyword).trim()).draw();
+    		
+    		
     	});
 
     });
