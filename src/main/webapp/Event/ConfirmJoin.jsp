@@ -30,8 +30,8 @@
     </header>
     <nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventList.jsp">活動列表</a></li>
 			<li class="breadcrumb-item active" aria-current="page">活動詳情</li>
 		</ol>
 	</nav>
@@ -129,7 +129,7 @@
 				$(".current_people").html(data.eventMember);
 				$(".event_start").html(startTime);
 				$(".event_end").html(endTime);
-				$(".eat_style").html("");
+				$(".eat_style").html(data.cuisineCatName);
 				$(".dish_name").html(data.dishName);
 				$(".address").html(data.city+data.address);
 				$(".event_description_content").val(data.eventDescription);

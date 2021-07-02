@@ -1,3 +1,7 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.sql.Timestamp"%>
+<%@page import="com.eventinfo.model.EventInfoVO"%>
+<%@page import="com.eventinfo.model.EventInfoService"%>
 <%@page import="com.accountinfo.model.AccountInfoService"%>
 <%@page import="com.accountinfo.model.AccountInfoVO"%>
 <%@page import="com.eventmember.model.EventMemberVO"%>
@@ -12,8 +16,11 @@
 		EventMemberVO eventMemberVO = eventMemberSvc.getByEventAndMemberID(Integer.parseInt(request.getParameter("eventID")), accountInfoVO.getAccountID());
 		request.setAttribute("eventMemberVO", eventMemberVO);
 	}
-	
 	pageContext.setAttribute("accountInfoVO", accountInfoVO);
+	EventInfoService eventInfoSvc = new EventInfoService();
+	EventInfoVO eventInfoVO =  eventInfoSvc.getEventID(Integer.parseInt(request.getParameter("eventID")));
+	
+	Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,8 +42,8 @@
     </header>
     <nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventList.jsp">活動列表</a></li>
 			<li class="breadcrumb-item active" aria-current="page">活動詳情</li>
 		</ol>
 	</nav>
@@ -86,19 +93,50 @@
 	            	<c:choose>
 	            		<c:when test="${eventMemberVO.hostIdentifier == true}">
 	            			<input type="button" value="回到活動列表" class="return">
+	            			<%
+	            				if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
+	            			%>
 	                		<input type="submit" name="action" value="活動編輯" class="">
+	               			<% 	
+	            				}
+		            			if(timestampNow.before(eventInfoVO.getEventEndTime())){
+		            		%>
 	                		<input type="submit" name="action" value="活動聊天室" class="eventCharRoom">
+	                		<% 
+		            			}
+		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
+		            		%>
 	                		<input type="button" value="成員審核" class="memberCheck">
 	                		<input type="submit" name="action" value="取消活動" class="">
+	                		<%
+		            			}
+		            		%>
 	            		</c:when>
 	            		<c:when test="${eventMemberVO.hostIdentifier == false}">
 	            			<input type="button" value="回到活動列表" class="return">
+	            			<% 
+		            			if(timestampNow.before(eventInfoVO.getEventEndTime())){
+		            		%>
 	            			<input type="submit" name="action" value="活動聊天室" class="eventCharRoom">
+	                    	<%
+		            			}
+	            			
+	            				if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
+		            		%>
 	                		<input type="submit" name="action" value="退出活動" class="">
+	                		<%
+		            			}
+		            		%>
 	            		</c:when>
 	            		<c:otherwise>
 		            		<input type="button" value="回到活動列表" class="return">
-		                	<input type="submit" name="action" value="加入活動" class="joinEvent">
+		            		<% 
+		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
+		            		%>
+		                		<input type="submit" name="action" value="加入活動" class="joinEvent">
+		            		<%
+		            			}
+		            		%>
 	            		</c:otherwise>
 	            	</c:choose>	
 	            </div>
@@ -159,7 +197,7 @@
 			location.href = "<%=request.getContextPath()%>/Event/EventMember.jsp?eventID<%=request.getParameter("eventID")%>";
 		});
 		$(".memberCheck").on("click",function(){
-			location.href = "<%=request.getContextPath()%>/Event/成員審核.jsp?eventID<%=request.getParameter("eventID")%>";
+			location.href = "<%=request.getContextPath()%>/Event/Audit.jsp?eventID<%=request.getParameter("eventID")%>";
 		});
 	});
 	

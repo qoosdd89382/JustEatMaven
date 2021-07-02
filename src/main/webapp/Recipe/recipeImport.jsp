@@ -22,7 +22,7 @@
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
 
-<jsp:useBean id="reicpeCatSvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
+<jsp:useBean id="recipeCatSvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
 <jsp:useBean id="recipeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" />
 <jsp:useBean id="recipeStepSvc" scope="page" class="com.recipestep.model.RecipeStepService" />
 

@@ -51,9 +51,9 @@
     </header>
     <nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動列表</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動詳情</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventList.jsp">活動列表</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${param.eventID}">活動詳情</a></li>
 			<li class="breadcrumb-item active" aria-current="page">成員菜單</li>
 		</ol>
 	</nav>

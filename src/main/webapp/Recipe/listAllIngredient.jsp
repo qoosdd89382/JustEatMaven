@@ -59,7 +59,7 @@ ul.pagination {
 
 
 </style>
-<title>食譜列表 | 料理分類 | Just Eat 揪食</title>
+<title>食譜列表 | 食材 | Just Eat 揪食</title>
 	
 </head>
 <body>
@@ -85,7 +85,7 @@ ul.pagination {
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe">食譜</a></li>
-					<li class="breadcrumb-item active" aria-current="page">料理分類列表</li>
+					<li class="breadcrumb-item active" aria-current="page">食材列表</li>
 				</ol>
 			</div> 
     	

@@ -1,6 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ include file="/Recipe/recipeImport.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<%@ page import="java.util.List"%>
+<%@ page import="com.admininfo.model.*" %>
+
+<%@ page import="java.util.*"%>
+<%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.recipe.model.*"%>
+<%@ page import="com.cuisinecategory.model.*"%>
+<%@ page import="com.ingredient.model.*"%>
+<%@ page import="com.unit.model.*"%>
+<%@ page import="com.recipecuisinecategory.model.*"%>
+<%@ page import="com.recipeingredientunit.model.*"%>
+<%@ page import="com.recipestep.model.*"%>
+<%@ page import="com.thumbsuprecipe.model.*"%>
+<%@ page import="com.favoriterecipe.model.*"%>
+
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+<jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
+<jsp:useBean id="categorySvc" scope="page" class="com.cuisinecategory.model.CuisineCategoryService" />
+<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
+<jsp:useBean id="unitSvc" scope="page" class="com.unit.model.UnitService" />
+
+<jsp:useBean id="recipeCatSvc" scope="page" class="com.recipecuisinecategory.model.RecipeCuisineCategoryService" />
+<jsp:useBean id="recipeIngUnitSvc" scope="page" class="com.recipeingredientunit.model.RecipeIngredientUnitService" />
+<jsp:useBean id="recipeStepSvc" scope="page" class="com.recipestep.model.RecipeStepService" />
+
 
 <%
 	RecipeVO recipeVO = (RecipeVO) request.getAttribute("recipeVO");
@@ -23,75 +51,165 @@
 	request.setAttribute("orgRecipeIngUnitVOs", orgRecipeIngUnitVOs);
 	request.setAttribute("orgRecipeStepVOs", orgRecipeStepVOs);
 	}
-	// 驗證新資料帶回
-// 	String recipeCategoryIDs = request.getParameter("recipeCategoryIDs");
-// 	String recipeIngredientIDs = request.getParameter("recipeIngredientIDs");
+
 	String[] unitIDs = request.getParameterValues("unitIDs");
 	String[] recipeUnitAmounts = (String[]) request.getAttribute("recipeUnitAmounts");
 %>
 
+
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Bootstrap 的 CSS -->
-<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
-<%-- <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick.css" /> --%>
-<%-- <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/slick/slick-theme.css" /> --%>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/addRecipe.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSidebar.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeHeader.css">
-<title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
+<title>Admin register page</title>
+    <!-- Custom fonts for this template-->
+    <link href="<%=request.getContextPath()%>/vendors/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="<%=request.getContextPath()%>/Dashboard/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
+    <link href="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <style>
+
+.vertical-container {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.catAutoOutput ul, .ingAutoOutput ul {
+	background: #eee;
+	min-height: 55px;
+	padding: 5px;
+	margin-top: 10px;
+}
+
+.catAutoOutput ul>li {
+	display: inline-block;
+	margin: 10px 3px;
+	padding: 5px;
+	border: 1px solid gray;
+	background: #fff;
+}
+.catAutoOutput ul>li span{
+	margin-right: 3px;
+}
+
+
+.ingAutoOutput ul > li {
+	margin: 10px 3px;
+	padding: 3px;
+	border: 1px solid gray;
+	background: #fff;
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+}
+
+.preview {
+	border: 1px solid lightgray;
+	display: inline-block;
+	position: relative;
+	min-height: 80px; /* 40px */
+	border-radius: .25rem !important;
+	margin-top: 10px;
+	padding: 3px;
+}
+
+.preview span.text {
+	position: absolute;
+	display: inline-block;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	color: lightgray;
+}
+.preview_img {
+    width: 100%;
+}
+.uploadBtn {
+    margin-bottom: 10px;
+}
+.recipe td:last-child {
+    text-align: right;
+}
+.agreeBox {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.errorSpan {
+	color: red;
+	font-weight: bold;
+}
 </style>
 </head>
-<body>
-	
-	<%-- include header --%>
-	<header>
-		<%@ include file="/common/header.jsp"%>
-	</header>
 
-	<%-- include navbar --%>
-	<%@ include file="/Recipe/recipeHeader.page"%>
+<body id="page-top">
 
-	<%-- main --%>
-	<main class="row col-12 col-xl-10 justify-content-between" style="margin: 0 auto;">
-	<%-- include searchbar --%>
-	<div class="searchbar col-12">
-		<%@ include file="/Recipe/recipeSearchbar.page"%>
-	</div>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-		<div class="content col-md-9 col-12">
-			<%-- breadcrumbs --%>
-			<div class="breadcrumbs" aria-label="breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>">Just Eat 揪食</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/home.jsp">食譜</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp">食譜列表</a></li>
-					<li class="breadcrumb-item active" aria-current="page">${recipeVO.recipeName} [編輯]</li>
-				</ol>
-			</div>
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        	<%@include file="/Dashboard/Admin/sidebar.page" %>
+        </ul>
+        <!-- End of Sidebar -->
 
-			<form method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do" enctype="multipart/form-data">
-				<h3>食譜基本資訊</h3>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+					<%@include file="/Dashboard/Admin/topbar.page" %>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">食譜資訊</h1>
+<!--                     <p class="mb-4"> -->
+						
+<!-- 					</p> -->
+
+                            <!-- Project Card Example -->
+                            <div class="card shadow mb-4">
+		                        <div class="card-header py-3">
+		                        	<h6 class="m-0 font-weight-bold text-primary">
+										${recipeVO.recipeName}
+									</h6>
+		                        </div>
+	                        
+                                <div class="card-body">
+
+			<form method="post" action="<%=request.getContextPath()%>/Dashboard/Recipe/recipe.do" enctype="multipart/form-data">
 
 				<div class="form-group">
-					<label for="recipeName">食譜名稱：</label>
+					<label for="recipeName" class="font-weight-bold text-primary">食譜名稱：</label>
 					<span class="errorSpan">${errorMsgs.get("recipeNameErr")}</span>
 					<input type="text" class="form-control" name="recipeName" placeholder="請輸入食譜名稱" value="${recipeVO.recipeName}">
 					<input type="hidden" name="recipeID" value="${recipeVO.recipeID}">
 				</div>
 
 				<div class="form-group">
-					<label for="recipeCategoryNames">食譜分類：</label>
+					<label for="recipeCategoryNames" class="font-weight-bold text-primary">食譜分類：</label>
 					<span class="errorSpan">${errorMsgs.get("recipeCategoryIDErr")}</span>
 					<div class="ui-widget">
 						<input class="form-control" id="catAutoCompl" name="recipeCategoryNames" placeholder="請輸入並選擇料理分類">
@@ -99,7 +217,6 @@
 					<div class="catAutoOutput">
 						<ul>
 							<c:if test="${empty recipeCatVOs}">
-<%-- 								<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
 								<c:forEach var="recipeCatVO" items="${orgRecipeCatVOs}">
 									<li data-id='${recipeCatVO.cuisineCategoryID}'>
 										<span>${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
@@ -117,7 +234,6 @@
 							</c:if>
 						</ul>
 						<c:if test="${empty recipeCatVOs}">
-<%-- 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>"> --%>
 							<input class="form-control catAutoInput" name="recipeCategoryIDs" type="hidden" value="<c:forEach var="recipeCatVO" items="${orgRecipeCatVOs}"> ${recipeCatVO.cuisineCategoryID}</c:forEach>">
 						</c:if>
 						<c:if test="${not empty recipeCatVOs}">
@@ -127,7 +243,7 @@
 				</div>
 
 				<div class="form-group">
-					<label for="recipeIngredientNames">食材標籤與單位：</label>
+					<label for="recipeIngredientNames" class="font-weight-bold text-primary">食材標籤與單位：</label>
 					<span class="errorSpan">${errorMsgs.get("recipeIngredientIDErr")}</span>
 					<span class="errorSpan">${errorMsgs.get("recipeUnitIDErr")}</span>
 					<span class="errorSpan">${errorMsgs.get("recipeUnitAmountErrNull")}</span>
@@ -138,7 +254,6 @@
 					<div class="ingAutoOutput">
 						<ul>
 							<c:if test="${empty recipeIngUnitVOs}">
-<%-- 								<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitSvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
 								<c:forEach var="recipeIngUnitVO" items="${orgRecipeIngUnitVOs}">
 									<li class='row' data-id='${recipeIngUnitVO.ingredientID}'>
 										<div class='col-4 vertical-container'>${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div>
@@ -180,7 +295,6 @@
 							</c:if>
 						</ul>
 						<c:if test="${empty recipeIngUnitVOs}">
-<%-- 							<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitSvc.getAllByRecipe(recipeVO.recipeID)}"> ${recipeIngUnitVO.ingredientID}</c:forEach>"> --%>
 							<input class="ingAutoInput" name="recipeIngredientIDs" type="hidden" value="<c:forEach var="recipeIngUnitVO" items="${orgRecipeIngUnitVOs}"> ${recipeIngUnitVO.ingredientID}</c:forEach>">
 						</c:if>
 						<c:if test="${not empty recipeIngUnitVOs}">
@@ -190,30 +304,29 @@
 				</div>
 
 				<div class="form-group">
-					<label for="recipeIntroduction">食譜介紹：</label>
+					<label for="recipeIntroduction" class="font-weight-bold text-primary">食譜介紹：</label>
 					<span class="errorSpan">${errorMsgs.get("recipeIntroductionErr")}</span>
 					<textarea class="form-control" name="recipeIntroduction" placeholder="請輸入食譜介紹" rows="10" cols="50">${recipeVO.recipeIntroduction}</textarea>
 				</div>
 
 				<div class="form-group">
-					<label for="recipeServe">享用人數：</label><span class="errorSpan">${errorMsgs.get("recipeServeErr")}</span>
+					<label for="recipeServe" class="font-weight-bold text-primary">享用人數：</label><span class="errorSpan">${errorMsgs.get("recipeServeErr")}</span>
 					<input class="form-control" type="number" name="recipeServe" placeholder="請輸入食譜準備的食材可供幾人享用" step="1" min="1" max="20" value="${recipeVO.recipeServe}">
 				</div>
 
 				<div class="form-group">
-					<label for="recipePicTop row">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
-						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳檔案</div>
+					<label for="recipePicTop row" class="font-weight-bold text-primary">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
+						<div id="picTopUploadBtn" class="uploadBtn btn btn-secondary col-6">上傳檔案</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><img id="top_img" src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}" class="preview_img"></div>
 				</div>
 
-				<h2>食譜步驟</h2>
+				<label class="font-weight-bold text-primary">食譜步驟：</label>
 				<span class="errorSpan">${errorMsgs.get("recipeStepErr")}</span>
 				<span class="errorSpan" style="margin-left: 10px;">${errorMsgs.get("recipeStepPicErr")}</span>
 				<table class="recipeStepsTable table">
 					<tbody>
 						<c:if test="${empty recipeStepVOs}">
-<%-- 							<c:forEach var="recipeStepVO" items="${recipeStepSvc.getAllByRecipe(recipeVO.recipeID)}"> --%>
 							<c:forEach var="recipeStepVO" items="${orgRecipeStepVOs}">
 								<tr class="form-group recipe row">
 									<td class="col-6 order-1 col-lg-1 order-lg-1">
@@ -226,7 +339,7 @@
 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
-										<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+										<div class="picStepUploadBtn uploadBtn btn btn-secondary col-12">上傳圖片</div>
 										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
 										<div class="picStepPreview preview col-12"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${recipeStepVO.recipeStepID}" class="step_img preview_img"></div>
 									</td>
@@ -272,43 +385,59 @@
 					</tbody>
 				</table>
 
-				<div id="addStepBtn" class="btn btn-primary">增加一個步驟</div>
-
-				<label>
-					<input type="checkbox" name="agreement" class="styled-checkbox" value="agree">
-						同意使用本網站之條款及隱私權政策
-				</label>
+				<div id="addStepBtn" class="btn btn-secondary btn-block">增加一個步驟</div>
+<!-- 				<div class="agreeBox"> -->
+<!-- 					<label> -->
+<!-- 						<input type="checkbox" name="agreement" class="styled-checkbox" value="agree"> -->
+<!-- 							同意使用本網站之條款及隱私權政策 -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+				<hr />
 				<span class="errorSpan">${errorMsgs.get("agreementErr")}</span>
 				<input type="hidden" name="action" value="update">
-				<input type="hidden" name="accountID" value="update">
-				<button id="btnSubmit" class="btn btn-primary" type="submit">送出</button>
+				<input type="hidden" name="accountID" value="${recipeVO.accountID}">
+				<button id="btnSubmit" class="btn btn-primary btn-block" type="submit">送出</button>
 			</form>
+				<a href="<%=request.getContextPath()%>/Dashboard/Admin/listAllRecipe.jsp" class="btn btn-light btn-block mt-1">返回列表</a>
 
-		</div>
+                                
+		                        </div>
+		                    </div>
 
-		<%-- include sidebar --%>
-		<div class="sidebar col-xl-3 col-12">
-			<%@ include file="/Recipe/recipeSidebar.page"%>
-		</div>	
-	</main>
+                </div>
+                <!-- /.container-fluid -->
 
-	<%-- include footer --%>
-	<footer>
-		<%@ include file="/common/footer.jsp"%>
-	</footer>
-	
+            </div>
+            <!-- End of Main Content -->
 
-	<%-- body 結束標籤之前，載入Bootstrap 的 JS 及其相依性安裝(jQuery、Popper) --%>
-	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
-	<script	src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
-	<script	src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <%@include file="/Dashboard/Admin/footer.page" %>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+	<%@include file="/Dashboard/Admin/endActive.page" %>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="<%=request.getContextPath()%>/vendors/jquery-easing/jquery.easing.min.js"></script>
+    <script src="<%=request.getContextPath()%>/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 	<script	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
-	<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js"></script> --%>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/vendors/slick/slick.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
-	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
-	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
-	<script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="<%=request.getContextPath()%>/Dashboard/js/sb-admin-2.js"></script>
+    <script>
 		$(function() {
 
 			<%@ include file="/Recipe/autoComplCat.file"%>
@@ -344,7 +473,7 @@
 					var recipeID = $('input[name="recipeID"]').val();
 			  		console.log(recipeID);
 					$.ajax({
-						  url: '<c:url value="/Recipe/deleteRecipeStep.do?update="/>' + recipeID + "&delOrder=" + delOrder.toString(),
+						  url: '<c:url value="/Dashboard/Recipe/deleteRecipeStep.do?update="/>' + recipeID + "&delOrder=" + delOrder.toString(),
 						  type: "GET",
 						  success: function(data){
 							$(that).closest("tr.recipe").remove();
@@ -368,5 +497,7 @@
 		});
 	</script>
 	<script src="<%=request.getContextPath()%>/Recipe/js/addRecipe.js"></script>
+
+
 </body>
 </html>

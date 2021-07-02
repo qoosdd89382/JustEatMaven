@@ -6,17 +6,19 @@ public class EventChatroomMessage {
 	private String eventID;
 	private String senderName;
 	private String message;
+	private String sendTime;
 
 	public EventChatroomMessage() {
 		super();
 	}
 	
-	public EventChatroomMessage(String type, String eventID,String senderID, String senderName,String message) {
+	public EventChatroomMessage(String type, String eventID,String senderID, String senderName,String message,String sendTime) {
 		this.type = type;
 		this.eventID = eventID;
 		this.senderID = senderID;
 		this.senderName = senderName;
 		this.message = message;
+		this.sendTime = sendTime;
 	}
 
 	public String getEventID() {
@@ -57,5 +59,13 @@ public class EventChatroomMessage {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(String sendTime) {
+		this.sendTime = sendTime;
 	}
 }

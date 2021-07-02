@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ingredient.model.IngredientVO;
+
 public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
@@ -258,6 +260,45 @@ public class DislikeIngredientJDBCDAO implements DislikeIngredientDAOInterface {
 		}
 		return alldislikeIngredient;
 	}
+	
+	@Override
+	public void addAccountDislikeIngredient(List<IngredientVO> dislikeIngredientVOs,Integer accountID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(INSERT);
+			
+			for(IngredientVO ingredientVO : dislikeIngredientVOs) {
+				pstmt.setInt(1,accountID);
+				pstmt.setInt(2,ingredientVO.getIngredientID());
+				pstmt.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+	}
+	
+	
+	
 	
 	public static void main(String args[]) {
 		DislikeIngredientVO vo = new DislikeIngredientVO();

@@ -94,7 +94,9 @@
 						<div class="info col-12 col-lg-7">
 							<div class="title"><i class="fas fa-utensils"></i><h4><a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a></h4></div>
 <!-- 							<div class="row"> -->
-							<div class="author"><i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></div>
+							<div class="author"><i class="fas fa-user"></i>
+								<a href="${pageContext.request.contextPath}/Recipe/recipe.do?action=myRecipe&id=${recipeVO.accountID}">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a>
+							</div>
 <!-- 							<div class="col-6">test</div> -->
 <!-- 							</div> -->
 							<div class="intro"><div class="intro-text">${recipeVO.recipeIntroduction}</div></div>

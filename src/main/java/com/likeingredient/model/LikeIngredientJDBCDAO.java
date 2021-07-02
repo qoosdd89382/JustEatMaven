@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ingredient.model.IngredientVO;
+
 public class LikeIngredientJDBCDAO implements LikeIngredientDAOInterface {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
@@ -31,6 +33,8 @@ public class LikeIngredientJDBCDAO implements LikeIngredientDAOInterface {
 	private static final String SELECT_ALL_BY_ACCOUNT = "SELECT * FROM LikeIngredient WHERE account_id = ?";
 	private static final String SELECT_ALL_BY_INGREDIENT = "SELECT * FROM LikeIngredient WHERE like_ingredient_id = ?";
 
+	
+	
 	@Override
 	public int insert(LikeIngredientVO likeIngredient) {
 		Connection con = null;
@@ -258,6 +262,44 @@ public class LikeIngredientJDBCDAO implements LikeIngredientDAOInterface {
 		return allLikeIngredient;
 	}
 	
+	@Override
+	public void addAccountLikeIngredient(List<IngredientVO> likeIngredientVOs,Integer accountID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(INSERT);
+			
+			for(IngredientVO ingredientVO : likeIngredientVOs) {
+				pstmt.setInt(1,accountID);
+				pstmt.setInt(2,ingredientVO.getIngredientID());
+				pstmt.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+	}
+	
+	
+	
 	public static void main(String args[]) {
 		LikeIngredientVO vo = new LikeIngredientVO();
 		LikeIngredientJDBCDAO dao = new LikeIngredientJDBCDAO();
@@ -288,5 +330,4 @@ public class LikeIngredientJDBCDAO implements LikeIngredientDAOInterface {
 		}
 		
 	}
-
 }

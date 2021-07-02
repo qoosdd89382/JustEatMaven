@@ -41,10 +41,8 @@ public class WebSocketEventChatRoom {
 	@OnMessage
 	public void onMessage(Session userSession, String message) {
 		JSONObject jsonObject = null;
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 		try {
 			jsonObject = new JSONObject(message);
-//			jsonObject.put("sendTime", dtf.format(LocalDateTime.now()).toString());
 			System.out.println(jsonObject);
 			String eventID = jsonObject.getString("eventID");
 			if ("history".equals(jsonObject.getString("type"))) {
@@ -54,7 +52,8 @@ public class WebSocketEventChatRoom {
 					JSONObject jsonObj = new JSONObject(historyMsg);
 					EventChatroomMessage eventChatroomMessage = new EventChatroomMessage(jsonObj.getString("type"),
 							jsonObj.getString("eventID"), jsonObj.getString("senderID"),
-							jsonObj.getString("senderName"), jsonObj.getString("message"));
+							jsonObj.getString("senderName"), jsonObj.getString("message"),
+							jsonObj.getString("sendTime"));
 					eventChatroomMessages.add(eventChatroomMessage);
 				}
 				System.out.println(eventChatroomMessages.size());

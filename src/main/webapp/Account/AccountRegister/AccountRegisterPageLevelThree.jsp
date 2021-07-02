@@ -206,6 +206,9 @@ textarea#textarea {
 		</div>
 	</div>
 	
+	<h3><a href='<%=request.getContextPath()%>/Account/AccountFoodPage.jsp'>選擇食材</a></h3>
+	
+	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
 	</footer>

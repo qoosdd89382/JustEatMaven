@@ -3,7 +3,7 @@
 
 <c:if test="${not empty sessionScope.accountInfoVOLogin}">
 <!-- forNoticeWebSocket -->
-<section id="msgsList" class="rounded -none">
+<section id="msgsList" class="rounded shadow -none">
 	<div id="msgsListInner">
 	</div>
 </section>

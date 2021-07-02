@@ -1,13 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.likeingredient.model.*"%>
+<%@ page import="com.dislikeingredient.model.*"%>
+<jsp:useBean id="likeIngredientSvc" scope="page" class="com.likeingredient.model.LikeIngredientService" />
+<jsp:useBean id="dislikeIngredientSvc" scope="page" class="com.dislikeingredient.model.DislikeIngredientService" />
+<jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 
 <%
 //儲存所有資料的accountInfoVO
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
+Integer accountID = accountInfoVO.getAccountID();
+List<LikeIngredientVO> likeIngredientVOs = likeIngredientSvc.getAccountLikeIngredient(accountID);
+pageContext.setAttribute("likeIngredientVOs",likeIngredientVOs);
+List<DislikeIngredientVO> dislikeIngredientVOs = dislikeIngredientSvc.getAccountDislikeIngredient(accountID);
+pageContext.setAttribute("dislikeIngredientVOs",dislikeIngredientVOs);
 %>
-
 <!DOCTYPE html>
 
 <html>
@@ -167,6 +177,21 @@ input#account_logout:hover {
 				<span>用戶身分證背面:</span><br>
 				<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
 				</div>
+				
+				<div>
+				<span>用戶喜歡的食材</span>
+					<c:forEach var="LikeIngredientVO" items="${likeIngredientVOs}">
+						<div>${ingredientSvc.getOneIngredient(LikeIngredientVO.likeIngredientID).ingredientName}</div>
+					</c:forEach>
+				</div>
+				
+				<div>
+				<span>用戶討厭的食材</span>
+					<c:forEach var="DislikeIngredientVO" items="${dislikeIngredientVOs}">
+						<div>${ingredientSvc.getOneIngredient(DislikeIngredientVO.dislikeIngredientID).ingredientName}</div>
+					</c:forEach>
+				</div>
+				
 										
 				<div id="account_name">
 				<span>用戶自我介紹:<br>${accountInfoVOLogin.accountText}</span><br>
