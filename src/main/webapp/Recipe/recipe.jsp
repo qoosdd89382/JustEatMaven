@@ -96,7 +96,7 @@
 				</div>
 				<div class="sub-title col-12">
 					<div class="author">
-						<i class="fas fa-user"></i><a href="#">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a>
+						<i class="fas fa-user"></i><a href="${pageContext.request.contextPath}/Recipe/recipe.do?action=myRecipe&id=${recipeVO.accountID}">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a>
 					</div>
 					<div class="time">
 						發表於 <fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy.MM.dd a K:mm"/>
