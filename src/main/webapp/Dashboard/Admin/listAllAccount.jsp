@@ -90,6 +90,7 @@
                                            <th>信箱</th>
                                            <th>暱稱</th>
                                            <th>註冊時間</th>
+                                           <th>狀態</th>
                                            <th>操作</th>
                                            <th>批次操作</th>
                                         </tr>
@@ -106,19 +107,22 @@
                                             </td>
                                             <td><fmt:formatDate value="${accountInfoVO.accountRegisterTime}" pattern="yyyy.MM.dd a KK:mm"/></td>
                                             <td>
+                                            	${accountInfoVO.accountState == true ? "啟用中" : "停權中" }
+                                            </td>
+                                            <td>
 
 							<c:if test="${accountInfoVO.accountState == false}">
 							  <form method="post" action="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do" style="margin-bottom: 0px;">
 							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
 							     <input type="hidden" name="action" value="activeAccountInfo">
-							     <button type="submit" class="btn btn-sm btn-primary" style="background-color:red;">啟用</button>
+							     <button type="submit" class="actionBtn btn btn-sm btn-danger">啟用</button>
 							  </form>
 							</c:if>
 							<c:if test="${accountInfoVO.accountState == true}">
 							  <form method="post" action="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do" style="margin-bottom: 0px;">
 							     <input type="hidden" name="accountID"  value="${accountInfoVO.accountID}">
 							     <input type="hidden" name="action" value="freezeAccountInfo">
-							     <button type="submit" class="btn btn-sm btn-primary">停權</button>
+							     <button type="submit" class="actionBtn btn btn-sm btn-primary">停權</button>
 							  </form>
 							</c:if>
 											</td>
@@ -191,8 +195,15 @@
 						success: function(data){
 							console.log($("tr[data-id='" + $(element).val() + "']").find("button[type='submit']").text());
 							$("tr[data-id='" + $(element).val() + "']").find("button[type='submit']").text(actionToggleStr);
-							$("tr[data-id='" + $(element).val() + "']").find("input[name='action']").value(actionToggleAction);
+							$("tr[data-id='" + $(element).val() + "']").find("input[name='action']").val(actionToggleAction);
 							$("#successModal").modal();
+							if (actionToggleStr == "啟用") {
+								$(element).closest("tr").find(".actionBtn").removeClass("btn-primary");
+								$(element).closest("tr").find(".actionBtn").addClass("btn-danger");
+							} else {
+								$(element).closest("tr").find(".actionBtn").removeClass("btn-danger");
+								$(element).closest("tr").find(".actionBtn").addClass("btn-primary");
+							}
 						},
 						
 		    		});
