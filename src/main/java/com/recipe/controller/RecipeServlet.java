@@ -78,7 +78,8 @@ public class RecipeServlet extends HttpServlet {
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/myRecipe.jsp");
 				successView.forward(req, res);
 			} catch (Exception e) {
-				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+//				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				errorMsgs.put("UnknowErr", "請登入，以使用本功能！");
 //				e.printStackTrace();
 				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
@@ -119,7 +120,8 @@ public class RecipeServlet extends HttpServlet {
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				successView.forward(req, res);
 			} catch (Exception e) {
-				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+//				errorMsgs.put("UnknowErr", "發生錯誤，或您尋找的食譜不存在！");
+				errorMsgs.put("UnknowErr", "請登入，以使用本功能！");
 //				e.printStackTrace();
 				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
