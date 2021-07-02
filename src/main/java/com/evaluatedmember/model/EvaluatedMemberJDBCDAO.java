@@ -17,8 +17,8 @@ public class EvaluatedMemberJDBCDAO implements EvaluatedMemberDAOInterface {
 	private static String user = "DBAdmin";
 	private static String password = "justeat";
 
-	private static final String Insert_Stmt = "Insert into EvaluatedMember(accepter_account_id,giver_account_id,event_id,give_score) Values((Select account_id From EventMember Where account_id = ?), (Select account_id From EventMember Where account_id = ?),(Select event_id From EventMember Where event_id = ?),?)";
-	private static final String Update_Stmt = "Update EvaluatedMember Set give_score=? Where event_id = ? AND accepter_account_id = ?";
+	private static final String Insert_Stmt = "Insert into EvaluatedMember(accepter_account_id,giver_account_id,event_id,give_score) Values(?,?,?,?)";
+	private static final String Update_Stmt = "Update EvaluatedMember Set give_score = ? Where event_id = ? AND accepter_account_id = ? AND giver_account_id = ?";
 //	private static final String Delete_Stmt = "Delete From EvaluatedMember Where "; 再想想
 	private static final String Select_All_Stmt = "Select * From EvaluatedMember";
 	private static final String Get_AllByEventID_Stmt = "Select * From EvaluatedMember Where event_id = ?";
@@ -82,11 +82,13 @@ public class EvaluatedMemberJDBCDAO implements EvaluatedMemberDAOInterface {
 			pstmt.setInt(1, evaluatedMemberVO.getGiveScore());
 			pstmt.setInt(2, evaluatedMemberVO.getEventID());
 			pstmt.setInt(3, evaluatedMemberVO.getAccepterAccountID());
+			pstmt.setInt(4, evaluatedMemberVO.getGiverAccountID());
+
 			pstmt.executeUpdate();
-			System.out.println("更新成功");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
 		}finally {
 			if(pstmt!=null) {
 				try {
