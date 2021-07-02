@@ -29,7 +29,7 @@ public class RecipeIngredientUnitJDBCDAO implements RecipeIngredientUnitDAOInter
 //	private static final String UPDATE = "UPDATE RecipeIngredientUnit SET recipe_id = ?, ingredient_id = ?, unit_id = ?, unit_amount = ? WHERE recipeIngredientUnit_id = ?";
 	private static final String UPDATE = "UPDATE RecipeIngredientUnit SET unit_id = ?, unit_amount = ? WHERE recipe_id = ? and ingredient_id = ?";
 	private static final String DELETE = "DELETE FROM RecipeIngredientUnit WHERE recipeIngredientUnit_id = ?";
-	private static final String DELETE_BY_FK = "DELETE FROM RecipeIngredientUnit WHERE recipe_id and ingredient_id = ?";
+	private static final String DELETE_BY_FK = "DELETE FROM RecipeIngredientUnit WHERE recipe_id = ? and ingredient_id = ?";
 	private static final String SELECT_ONE_BY_ID = "SELECT * FROM RecipeIngredientUnit WHERE recipeIngredientUnit_id = ?";
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM RecipeIngredientUnit WHERE recipe_id = ?";
 	private static final String SELECT_ALL_BY_INGREDIENT = "SELECT * FROM RecipeIngredientUnit WHERE ingredient_id = ?";
@@ -454,7 +454,7 @@ public class RecipeIngredientUnitJDBCDAO implements RecipeIngredientUnitDAOInter
 		int deleteRow = 0;
 
 		try {
-			pstmt = con.prepareStatement(DELETE);
+			pstmt = con.prepareStatement(DELETE_BY_FK);
 
 			pstmt.setInt(1, recipeIngredientUnit.getRecipeID());
 			pstmt.setInt(2, recipeIngredientUnit.getIngredientID());

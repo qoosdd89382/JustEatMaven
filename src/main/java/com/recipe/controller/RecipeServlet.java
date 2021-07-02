@@ -68,7 +68,7 @@ public class RecipeServlet extends HttpServlet {
 				
 				String successMsg = "";
 				if (list.size() > 0) {
-					successMsg = accountName + "發表的食譜共有" + list.size() + "筆：";
+					successMsg = "<b>" + accountName + "</b>發表的食譜共有" + list.size() + "筆：";
 				} else {
 					successMsg = "......很抱歉，" + accountName + "暫時沒有發表食譜......";
 				}
@@ -183,11 +183,11 @@ public class RecipeServlet extends HttpServlet {
 					throw new Exception();
 				}
 				
-				RecipeCuisineCategoryService reicpeCatSvc = new RecipeCuisineCategoryService();
+				RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
 				RecipeService recipeSvc = new RecipeService();
 				CuisineCategoryService categorySvc = new CuisineCategoryService();
 				
-				List<RecipeCuisineCategoryVO> catRecipeList = reicpeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
+				List<RecipeCuisineCategoryVO> catRecipeList = recipeCatSvc.getAllByCuisineCategory(new Integer(cuisineCategoryID));
 				List<RecipeVO> list = new ArrayList<RecipeVO>();
 				for (RecipeCuisineCategoryVO catRecipeVO : catRecipeList) {
 					list.add(recipeSvc.getOneRecipe(catRecipeVO.getRecipeID()));
@@ -1023,13 +1023,13 @@ public class RecipeServlet extends HttpServlet {
 //					}
 //				}
 //				System.out.println("---刪除(不包含更新的資料)---");
-//				for(RecipeIngredientUnitVO one : recipeIngUnitDiffList) {
+//				for(RecipeIngredientUnitVO one : recipeIngUnitDiff) {
 //					System.out.print("getIngredientID:" + one.getIngredientID());
 //					System.out.print("-getUnitID:" + one.getUnitID());
 //					System.out.println("-getUnitAmount:" + one.getUnitAmount());
 //				}
 //				System.out.println("---新增(不包含更新的資料)---");
-//				for(RecipeIngredientUnitVO one : recipeIngUnitAddList) {
+//				for(RecipeIngredientUnitVO one : recipeIngUnitAdd) {
 //					System.out.print("getIngredientID:" + one.getIngredientID());
 //					System.out.print("-getUnitID:" + one.getUnitID());
 //					System.out.println("-getUnitAmount:" + one.getUnitAmount());
@@ -1077,7 +1077,7 @@ public class RecipeServlet extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
 			}
 		}

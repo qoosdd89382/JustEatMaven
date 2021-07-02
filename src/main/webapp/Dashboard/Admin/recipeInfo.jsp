@@ -73,6 +73,87 @@
     <link href="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <style>
 
+.vertical-container {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.catAutoOutput ul, .ingAutoOutput ul {
+	background: #eee;
+	min-height: 55px;
+	padding: 5px;
+	margin-top: 10px;
+}
+
+.catAutoOutput ul>li {
+	display: inline-block;
+	margin: 10px 3px;
+	padding: 5px;
+	border: 1px solid gray;
+	background: #fff;
+}
+.catAutoOutput ul>li span{
+	margin-right: 3px;
+}
+
+
+.ingAutoOutput ul > li {
+	margin: 10px 3px;
+	padding: 3px;
+	border: 1px solid gray;
+	background: #fff;
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+}
+
+.preview {
+	border: 1px solid lightgray;
+	display: inline-block;
+	position: relative;
+	min-height: 80px; /* 40px */
+	border-radius: .25rem !important;
+	margin-top: 10px;
+	padding: 3px;
+}
+
+.preview span.text {
+	position: absolute;
+	display: inline-block;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	color: lightgray;
+}
+.preview_img {
+    width: 100%;
+}
+.uploadBtn {
+    margin-bottom: 10px;
+}
+.recipe td:last-child {
+    text-align: right;
+}
+.agreeBox {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.errorSpan {
+	color: red;
+	font-weight: bold;
+}
 </style>
 </head>
 
@@ -235,7 +316,7 @@
 
 				<div class="form-group">
 					<label for="recipePicTop row" class="font-weight-bold text-primary">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
-						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳檔案</div>
+						<div id="picTopUploadBtn" class="uploadBtn btn btn-secondary col-6">上傳檔案</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><img id="top_img" src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}" class="preview_img"></div>
 				</div>
@@ -258,7 +339,7 @@
 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
-										<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+										<div class="picStepUploadBtn uploadBtn btn btn-secondary col-12">上傳圖片</div>
 										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
 										<div class="picStepPreview preview col-12"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${recipeStepVO.recipeStepID}" class="step_img preview_img"></div>
 									</td>
@@ -304,18 +385,20 @@
 					</tbody>
 				</table>
 
-				<div id="addStepBtn" class="btn btn-primary">增加一個步驟</div>
-				<div>
-					<label>
-						<input type="checkbox" name="agreement" class="styled-checkbox" value="agree">
-							同意使用本網站之條款及隱私權政策
-					</label>
-				</div>
+				<div id="addStepBtn" class="btn btn-secondary btn-block">增加一個步驟</div>
+<!-- 				<div class="agreeBox"> -->
+<!-- 					<label> -->
+<!-- 						<input type="checkbox" name="agreement" class="styled-checkbox" value="agree"> -->
+<!-- 							同意使用本網站之條款及隱私權政策 -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+				<hr />
 				<span class="errorSpan">${errorMsgs.get("agreementErr")}</span>
 				<input type="hidden" name="action" value="update">
-				<input type="hidden" name="accountID" value="update">
+				<input type="hidden" name="accountID" value="${recipeVO.accountID}">
 				<button id="btnSubmit" class="btn btn-primary btn-block" type="submit">送出</button>
 			</form>
+				<a href="<%=request.getContextPath()%>/Dashboard/Admin/listAllRecipe.jsp" class="btn btn-light btn-block mt-1">返回列表</a>
 
                                 
 		                        </div>
@@ -390,7 +473,7 @@
 					var recipeID = $('input[name="recipeID"]').val();
 			  		console.log(recipeID);
 					$.ajax({
-						  url: '<c:url value="/Recipe/deleteRecipeStep.do?update="/>' + recipeID + "&delOrder=" + delOrder.toString(),
+						  url: '<c:url value="/Dashboard/Recipe/deleteRecipeStep.do?update="/>' + recipeID + "&delOrder=" + delOrder.toString(),
 						  type: "GET",
 						  success: function(data){
 							$(that).closest("tr.recipe").remove();

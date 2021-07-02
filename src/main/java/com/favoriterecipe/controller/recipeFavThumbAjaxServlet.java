@@ -73,8 +73,9 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 						String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountName();
 						
 						NoticeVO noticeVO = noticeSvc.addNotice(authorID, "食譜", 
-								accountName
-								+ "收藏您的食譜<a href='" + req.getContextPath() + "/Recipe/recipe.jsp?id="+ recipeID + "'>"
+								"<a href='" + req.getContextPath() + "/Recipe/recipe.do?action=myRecipe&id="+ accountID + "'>"
+								+ accountName + "</a>"
+								+ " 收藏您的食譜 <a href='" + req.getContextPath() + "/Recipe/recipe.jsp?id="+ recipeID + "'>"
 								+ recipeName + "</a>");
 						String message = gson.toJson(noticeVO);
 						WebSocketNotice noticeWS = new WebSocketNotice();

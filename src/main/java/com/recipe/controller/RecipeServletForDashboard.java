@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ import com.recipestep.model.RecipeStepService;
 import com.recipestep.model.RecipeStepVO;
 
 @WebServlet("/Dashboard/Recipe/recipe.do")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class RecipeServletForDashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +42,7 @@ public class RecipeServletForDashboard extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html; charset=UTF-8");
-
+		
 		String action = req.getParameter("action");
 
 		/********************** 刪除食譜 **********************/
@@ -77,6 +79,7 @@ public class RecipeServletForDashboard extends HttpServlet {
 				req.setAttribute("recipeVO", recipeVO);
 				RequestDispatcher successView = req.getRequestDispatcher("/Dashboard/Admin/recipeInfo.jsp");
 				successView.forward(req, res);
+				System.out.println("成功轉交");
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
 				e.printStackTrace();
@@ -87,6 +90,7 @@ public class RecipeServletForDashboard extends HttpServlet {
 
 		/********************** 更新食譜 **********************/
 		if ("update".equals(action)) { // 來自updateRecipe.jsp的請求
+			System.out.println("let's update");
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 			RecipeService recipeSvc = new RecipeService();
@@ -94,7 +98,7 @@ public class RecipeServletForDashboard extends HttpServlet {
 			RecipeIngredientUnitService recipeIngUnitSvc = new RecipeIngredientUnitService();
 			RecipeStepService recipeStepSvc = new RecipeStepService();
 
-			try {
+//			try {
 				Integer recipeID = new Integer(req.getParameter("recipeID"));
 
 				// ------------------------食譜------------------------
@@ -338,13 +342,13 @@ public class RecipeServletForDashboard extends HttpServlet {
 				req.getSession().setAttribute("recipeStepPicBuffers", recipeStepPicBuffers);
 				req.setAttribute("oldFileIdentify", oldFileIdentify);
 
-				String agreement = req.getParameter("agreement");
-				System.out.println(agreement);
-				if (agreement == null || agreement.trim().length() == 0) {
-					errorMsgs.put("agreementErr", "未勾選同意本站之使用規範與協議");
-				} else if (!"agree".equals(agreement.trim())) {
-					errorMsgs.put("agreementErr", "未勾選同意本站之使用規範與協議");
-				}
+//				String agreement = req.getParameter("agreement");
+//				System.out.println(agreement);
+//				if (agreement == null || agreement.trim().length() == 0) {
+//					errorMsgs.put("agreementErr", "未勾選同意本站之使用規範與協議");
+//				} else if (!"agree".equals(agreement.trim())) {
+//					errorMsgs.put("agreementErr", "未勾選同意本站之使用規範與協議");
+//				}
 
 				RecipeVO recipeVO = new RecipeVO();
 				recipeVO.setRecipeID(recipeID);
@@ -360,7 +364,7 @@ public class RecipeServletForDashboard extends HttpServlet {
 					req.setAttribute("recipeCatVOs", recipeCatVOs);
 					req.setAttribute("recipeIngUnitVOs", recipeIngUnitVOs);
 					req.setAttribute("recipeStepVOs", recipeStepVOs);
-					RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
+					RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/Admin/recipeInfo.jsp");
 					failureView.forward(req, res);
 					return;
 				}
@@ -413,21 +417,24 @@ public class RecipeServletForDashboard extends HttpServlet {
 						(List<RecipeCuisineCategoryVO>) recipeCatAdd, (List<RecipeIngredientUnitVO>) recipeIngUnitDiff,
 						(List<RecipeIngredientUnitVO>) recipeIngUnitAdd, (List<RecipeStepVO>) recipeStepDiff,
 						(List<RecipeStepVO>) recipeStepAdd);
-
+				
+				System.out.println("leave");
 				req.getSession().removeAttribute("recipePicTopBuffer");
 				req.getSession().removeAttribute("recipeStepPicBuffers");
 				RequestDispatcher successView = req
-						.getRequestDispatcher("/Recipe/recipe.jsp?id=" + recipeVO.getRecipeID());
+						.getRequestDispatcher("/Dashboard/Recipe/recipe.do?action=getOneForUpdate&recipeID=" + recipeVO.getRecipeID());
 				successView.forward(req, res);
+				System.out.println("after leave");
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
-				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/updateRecipe.jsp");
-				failureView.forward(req, res);
-			}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+//				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/Recipe/recipeInfo.jsp");
+//				failureView.forward(req, res);
+//			}
 		}
-
+		
+		System.out.println("out");
 	}
 
 }
