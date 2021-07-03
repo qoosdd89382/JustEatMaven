@@ -21,8 +21,8 @@
         <ul>
             <li><a href="<%=request.getContextPath()%>" id="homepage_btn">首頁</a></li>
             <li><a href="<%=request.getContextPath()%>/Recipe/listAllRecipe.jsp" id="recipe_btn">食譜</a></li>
-            <li><a href="#" id="party_btn">揪飯</a></li>
-            <li><a href="#" id="shop_btn">商城</a></li>
+            <li><a href="<%=request.getContextPath()%>/Event/EventList.jsp" id="party_btn">揪飯</a></li>
+<!--             <li><a href="#" id="shop_btn">商城</a></li> -->
             <li><a href="<%=request.getContextPath()%>/Account/accountInfo.do?action=gotoAccountLoginPage" class="select">${sessionScope.accountInfoVOLogin == null ? "登入" : "會員中心" }</a></li>
             <c:if test="${not empty sessionScope.accountInfoVOLogin}">
             	<li><div class="profile_pic_outer"><img class="profile_pic" src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVOLogin.accountID}" alt=""></div></li>
