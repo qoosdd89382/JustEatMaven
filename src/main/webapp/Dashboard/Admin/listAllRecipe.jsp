@@ -125,7 +125,10 @@ td > span {
                                         <tr data-id="${recipeVO.recipeID}">
                                             <td>${recipeVO.recipeID}</td>
 											<td><a href="<%=request.getContextPath()%>/Dashboard/Recipe/recipe.do?action=getOneForUpdate&recipeID=${recipeVO.recipeID}">${recipeVO.recipeName}</a></td>
-											<td><a href="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do?action=gotoUpdateAccountInfo&accountID=${recipeVO.accountID}">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></td>
+<%-- 											<td><a href="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do?action=gotoUpdateAccountInfo&accountID=${recipeVO.accountID}">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</a></td> --%>
+											<td>
+												<span class="searchable">${accountSvc.selectOneAccountInfo(recipeVO.accountID).accountNickname}</span>
+												<a class="btn btn-light btn-sm" href="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do?action=gotoUpdateAccountInfo&accountID=${recipeVO.accountID}">編輯會員</a></td>
 											<td>
 												<c:forEach var="recipeCatVO" items="${recipeCatSvc.getAllByRecipe(recipeVO.recipeID)}">
 													<span class="searchable">
@@ -197,7 +200,33 @@ td > span {
     $(function(){
     	
     	$('#dataTable').DataTable({
-    		  order: [[ 0, 'desc' ]],
+    		  "order": [[ 0, 'desc' ]],
+
+    		    "searching": true, //搜尋功能, 預設是開啟
+    		    "paging": true, //分頁功能, 預設是開啟
+    		    "ordering": true, //排序功能, 預設是開啟
+//    		    "lengthMenu": [10, 20],
+    		    "language": {
+    		        "processing": "處理中...",
+    		        "loadingRecords": "載入中...",
+    		        "lengthMenu": "顯示 _MENU_ 項結果",
+    		        "zeroRecords": "沒有符合的結果",
+    		        "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+    		        "infoEmpty": "顯示第 0 至 0 項結果，共 0 項",
+    		        "infoFiltered": "(從 _MAX_ 項結果中過濾)",
+    		        "infoPostFix": "",
+    		        "search": "搜尋:",
+    		        "paginate": {
+    		            "first": "第一頁",
+    		            "previous": "上一頁",
+    		            "next": "下一頁",
+    		            "last": "最後一頁"
+    		        },
+    		        "aria": {
+    		            "sortAscending": ": 升冪排列",
+    		            "sortDescending": ": 降冪排列"
+    		        }
+    		    }	  
     	});
     	
     	$(document).on("click", ".searchable", function(){
