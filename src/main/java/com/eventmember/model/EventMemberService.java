@@ -25,13 +25,14 @@ public class EventMemberService {
 		return eventMemberVO;
 	}
 	
-	public EventMemberVO updateEventMember(int participationState,int eventID,int accountID,boolean isHostIdentifier) {
+//	public EventMemberVO updateEventMember(int participationState,int eventID,int accountID,boolean isHostIdentifier) {
+	public EventMemberVO updateEventMember(int participationState,int eventID,int accountID) {
 		
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setParticipationState(participationState);
 		eventMemberVO.setEventID(eventID);
 		eventMemberVO.setAccountID(accountID);
-		eventMemberVO.setHostIdentifier(isHostIdentifier);
+//		eventMemberVO.setHostIdentifier(isHostIdentifier);
 		dao.update(eventMemberVO);
 		return eventMemberVO;
 	}
@@ -70,8 +71,11 @@ public class EventMemberService {
 	public int  getTotalAttendanceByAccountID(Integer accountID)  {
 		return dao.getTotalAttendanceByAccountID(accountID);
 	}
-	public int  getEventStatusByAccountID(Integer accountID)  {
-		return dao.getEventStatusByAccountID(accountID);
+	public int  getEventStatusByAccountID(Integer accountID, int eventID) {
+		return dao.getEventStatusByAccountID(accountID, eventID);
+	}
+	public List<EventMemberVO> getAuditPassbyeventID(Integer eventID) {
+		return dao.getAuditPassbyeventID( eventID);
 	}
 
 	

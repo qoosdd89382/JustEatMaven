@@ -134,11 +134,17 @@ public class AccountInfoService {
 		return dao.getAccountNickname(accountNickname);
 	}
 	//輸入信箱 回傳該信箱帳號的 含密碼的VO物件 用來比對使用者的輸入資料是否正確
-	public AccountInfoVO getAccountPasswordByAccountMail(String accountMail) {
-		return dao.getAccountPasswordByAccountMail(accountMail);
-	}
 	public AccountInfoVO getAccountIDByAccountMail(String accountMail){
 		return dao.getAccountIDByAccountMail(accountMail);
+	}
+	public AccountInfoVO getAccountNicknameByAccountMail(String accountMail) {
+		return dao.getAccountNicknameByAccountMail(accountMail);
+	}
+	public AccountInfoVO getAccountLevelByAccountMail(String accountMail) {
+		return dao.getAccountLevelByAccountMail(accountMail);
+	}
+	public AccountInfoVO getAccountPasswordByAccountMail(String accountMail) {
+		return dao.getAccountPasswordByAccountMail(accountMail);
 	}
 	public AccountInfoVO getAccountCodeByAccountMail(String accountMail){
 		return dao.getAccountCodeByAccountMail(accountMail);
@@ -176,15 +182,20 @@ public class AccountInfoService {
 	
 //註冊用
 	//傳入 可用信箱 帳號 隨機驗證碼到資料庫儲存
-	public AccountInfoVO setBlankAccountInfoFromRegister(String accountMail, String accountNickname, String accountCode) {
+	public AccountInfoVO setBlankAccountInfoFromRegister(String accountMail, String accountCode) {
 		AccountInfoVO accountInfoVO = new AccountInfoVO();
 		accountInfoVO.setAccountMail(accountMail);
-		accountInfoVO.setAccountNickname(accountNickname);
 		accountInfoVO.setAccountCode(accountCode);
 		dao.setBlankAccountInfoFromRegister(accountInfoVO);
 		return accountInfoVO;
 	}
-	
+	//針對沒有申請到驗證碼的會員 重新更換驗證碼
+	public void updateBlankAccountCodeFromRegister(String accountMail, String accountCode) {
+		AccountInfoVO accountInfoVO = new AccountInfoVO();
+		accountInfoVO.setAccountMail(accountMail);
+		accountInfoVO.setAccountCode(accountCode);
+		dao.updateBlankAccountCodeFromRegister(accountInfoVO);
+	}
 	
 	//傳入基本會員輸入的資料在VO物件往資料庫送
 	public void setLevelOneAccountInfoFromRegister(

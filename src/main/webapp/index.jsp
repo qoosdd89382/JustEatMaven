@@ -6,8 +6,17 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
 <%@ page import="com.eventinfo.model.*"%>
+<%@page import="java.sql.Timestamp"%>
+<%@page import="java.time.LocalDateTime"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@ page import="java.util.*"%>
 
+
+<jsp:useBean id="thmupRecipeSvc" scope="page" class="com.thumbsuprecipe.model.ThumbsupRecipeService" />
+<jsp:useBean id="favRecipeSvc" scope="page" class="com.favoriterecipe.model.FavoriteRecipeService" />
+<jsp:useBean id="recipeSvc" scope="page" class="com.recipe.model.RecipeService" />
 <jsp:useBean id="eventInfoSvc" scope="page" class="com.eventinfo.model.EventInfoService" />
+<jsp:useBean id="now" class="java.util.Date" scope="page"/>
 
 <%-- <%@ page import="com.*"%> --%>
 
@@ -32,6 +41,33 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/common/css/adminChat.css">
 <title>Just Eat 揪食 - 揪團共享美食</title>
+<style>
+
+.popular > span {
+	margin-right: 10px;
+}
+
+.popular > span svg {
+	margin-right: 10px;
+}
+
+.popular > span {
+	margin-right: 10px;
+}
+
+.popular > span svg {
+	margin-right: 10px;
+}
+.popular span.favcount.click svg {
+	color: #FF79C6;	
+}
+.popular span.likecount.click svg {
+	color: #435DFF;
+}
+
+
+
+</style>
 </head>
 <body>
 	<%-- include header --%>
@@ -74,19 +110,66 @@
 
     <!-- main -->
     <main class="col-10" style="margin: 0 auto;">
+    
         <div class="hot_events">
-            <h3>熱門活動</h3>
+            <h2><i class="fas fa-pizza-slice"></i> 最新活動</h2>
             <section class="slider_box multiple-item responsive">
             <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}">
                 <div>
                     <div class="img_outer"><img src="<%= request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}"></div>
-                    <span class="popular">${eventInfoVO.eventCurrentCount} 人</span>
-                    <div class="title"><a href="<%= request.getContextPath() %>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVOLogin.accountID}">${eventInfoVO.eventName}</a></div>
-                    <div class="datetime"><span class="date">${eventInfoVO.eventStartTime}</span><span class="time">下午 2 時 30 分</span></div>
+                    <span class="popular shadow">${eventInfoVO.eventCurrentCount} 人</span>
+                    <span class="place shadow">${eventInfoVO.groupCity}</span>
+                    <div class="title">
+                    	<a href="<%= request.getContextPath() %>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVOLogin.accountID}">${eventInfoVO.eventName}</a>
+						<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
+							<span class="badge badge-primary">等待報名</span>
+						</c:if>	
+						<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventRegistartionEndTime}">
+							<span class="badge badge-warning">報名中</span>
+						</c:if>	
+						<c:if test="${now > eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
+							<span class="badge badge-info">等待進行</span>
+						</c:if>	
+						<c:if test="${now > eventInfoVO.eventStartTime && now < eventInfoVO.eventEndTime}">
+							<span class="badge badge-success">進行中</span>
+						</c:if>	
+                    	<c:if test="${now > eventInfoVO.eventEndTime}">
+							<span class="badge badge-secondary">已結束</span>
+						</c:if>
+                    </div>
+                    <div class="datetime">
+                    	<span class="date"><fmt:formatDate value="${eventInfoVO.eventStartTime}" pattern="yyyy/MM/dd KK:mm"/></span>
+                    </div>
                 </div>
             </c:forEach>
             </section>
         </div>
+        
+        
+        <div class="hot_events mt-5">
+            <h2><i class="fas fa-hamburger"></i> 最新食譜</h2>
+            <section class="slider_box multiple-item responsive">
+            <c:forEach var="recipeVO" items="${recipeSvc.getSomeNew()}">
+                <div class="recipeInfo" data-id="${recipeVO.recipeID}">
+                    <div class="img_outer"><img src="<%= request.getContextPath() %>/Recipe/Pic/Top/${recipeVO.recipeID}"></div>
+                    <span class="popular shadow">
+						<span class="viewcount"><i class="fas fa-eye"></i>${recipeVO.recipeViewCount}</span>
+						<span class='likecount ${accountInfoVOLogin == null ? "" : (thmupRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-thumbs-up"></i><span class="num">${thmupRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+						<span class='favcount ${accountInfoVOLogin == null ? "" : (favRecipeSvc.isExist(accountInfoVOLogin.accountID, recipeVO.recipeID) == null ? "" : "click confirm")}'><i class="fas fa-heart"></i><span class="num">${favRecipeSvc.countAllByRecipe(recipeVO.recipeID)}</span></span>
+					</span>
+                    <div class="title">
+                    	<a href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${recipeVO.recipeID}">${recipeVO.recipeName}</a>
+                    </div>
+                    <div class="datetime">
+                    	<span class="date"><fmt:formatDate value="${recipeVO.recipeTime}" pattern="yyyy/MM/dd KK:mm"/></span>
+                    </div>
+                </div>
+            </c:forEach>
+            </section>
+        </div>
+        
+		<%-- include notMemberAlertModal --%>
+		<%@ include file="/Recipe/notMemberAlertModal.page"%>
     </main>
 
 	<%-- include chatbox --%>
@@ -110,6 +193,98 @@
 	<script src="<%=request.getContextPath()%>/common/js/dateFormat.js"></script>
 	<script>
 		<%@ include file="/common/js/scriptFooter.page"%>
+		$(function(){
+
+			$("span.likecount").on("mouseover", "svg", function() {
+				$(this).css('cursor', 'pointer'); 
+				$(this).parent().addClass("click");
+			});
+			
+			$("span.likecount").on("mouseout", "svg", function() {
+				$(this).css('cursor', 'auto');
+				if (!$(this).parent().hasClass("confirm")) {
+					$(this).parent().removeClass("click");
+				}
+			});
+				
+			$("span.likecount").on("click", "svg", function() {
+				var that = this;
+				var accountID = "${accountInfoVOLogin.accountID}";
+				var recipeID = $(that).closest(".recipeInfo").attr("data-id");
+				
+				if (accountID == "") {
+					$('#notLogin').modal();
+					return;
+				}
+				
+				$.ajax({
+					type : 'POST',
+					url : '<c:url value="/Recipe/recipeFavThumb.do"/>',
+					data : {
+						'action': "insertThumbsupRecipe",
+						'accountID': accountID,
+						'recipeID': recipeID
+					},
+					success : function(data) {
+						var jsonObj = JSON.parse(data);
+						$(that).next().text(jsonObj.count);
+						if ("insertSucess" == jsonObj.status) {
+							$(that).parent().addClass("click");
+							$(that).parent().addClass("confirm");
+						} else if ("deleteSucess" == jsonObj.status) {
+							$(that).parent().removeClass("click");
+							$(that).parent().removeClass("confirm");
+						}
+					}
+				});
+			});
+
+			
+
+			$("span.favcount").on("mouseover", "svg", function() {
+				$(this).css('cursor', 'pointer'); 
+				$(this).parent().addClass("click");
+			});
+			
+			$("span.favcount").on("mouseout", "svg", function() {
+				$(this).css('cursor', 'auto'); 
+				if (!$(this).parent().hasClass("confirm")) {
+					$(this).parent().removeClass("click");
+				}
+			});
+				
+			$("span.favcount").on("click", "svg", function() {
+				var that = this;
+				var accountID = "${accountInfoVOLogin.accountID}";
+				var recipeID = $(that).closest(".recipeInfo").attr("data-id");
+				
+				if (accountID == "") {
+					$('#notLogin').modal();
+					return;
+				}
+				
+				$.ajax({
+					type : 'POST',
+					url : 'recipeFavThumb.do',
+					data : {
+						'action': "insertFavoriteRecipe",
+						'accountID': accountID,
+						'recipeID': recipeID
+					},
+					success : function(data) {
+						var jsonObj = JSON.parse(data);
+						$(that).next().text(jsonObj.count);
+						if ("insertSucess" == jsonObj.status) {
+							$(that).parent().addClass("click");
+							$(that).parent().addClass("confirm");
+						} else if ("deleteSucess" == jsonObj.status) {
+							$(that).parent().removeClass("click");
+							$(that).parent().removeClass("confirm");
+						}
+					}
+				});
+			});			
+		});
 	</script>
 </body>
 </html>

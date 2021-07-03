@@ -18,11 +18,11 @@ public interface EventMemberDAOInterface {
 	public int getAvgScoreByAccountID(Integer accountID);
 	public int getTotalEventByAccountID(Integer accountID);
 	public int getTotalAttendanceByAccountID(Integer accountID);
-	public int getEventStatusByAccountID(Integer accountID);
+	public int getEventStatusByAccountID(Integer accountID, Integer eventID);
 	public int getOneByEventAndHost(int eventID);
 	public void insertByEventInfo(EventMemberVO eventMemberVO,Connection con);
 	public void insertWithDishIngredient(EventMemberVO eventMemberVO,List<DishVO> dishList,List<DishAndIngredientVO> dishAndIngredientList);
-
+	public List<EventMemberVO> getAuditPassbyeventID(Integer eventID);
 	public EventMemberVO getByEventIDAndMemberID(Integer eventID, Integer accountID);
 
 

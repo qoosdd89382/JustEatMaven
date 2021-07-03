@@ -67,9 +67,8 @@
 	<h2>成員評分</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">我的活動</a></li>
-			<li class="breadcrumb-item"><a href=" # ">參加/結束的活動</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/myevent.jsp">參加/結束的活動</a></li>
 			<li class="breadcrumb-item"><a href=" # ">評鑑頁面</a></li>
 			
 		</ol>
@@ -84,7 +83,7 @@
 		<th>性別</th>
 		<th>平均星數</th>
 		<th>給予星數</th>
-		<th>社交</th>
+		<th>給予</th>
 		
 	</tr>
 		<c:forEach var="evaluatedmemberVO" items="${list}" >
