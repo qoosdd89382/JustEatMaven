@@ -19,7 +19,7 @@
 	pageContext.setAttribute("accountInfoVO", accountInfoVO);
 	EventInfoService eventInfoSvc = new EventInfoService();
 	EventInfoVO eventInfoVO =  eventInfoSvc.getEventID(Integer.parseInt(request.getParameter("eventID")));
-	
+	eventInfoSvc.updateEventViewCount(Integer.parseInt(request.getParameter("eventID")));
 	Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
 %>
 <!DOCTYPE html>
