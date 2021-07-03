@@ -49,7 +49,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                 	data-target="#recipeCollapse" aria-controls="recipeCollapse"
                     aria-expanded="true">
-                    <i class="fas fa-fw fa-user"></i>
+                    <i class="fas fa-cookie-bite"></i>
                     <span>Recipe 食譜</span>
                 </a>
                 <div id="recipeCollapse" class="collapse"
@@ -69,14 +69,14 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                 	data-target="#eventCollapse" aria-controls="eventCollapse"
                     aria-expanded="true">
-                    <i class="fas fa-fw fa-user"></i>
+                    <i class="fas fa-hands-helping"></i>
                     <span>Event 活動</span>
                 </a>
                 <div id="eventCollapse" class="collapse"
                 		aria-labelledby="headingEvent"
                 		data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="utilities-color.html">活動列表管理</a>
+                        <a class="collapse-item" href="<%=request.getContextPath()%>/Dashboard/Admin/listAllEvent.jsp">活動列表管理</a>
                         <a class="collapse-item" href="utilities-border.html">活動成員管理</a>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                 	data-target="#adminCollapse" aria-controls="adminCollapse"
                     aria-expanded="true">
-                    <i class="fas fa-fw fa-user"></i>
+                    <i class="fas fa-user-cog"></i>
                     <span>Admin 管理員</span>
                 </a>
                 <div id="adminCollapse" class="collapse"
@@ -126,15 +126,15 @@
 
             <!-- Divider 
             <hr class="sidebar-divider">
--->
 
-            <!-- Nav Item - Charts 
+
+            <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>瀏覽紀錄</span></a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/Dashboard/Admin/adminChat.jsp">
+                    <i class="fas fa-comments"></i>
+                    <span>客服聊天室</span></a>
             </li>
--->
+
             <!-- Nav Item - Tables 
             <li class="nav-item">
                 <a class="nav-link" href="tables.html">
