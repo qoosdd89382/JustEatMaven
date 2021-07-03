@@ -422,6 +422,7 @@ public class RecipeServletForDashboard extends HttpServlet {
 				System.out.println("leave");
 				req.getSession().removeAttribute("recipePicTopBuffer");
 				req.getSession().removeAttribute("recipeStepPicBuffers");
+				req.setAttribute("successMsg", "更新成功！");
 				RequestDispatcher successView = req
 						.getRequestDispatcher("/Dashboard/Recipe/recipe.do?action=getOneForUpdate&recipeID=" + recipeVO.getRecipeID());
 				successView.forward(req, res);

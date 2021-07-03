@@ -152,9 +152,9 @@ header {
 
 .slider_box .img_outer > img {
     position: absolute;
-    width: 180%;
+    width: 120%;
     top: 50%;
-    left: -40%;
+    left: -10%;
     transform: translateY(-50%);
 }
 
@@ -172,14 +172,23 @@ section.slider_box > div > div > div{
     margin-top: 10px;
 } */
 
-.popular {
-    background-color: #F9C74F;
+.popular, .place {
+    background-color: #fce6b1;
     padding: 5px;
     text-align: center;
     border-radius: 8px;
+    font-weight: bold;
+}
+.popular {
     position: absolute;
     top: 20px;
     left: 15px;
+}
+
+.place {
+    position: absolute;
+    top: 20px;
+    right: 15px;
 }
 
 .title {
@@ -208,4 +217,11 @@ section.slider_box > div > div > div{
 
 .datetime > span {
     padding-right: 20px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
 }
+.img_outer {
+	cursor: pointer;
+}
+
+
