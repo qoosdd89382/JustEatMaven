@@ -1,18 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
 <%@ page import="com.accountinfo.model.*"%>
 <%
 //登入後產生存在session中的accountInfoVOLogin
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
-//如果SESSIN沒有登入消息的話 就取前面的REQUEST
-// if(accountInfoVO==null){
-// 	accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO");
-// }
+
 //取得傳回的使用者輸入參數
-// String accountMail = accountInfoVO.getAccountMail();
-// String accountPassword = accountInfoVO.getAccountPassword();
 String accountMail = request.getParameter("accountMail");
 String accountPassword = request.getParameter("accountPassword");
 %>
@@ -37,16 +31,16 @@ String accountPassword = request.getParameter("accountPassword");
 </head>
 
 <style>
-
+/* 背景 */
 body#Body_Login{
 	background-image:url("images/LoginBackGround.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-
 /*整個區塊 */
 div#main_area{
 	margin-top:80px;
+	margin-bottom:-20px;
 }
 /* 登入區塊 */
 div#login_area {	
@@ -72,38 +66,38 @@ div#login_area {
 /* 您好歡迎登入 */
 strong#login_area_title{
 	color: 	#FF8800;
-
 	font-size:25px;
 }
+/* 信箱 密碼 驗證碼 */
 form span#text{
 	color: 	#FF8800;
 	font-size:20px;
 	margin:5px;
 }
+/* 驗證碼 */
 img#login_area_randomnumber_pic{
 	margin:5px;
 }
-
+/* 還不是會員 忘記密碼 */
 span#account_forget_code,
 span#account_register_info{
 	margin:5px;
 	font-size:15px;
 }
+/* 帳號 密碼 驗證碼 樣式 */
 input#account_mail_input,
 input#account_password_input,
 input#account_randomnumber_input{
 	border-radius:2px;
 	margin:5px;
 }
-
-
 input#account_mail_input:focus,
 input#account_password_input:focus,
 input#account_randomnumber_input:focus{
 	border-color: #FFDBC0;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(252, 146, 76, 0.6);
 }
-
+/* 登入 重置按鈕 */
 input#account_login_btn,
 input#account_reset_btn {
 	margin:5px;
@@ -164,12 +158,10 @@ input#account_reset_btn:hover {
 						<input id="account_reset_btn" type="reset" value="重置">
 					</form>
 				
-				
 				<span id="account_forget_code"><a id="account_forget_code" href='<%=request.getContextPath()%>/Account/AccountForgetPage.jsp'>忘記密碼了嗎?</a></span>
 								
 				<span id="account_register_info"><a id="account_register_info" href='<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp'>還不是會員?</a></span>
 				
-					
 			</div>
 		</div>
 	</div>
@@ -179,7 +171,6 @@ input#account_reset_btn:hover {
 	</footer>
 	
 	<script type="text/javascript">
-
 	//驗證碼圖片更新
 	function refresh() {
 	    	LoginInfo.imgValidate.src="RandomNumber.jsp?id="+Math.random();

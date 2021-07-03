@@ -110,30 +110,27 @@ textarea#textarea {
 		
 			<div id="register_area" class="col-sm-6 align-self-center">
 			<div id="register_area_title">
-			<Strong>您好!您所輸入的信箱跟暱稱可以使用</Strong><br>
+			<Strong>您好!您所輸入的信箱可以使用</Strong><br>
 			<strong>請至您的信箱查看驗證碼</strong>
 			</div>
 			
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
-				
+					
 					<span>您的會員信箱為 :</span>${accountInfoVO.accountMail}<br>
 					
-					<span>您的會員暱稱 :</span>${accountInfoVO.accountNickname}<br>
-
 					<span>請輸入驗證碼:</span><br>
 					<input id="input_box" type="text" name="accountCode"><br>
 					<span style="color:red">${errorMsgs.get("accountCodeError")}</span><br> 
 
-						
+					<a href="<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp">(如無收到驗證碼請點我返回前一頁面重新申請)</a><br>					
 					<input type="hidden" name="action" value="getAccountCode"> 
 					<input id="register_submit_btn" type="submit" value="開始填寫我的詳細資料"> 
 					
 				</form>
+				
 			</div>
 		</div>
 	</div>
-	<P>除錯區</P>
-	<P>全部的訊息${errorMsgs}</P>
 
 	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
