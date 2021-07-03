@@ -2,10 +2,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ page import="com.accountinfo.model.*"%>
+
+<jsp:useBean id="accountInfoSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+
 <!DOCTYPE html>
 
 <%
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+if(accountInfoVO==null){
+	//假設使用者關掉瀏覽器，從信箱進入
+	Integer accountID = Integer.parseInt(request.getParameter("accountID"));
+	accountInfoVO = accountInfoSvc.selectOneAccountInfo(accountID);
+	session.setAttribute("accountInfoVO",accountInfoVO);
+}
+
+
+
 %>
 
 <html>
@@ -117,7 +129,7 @@ textarea#textarea {
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 					
 					<span>您的會員信箱為 :</span>${accountInfoVO.accountMail}<br>
-					
+			
 					<span>請輸入驗證碼:</span><br>
 					<input id="input_box" type="text" name="accountCode"><br>
 					<span style="color:red">${errorMsgs.get("accountCodeError")}</span><br> 

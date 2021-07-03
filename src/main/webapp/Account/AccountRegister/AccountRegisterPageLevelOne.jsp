@@ -2,12 +2,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ page import="com.accountinfo.model.*"%>
+
+<jsp:useBean id="accountInfoSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
+
+
 <!DOCTYPE html>
 
 <%
 //當 確認註冊 取得 使用者存在頁面中的數值
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
-AccountInfoVO accountInfoVORequest = (AccountInfoVO) request.getAttribute("accountInfoVORequest");
+if(accountInfoVO==null){
+	//假設使用者關掉瀏覽器，從信箱進入
+	Integer accountID = Integer.parseInt(request.getParameter("accountID"));
+	accountInfoVO = accountInfoSvc.selectOneAccountInfo(accountID);
+	session.setAttribute("accountInfoVO",accountInfoVO);
+}
+
 %>
 
 <html>
@@ -118,10 +128,13 @@ textarea#textarea {
 				
 					<span>會員信箱 :</span>
 					<span><%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountMail()%></span><br>
-
 					
-					<span>會員暱稱 :</span>
-					<span><%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountNickname()%></span><br>
+					<span style="color:red">*</span><span>請輸入會員暱稱:</span><br>
+					<input id="input_box" type="text" name="accountNickname" 
+<%-- 					value="<%=(accountInfoVO == null) ? "" : "2"%>" --%>
+					placeholder="至少兩個字以上，任意 中文 數字 英文大小寫">
+					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br>
+					
 					
 					<span style="color:red">*</span><span>請輸入會員密碼:</span><br>
 					<input id="input_box" type="text" name="accountPassword" 

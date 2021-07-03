@@ -96,7 +96,7 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	
 	//註冊第一層級會員
 	private static final String Update_LevelOne_Account_From_Register = "Update JustEat.AccountInfo set "
-			+ "account_password=?,account_state=?,account_level=?,"
+			+ "account_nickname=?,account_password=?,account_state=?,account_level=?,"
 			+ "account_name=?,account_gender=?,account_birth=?,"
 			+ "account_text=? "
 			+ "Where account_id=?";
@@ -1065,17 +1065,18 @@ public void activeAccountInfo(Integer accountID) {
 			con = DriverManager.getConnection(url, userid, password);
 			pstmt = con.prepareStatement(Update_LevelOne_Account_From_Register);
 
-			pstmt.setString(1,accountInfoVO.getAccountPassword());//傳入
-			pstmt.setBoolean(2,true);
-			pstmt.setInt(3,new Integer(1));
+			pstmt.setString(1,accountInfoVO.getAccountNickname());
+			pstmt.setString(2,accountInfoVO.getAccountPassword());//傳入
+			pstmt.setBoolean(3,true);
+			pstmt.setInt(4,new Integer(1));
 			
-			pstmt.setString(4,accountInfoVO.getAccountName());//傳入
-			pstmt.setInt(5,accountInfoVO.getAccountGender());//傳入
-			pstmt.setDate(6,accountInfoVO.getAccountBirth());//傳入
+			pstmt.setString(5,accountInfoVO.getAccountName());//傳入
+			pstmt.setInt(6,accountInfoVO.getAccountGender());//傳入
+			pstmt.setDate(7,accountInfoVO.getAccountBirth());//傳入
 
-			pstmt.setString(7,accountInfoVO.getAccountText());//傳入
+			pstmt.setString(8,accountInfoVO.getAccountText());//傳入
 			
-			pstmt.setInt(8, accountInfoVO.getAccountID());
+			pstmt.setInt(9, accountInfoVO.getAccountID());
 			
 			pstmt.executeUpdate();
 			
@@ -1154,7 +1155,7 @@ public void activeAccountInfo(Integer accountID) {
 			pstmt = con.prepareStatement(Update_LevelThree_Account_From_Register);
 			
 			pstmt.setString(1,accountInfoVO.getAccountPhone());
-			pstmt.setInt(2,new Integer(3));
+			pstmt.setInt(2,new Integer(1));
 			
 			pstmt.setBytes(3, accountInfoVO.getAccountPic());
 			pstmt.setBytes(4, accountInfoVO.getAccountIDcardFront());

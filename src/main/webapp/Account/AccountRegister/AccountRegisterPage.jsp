@@ -6,7 +6,7 @@
 
 <%
 //當 確認註冊 取得 使用者存在頁面中的數值
-AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO"); 
+AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO");
 %>
 
 <html>
