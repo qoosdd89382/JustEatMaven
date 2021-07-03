@@ -17,6 +17,8 @@
 <%
 	EventInfoService eventInfoSvc = new EventInfoService();
 	EventInfoVO eventInfoVO = eventInfoSvc.getEventID(Integer.parseInt(request.getParameter("eventID")));
+	pageContext.setAttribute("eventInfoVO", eventInfoVO);
+	
 	EventCuisineCategoryService eventCuisineCategoryService = new EventCuisineCategoryService();
 	List<EventCuisineCategoryVO> eventCuisineCategoryList = eventCuisineCategoryService.getAllByEventID(Integer.parseInt(request.getParameter("eventID")));
 	CuisineCategoryService categoryService = new CuisineCategoryService();
@@ -185,12 +187,13 @@
 	            </div>
 	            <div>
 	                <input type="button" name="" value="上一頁" class="return">
-	                <input type="submit" name="action" value="儲存">
+	                <input type="submit" name="action" value="儲存" class="saveEvent">
 	            </div>
 	        </div>
 		    <div class="info col-6 col-lg-6">
 		        <div class="event_description">
-		            <textarea name="event_description" cols="60" rows="20" placeholder="活動說明"></textarea>
+		            <textarea name="" id="description" cols="60" rows="20" placeholder="活動說明">${eventInfoVO.eventDescription}</textarea>
+		            <input type="hidden" name="event_description" value="${eventInfoVO.eventDescription}"/>
 		        </div>
 		    </div>
 	    </div>
@@ -209,28 +212,28 @@
 	     $('#eventStart').datetimepicker({
 	        theme: '',          //theme: 'dark',
 	        timepicker: true,   //timepicker: false,
-	        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+	        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 		    format: 'Y-m-d H:i',
 		    minDate:'-1970-01-01'
 	     });
 	     $('#eventEnd').datetimepicker({
 		        theme: '',          //theme: 'dark',
 		        timepicker: true,   //timepicker: false,
-		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+		        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 			    minDate:'-1970-01-01'
 		 });
 	     $('#eventRegStart').datetimepicker({
 		        theme: '',          //theme: 'dark',
 		        timepicker: true,   //timepicker: false,
-		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+		        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 			    minDate:'-1970-01-01'
 		 });
 	     $('#eventRegEnd').datetimepicker({
 		        theme: '',          //theme: 'dark',
 		        timepicker: true,   //timepicker: false,
-		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+		        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 			    minDate:'-1970-01-01'
 		 });
@@ -249,7 +252,16 @@
 	            	$("#preview_img").html("");
 	                $("#preview_img").append("<img src="+reader.result+">");
 	            });
-	        });
+	     });
+// 	     $(".saveEvent").on("click",function(){
+// 	    	 if($("#uploadEventImg").val().length ==0){
+<%-- 		    	 <% --%>
+// 		    	 	byte[] tempPic = eventInfoVO.getEventPic();
+// 		    	 	eventInfoVO.setEventPic(tempPic);
+<%-- 		    	 %> --%>
+// 		     }
+// 	     });
+	     
 	</script>
 </body>
 </html>

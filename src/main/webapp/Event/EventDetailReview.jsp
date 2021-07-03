@@ -176,7 +176,7 @@
 					$(".group_type").html("我當主廚");
 				}
 				var startTime = new Date(""+data.eventStart).format("yyyy-MM-dd hh:mm");
-				var endTime = new Date(""+data.eventStart).format("yyyy-MM-dd hh:mm");
+				var endTime = new Date(""+data.eventEnd).format("yyyy-MM-dd hh:mm");
 				
 				$(".event_name").html(data.eventName);
 				$(".current_people").html(data.eventMember);
@@ -194,10 +194,10 @@
 		});
 		
 		$(".memberList").on("click",function(){
-			location.href = "<%=request.getContextPath()%>/Event/EventMember.jsp?eventID<%=request.getParameter("eventID")%>";
+			location.href = "<%=request.getContextPath()%>/Event/EventMember.jsp?eventID=<%=request.getParameter("eventID")%>";
 		});
 		$(".memberCheck").on("click",function(){
-			location.href = "<%=request.getContextPath()%>/Event/Audit.jsp?eventID<%=request.getParameter("eventID")%>";
+			location.href = "<%=request.getContextPath()%>/Event/Audit.jsp?eventID=<%=request.getParameter("eventID")%>";
 		});
 	});
 	

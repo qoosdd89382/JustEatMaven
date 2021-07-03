@@ -80,15 +80,28 @@
 	                <span class="eat_style border"></span>
 	            </div>
 	            <div>
-	                菜色:
+	                其他人菜色:
 	                <span class="dish_name"></span>
 	            </div>
 	            <div>
-	                <input type="submit" name="actionJoin" value="新增菜色">
+	            	<%
+	            		if(dishAndIngJson==null || dishAndIngJson.length()==2){ 
+	            	%>
+	               			<input type="submit" name="actionJoin" value="新增菜色">
+	                <%
+	            		}else{
+	                %>	
+	                		<input type="submit" name="actionJoin" value="重新新增菜色">
+	                <%
+	            		}
+	                %>
 	            </div>
 	            <div>
 	                <input type="button" value="取消參加" class="returnList">
 	                <input type="submit" name="action" value="確定參加" class="joinEvent">
+	            </div>
+	            <div id="preview_img">
+	            	<img src="<%=request.getContextPath()%>/Event/EventInfoForOnePic?eventID=${param.eventID}">
 	            </div>
 	        </div>
 	        <div class="event_content_right col-6 col-lg-6">

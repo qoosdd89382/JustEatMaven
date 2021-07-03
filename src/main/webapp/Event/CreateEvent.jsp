@@ -15,8 +15,9 @@
 <%
 	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
 	CuisineCategoryService cuisineCatSvc = new CuisineCategoryService();
+	pageContext.setAttribute("cuisineCatSvc",cuisineCatSvc);
 	String cuisineCatID = request.getParameter("cuisineCatID");
-	List<CuisineCategoryVO> cuisineCatList = (List<CuisineCategoryVO>) request.getAttribute("cuisineCatList");
+	List<CuisineCategoryVO> cuisineCategoryVOs = (List<CuisineCategoryVO>) request.getAttribute("cuisineCategoryVOs");
 
 	if(eventInfoVO!=null){
 		if(eventInfoVO.getEventStartTime()!=null){
@@ -167,9 +168,12 @@
 	            </div>
 	            <div class="cuisineCatAutoOutput">
 			                <ul>
-				                <c:if test="${not empty cuisineCatList}">
-				                	<c:forEach var="cuisineCatVO" items="${cuisineCatList}">
-				                		<li data-id="${cuisineCatVO.cuisineCategoryID}"><span>${cuisineCatSvc.getOneCategory(cuisineCatVO.cuisineCategoryID).cuisineCategoryName}</span><i class="fas fa-times"></i></li>
+				                <c:if test="${not empty cuisineCategoryVOs}">
+				                	<c:forEach var="cuisineCatVO" items="${cuisineCategoryVOs}">
+				                		<li data-id="${cuisineCatVO.cuisineCategoryID}">
+				                			<span>${cuisineCatSvc.getOneCategory(cuisineCatVO.cuisineCategoryID).cuisineCategoryName}</span>
+				                			<i class="fas fa-times"></i>
+				                		</li>
 				                	</c:forEach>
 				                </c:if>
 			                </ul>
@@ -181,15 +185,26 @@
 	            <div id="preview_img">
 	            </div>
 	            <div>
-	                <input type="submit" name="action" value="新增菜色">
-	                <input type="submit" name="action" value="邀請好友">
+	            	<%
+	            		if(dishAndIngJson==null || dishAndIngJson.length()==2){ 
+	            	%>
+	               			<input type="submit" name="action" value="新增菜色" class="insertDish">
+	                <%
+	            		}else{
+	                %>	
+	                		<input type="submit" name="action" value="重新新增菜色" class="insertDish">
+	                <%
+	            		}
+	                %>
+<!-- 	                <input type="submit" name="action" value="邀請好友"> -->
 	                <input type="submit" name="action" value="取消建立">
 	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
 	            </div>
 	        </div>
 		    <div class="info col-6 col-lg-6">
 		        <div class="event_description">
-		            <textarea name="event_description" cols="60" rows="20" placeholder="活動說明"></textarea>
+		            <textarea name="" id="description" cols="60" rows="20" placeholder="活動說明"><%=(eventInfoVO==null)?"":(eventInfoVO.getEventDescription()==null)?"":(eventInfoVO.getEventDescription()) %></textarea>
+		            <input type="hidden" name="event_description" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventDescription()==null)?"":(eventInfoVO.getEventDescription()) %>"/>
 		        </div>
 		    </div>
 	    </div>
@@ -208,31 +223,44 @@
 	     $('#eventStart').datetimepicker({
 	        theme: '',          //theme: 'dark',
 	        timepicker: true,   //timepicker: false,
-	        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+	        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 		    format: 'Y-m-d H:i',
 		    minDate:'-1970-01-01'
 	     });
 	     $('#eventEnd').datetimepicker({
 		        theme: '',          //theme: 'dark',
 		        timepicker: true,   //timepicker: false,
-		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+		        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 			    minDate:'-1970-01-01'
 		 });
 	     $('#eventRegStart').datetimepicker({
 		        theme: '',          //theme: 'dark',
 		        timepicker: true,   //timepicker: false,
-		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+		        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 			    minDate:'-1970-01-01'
 		 });
 	     $('#eventRegEnd').datetimepicker({
 		        theme: '',          //theme: 'dark',
 		        timepicker: true,   //timepicker: false,
-		        step: 1,            //step: 60 (這是timepicker的預設間隔60分鐘)
+		        step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
 			    format: 'Y-m-d H:i',
 			    minDate:'-1970-01-01'
 		 });
+	     
+	     $(".confirmCreate").on("click",function(){
+	    	 var content = $("#description").val();
+	    	 console.log(content);
+	    	 $("input[name=event_description]").val(content);
+	     });
+	     
+	     $(".insertDish").on("click",function(){
+	    	 var content = $("#description").val();
+	    	 console.log(content);
+	    	 $("input[name=event_description]").val(content);
+	     });
+	     
 	     //=================圖片預覽==========================
 	     $("#uploadEventImg").on("change", function() {
 	            console.log(this.files);
@@ -256,6 +284,20 @@
 		<%		
 			}
 		%>
+		
+		//================類型儲存========================
+		var cuisineCatIDsEle = $('input[name="cuisineCatID"]').val().trim();
+		if (cuisineCatIDsEle != "") {
+			var cuisineCatIDs = cuisineCatIDsEle.split(" ");
+			console.log(cuisineCatIDs);
+			cuisineCatIDs.forEach(function(itm, ind, arr){
+				cuisineCatArray.forEach(function(item, index, array){
+		        	if (parseInt(cuisineCatIDs[ind]) == cuisineCatArray[index].id) {
+		        		cuisineCatArray.splice(index, 1);
+		        	}
+		    	});
+		    });
+		}
 		
 		function putCuisineCatInID(id,name){
 			var tempCuisineCatHTML = "<li data-id='"+id+"'><span>" +name + "</span><i class='fas fa-times'></i></li>";		
@@ -306,21 +348,8 @@
 			$(this).closest("li").remove();
 		});
 	});
-	//================類型儲存========================
-	$(".confirmCreate").on("click",function(){
-		var cuisineCatArray = new Array();
-		$(".cuisineCatAutoOutput").find("ul").each(function(index,element){
-			var cuisineCatObj = new Object();
-			var cuisineCatIDArray = new Array();
-			$(element).find("li").each(function(index,element){
-				cuisineCatIDArray.push($(element).attr("data-id"));
-			});
-			cuisineCatObj["cuisineCatID"] = cuisineCatIDArray;
-			cuisineCatArray.push(cuisineCatObj);
-		});
-		var cuisineCatJson = JSON.stringify(cuisineCatArray);
-		$(".temp_data").append("<input type='hidden' name='cuisineCatJson' value='"+cuisineCatJson+"'>");
-	});
+		
+		
 	</script>
 </body>
 </html>

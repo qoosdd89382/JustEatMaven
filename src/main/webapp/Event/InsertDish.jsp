@@ -1,3 +1,4 @@
+<%@page import="com.dish.model.DishService"%>
 <%@page import="org.json.JSONObject"%>
 <%@page import="org.json.JSONArray"%>
 <%@page import="java.io.InputStream"%>
@@ -13,11 +14,14 @@
 <%
 	EventInfoVO eventInfoVO = (EventInfoVO) request.getAttribute("eventInfoVO");
 	IngredientService ingSvc = new IngredientService();
+	DishService dishSvc = new DishService();
+	pageContext.setAttribute("ingSvc", ingSvc);
+	pageContext.setAttribute("dishSvc", dishSvc);
 	List<IngredientVO> list= ingSvc.getAll();
 	request.setAttribute("AllIngredientVO", list);
 // 	Part eventPic = request.getPart("eventPic");
 	
-	List<IngredientVO> ingList = (List<IngredientVO>) request.getAttribute("ingredientList"); 
+	List<IngredientVO> ingredientVOs = (List<IngredientVO>) request.getAttribute("ingredientVOs"); 
 	String ingredientID = request.getParameter("ingredientID");
 	
 	Integer[][] ingID = null;
@@ -84,6 +88,9 @@
 			<input type="hidden" name="event_reg_end" value="${eventInfoVO.eventRegistartionEndTime}">
 			<input type="hidden" name="city" value="${eventInfoVO.groupCity}">
 			<input type="hidden" name="address" value="${eventInfoVO.groupAddress}">
+			<input type="hidden" name="event_description" value="${eventInfoVO.eventDescription}">
+			<input type="hidden" name="cuisineCatID" value="${cuisineCatID}">
+<!-- 			<input type="hidden" name="dishName" value="" class="tempDishName"> -->
 <%-- 			<input type="hidden" name='dishAndIngJson' value="${replaceDishAndIngJson}">	 --%>
 		</div>
 		<div class="title">
@@ -93,7 +100,7 @@
 	        <div class="insert_content_left col-6 col-lg-6">
 	            <div class="title_separate">
 	                菜色名稱
-	                <label>
+	            <label>
 	                <input type="text" name="dish_name" value="" placeholder="請輸入菜名" class="dish_name">
 	            </label>
 	            </div>
@@ -105,8 +112,8 @@
 		                </div>
 			            <div class="ingAutoOutput">
 			                <ul>
-				                <c:if test="${not empty ingList}">
-				                	<c:forEach var="ingVO" items="${ingList}">
+				                <c:if test="${not empty ingredientVOs}">
+				                	<c:forEach var="ingVO" items="${ingredientVOs}">
 				                		<li data-id="${ingVO.ingredientID}"><span>${ingSvc.getOneIngredient(ingVO.ingredientID).ingredientName}</span><i class='fas fa-times'></i></li>
 				                	</c:forEach>
 				                </c:if>
@@ -156,6 +163,20 @@
 			}
 		%>
 
+		var ingredientIDsEle = $('input[name="ingredientID"]').val().trim();
+		if (ingredientIDsEle != "") {
+			var ingredientIDs = ingredientIDsEle.split(" ");
+			console.log(ingredientIDs);
+			ingredientIDs.forEach(function(itm, ind, arr){
+				ingredientArray.forEach(function(item, index, array){
+		        	if (parseInt(ingredientIDs[ind]) == ingredientArray[index].id) {
+		        		ingredientArray.splice(index, 1);
+		        	}
+		    	});
+		    });
+		}
+		
+		
 		<%
 		if(ingredientID !=null){
 			String[] orgList = ingredientID.trim().split(" ");
@@ -272,11 +293,11 @@
 					return false;
 				}
 			});
+			
+			$(this).attr("disabled",true);
 		});
 	});
 	
-	
-
 	//========================================
 	$(".dishConfirm").on("click",function(){
 		var dishAndIngArray = new Array();
@@ -288,11 +309,13 @@
 				$(element).find("span").each(function(index,element){
 					idArray.push($(element).attr("data-id"));
 				});
+				console.log(idArray);
 				dishAndIngObj["IngID"] = idArray;
 				dishAndIngArray.push(dishAndIngObj);
 			}
 		});
 		var dishAndIngJson = JSON.stringify(dishAndIngArray);
+		console.log(dishAndIngJson);
 		$(".temp_data").append("<input type='hidden' name='dishAndIngJson' value='"+dishAndIngJson+"'>");
 	});
 	

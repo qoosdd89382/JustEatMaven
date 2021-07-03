@@ -38,6 +38,7 @@ import com.eventmember.model.EventMemberService;
 import com.eventmember.model.EventMemberVO;
 import com.ingredient.model.IngredientService;
 import com.ingredient.model.IngredientVO;
+import com.recipecuisinecategory.model.RecipeCuisineCategoryVO;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class EventInfoActionServlet extends HttpServlet {
@@ -229,7 +230,7 @@ public class EventInfoActionServlet extends HttpServlet {
 		}
 
 //========================================建立活動相關===============================
-		if ("新增菜色".equals(action)) {
+		if ("新增菜色".equals(action) || "重新新增菜色".equals(action)) {
 			EventInfoVO eventInfoVO = new EventInfoVO();
 			String groupType = request.getParameter("choose_type");
 			String eventName = request.getParameter("event_name");
@@ -240,6 +241,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			String eventRegEnd = request.getParameter("event_reg_end");
 			String groupCity = request.getParameter("city");
 			String groupAddress = request.getParameter("address");
+			String eventDescription = request.getParameter("event_description");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
@@ -298,6 +300,15 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
+			if(eventDescription == null) {
+				eventInfoVO.setEventDescription("");
+			}else {
+				eventInfoVO.setEventDescription(eventDescription);
+			}
+			
+			String cuisineCatIDStr = request.getParameter("cuisineCatID");
+			
+			request.setAttribute("cuisineCatID", cuisineCatIDStr);
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher notfullView = request.getRequestDispatcher("/Event/InsertDish.jsp");
 			notfullView.forward(request, response);
@@ -410,6 +421,12 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
+			
+			if(eventDescription == null) {
+				eventInfoVO.setEventDescription("");
+			}else {
+				eventInfoVO.setEventDescription(eventDescription);
+			}
 //===============================日期判斷================================
 			if (StartDateTime != null && EndDateTime != null && RegStartDateTime != null && RegEndDateTime != null) {
 				if (RegEndDateTime.isBefore(RegStartDateTime) || RegEndDateTime.isEqual(RegStartDateTime)) {
@@ -422,6 +439,7 @@ public class EventInfoActionServlet extends HttpServlet {
 					errorMsgs.put("EndMustAfterStart", "活動結束日期 必須大於 活動開始日期");
 				}
 			}
+//==============================菜色判斷==================================
 			String dishAndIngJson = request.getParameter("dishAndIngJson");
 			System.out.println(dishAndIngJson);
 			Integer[][] ingID = null;
@@ -471,23 +489,27 @@ public class EventInfoActionServlet extends HttpServlet {
 			}
 
 			// =======================================類型============================
-			String cuisineCatJson = request.getParameter("cuisineCatJson");
+			List<CuisineCategoryVO> cuisineCategoryVOs = new ArrayList<CuisineCategoryVO>();
+			String cuisineCatIDStr = request.getParameter("cuisineCatID");
 			Integer[] cuisineCatID = null;
-			if (cuisineCatJson != null) {
-				try {
-					JSONArray jsonArray = new JSONArray(cuisineCatJson);
-					cuisineCatID = new Integer[jsonArray.length()];
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONObject jsonObj = jsonArray.getJSONObject(i);
-						cuisineCatID[i] = jsonObj.getJSONArray("cuisineCatID").getInt(i);
-						System.out.println(cuisineCatID[i]);
-					}
-//					System.out.println(Arrays.deepToString(cuisineCatID));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					errorMsgs.put("cuisineCatError", "請至少選擇一個類型");
+			
+			if (cuisineCatIDStr == null || cuisineCatIDStr.trim().length() == 0) {
+				errorMsgs.put("cuisineCatError", "請至少選取一個類型");
+			} else {
+				String[] cuisineCatIDs = cuisineCatIDStr.trim().split(" ");
+				System.out.println(cuisineCatIDs.length);
+				cuisineCatID = new Integer[cuisineCatIDs.length];
+				int i = 0;
+				for (String cuisineCategoryID : cuisineCatIDs) {
+					cuisineCatID[i] = new Integer(cuisineCategoryID);
+					CuisineCategoryVO cuisineCategoryVO = new CuisineCategoryVO();
+					cuisineCategoryVO.setCuisineCategoryID(new Integer(cuisineCategoryID));
+					cuisineCategoryVOs.add(cuisineCategoryVO);
+					i++;
 				}
 			}
+			
+			
 
 			String accountID = request.getParameter("accountID");
 			System.out.println(accountID);
@@ -497,13 +519,14 @@ public class EventInfoActionServlet extends HttpServlet {
 
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
+				request.setAttribute("cuisineCategoryVOs", cuisineCategoryVOs);
 				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
 				notfullView.forward(request, response);
 			} else {
 				EventInfoService eventInfoSvc = new EventInfoService();
 				eventInfoSvc.addDishAndIngredientByEventInfo(eventName, Integer.parseInt(eventMember), eventDescription,
 						Integer.parseInt(groupType), groupCity, groupAddress, eventRegStart, eventRegEnd, eventStart,
-						eventEnd, 1, eventPicToByte, dishName, ingID, cuisineCatID);
+						eventEnd, 1, eventPicToByte, dishName, ingID, cuisineCatID,Integer.parseInt(request.getParameter("accountID")));
 				System.out.println("新增成功");
 				RequestDispatcher successView = request.getRequestDispatcher("/Event/EventList.jsp");
 				successView.forward(request, response);
@@ -531,7 +554,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			String eventRegEnd = request.getParameter("event_reg_end");
 			String groupCity = request.getParameter("city");
 			String groupAddress = request.getParameter("address");
-
+			String eventDescription = request.getParameter("event_description");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 
 			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
@@ -590,12 +613,39 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
+			
+			if(eventDescription == null) {
+				eventInfoVO.setEventDescription("");
+			}else {
+				eventInfoVO.setEventDescription(eventDescription);
+			}
 
-			Part eventPic = request.getPart("eventPic");
+			List<CuisineCategoryVO> cuisineCategoryVOs = new ArrayList<CuisineCategoryVO>();
+			String cuisineCatIDStr = request.getParameter("cuisineCatID");
+			Integer[] cuisineCatID = null;
+			
+			if (cuisineCatIDStr == null || cuisineCatIDStr.trim().length() == 0) {
+				errorMsgs.put("cuisineCatError", "請至少選取一個類型");
+			} else {
+				String[] cuisineCatIDs = cuisineCatIDStr.trim().split(" ");
+				cuisineCatID = new Integer[cuisineCatIDs.length];
+				int i = 0;
+				for (String cuisineCategoryID : cuisineCatIDs) {
+					cuisineCatID[i] = new Integer(cuisineCategoryID);
+					CuisineCategoryVO cuisineCategoryVO = new CuisineCategoryVO();
+					cuisineCategoryVO.setCuisineCategoryID(new Integer(cuisineCategoryID));
+					cuisineCategoryVOs.add(cuisineCategoryVO);
+					i++;
+				}
+			}
+			
+			
+//			Part eventPic = request.getPart("eventPic");
 
 //			String dishAndIngJson = request.getParameter("dishAndIngJson");
 //			System.out.println(request.getParameter("dishAndIngJson"));
-
+			request.setAttribute("cuisineCatID", cuisineCatIDStr);
+			request.setAttribute("cuisineCategoryVOs", cuisineCategoryVOs);
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher returnView = request.getRequestDispatcher("/Event/CreateEvent.jsp");
 			returnView.forward(request, response);
@@ -622,7 +672,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			}
 		}
 
-		if ("新增菜色".equals(actionJoin)) {
+		if ("新增菜色".equals(actionJoin) || "重新新增菜色".equals(actionJoin)) {
 			EventInfoVO eventInfoVO = new EventInfoVO();
 			String groupType = request.getParameter("choose_type");
 			String eventName = request.getParameter("event_name");
@@ -633,6 +683,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			String eventRegEnd = request.getParameter("event_reg_end");
 			String groupCity = request.getParameter("city");
 			String groupAddress = request.getParameter("address");
+			String eventDescription = request.getParameter("event_description");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 			if (groupType == null || groupType.trim().length() == 0 || groupType.isEmpty()) {
@@ -691,6 +742,13 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
+			
+			if(eventDescription == null) {
+				eventInfoVO.setEventDescription("");
+			}else {
+				eventInfoVO.setEventDescription(eventDescription);
+			}
+			
 			request.setAttribute("eventInfoVO", eventInfoVO);
 			RequestDispatcher notfullView = request.getRequestDispatcher("/Event/InsertDishByJoin.jsp");
 			notfullView.forward(request, response);
@@ -715,7 +773,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			String eventRegEnd = request.getParameter("event_reg_end");
 			String groupCity = request.getParameter("city");
 			String groupAddress = request.getParameter("address");
-
+			String eventDescription = request.getParameter("event_description");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 
 			if (eventID == null || eventID.trim().length() == 0 || eventID.isEmpty()) {
@@ -779,6 +837,12 @@ public class EventInfoActionServlet extends HttpServlet {
 			if (groupAddress == null || groupAddress.trim().length() == 0 || groupAddress.isEmpty()) {
 			} else {
 				eventInfoVO.setGroupAddress(groupAddress);
+			}
+			
+			if(eventDescription == null) {
+				eventInfoVO.setEventDescription("");
+			}else {
+				eventInfoVO.setEventDescription(eventDescription);
 			}
 
 			request.setAttribute("eventInfoVO", eventInfoVO);
@@ -951,6 +1015,12 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setGroupAddress(groupAddress);
 			}
 			
+			if(eventDescription == null) {
+				eventInfoVO.setEventDescription("");
+			}else {
+				eventInfoVO.setEventDescription(eventDescription);
+			}
+			
 			if (StartDateTime != null && EndDateTime != null && RegStartDateTime != null && RegEndDateTime != null) {
 				if (RegEndDateTime.isBefore(RegStartDateTime) || RegEndDateTime.isEqual(RegStartDateTime)) {
 					errorMsgs.put("RegEndMustAfterRegStart", "活動報名結束日期 必須大於 活動報名開始日期");
@@ -966,7 +1036,10 @@ public class EventInfoActionServlet extends HttpServlet {
 			// ===================================編輯活動的圖片處理=============================
 			Part eventPic = request.getPart("eventPic");
 			byte[] eventPicToByte = null;
+			EventInfoService eventInfoService = new EventInfoService();
+			byte[] tempPic = eventInfoService.getEventID(Integer.parseInt(request.getParameter("eventID"))).getEventPic();
 			if (eventPic.getSubmittedFileName().length() == 0 || eventPic.getContentType() == null) {
+				eventPicToByte = tempPic;
 				System.out.println("使用者沒有上傳活動圖片");
 			} else if (!eventPic.getContentType().startsWith("image")) {
 				errorMsgs.put("eventPicError", "上傳必須是image類型");
