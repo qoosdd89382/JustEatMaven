@@ -13,9 +13,22 @@
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 <jsp:useBean id="dishSvc" scope="page" class="com.dish.model.DishService" />
-<%
-	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
+<%  
+	String eventID = request.getParameter("eventID");
+	if(session.getAttribute("accountInfoVOLogin")==null) {
+		response.sendRedirect(request.getContextPath() + "/Event/EventDetailReview.jsp?eventID=" + eventID);
+		return;
+	}
+	int loginAccounID = ((AccountInfoVO) session.getAttribute("accountInfoVOLogin")).getAccountID();
+	
+	if (loginAccounID != eventMemberSvc.getOneByEventAndHost(new Integer(eventID))) {
+		response.sendRedirect(request.getContextPath() + "/Event/EventDetailReview.jsp?eventID=" + eventID);
+		return;
+	}
+	
+	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(new Integer(eventID));
 	pageContext.setAttribute("list", list);
+	
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
 
@@ -40,10 +53,9 @@
 	<h2>成員未審核</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">我的活動</a></li>
-			<li class="breadcrumb-item"><a href=" # ">參加/結束的活動</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動詳情</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp ">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/myevent.jsp">參加/結束的活動</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=<%=request.getParameter("eventID")%>">活動詳情</a></li>
 			<li class="breadcrumb-item active" aria-current="page">成員列表</li>
 		</ol>
 	</nav>
@@ -76,17 +88,27 @@
 						<div id="${dishVO.dishID}">${dishVO.dishName}</div>
 					</c:forEach>
 				</td>
-				<td>	 <a href="<%= request.getContextPath()%>/Event/AuditPass.jsp?eventID=${eventID}&accountID=${eventMemberVO.accountID}&">通過</a>            <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">不通過</a> 	</td>
+				<td>
+				<c:if test="${accountInfoVOLogin.accountID != eventMemberVO.accountID}">
+					<c:if test="${eventMemberVO.participationState == 1}">
+						<a href="<%= request.getContextPath()%>/Event/audit.do?eventID=${eventMemberVO.eventID}&accountID=${eventMemberVO.accountID}&action=pass">通過</a>          
+						<a href="<%= request.getContextPath()%>/Event/audit.do?eventID=${eventMemberVO.eventID}&accountID=${eventMemberVO.accountID}&action=reject">不通過</a>
+					</c:if> 
+					<c:if test="${eventMemberVO.participationState == 2}">
+						<a href="<%= request.getContextPath()%>/Event/auditpass.do?eventID=${eventMemberVO.eventID}&accountID=${eventMemberVO.accountID}&action=reject">剔除成員</a> 
+					</c:if>
+				</c:if>
+				</td>
 			
 				
 			</tr> 
 		</c:forEach>
 	</table>
-	  <div class="btn_margin" align="right"  >
+<!-- 	  <div class="btn_margin" align="right"  > -->
 	  
-	          <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">確認</a> 	
+<%-- 	          <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">確認</a> 	 --%>
 
-	  </div>
+<!-- 	  </div> -->
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
