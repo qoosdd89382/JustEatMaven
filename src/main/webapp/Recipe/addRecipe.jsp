@@ -95,8 +95,24 @@ div.temp_loading{
 	color: white;
 }
 </style>
-
 <title>食譜列表 | 食譜 | Just Eat 揪食</title>
+  <script src="https://cdn.tiny.cloud/1/7cr4ih870sgurlll171zc6ccfd9bh8ylwqjh0slgdx97xyt9/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+
+  tinymce.init({
+// 	    selector: 'textarea[name="recipeStepTexts"]',
+	    selector: 'textarea',
+	    menubar: '',
+	    toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | charmap emoticons | ltr rtl',
+
+	  });
+//   tinymce.init({
+// 	    selector: 'textarea[name="recipeStepTexts"]',
+// 	    menubar: ''
+// 	  });
+
+
+  </script>
 </head>
 <body>
 
