@@ -23,6 +23,8 @@ public interface AccountInfoDAOInterface {
     public AccountInfoVO getAccountNickname(String accountNickname);
     //用信箱找資料
     public AccountInfoVO getAccountIDByAccountMail(String accountMail);
+    public AccountInfoVO getAccountNicknameByAccountMail(String accountMail);
+    public AccountInfoVO getAccountLevelByAccountMail(String accountMail);
     public AccountInfoVO getAccountPasswordByAccountMail(String accountMail);
 	public AccountInfoVO getAccountCodeByAccountMail(String accountMail);
 
@@ -36,6 +38,9 @@ public interface AccountInfoDAOInterface {
     public void setBlankAccountInfoFromRegister(AccountInfoVO accountInfoVO);
     //設定基本會員
     public void setLevelOneAccountInfoFromRegister(AccountInfoVO accountInfoVO);
+    //更改驗證碼用
+	public void updateBlankAccountCodeFromRegister(AccountInfoVO accountInfoVO);
+
     
     //暫時沒用===
     public void setLevelTwoAccountInfoFromRegister(

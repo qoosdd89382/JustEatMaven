@@ -41,8 +41,8 @@ div#register_area{
 	background-color: rgba(0,0,0,0.6);
 	color:white;
 	
-	width: 200px;
-	height: 380px;
+	width: 180px;
+	height: 300px;
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -109,33 +109,39 @@ textarea#textarea {
 		<div id="main_area" class="row">
 		
 			<div id="register_area" class="col-sm-6 align-self-center">
-			<div id ="register_area_title">
-			<Strong>您好~歡迎來到揪食!</Strong><br>
-			<strong>請輸入您的資料協助您成為我們的一員</strong>
-			</div>
 			
+				<div id ="register_area_title">
+					<Strong>您好~歡迎來到揪食!</Strong><br>
+					<strong>請輸入您的資料協助您成為我們的一員</strong>
+				</div>
+		
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
-				
 					<span style="color:red">*</span><span>請輸入會員信箱 :</span><br>
 					<input id="input_box" type="text" name="accountMail" 
 					value="<%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountMail()%>"
 					placeholder="如JustEat@gmail.com"><br>
 					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 					
-					<span style="color:red">*</span><span>請輸入會員暱稱 :</span><br>
-					<input id="input_box" type="text" name="accountNickname" 
-					value="<%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountNickname()%>"
-					placeholder="兩個字以上，任意 中文 數字 英文大小寫"><br>
-					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br> 
+<!-- 					<span style="color:red">*</span><span>請輸入會員暱稱 :</span><br> -->
+<!-- 					<input id="input_box" type="text" name="accountNickname"  -->
+<%-- 					value="<%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountNickname()%>" --%>
+<!-- 					placeholder="兩個字以上，任意 中文 數字 英文大小寫"><br> -->
+<%-- 					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br>  --%>
 					
 					<span style="color:red">* 為必填欄位，請填妥欄位資訊</span><br>
 						
 					<input type="hidden" name="action" value="sendAccountCode"> 
 					<input id="register_submit_btn" type="submit" value="提出申請"> 
 					<input id="register_reset_btn" type="reset" value="重置">
-					
 				</form>
+				
+<!-- 				<form>				 -->
+<!-- 					<input type="hidden" name="action" value="resendAccountCode">  -->
+<!-- 					<input id="register_submit_btn" type="submit" value="沒有收到驗證碼?">  -->
+<!-- 				</form> -->
+				
 			</div>
+			
 		</div>
 	</div>
 	<P>除錯區</P>
