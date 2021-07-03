@@ -354,13 +354,15 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				String recipeIntroduction = req.getParameter("recipeIntroduction");
-				String recipeIntroductionReg = "^.{3,450}$";
+				System.out.println(recipeIntroduction);
+//				String recipeIntroductionReg = "^.{3,5000}$";
 				if (recipeName == null || recipeName.trim().length() == 0) {
 //					recipeIntroduction = "";
 					errorMsgs.put("recipeIntroductionErr", "食譜介紹請勿空白");
-				} else if (!recipeIntroduction.trim().matches(recipeIntroductionReg)) {
-					errorMsgs.put("recipeIntroductionErr", "食譜介紹長度需介於英數3至450字、中文1至150字");
 				}
+//				else if (!recipeIntroduction.trim().matches(recipeIntroductionReg)) {
+//					errorMsgs.put("recipeIntroductionErr", "食譜介紹長度需介於英數3至450字、中文1至150字");
+//				}
 	
 				Integer recipeServe = null;
 				try {
@@ -634,6 +636,7 @@ public class RecipeServlet extends HttpServlet {
 				
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "其他錯誤:" + e.getMessage());
+				e.printStackTrace();
 				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
 			}
@@ -705,12 +708,13 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				String recipeIntroduction = req.getParameter("recipeIntroduction");
-				String recipeIntroductionReg = "^.{3,450}$";
+//				String recipeIntroductionReg = "^.{3,450}$";
 				if (recipeName == null || recipeName.trim().length() == 0) {
 					errorMsgs.put("recipeIntroductionErr", "食譜介紹請勿空白");
-				} else if (!recipeIntroduction.trim().matches(recipeIntroductionReg)) {
-					errorMsgs.put("recipeIntroductionErr", "食譜介紹長度需介於英數3至450字、中文1至150字");
-				}
+				} 
+//				else if (!recipeIntroduction.trim().matches(recipeIntroductionReg)) {
+//					errorMsgs.put("recipeIntroductionErr", "食譜介紹長度需介於英數3至450字、中文1至150字");
+//				}
 	
 				Integer recipeServe = null;
 				try {

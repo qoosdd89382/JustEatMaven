@@ -126,7 +126,7 @@ $(function () {
 					'<input name="recipeStepOrders" type="hidden" value="' + stepOrderNum + '">' + 
 					'<input name="oldFileIdentify" type="hidden" value="false"></td>' +
 				'<td class="col-12 order-3 col-lg-6 order-lg-2">' + 
-					'<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea></td>' + 
+					'<textarea id="step' + stepOrderNum + '" class="form-control addStepText" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40"></textarea></td>' + 
 				'<td class="col-12 order-4 col-lg-4 order-lg-3">' + 
 					'<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>' + 
 					'<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">' + 
@@ -136,6 +136,15 @@ $(function () {
 			'</tr>';
 		
 		$(".recipeStepsTable").find("tbody").append(stepsInsertHTML);
+//		tinyMCE.triggerSave();
+//	    tinyMCE.execCommand('mceRemoveControl', true, 'textarea');
+//	    tinymce.execCommand('mceAddControl', true, 'step' + stepOrderNum);
+
+		  tinymce.init({
+		    selector: 'textarea',
+		    menubar: '',
+		    toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | charmap emoticons | ltr rtl',
+		  });
 	});
 	
 	

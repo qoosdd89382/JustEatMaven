@@ -166,8 +166,9 @@
 					<c:forEach var="RecipeStepVO" items="${RecipeStepList}">
 						<div class="recipe row" data-id="${RecipeStepVO.recipeStepID}">
 							<div class="order col-3 col-xl-2 vertical-container"><span>${RecipeStepVO.recipeStepOrder}</span></div>
-							<div class="text col-9 col-xl-4 vertical-container">${RecipeStepVO.recipeStepText}</div>
-							<div class="img col-12 col-xl-6"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${RecipeStepVO.recipeStepID}"></div>
+<%-- 							<div class="text col-9 col-xl-4 vertical-container">${RecipeStepVO.recipeStepText}</div> --%>
+							<div class="text col-9 col-xl-4 border rounded m-0 p-2">${RecipeStepVO.recipeStepText}</div>
+							<div class="img col-12 col-xl-6 p-0 pl-2"><img class="rounded" src="<%=request.getContextPath()%>/Recipe/Pic/Step/${RecipeStepVO.recipeStepID}"></div>
 						</div>
 					</c:forEach>
 				</div>
@@ -199,7 +200,7 @@
 	<script src="<%=request.getContextPath()%>/vendors/jquery-ui/js/jquery-ui.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
-	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script>
+<%-- 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script> --%>
 
 	<script>
 

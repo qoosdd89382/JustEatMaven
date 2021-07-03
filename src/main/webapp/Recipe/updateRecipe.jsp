@@ -49,6 +49,16 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeSearchbar.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/Recipe/css/recipeHeader.css">
 <title>${recipeVO.recipeName} [編輯] | 食譜 | Just Eat 揪食</title>
+  <script src="https://cdn.tiny.cloud/1/7cr4ih870sgurlll171zc6ccfd9bh8ylwqjh0slgdx97xyt9/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+
+  tinymce.init({
+	    selector: 'textarea',
+	    menubar: '',
+	    toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | charmap emoticons | ltr rtl',
+	  });
+
+  </script>
 <style>
 </style>
 </head>

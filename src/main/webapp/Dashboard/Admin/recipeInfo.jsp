@@ -133,7 +133,7 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	z-index: -1;
+	z-index: 1;
 	color: lightgray;
 }
 .preview_img {
@@ -155,6 +155,16 @@
 	font-weight: bold;
 }
 </style>
+  <script src="https://cdn.tiny.cloud/1/7cr4ih870sgurlll171zc6ccfd9bh8ylwqjh0slgdx97xyt9/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+
+  tinymce.init({
+	    selector: 'textarea',
+	    menubar: '',
+	    toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | charmap emoticons | ltr rtl',
+	  });
+
+  </script>
 </head>
 
 <body id="page-top">
