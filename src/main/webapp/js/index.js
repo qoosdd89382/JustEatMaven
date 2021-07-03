@@ -47,5 +47,12 @@ $(function () {
             // instead of a settings object
         ]
     });
+    
+    $(document).on("click", ".img_outer", function() {
+    	console.log(
+    			$(this).parent().find(".title").find("a")[0]
+    	);
+    	$(this).parent().find(".title").find("a")[0].click();
+    });
 
 });
