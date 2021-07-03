@@ -72,7 +72,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">管理員列表</h6>
                         </div>
                         <div class="card-body">
-                        本列表共有 ${fn:length(list)} 名管理員：
+                        本列表共有 ${fn:length(list)} 名管理員：<br>
 	                        <c:if test="${adminSvc.getOneAdmin(loginAdminID).adminState >= 3}">
                         	<div class="editBtn row">
 		                        <select name="action" class="custom-select col- lg-1 col-md-2 col-3 ml-auto mb-2">
