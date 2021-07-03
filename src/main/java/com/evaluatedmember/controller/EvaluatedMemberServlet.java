@@ -26,11 +26,12 @@ public class EvaluatedMemberServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
 		if ("giveScore".equals(action)) {	
-
+			
 			int eventID = new Integer(req.getParameter("eventID"));
 			int giverID = new Integer(req.getParameter("giverID"));
 			int accepterID = new Integer(req.getParameter("accepterID"));
 			int giverScore = new Integer(req.getParameter("score"));
+			
 			System.out.println("action" + action);
 			System.out.println("giverID" + giverID);
 			System.out.println("eventID" + eventID);

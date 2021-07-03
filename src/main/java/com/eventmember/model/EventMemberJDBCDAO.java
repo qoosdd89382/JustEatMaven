@@ -37,9 +37,11 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			" and accepter_account_id = ?";
 	private static final String Select_Totalevent_Stmt ="SELECT COUNT(*) FROM EventMember WHERE account_id = ? and (participation_state = 3 or participation_state = 4)";
 	private static final String Select_TotalAttendance_Stmt ="SELECT COUNT(*) FROM EventMember WHERE account_id = ? and (participation_state = 3 )";
-	private static final String Select_EventStatus_Stmt ="SELECT * FROM EventMember WHERE account_id = ? and (participation_state = 1 or participation_state = 2)";
+//	private static final String Select_EventStatus_Stmt ="SELECT * FROM EventMember WHERE account_id = ? and event_id = ? and (participation_state = 1 or participation_state = 2)";
+	private static final String Select_EventStatus_Stmt ="SELECT participation_state FROM EventMember WHERE account_id = ? and event_id = ? ";
 	private static final String Select_Account_Stmt ="SELECT * FROM EventMember WHERE account_id = ?";
 	private static final String Select_EventandHost_Stmt ="SELECT account_id FROM EventMember WHERE event_id = ? and host_identifier = 1";
+	private static final String Select_AuditPass_Stmt ="SELECT * FROM EventMember WHERE event_id = ? AND participation_state = 2";
 	
 
 	private static final String Select_EventID_And_MemberID_Stmt = "Select * From EventMember Where event_id = ? And account_id = ?";
@@ -103,7 +105,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			pstmt.setInt(1, eventMemberVO.getParticipationState());
 			pstmt.setInt(2, eventMemberVO.getEventID());
 			pstmt.setInt(3, eventMemberVO.getAccountID());
-			pstmt.setBoolean(4, eventMemberVO.isHostIdentifier());
+//			pstmt.setBoolean(4, eventMemberVO.isHostIdentifier());
 			pstmt.executeUpdate();
 			System.out.println("更新成功");
 		} catch (SQLException e) {
@@ -519,7 +521,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	}
 	
 	@Override
-	public int getEventStatusByAccountID(Integer accountID) {
+	public int getEventStatusByAccountID(Integer accountID, Integer eventID) {
 		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
 		int eventstatus = 0;
 		Connection con = null;
@@ -530,6 +532,8 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(Select_EventStatus_Stmt);
 			pstmt.setInt(1,  accountID);
+			pstmt.setInt(2,  eventID);
+			
 			rs = pstmt.executeQuery();
 			if (rs.next()) {	
 				eventstatus = rs.getInt(1);	
@@ -612,6 +616,59 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 			}
 		}
 		return accountID;
+	}
+	
+	@Override
+		public List<EventMemberVO> getAuditPassbyeventID(Integer eventID) {
+		List<EventMemberVO> list = new ArrayList<EventMemberVO>();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_AuditPass_Stmt);
+			pstmt.setInt(1,  eventID);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {	
+				EventMemberVO eventMemberVO = new EventMemberVO();
+				eventMemberVO.setEventID(rs.getInt("event_id"));
+				eventMemberVO.setAccountID(rs.getInt("account_id"));
+				eventMemberVO.setParticipationState(rs.getInt("participation_state"));
+				eventMemberVO.setHostIdentifier(rs.getBoolean("host_identifier"));
+				list.add(eventMemberVO);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
 	}
 	
 	@Override

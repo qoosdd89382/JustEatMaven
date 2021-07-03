@@ -14,8 +14,12 @@
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
 <jsp:useBean id="dishSvc" scope="page" class="com.dish.model.DishService" />
 <%
-	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
+	String eventID = request.getParameter("eventID");
+	List<EventMemberVO> list = eventMemberSvc.getAuditPassbyeventID(new Integer(eventID));
 	pageContext.setAttribute("list", list);
+
+// SELECT * FROM EventMember WHERE event_id = ? AND participation_state = ?
+	
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
 
@@ -40,10 +44,9 @@
 	<h2>成員審核</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href=" # ">首頁</a></li>
-			<li class="breadcrumb-item"><a href=" # ">我的活動</a></li>
-			<li class="breadcrumb-item"><a href=" # ">參加/結束的活動</a></li>
-			<li class="breadcrumb-item"><a href=" # ">活動詳情</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/myevent.jsp">參加/結束的活動</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=<%=request.getParameter("eventID")%>">活動詳情</a></li>
 			<li class="breadcrumb-item active" aria-current="page">成員列表</li>
 		</ol>
 	</nav>
@@ -75,17 +78,20 @@
 					<c:forEach var="dishVO" items="${dishSvc.getAccountIDAndEventID(eventMemberVO.accountID, eventMemberVO.eventID)}">
 					<div id="${dishVO.dishID}">${dishVO.dishName}</div>
 					</c:forEach>
-				</td>															
-					<td>	 <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">剔除成員</a>      	</td>
+				</td>	
+																		
+					<td><a href="<%= request.getContextPath()%>/Event/auditpass.do?eventID=${eventID}&accountID=${eventMemberVO.accountID}&action">剔除成員</a> 
+					
+				</td>
 				
 			</tr> 
 		</c:forEach>
 	</table>
-	  <div class="btn_margin" align="right"  >
+<!-- 	  <div class="btn_margin" align="right"  > -->
 	  
-	                  <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">通過</a> 
+<%-- 	                  <a href="<%= request.getContextPath()%>/Event/EventMember.jsp?eventID=${eventID}">通過</a>  --%>
 
-	  </div>
+<!-- 	  </div> -->
 			
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
