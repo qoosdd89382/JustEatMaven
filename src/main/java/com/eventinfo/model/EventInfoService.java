@@ -127,7 +127,7 @@ public class EventInfoService {
 	public void addDishByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
 			Integer groupType, String groupCity, String groupAddress, String eventRegistartionStartTime,
 			String eventRegistartionEndTime, String eventStartTime, String eventEndTime, Integer eventState,
-			byte[] eventPic, String dishName) {
+			byte[] eventPic, String dishName,Integer accountID) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime localRegistartionStartTime = LocalDateTime.parse(eventRegistartionStartTime, formatter);
@@ -156,7 +156,7 @@ public class EventInfoService {
 		List<DishVO> dishList = new ArrayList<DishVO>();
 		DishVO dishVO = new DishVO();
 		dishVO.setDishName(dishName);
-		dishVO.setAccountID(100001); // 再討論
+		dishVO.setAccountID(accountID); // 再討論
 		dishList.add(dishVO);
 		dao.insertWithDish(eventInfoVO, dishList);
 
@@ -166,7 +166,7 @@ public class EventInfoService {
 	public void addDishAndIngredientByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
 			Integer groupType, String groupCity, String groupAddress, String eventRegistartionStartTime,
 			String eventRegistartionEndTime, String eventStartTime, String eventEndTime, Integer eventState,
-			byte[] eventPic, String[] dishNames,Integer[][] IngIDs,Integer[] cuisinecategoryID) {
+			byte[] eventPic, String[] dishNames,Integer[][] IngIDs,Integer[] cuisinecategoryID,Integer accountID) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime localRegistartionStartTime = LocalDateTime.parse(eventRegistartionStartTime, formatter);
@@ -197,7 +197,7 @@ public class EventInfoService {
 		for(int i =0;i<dishNames.length;i++) {
 			DishVO dishVO = new DishVO();
 			dishVO.setDishName(dishNames[i]);
-			dishVO.setAccountID(100001); // 再討論
+			dishVO.setAccountID(accountID); // 再討論
 			dishList.add(dishVO);
 		}
 		
@@ -212,7 +212,7 @@ public class EventInfoService {
 
 		List<EventMemberVO> eventMemberList = new ArrayList<EventMemberVO>();
 		EventMemberVO eventMemberVO = new EventMemberVO();
-		eventMemberVO.setAccountID(100001);
+		eventMemberVO.setAccountID(accountID);
 		eventMemberVO.setParticipationState(3);
 		eventMemberVO.setHostIdentifier(true);
 		eventMemberList.add(eventMemberVO);

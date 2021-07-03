@@ -117,7 +117,6 @@
 	                    <tr>
 	                        <th>菜名</th>
 	                        <th>食材</th>
-	                        
 	                    </tr>
 	                </table>
 	            </div>
@@ -262,6 +261,8 @@
 					return false;
 				}
 			});
+			
+			$(this).attr("disabled",true);
 		});
 	});
 	
