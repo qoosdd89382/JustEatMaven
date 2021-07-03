@@ -176,6 +176,7 @@ textarea#textarea {
 				<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
 					<div id="register_area_title">
 					<strong>如要參加活動請提供以下資料</strong>
+					<a href="<%=request.getContextPath()%>/Account/AccountFoodPage.jsp">或點我跳過</a>
 					</div>	
 					<div id="second_level_register_area">
 					<span>請輸入會員電話 (如0912345678):</span><br>

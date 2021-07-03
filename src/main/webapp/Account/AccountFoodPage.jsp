@@ -176,7 +176,9 @@ input#food_reset_btn:hover {
 					<input type="hidden" name="action" value="getAccountFood"> 
 					<input id="food_submit_btn" type="submit" value="確認送出前往食譜專區"> 
 					<input id="food_reset_btn" type="reset" value="重置">
+					<br>
 				</form>
+				<a href="<%=request.getContextPath()%>/Account/AccountLoginPage.jsp">跳過此步驟前往會員中心</a>
 				
 			</div>
 		</div>
