@@ -11,6 +11,7 @@ public interface EventInfoDAOinterface {
 	public void insert(EventInfoVO eventVO);
 	public void update(EventInfoVO eventVO);
 	public void updateEventState(EventInfoVO eventInfoVO);
+	public void updateEventViewCount(EventInfoVO eventInfoVO);
 	public void delete(Integer eventID);
     public EventInfoVO findByPrimaryKey(Integer eventID);
     public List<EventInfoVO> findByName(String eventName);

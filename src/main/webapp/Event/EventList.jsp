@@ -40,7 +40,7 @@
 	EventCuisineCategoryService eventCuisineCategorySvc = new EventCuisineCategoryService();
 	
 	Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
-	pageContext.setAttribute("today", timestampNow);
+	pageContext.setAttribute("now", timestampNow);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -128,7 +128,19 @@
 										<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
 										<td class="col-sm-2 col-2">
 											<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a>
-											<c:if test="${today > eventInfoVO.eventEndTime}">
+											<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
+												<span class="badge badge-primary">等待報名</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
+												<span class="badge badge-warning">報名中</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
+												<span class="badge badge-info">等待進行</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventStartTime && now < eventInfoVO.eventEndTime}">
+												<span class="badge badge-success">進行中</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventEndTime}">
 												<span class="badge badge-secondary">已結束</span>
 											</c:if>
 										</td>
@@ -140,7 +152,7 @@
 										</c:if>
 										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
 										<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-										<td class="col-sm-2 col-2">1000</td>
+										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
 									</tr>
 							</c:if>
 						</c:forEach>
@@ -157,7 +169,19 @@
 										<td class="col-sm-2 col-2"><img src="<%=request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}" class="img"></td>
 										<td class="col-sm-2 col-2">
 											<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a>
-											<c:if test="${today > eventInfoVO.eventEndTime}">
+											<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
+												<span class="badge badge-primary">等待報名</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
+												<span class="badge badge-warning">報名中</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
+												<span class="badge badge-info">等待進行</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventStartTime && now < eventInfoVO.eventEndTime}">
+												<span class="badge badge-success">進行中</span>
+											</c:if>
+											<c:if test="${now > eventInfoVO.eventEndTime}">
 												<span class="badge badge-secondary">已結束</span>
 											</c:if>
 										</td>
@@ -169,7 +193,7 @@
 										</c:if>
 										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
 										<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-										<td class="col-sm-2 col-2">1000</td>
+										<td class="col-sm-2 col-2">${eventInfoVO.eventViewCount}</td>
 									</tr>
 							</c:if>
 						</c:forEach>

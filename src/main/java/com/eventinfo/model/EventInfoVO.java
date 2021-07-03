@@ -20,6 +20,15 @@ public class EventInfoVO implements Serializable {
 	private Timestamp eventEndTime;
 	private Integer eventState;
 	private byte[] eventPic;
+	private Integer eventViewCount;
+	
+	public Integer getEventViewCount() {
+		return eventViewCount;
+	}
+
+	public void setEventViewCount(Integer eventViewCount) {
+		this.eventViewCount = eventViewCount;
+	}
 
 	public Integer getEventID() {
 		return eventID;

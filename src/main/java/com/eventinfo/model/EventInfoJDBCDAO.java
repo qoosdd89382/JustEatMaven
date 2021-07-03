@@ -38,6 +38,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 	private static final String Insert_Stmt = "Insert into EventInfo (event_name,event_current_count,event_description,group_type,group_city,group_address,event_registartion_start_time,event_registartion_end_time,event_start_time,event_end_time,event_state,event_pic) Values(?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String Update_Stmt = "Update EventInfo set event_name=?,event_current_count=?,event_description=?,group_type=?,group_city=?,group_address=?,event_registartion_start_time=?,event_registartion_end_time=?,event_start_time=?,event_end_time=?,event_state=?,event_pic=? Where event_id = ?";
 	private static final String Update_State_Stmt = "Update EventInfo set event_state=? Where event_id = ?";
+	private static final String Update_View_Count_Stmt = "Update EventInfo set event_view_count=? Where event_id = ?";
 	private static final String Delete_Stmt = "Delete From EventInfo Where event_id = ?";
 	private static final String Select_Key_Stmt = "Select * From EventInfo Where event_id = ? Order by event_id";
 	private static final String Select_Name_Stmt = "Select * From EventInfo Where event_name Like ? ";
@@ -192,6 +193,40 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 		}
 	}
 	
+	public void updateEventViewCount(EventInfoVO eventVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Update_View_Count_Stmt);
+
+			pstmt.setInt(1, eventVO.getEventViewCount());
+			pstmt.setInt(2, eventVO.getEventID());
+
+			pstmt.executeUpdate();
+			System.out.println("更新成功");
+
+		} catch (SQLException e) {
+			throw new RuntimeException("資料庫發生錯誤" + e.getMessage());
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException("PrepareStatement發生錯誤" + e.getMessage());
+			}
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException("資料庫連線發生錯誤" + e.getMessage());
+			}
+		}
+	}
+	
 	
 	public void delete(Integer eventID) {
 		Connection con = null;
@@ -254,6 +289,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 				eventVO.setEventEndTime(rs.getTimestamp("event_end_time"));
 				eventVO.setEventState(rs.getInt("event_state"));
 				eventVO.setEventPic(rs.getBytes("event_pic"));
+				eventVO.setEventViewCount(rs.getInt("event_view_count"));
 			}
 
 		} catch (SQLException e) {
@@ -313,6 +349,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 				eventVO.setEventEndTime(rs.getTimestamp("event_end_time"));
 				eventVO.setEventState(rs.getInt("event_state"));
 				eventVO.setEventPic(rs.getBytes("event_pic"));
+				eventVO.setEventViewCount(rs.getInt("event_view_count"));
 				list.add(eventVO);
 			}
 
@@ -373,6 +410,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 				eventVO.setEventEndTime(rs.getTimestamp("event_end_time"));
 				eventVO.setEventState(rs.getInt("event_state"));
 				eventVO.setEventPic(rs.getBytes("event_pic"));
+				eventVO.setEventViewCount(rs.getInt("event_view_count"));
 				list.add(eventVO);
 			}
 
@@ -433,6 +471,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 				eventVO.setEventEndTime(rs.getTimestamp("event_end_time"));
 				eventVO.setEventState(rs.getInt("event_state"));
 				eventVO.setEventPic(rs.getBytes("event_pic"));
+				eventVO.setEventViewCount(rs.getInt("event_view_count"));
 				list.add(eventVO);
 			}
 

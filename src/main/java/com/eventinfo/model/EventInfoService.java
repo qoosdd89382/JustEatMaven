@@ -98,6 +98,18 @@ public class EventInfoService {
 		return eventInfoVO;
 	}
 	
+	public EventInfoVO updateEventViewCount(Integer eventID) {
+
+
+		EventInfoVO eventInfoVO = dao.findByPrimaryKey(eventID);
+		int count = eventInfoVO.getEventViewCount();
+		eventInfoVO.setEventViewCount(++count);
+		System.out.println(eventInfoVO.getEventViewCount());
+		dao.updateEventViewCount(eventInfoVO);
+
+		return eventInfoVO;
+	}
+	
 	public void deleteEventInfo(Integer eventID) {
 		dao.delete(eventID);
 	}
@@ -213,7 +225,7 @@ public class EventInfoService {
 		List<EventMemberVO> eventMemberList = new ArrayList<EventMemberVO>();
 		EventMemberVO eventMemberVO = new EventMemberVO();
 		eventMemberVO.setAccountID(accountID);
-		eventMemberVO.setParticipationState(3);
+		eventMemberVO.setParticipationState(2);
 		eventMemberVO.setHostIdentifier(true);
 		eventMemberList.add(eventMemberVO);
 		
