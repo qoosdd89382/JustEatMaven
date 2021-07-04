@@ -260,7 +260,7 @@ public class RecipeServlet extends HttpServlet {
 						ingredientIDSet.add(recipeIngredientID);
 					}
 				}
-
+				
 //				Set<String> ingredientNameSet = new HashSet<String>();
 //				String recipeIngredientStr = req.getParameter("ingredientNames");
 //				String[] recipeIngredientNames = null;
@@ -335,6 +335,10 @@ public class RecipeServlet extends HttpServlet {
 				req.setAttribute("successTitle", ": 搜尋結果");
 				
 				req.setAttribute("list", list); //  複合查詢, 資料庫取出的list物件,存入request
+				req.setAttribute("searchString", recipeNameStr); 
+//				req.setAttribute("ingString", req.getParameter("ingredientNames")); 
+//				req.setAttribute("ingValue", recipeIngredientStr); 
+				
 				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 //				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/searchResult.jsp");
 				successView.forward(req, res);
