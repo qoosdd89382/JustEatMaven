@@ -26,8 +26,9 @@ String accountMail = (String) request.getAttribute("accountMailInput");
 
 <style>
 body#body_forget{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
+	background-attachment:fixed; 
 	background-repeat: no-repeat;
 }
 
@@ -104,7 +105,7 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col-sm-4 align-self-center">
+			<div id="register_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
 			
 			<Strong id="register_area_title">您好~歡迎來到揪食!</Strong><br>
 			<strong id="register_area_title">忘記密碼了嗎? 我們將協助您取得密碼 ~</strong>

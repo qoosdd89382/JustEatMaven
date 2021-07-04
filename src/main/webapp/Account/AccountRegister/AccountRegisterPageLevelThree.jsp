@@ -40,9 +40,14 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
 
 <style>
 body#body_register{
-	background: #ffe259; 
-	background: -webkit-linear-gradient(to left, #ffa751, #ffe259); 
-	background: linear-gradient(to left, #ffa751, #ffe259);
+/* 	background: #ffe259;  */
+/* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
+/* 	background: linear-gradient(to left, #ffa751, #ffe259); */
+
+	background-image:url("./images/LoginBackGround.jpg");
+	background-size: cover;
+	background-attachment:fixed; 
+	background-repeat: no-repeat;
 }
 
 /*整個區塊 */
@@ -54,7 +59,7 @@ div#register_area{
 	color:white;
 	
 	width: 200px;
-	height: 1000px;
+	height:  expression(this.height < 100 ? "100px" : this.height "px");
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -79,23 +84,31 @@ div#register_area_title{
 	font-size:20px;
 	margin-bottom:20px;
 }
-
+div#register_area_form{
+	text-align:center;
+}
 
 div#second_level_register_area{
 	margin:15px auto;
-	border:1px solid gray;	
+	border:1px solid orange;	
+	padding: 10px;
 }
 
 div#third_level_register_area{
 	margin:15px auto;
-	border:1px solid gray;
+	border:1px solid orange;
+	padding: 10px;
 }
 div#account_pic_preview,
 div#account_idcardfront_preview,
 div#account_idcardback_preview {
-	border:1px gray dashed;
-	height:120px;
-	width:170px;
+	border:1px gray dotted;
+	height:expression(this.height < 100 ? "100px" : this.height "px");
+	width:300px;
+}
+span#pic_title{
+	color: 	#FF8800;
+	font-size:20px;
 }
 span.preview_pic{
 	margin:0 auto;
@@ -127,19 +140,19 @@ textarea#textarea {
 }
 
 /* 預覽圖 */
-#account_pic_preview,
-#account_idcardfront_preview,
-#account_idcardback_preview
+div#account_pic_preview,
+div#account_idcardfront_preview,
+div#account_idcardback_preview
 {
     border: 1px solid lightgray;
     display: inline-block;
-    width: 200px;
+    width: 300px;
     min-height: 150px;
     position: relative;
 }
-#account_pic_preview span.text,
-#account_idcardfront_preview span.text,
-#account_idcardback_preview span.text{
+div#account_pic_preview span.text,
+div#account_idcardfront_preview span.text,
+div#account_idcardback_preview span.text{
     position: absolute;
     display: inline-block;
     left: 50%;
@@ -148,9 +161,9 @@ textarea#textarea {
     z-index: -1;
     color: lightgray;
 }
-#account_pic_preview img.preview_img,
-#account_idcardfront_preview img.preview_img,
-#account_idcardback_preview img.preview_img
+div#account_pic_preview img.preview_img,
+div#account_idcardfront_preview img.preview_img,
+div#account_idcardback_preview img.preview_img
 {
    width: 100%;
 }
@@ -168,47 +181,46 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col-sm-6 align-self-center">
-			<div id="welcome">
-			<Strong id="welcome">您好~歡迎來到揪食!</Strong><br>
-			<strong id="welcome">揪食提供您最有趣的飲食揪團體驗</strong>
-			</div>
-				<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
-					<div id="register_area_title">
-					<strong>如要參加活動請提供以下資料</strong>
-					<a href="<%=request.getContextPath()%>/Account/AccountFoodPage.jsp">或點我跳過</a>
-					</div>	
-					<div id="second_level_register_area">
-					<span>請輸入會員電話 (如0912345678):</span><br>
-					<input type="text" name="accountPhone">
-					<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
-					</div>
-
-					<div id="third_level_register_area">
-					<span>請輸入會員照片:</span><br> 
-					<input type="file" id="account_pic" name="accountPic"><br> 
-					<div id="account_pic_preview"><span class="preview_pic">會員照片預覽圖</span></div><br>
-					
-					<span>請輸入會員身分證正面:</span><br>
-					<input type="file" id="account_front" name="accountIDcardFront"><br> 
-					<div id="account_idcardfront_preview"><span class="preview_pic">會員身分證正面預覽圖</span></div><br>
-					
-					<span>請輸入會員身分證背面:</span><br>
-					<input type="file" id="account_back" name="accountIDcardBack"><br> 
-					<div id="account_idcardback_preview"><span class="preview_pic">會員身分證背面預覽圖</span></div><br>
-					</div>
-					
-
-					<input type="hidden" name="action" value="setLevelThreeAccountInfoForRegister"> 
-					<input id="register_submit_btn" type="submit" value="提交送出"> 
-					<input id="register_reset_btn" type="reset" value="重置">
-				</form>
+			<div id="register_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
+				<div id="welcome">
+					<Strong id="welcome">您好~歡迎來到揪食!</Strong><br>
+					<strong id="welcome">揪食提供您最有趣的飲食揪團體驗</strong>
+				</div>
+				<div id="register_area_form">
+					<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
+						<div id="register_area_title">
+						<strong>如要參加活動請提供以下資料</strong>
+						<a href="<%=request.getContextPath()%>/Account/AccountFoodPage.jsp">或點我跳過</a>
+						</div>	
+						<div id="second_level_register_area">
+						<span>請輸入會員電話 (如0912345678):</span><br>
+						<input type="text" name="accountPhone">
+						<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
+						</div>
+	
+						<div id="third_level_register_area">
+						<span id="pic_title">請輸入會員照片:</span><br> 
+						<input type="file" id="account_pic" name="accountPic"><br> 
+						<div id="account_pic_preview"><span class="preview_pic">會員照片預覽圖</span></div><br>
+						
+						<span id="pic_title">請輸入會員身分證正面:</span><br>
+						<input type="file" id="account_front" name="accountIDcardFront"><br> 
+						<div id="account_idcardfront_preview"><span class="preview_pic">會員身分證正面預覽圖</span></div><br>
+						
+						<span id="pic_title">請輸入會員身分證背面:</span><br>
+						<input type="file" id="account_back" name="accountIDcardBack"><br> 
+						<div id="account_idcardback_preview"><span class="preview_pic">會員身分證背面預覽圖</span></div><br>
+						</div>
+						
+	
+						<input type="hidden" name="action" value="setLevelThreeAccountInfoForRegister"> 
+						<input id="register_submit_btn" type="submit" value="提交送出"> 
+						<input id="register_reset_btn" type="reset" value="重置">
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-	
-	<h3><a href='<%=request.getContextPath()%>/Account/AccountFoodPage.jsp'>選擇食材</a></h3>
-	
 	
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

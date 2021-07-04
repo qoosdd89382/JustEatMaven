@@ -24,8 +24,9 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 
 <style>
 body#body_forget{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
+	background-attachment:fixed; 
 	background-repeat: no-repeat;
 }
 
@@ -39,7 +40,7 @@ div#register_area{
 	color:white;
 	
 	width: 200px;
-	height: 320px;
+	height: expression(this.height < 100 ? "100px" : this.height "px");
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -104,7 +105,7 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col-sm-4 align-self-center">
+			<div id="register_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
 			<div id="register_area_title">
 			<Strong>您好~歡迎來到揪食!</Strong><br>			
 			<strong>請輸入您信箱中的密碼與驗證碼</strong>
