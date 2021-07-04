@@ -35,8 +35,9 @@
 
 <style>
 body#body_food{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
+	background-attachment:fixed; 
 	background-repeat: no-repeat;
 }
 
@@ -49,7 +50,7 @@ div#food_area{
 	color:white;
 	
 	width: 200px;
-	height: 320px;
+	height: expression(this.height < 100 ? "100px" : this.height "px");
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -116,7 +117,7 @@ input#food_reset_btn:hover {
 	
 		<div id="main_area" class="row">
 		
-			<div id="food_area" class="col-6">
+			<div id="food_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
 			
 				<div id="food_area_title">
 					<span>在審核資料期間，先去看食譜如何?</span><br>

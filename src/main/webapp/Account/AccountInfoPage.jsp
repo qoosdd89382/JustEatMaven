@@ -54,9 +54,14 @@ pageContext.setAttribute("dislikeIngredientVOs",dislikeIngredientVOs);
 <title>揪食-會員資料</title>
 <style>
 body#body_accountInfo{
-	background: #ffe259; 
-	background: -webkit-linear-gradient(to left, #ffa751, #ffe259); 
-	background: linear-gradient(to left, #ffa751, #ffe259);
+/* 	background: #ffe259;  */
+/* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
+/* 	background: linear-gradient(to left, #ffa751, #ffe259); */
+
+	background-image:url("./images/AccountInfoPage.jpg");
+	background-size: cover;
+/* 	background-attachment:fixed;  */
+/* 	background-repeat: no-repeat; */
 }
 div#main_block{
 	margin-top:150px;

@@ -9,13 +9,15 @@
 <!DOCTYPE html>
 
 <%
-//當 確認註冊 取得 使用者存在頁面中的數值
-AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
-if(accountInfoVO==null){
-	//假設使用者關掉瀏覽器，從信箱進入
-	Integer accountID = Integer.parseInt(request.getParameter("accountID"));
-	accountInfoVO = accountInfoSvc.selectOneAccountInfo(accountID);
-	session.setAttribute("accountInfoVO",accountInfoVO);
+AccountInfoVO accountInfoVO = null;
+
+//用來返回錯誤訊息
+if(request.getAttribute("accountInfoVO") != null){
+	accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO");
+//從信箱過來的一定有SESSION 前面網頁也會存SESSION
+}else if (session.getAttribute("accountInfoVO") != null){
+// 	//取得信箱中的ID 並且取得信箱
+	accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO");
 }
 
 %>
@@ -34,13 +36,18 @@ if(accountInfoVO==null){
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>揪食-會員註冊</title>
+<title>揪食-一般會員註冊</title>
 
 <style>
 body#body_register{
-	background: #ffe259; 
-	background: -webkit-linear-gradient(to left, #ffa751, #ffe259); 
-	background: linear-gradient(to left, #ffa751, #ffe259);
+/* 	background: #ffe259;  */
+/* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
+/* 	background: linear-gradient(to left, #ffa751, #ffe259); */
+
+	background-image:url("./images/LoginBackGround.jpg");
+	background-size: cover;
+	background-attachment:fixed; 
+	background-repeat: no-repeat;
 }
 
 /*整個區塊 */
@@ -53,7 +60,7 @@ div#register_area{
 	color:white;
 	
 	width: 200px;
-	height: 700px;
+	height: expression(this.height < 100 ? "100px" : this.height "px");
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -118,7 +125,7 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col-sm-6 align-self-center">
+			<div id="register_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
 			<div id="register_area_title">
 			<Strong>您好~歡迎來到揪食!</Strong><br>
 			<strong>請輸入以下資料協助您成為我們的一員</strong>
@@ -127,35 +134,38 @@ textarea#textarea {
 				<form id="register_area" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
 				
 					<span>會員信箱 :</span>
-					<span><%=(accountInfoVO == null) ? "" : accountInfoVO.getAccountMail()%></span><br>
+					<span><%=(accountInfoVO.getAccountMail() == null) ? "" : accountInfoVO.getAccountMail()%></span><br>
 					
 					<span style="color:red">*</span><span>請輸入會員暱稱:</span><br>
 					<input id="input_box" type="text" name="accountNickname" 
-<%-- 					value="<%=(accountInfoVO == null) ? "" : "2"%>" --%>
-					placeholder="至少兩個字以上，任意 中文 數字 英文大小寫">
+					class='${errorMsgs.get("accountNicknameError") == null ? "": "border-danger"}'					
+					value="<%=(accountInfoVO.getAccountNickname() == null) ? "" : accountInfoVO.getAccountNickname()%>"
+					placeholder="至少兩個字以上，任意 中文 數字 英文大小寫"><br>
 					<span style="color:red">${errorMsgs.get("accountNicknameError")}</span><br>
 					
 					
 					<span style="color:red">*</span><span>請輸入會員密碼:</span><br>
 					<input id="input_box" type="text" name="accountPassword" 
-<%-- 					value="<%=(accountInfoVO == null) ? "" : "2"%>" --%>
-					placeholder="至少8~16碼任意大小寫英文數字">
+					class='${errorMsgs.get("accountPasswordError") == null ? "": "border-danger"}'
+					value="<%=(accountInfoVO.getAccountPassword() == null) ? "" : accountInfoVO.getAccountPassword()%>"
+					placeholder="至少8~16碼任意大小寫英文數字"><br>
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 
 					<span style="color:red">*</span><span>請輸入會員姓名:</span><br> 
 					<input id="input_box" type="text" name="accountName" 
-<%-- 					value="<%=(accountInfoVO == null) ? "" : accountInfoVORequest.getAccountName()%>" --%>
-					placeholder="兩個字以上，任意 中文 英文大小寫">
+					class='${errorMsgs.get("accountNameError") == null ? "": "border-danger"}'
+					value="<%=(accountInfoVO.getAccountName() == null) ? "" : accountInfoVO.getAccountName()%>"
+					placeholder="兩個字以上，任意 中文 英文大小寫"><br>
 					<span style="color:red">${errorMsgs.get("accountNameError")}</span><br>
 					
 					<br>
 					
 					<span style="color:red">*</span><span>請輸入會員性別 :</span>
 					<input type="radio" name="accountGender" value="1" 
-<%-- 					${(accountInfoVORequest.accountGender)== 1?"checked":""} --%>
+					${(accountInfoVO.accountGender)== 1?"checked":""}
 					>男
 					<input type="radio" name="accountGender" value="2" 
-<%-- 					${(accountInfoVORequest.accountGender)== 2?"checked":""} --%>
+					${(accountInfoVO.accountGender)== 2?"checked":""}
 					>女 
 					<span style="color:red">${errorMsgs.get("accountGenderError")}</span><br>
 					
@@ -163,18 +173,18 @@ textarea#textarea {
 					
 					<span style="color:red">*</span><span>請輸入會員生日</span><br>
 					<input type="date" name="accountBirth" 
-<%-- 					value="<%=(accountInfoVO == null) ? "" : accountInfoVORequest.getAccountBirth()%>" --%>
+					value="<%=(accountInfoVO.getAccountBirth() == null) ? "" : accountInfoVO.getAccountBirth()%>"
 					>
 					<span style="color:red">${errorMsgs.get("accountBirthError")}</span><br>
 					
 					<br>
 					
 					<span style="color:red">*</span><span>請輸入會員自我介紹:</span><br>
-					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)"><%-- <%=(accountInfoVO == null) ? "" : accountInfoVORequest.getAccountText()%> --%></textarea><br>
+					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)"><%=(accountInfoVO.getAccountText() == null) ? "" : accountInfoVO.getAccountText()%></textarea><br>
 					<span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
 					
 					<span style="color:red">* 為必填欄位，請填妥欄位資訊</span><br>
-						
+					
 					<input type="hidden" name="action" value="setAccountInfoForRegister"> 
 					<input id="register_submit_btn" type="submit" value="提交送出"> 
 					<input id="register_reset_btn" type="reset" value="重置">

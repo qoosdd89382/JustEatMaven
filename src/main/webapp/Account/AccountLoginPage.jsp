@@ -33,7 +33,7 @@ String accountPassword = request.getParameter("accountPassword");
 <style>
 /* 背景 */
 body#Body_Login{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;
 }

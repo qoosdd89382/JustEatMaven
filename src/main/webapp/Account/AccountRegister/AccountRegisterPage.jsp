@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 
 <%
-//當 確認註冊 取得 使用者存在頁面中的數值
+//用來取得輸入錯誤的 請求物件 包含 信箱
 AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoVO");
 %>
 
@@ -23,18 +23,21 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>揪食-會員註冊</title>
+<title>揪食-會員信箱註冊</title>
 
 <style>
 body#body_register{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
-	background-repeat: no-repeat;
+	background-attachment:scroll; 
+	background-repeat: repeat;
 }
 
 /*整個區塊 */
 div#main_area{
 	margin-top:80px;
+	margin-bottom:170px;
+	
 }
 div#register_area{
 	text-align:center;
@@ -108,7 +111,7 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col-sm-6 align-self-center">
+			<div id="register_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
 			
 				<div id ="register_area_title">
 					<Strong>您好~歡迎來到揪食!</Strong><br>
@@ -144,9 +147,6 @@ textarea#textarea {
 			
 		</div>
 	</div>
-	<P>除錯區</P>
-	<P>全部的訊息${errorMsgs}</P>
-	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
