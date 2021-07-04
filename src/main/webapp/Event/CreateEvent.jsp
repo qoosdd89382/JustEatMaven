@@ -196,7 +196,7 @@
 	                <%
 	            		}
 	                %>
-<!-- 	                <input type="submit" name="action" value="邀請好友"> -->
+	                <input type="submit" name="action" value="邀請好友">
 	                <input type="submit" name="action" value="取消建立">
 	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
 	            </div>

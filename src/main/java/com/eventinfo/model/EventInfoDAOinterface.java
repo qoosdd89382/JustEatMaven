@@ -12,6 +12,7 @@ public interface EventInfoDAOinterface {
 	public void update(EventInfoVO eventVO);
 	public void updateEventState(EventInfoVO eventInfoVO);
 	public void updateEventViewCount(EventInfoVO eventInfoVO);
+	public void updateWithCuisineCat(EventInfoVO eventInfoVO,List<EventCuisineCategoryVO> delCatList,List<EventCuisineCategoryVO> addCatList);
 	public void delete(Integer eventID);
     public EventInfoVO findByPrimaryKey(Integer eventID);
     public List<EventInfoVO> findByName(String eventName);
@@ -23,5 +24,5 @@ public interface EventInfoDAOinterface {
     public void insertWithDish(EventInfoVO eventInfoVO,List<DishVO> dishList); 
     //連鎖菜色和菜色食材
     public void insertWithDishIngredient(EventInfoVO eventInfoVO,List<DishVO> dishList,List<DishAndIngredientVO> dishAndIngredientList);
-    public void insertWithDishIngredientMember(EventInfoVO eventInfoVO,List<DishVO> dishList,List<DishAndIngredientVO> dishAndIngredientList,List<EventMemberVO> eventMemberList,List<EventCuisineCategoryVO> eventCategoryList);
+    public EventInfoVO insertWithDishIngredientMember(EventInfoVO eventInfoVO,List<DishVO> dishList,List<DishAndIngredientVO> dishAndIngredientList,List<EventMemberVO> eventMemberList,List<EventCuisineCategoryVO> eventCategoryList);
 }

@@ -21,6 +21,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 	private static final String Insert_Stmt = "Insert into Eventcuisinecategory(event_id,cuisinecategory_id)Values(?,?)";
 	private static final String Update_Stmt = "Update Eventcuisinecategory Set cuisinecategory_id = ? Where event_id = ?";
 	private static final String Delete_Stmt = "Delete from Eventcuisinecategory Where event_id = ?";
+	private static final String Delete_With_Event_And_CuisineCat_Stmt = "Delete from Eventcuisinecategory Where event_id = ? and cuisinecategory_id = ?";
 	//private static final String Select_Key_Stmt = "Select * From Event Where event_id=?";
 	private static final String Select_All_Stmt = "Select * From Eventcuisinecategory";
 	private static final String Select_All_By_Event_Id = "Select * From Eventcuisinecategory Where event_id = ?";
@@ -76,7 +77,7 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 	}
 	
 	@Override
-	public void insertbyEventInfo(EventCuisineCategoryVO eventcuisinecategoryVO,Connection con) {
+	public void insertByEventInfo(EventCuisineCategoryVO eventcuisinecategoryVO,Connection con) {
 		PreparedStatement pstmt = null;
 	
 
@@ -168,6 +169,42 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 		}
 	}
 
+	@Override
+	public void deleteByEventInfo(EventCuisineCategoryVO eventCuisineCategoryVO, Connection con) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = con.prepareStatement(Delete_With_Event_And_CuisineCat_Stmt);
+
+			pstmt.setInt(1, eventCuisineCategoryVO.getEventID());
+			pstmt.setInt(2, eventCuisineCategoryVO.getCuisinecategoryID());
+
+			pstmt.executeUpdate();
+			System.out.println("刪除成功");
+		} catch (SQLException se) {
+			if (con != null) {
+				try {
+					System.err.print("Transaction is being rolled back by RecipeCuisineCategory.");
+					// don't forget ---------------------------------------------------
+					con.rollback();
+				} catch (SQLException excep) {
+					throw new RuntimeException("rollback error occured. "
+							+ excep.getMessage());
+				}
+			}
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+		}
+	}
 	
 	@Override
 	public List<EventCuisineCategoryVO> getAll() {
@@ -374,12 +411,6 @@ public class EventcuisinecategoryJDBCDAO implements EventCuisineCategoryDAOInter
 //		
 //		System.out.println("=======================");
 //	}		
-		
-		
-		
-		
-		
-		
-				
+						
 //	}
 }
