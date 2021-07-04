@@ -114,7 +114,7 @@
         <div class="hot_events">
             <h2><i class="fas fa-pizza-slice"></i> 最新活動</h2>
             <section class="slider_box multiple-item responsive">
-            <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}">
+            <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}" begin="1" end="6">
                 <div>
                     <div class="img_outer"><img src="<%= request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}"></div>
                     <span class="popular shadow">${eventInfoVO.eventCurrentCount} 人</span>
@@ -149,7 +149,7 @@
         <div class="hot_events mt-5">
             <h2><i class="fas fa-hamburger"></i> 最新食譜</h2>
             <section class="slider_box multiple-item responsive">
-            <c:forEach var="recipeVO" items="${recipeSvc.getSomeNew()}">
+            <c:forEach var="recipeVO" items="${recipeSvc.getSomeNew()}" begin="1" end="6">
                 <div class="recipeInfo" data-id="${recipeVO.recipeID}">
                     <div class="img_outer"><img src="<%= request.getContextPath() %>/Recipe/Pic/Top/${recipeVO.recipeID}"></div>
                     <span class="popular shadow">
