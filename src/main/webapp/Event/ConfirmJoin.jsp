@@ -64,11 +64,19 @@
 	                <span class="current_people border"></span>
 	            </div>
 	            <div>
-	                活動開始日期:
+	                活動報名開始時間:
+	                <span class="event_reg_start border"></span>
+	            </div>
+	            <div>
+	                活動報名結束時間:
+	                <span class="event_reg_end border"></span>
+	            </div>
+	            <div>
+	                活動開始時間:
 	                <span class="event_start border"></span>
 	            </div>
 	            <div>
-	                活動結束日期:
+	                活動結束時間:
 	                <span class="event_end border"></span>
 	            </div>
 	            <div>
@@ -121,7 +129,7 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
-	
+	<%@ include file="/common/js/scriptFooter.page"%>
 	$(function(){
 		$.ajax({
 			type:"POST",
@@ -138,9 +146,13 @@
 				
 				var startTime = new Date(""+data.eventStart).format("yyyy-MM-dd hh:mm");
 				var endTime = new Date(""+data.eventStart).format("yyyy-MM-dd hh:mm");
+				var regStartTime = new Date(""+data.eventRegStart).format("yyyy-MM-dd hh:mm");
+				var regEndTime = new Date(""+data.eventRegEnd).format("yyyy-MM-dd hh:mm");
 				
 				$(".event_name").html(data.eventName);
 				$(".current_people").html(data.eventMember);
+				$(".event_reg_start").html(regStartTime);
+				$(".event_reg_end").html(regEndTime);
 				$(".event_start").html(startTime);
 				$(".event_end").html(endTime);
 				$(".eat_style").html(data.cuisineCatName);

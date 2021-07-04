@@ -129,7 +129,7 @@
 										<td class="col-sm-2 col-2">
 											<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a>
 											<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
-												<span class="badge badge-primary">等待報名</span>
+												<span class="badge badge-primary">未開始報名</span>
 											</c:if>
 											<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
 												<span class="badge badge-warning">報名中</span>
@@ -170,7 +170,7 @@
 										<td class="col-sm-2 col-2">
 											<a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}">${eventInfoVO.eventName}</a>
 											<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
-												<span class="badge badge-primary">等待報名</span>
+												<span class="badge badge-primary">未開始報名</span>
 											</c:if>
 											<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
 												<span class="badge badge-warning">報名中</span>
@@ -214,7 +214,7 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
-
+	<%@ include file="/common/js/scriptFooter.page"%>
 		$("[name=position]").on("change",function(){
 			if($(this).is(":checked")){
 				$(".positionSubmit").submit();

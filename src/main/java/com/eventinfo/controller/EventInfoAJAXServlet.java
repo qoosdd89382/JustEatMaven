@@ -60,6 +60,8 @@ public class EventInfoAJAXServlet extends HttpServlet {
 			jsonData.put("groupType", eventInfoVO.getGroupType());
 			jsonData.put("eventName",eventInfoVO.getEventName());
 			jsonData.put("eventMember", eventInfoVO.getEventCurrentCount());
+			jsonData.put("eventRegStart", eventInfoVO.getEventRegistartionStartTime());
+			jsonData.put("eventRegEnd", eventInfoVO.getEventRegistartionEndTime());
 			jsonData.put("eventStart", eventInfoVO.getEventStartTime());
 			jsonData.put("eventEnd", eventInfoVO.getEventEndTime());
 			jsonData.put("city", eventInfoVO.getGroupCity());

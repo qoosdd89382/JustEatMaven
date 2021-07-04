@@ -1090,26 +1090,6 @@ public class EventInfoActionServlet extends HttpServlet {
 //				}
 //			}
 			
-			List<CuisineCategoryVO> cuisineCategoryVOs = new ArrayList<CuisineCategoryVO>();
-			String cuisineCatIDStr = request.getParameter("cuisineCatID");
-			Integer[] cuisineCatID = null;
-			
-			if (cuisineCatIDStr == null || cuisineCatIDStr.trim().length() == 0) {
-				errorMsgs.put("cuisineCatError", "請至少選取一個類型");
-			} else {
-				String[] cuisineCatIDs = cuisineCatIDStr.trim().split(" ");
-				System.out.println(cuisineCatIDs.length);
-				cuisineCatID = new Integer[cuisineCatIDs.length];
-				int i = 0;
-				for (String cuisineCategoryID : cuisineCatIDs) {
-					cuisineCatID[i] = new Integer(cuisineCategoryID);
-					CuisineCategoryVO cuisineCategoryVO = new CuisineCategoryVO();
-					cuisineCategoryVO.setCuisineCategoryID(new Integer(cuisineCategoryID));
-					cuisineCategoryVOs.add(cuisineCategoryVO);
-					i++;
-				}
-			}
-			
 			
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
