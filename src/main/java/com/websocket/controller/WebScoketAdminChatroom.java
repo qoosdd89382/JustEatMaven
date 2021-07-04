@@ -117,11 +117,14 @@ public class WebScoketAdminChatroom {
 		for(Map.Entry<String, Session> entry : sessionsMap.entrySet()) {
 			userIDs.add(entry.getKey());
 		}
-		
+		System.out.println(userSession);
 		for (String userID : userIDs) {
 			if (sessionsMap.get(userID).equals(userSession)) {
+				System.out.println(userID);
+				System.out.println(userSession);
 				userIDClose = userID;
 				sessionsMap.remove(userID);
+				userIDs.remove(userID);
 				break;
 			}
 		}
