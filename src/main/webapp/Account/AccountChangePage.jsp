@@ -34,9 +34,12 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 
 <style>
 body#body_change{
-	background: #ffe259; 
-	background: -webkit-linear-gradient(to left, #ffa751, #ffe259); 
-	background: linear-gradient(to left, #ffa751, #ffe259);
+/* 	background: #ffe259;  */
+/* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
+/* 	background: linear-gradient(to left, #ffa751, #ffe259); */
+
+	background-image:url("./images/AccountInfoPage.jpg");
+	background-size: cover;
 }
 
 /*整個區塊 */
@@ -44,11 +47,12 @@ div#main_area{
 	margin-top:80px;
 }
 div#change_area{
+	text-align:center;
 	background-color: rgba(0,0,0,0.6);
 	color:white;
 	
 	width: 200px;
-	height: 1400px;
+	height: expression(this.height < 100 ? "100px" : this.height "px");
 	
  	margin: 35px auto; 
  	padding: 30px; 
@@ -81,9 +85,9 @@ div#third_level_register_area{
 div#account_pic_preview,
 div#account_idcardfront_preview,
 div#account_idcardback_preview {
-	border:1px gray dashed;
-	height:120px;
-	width:170px;
+	border:1px gray dotted;
+	height:expression(this.height < 100 ? "100px" : this.height "px");
+	width:300px;
 }
 span.preview_pic{
 	margin:0 auto;
@@ -102,7 +106,11 @@ input#change_reset_btn {
 	padding: 5px 15px 5px 15px;
 	text-decoration: none;
 }
-
+span#text_title,
+span#pic_title{
+	color: 	#FF8800;
+	font-size:20px;
+}
 input#change_submit_btn:hover,
 input#change_reset_btn:hover {
 	background:#FFAA33;
@@ -114,16 +122,19 @@ textarea#textarea {
 }
 
 /* 預覽圖 */
-#account_pic_preview
+div#account_pic_preview,
+div#account_idcardfront_preview,
+div#account_idcardback_preview
 {
     border: 1px solid lightgray;
     display: inline-block;
-    width: 200px;
+    width: 300px;
     min-height: 150px;
     position: relative;
 }
-#account_pic_preview span.text
-{
+div#account_pic_preview span.text,
+div#account_idcardfront_preview span.text,
+div#account_idcardback_preview span.text{
     position: absolute;
     display: inline-block;
     left: 50%;
@@ -132,7 +143,9 @@ textarea#textarea {
     z-index: -1;
     color: lightgray;
 }
-#account_pic_preview img.preview_img
+div#account_pic_preview img.preview_img,
+div#account_idcardfront_preview img.preview_img,
+div#account_idcardback_preview img.preview_img
 {
    width: 100%;
 }
@@ -147,25 +160,25 @@ textarea#textarea {
 
 	<div class="container">
 	
-		<div id="main_area" class="row">
+		<div class="row justify-content-center">
 		
-			<div id="change_area" class="col-sm-6 align-self-center">
-			<div id="change_area_title">			
-				<span>揪食-修改會員資料</span><br>
-				<span>請修改您想更動的資料</span>
-			</div>
+			<div id="change_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
+				<div id="change_area_title">			
+					<span>揪食-修改會員資料</span><br>
+					<span>請修改您想更動的資料</span>
+				</div>
 				<form id="change" method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" enctype="multipart/form-data">
 					
-					<span>會員信箱 :${accountInfoVOLogin.accountMail}</span><br> 
+					<span id="text_title">會員信箱 :${accountInfoVOLogin.accountMail}</span><br> 
 					<br>
-					<span>會員暱稱:${accountInfoVOLogin.accountNickname}</span><br> 
+					<span id="text_title">會員暱稱:${accountInfoVOLogin.accountNickname}</span><br> 
 					<br>
 					
-					<span>會員密碼:</span><br> 
+					<span id="text_title">會員密碼:</span><br> 
 					<input type="text" name="accountPassword" value="${accountInfoVOLogin.accountPassword}"><br>
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 
-					<span>會員姓名:</span><br>
+					<span id="text_title">會員姓名:</span><br>
 					<input type="text" name="accountName" value="${accountInfoVOLogin.accountName}"><br>
 					<span style="color:red">${errorMsgs.get("accountNameError")}</span><br> 
 					
@@ -174,30 +187,36 @@ textarea#textarea {
 					<input type="radio" name="accountGender" value="2" ${(accountInfoVOLogin.accountGender)== 2?"checked":""}>女 <br>
 					<span style="color:red">${errorMsgs.get("accountGenderError")}</span><br> 
 					
-					<span>會員生日:</span><br>
+					<span id="text_title">會員生日:</span><br>
 					<input type="date" name="accountBirth" value="${accountInfoVOLogin.accountBirth}"><br>
 					<span style="color:red">${errorMsgs.get("accountBirthError")}</span><br> 
 					
-					<span>會員電話 :</span><br>
+					<span id="text_title">會員電話 :</span><br>
 					<input type="text" name="accountPhone" value="${accountInfoVOLogin.accountPhone}"><br> 
 					<span style="color:red">${errorMsgs.get("accountPhoneError")}</span><br> 
 					
-					<span>會員照片 :</span>
+					<span id="pic_title">請輸入會員照片:</span><br> 
 					<input type="file" id="account_pic" name="accountPic" value="${accountInfoVOLogin.accountPic}"><br> 
 					<div id="account_pic_preview">
 					<img src="<%=request.getContextPath()%>/Account/Pic/Pic/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>
-					</div><br>
+					<span class="preview_pic">會員照片預覽圖</span></div><br>
 					
-					<span>會員身分證正面:(如需修改請更管理員聯絡)</span>
-					<img src="<%=request.getContextPath()%>/Account/Pic/Front/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>
+					<span id="pic_title">請輸入會員身分證正面:</span><br>
+					<input type="file" id="account_front" name="accountIDcardFront" value="${accountInfoVOLogin.accountIDcardFront}"><br> 
+					<div id="account_idcardfront_preview">
+					<img src="<%=request.getContextPath()%>/Account/Pic/Front/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>						
+					<span class="preview_pic">會員身分證正面預覽圖</span></div><br>
 					
-					<span>會員身分證背面:(如需修改請更管理員聯絡)</span>
+					<span id="pic_title">請輸入會員身分證背面:</span><br>
+					<input type="file" id="account_back" name="accountIDcardBack" value="${accountInfoVOLogin.accountIDcardBack}"><br> 
+					<div id="account_idcardback_preview">
 					<img src="<%=request.getContextPath()%>/Account/Pic/Back/<%=accountInfoVO.getAccountID()%>" width="300px" height="150px"><br>
-					
-					<span>會員自我介紹:</span><br>
+					<span class="preview_pic">會員身分證背面預覽圖</span></div><br>
+
+					<span id="text_title">會員自我介紹:</span><br>
 					<textarea id="textarea" name="accountText" rows="5" cols="50" onkeyup="autogrow(this)">${accountInfoVOLogin.accountText}</textarea><br>
 					<span style="color:red">${errorMsgs.get("accountTextError")}</span><br>
-
+					
 					<input type="hidden" name="action" value="setAccountInfoForChange"> 
 					<input id="change_submit_btn" type="submit" value="提交送出"> 
 					<input id="change_reset_btn" type="reset" value="重置">
@@ -205,8 +224,6 @@ textarea#textarea {
 			</div>
 		</div>
 	</div>
-
-	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

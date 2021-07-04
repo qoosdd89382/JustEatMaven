@@ -194,7 +194,7 @@ public class AccountInfoServlet extends HttpServlet {
 						.getAccountInfoForLogin(accountMail,accountPassword);
 
 				//新增瀏覽紀錄
-				visitSvc.insertVisitRecordByAccountID(accountInfoSvc.getAccountIDByAccountMail(accountMail).getAccountID());
+//				visitSvc.insertVisitRecordByAccountID(accountInfoSvc.getAccountIDByAccountMail(accountMail).getAccountID());
 				
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				//session的accountInfoVO有該會員的全部資料
