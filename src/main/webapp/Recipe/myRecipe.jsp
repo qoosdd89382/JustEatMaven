@@ -84,7 +84,7 @@ td > span {
 				${successMsg}
     		</section>
     			
-	                        <c:if test="${list.get(0).accountID == accountInfoVOLogin.accountID}">
+	                        <c:if test="${ fn:length(list) > 0 && list.get(0).accountID == accountInfoVOLogin.accountID}">
                         	<div class="editBtn row">
 		                        <select name="recipeAction" class="custom-select col- lg-1 col-md-2 col-3 ml-auto mb-2">
 		                        	<option value="delete">刪除</option>

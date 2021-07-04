@@ -42,6 +42,57 @@ public class AdminInfoServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		HttpSession session = req.getSession();
 		
+		if ("sendAuthAgain".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+			String adminMail = req.getParameter("adminMail");
+			String adminMailReg = "^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$";
+			if (adminMail.trim() == null || adminMail.trim().length() == 0) {
+				errorMsgs.put("forgetPasswordErr", "e-mail請勿空白");
+			} else if (!adminMail.trim().matches(adminMailReg)) {
+				errorMsgs.put("forgetPasswordErr", "e-mail格式錯誤");
+			} else if (adminSvc.getOneAdmin(adminMail) == null) {
+				errorMsgs.put("forgetPasswordErr", "無此管理員信箱，請確認後重新輸入");
+			}
+			
+			AdminInfoVO adminVO = new AdminInfoVO();
+			adminVO.setAdminMail(adminMail);
+
+			req.setAttribute("adminVO", adminVO);
+
+			if (!errorMsgs.isEmpty()) {
+				RequestDispatcher failureView = req.getRequestDispatcher("/Dashboard/forgetPassword.jsp");
+				failureView.forward(req, res);
+				return;
+			}
+
+			// All parameters are correct, so we can send them to db
+			// ==========================
+			String adminPassword = new RandomAuthCode().generateCode();
+
+			adminVO = adminSvc.getOneAdmin(adminMail);
+			adminSvc.resetAuthCode(adminVO.getAdminID(), adminPassword);
+
+			if (adminSvc != null) {
+				System.out.println("新增成功");
+
+				MailService mailSvc = new MailService();
+				String subject = "JustEat管理員重設密碼驗證信";
+				String messageText =
+						"請點擊本連結，重設密碼：<br>" + req.getRequestURL() + "?action=recheckAuth" + 
+						"&adminID="	+ adminVO.getAdminID() + 
+						"&authCode=" + adminPassword + 
+						"<br><br>或至" + req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath() + "/Dashboard/adminResendAuth.jsp?adminID="	+ adminVO.getAdminID() + 
+						"輸入驗證碼" + adminPassword;
+
+				mailSvc.sendMail(adminMail, subject, messageText);
+
+				RequestDispatcher inputAuthCodeView = req.getRequestDispatcher(
+						"/Dashboard/adminResendAuth.jsp?adminID=" + adminVO.getAdminID());
+				inputAuthCodeView.forward(req, res);
+			}
+		}
 
 		if ("insert".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -95,7 +146,7 @@ public class AdminInfoServlet extends HttpServlet {
 							"請點擊本連結，啟用帳號：<br>" + req.getRequestURL() + "?action=auth" + 
 							"&adminID="	+ adminVO.getAdminID() + 
 							"&authCode=" + adminPassword + 
-							"<br><br>或至" +  req.getRequestURL() + "?adminID="	+ adminVO.getAdminID() + 
+							"<br><br>或至" +  req.getContextPath() + "/Dashboard/adminRegisterAuth.jsp?adminID="	+ adminVO.getAdminID() + 
 							"輸入驗證碼" + adminPassword;
 
 					mailSvc.sendMail(adminMail, subject, messageText);
@@ -114,6 +165,42 @@ public class AdminInfoServlet extends HttpServlet {
 
 		}
 
+		if ("recheckAuth".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+//			try {
+				Integer adminID = new Integer(req.getParameter("adminID"));
+
+				String authCode = req.getParameter("authCode");
+				if (authCode == null) {
+					errorMsgs.put("authWrongErr", "請輸入驗證碼");
+					RequestDispatcher inputAuthCodeView = req
+							.getRequestDispatcher("/Dashboard/adminResendAuth.jsp?adminID=" + adminID);
+					inputAuthCodeView.forward(req, res);
+					return;
+				} else if (adminSvc.getOneAdmin(adminID).getAdminPassword().equals(authCode)) {
+					RequestDispatcher successView = req
+							.getRequestDispatcher("/Dashboard/adminPasswordReset.jsp"
+									+ "?adminID=" + adminID
+									+ "&authCode=" + authCode);
+					successView.forward(req, res);
+				} else {
+					errorMsgs.put("authWrongErr", "驗證錯誤");
+					RequestDispatcher failureView = req
+							.getRequestDispatcher("/Dashboard/adminResendAuth.jsp?adminID=" + adminID);
+					failureView.forward(req, res);
+				}
+
+//			} catch (Exception e) {
+//				errorMsgs.put("authWrongErr", "驗證錯誤");
+//				RequestDispatcher successView = req
+//						.getRequestDispatcher("/Dashboard/addAdmin.jsp");
+//				successView.forward(req, res);
+//			}
+
+		}
+		
 		if ("auth".equals(action)) {
 			Map<String, String> errorMsgs = new HashMap<String, String>();
 			req.setAttribute("errorMsgs", errorMsgs);
@@ -152,6 +239,69 @@ public class AdminInfoServlet extends HttpServlet {
 //				successView.forward(req, res);
 //			}
 
+		}
+		
+
+		if ("resetpwd".equals(action)) {
+			Map<String, String> errorMsgs = new HashMap<String, String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+//			try {
+				Integer adminID = new Integer(req.getParameter("adminID"));
+				AdminInfoVO adminVO = adminSvc.getOneAdmin(adminID);
+//				String authCode = req.getParameter("authCodePara");
+				
+				
+				String adminPassword = req.getParameter("adminPassword");
+				String adminPasswordReg = "^[a-zA-Z0-9]{8,20}$";
+				if (adminPassword == null || adminPassword.trim().length() == 0) {
+					errorMsgs.put("adminPasswordErr", "密碼不可空白");
+					errorMsgs.put("adminPasswordRecheckErr", "密碼不可空白");
+				} else if (!adminPassword.trim().matches(adminPasswordReg)) {
+					errorMsgs.put("adminPasswordErr", "密碼須為8-20字英文大小寫與數字");
+					errorMsgs.put("adminPasswordRecheckErr", "請再次輸入密碼");
+				} else {
+					String adminPasswordRecheck = req.getParameter("adminPasswordRecheck");
+					if (adminPasswordRecheck == null || adminPasswordRecheck.trim().length() == 0) {
+						errorMsgs.put("adminPasswordRecheckErr", "請再次輸入密碼");
+					} else if (!adminPasswordRecheck.trim().equals(adminPassword.trim())) {
+						errorMsgs.put("adminPasswordErr", "請重新輸入密碼");
+						errorMsgs.put("adminPasswordRecheckErr", "與第一次輸入不符，重新輸入");
+					}
+				}
+
+				adminVO.setAdminPassword(adminPassword);
+				req.setAttribute("adminVO", adminVO);
+
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = 
+							req.getRequestDispatcher("/Dashboard/adminPasswordReset.jsp");
+					failureView.forward(req, res);
+					return;
+				}
+
+				// All parameters are correct, so we can send them to db
+				// ==========================
+				
+				String hashedPassword = BCrypt.hashpw(adminPassword, BCrypt.gensalt());
+				System.out.println(hashedPassword);
+				if (adminSvc.resetAuthCode(adminID, hashedPassword) > 0) {
+					session.removeAttribute("adminID");
+					System.out.println("修改密碼成功");
+					RequestDispatcher successView = 
+							req.getRequestDispatcher("/Dashboard");
+					successView.forward(req, res);
+					return;
+				}
+				
+				
+//			} catch (Exception e) {
+////			errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的編號不存在！");
+//			e.printStackTrace();
+////			RequestDispatcher failureView = req.getRequestDispatcher("/");
+////			failureView.forward(req, res);
+////				res.sendRedirect(req.getContextPath());
+//			}
 		}
 		
 		if ("setpwd".equals(action)) {
