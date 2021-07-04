@@ -77,7 +77,6 @@
                 		data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<%=request.getContextPath()%>/Dashboard/Admin/listAllEvent.jsp">活動列表管理</a>
-                        <a class="collapse-item" href="utilities-border.html">活動成員管理</a>
                     </div>
                 </div>
             </li>
