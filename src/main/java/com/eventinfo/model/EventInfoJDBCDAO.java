@@ -42,10 +42,10 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 	private static final String Update_State_Stmt = "Update EventInfo set event_state=? Where event_id = ?";
 	private static final String Update_View_Count_Stmt = "Update EventInfo set event_view_count=? Where event_id = ?";
 	private static final String Delete_Stmt = "Delete From EventInfo Where event_id = ?";
-	private static final String Select_Key_Stmt = "Select * From EventInfo Where event_id = ? Order by event_id";
-	private static final String Select_Name_Stmt = "Select * From EventInfo Where event_name Like ? ";
-	private static final String Select_Start_Date_Stmt = "Select * From EventInfo Where event_start_time Like ? ";
-	private static final String Select_All_Stmt = "Select * From EventInfo";
+	private static final String Select_Key_Stmt = "Select * From EventInfo Where event_id = ? Order by event_id desc";
+	private static final String Select_Name_Stmt = "Select * From EventInfo Where event_name Like ? Order by event_id desc";
+	private static final String Select_Start_Date_Stmt = "Select * From EventInfo Where event_start_time Like ? Order by event_id desc";
+	private static final String Select_All_Stmt = "Select * From EventInfo Order by event_id desc";
 
 	static {
 		try {
@@ -520,7 +520,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Select_All_Stmt + " Order by event_id");
+			pstmt = con.prepareStatement(Select_All_Stmt);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -990,7 +990,7 @@ public class EventInfoJDBCDAO implements EventInfoDAOinterface {
 
 		try {
 			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(Select_All_Stmt + " ORDER BY event_start_time DESC LIMIT 6");
+			pstmt = con.prepareStatement(Select_All_Stmt + " LIMIT 6");
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {

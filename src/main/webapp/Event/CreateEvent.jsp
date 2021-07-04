@@ -110,24 +110,24 @@
 	            	</div>
 	            </div>
 	            <div>
-	                活動開始日期:
-	                <input type="text" name="event_start" id="eventStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventStartTime()==null)?"":(pageContext.getAttribute("formatStartDateTime")) %>">
-	                <span class="error">${errorMsgs.get("EventStartTimeIsNull")} ${errorMsgs.get("EventStartTimeNotConform")} ${errorMsgs.get("StartMustAfterRegStart")}</span>
-	            </div>
-	            <div>
-	                活動結束日期:
-	                <input type="text" name="event_end" id="eventEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventEndTime()==null)?"":(pageContext.getAttribute("formatEndDateTime"))%>">
-	            	<span class="error">${errorMsgs.get("EventEndTimeIsNull")} ${errorMsgs.get("EventEndTimeNotConform")}${errorMsgs.get("EndMustAfterStart")}</span>
-	            </div>
-	            <div>
-	                活動報名開始日期:
+	                活動報名開始時間:
 	                <input type="text" name="event_reg_start" id="eventRegStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionStartTime()==null)?"":(pageContext.getAttribute("formatRegStartDateTime"))%>">
 	            	<span class="error">${errorMsgs.get("EventRegStartTimeIsNull")} ${errorMsgs.get("EventRegStartTimeNotConform")}</span>
 	            </div>
 	            <div>
-	                活動報名結束日期:
+	                活動報名結束時間:
 	                <input type="text" name="event_reg_end" id="eventRegEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionEndTime()==null)?"":(pageContext.getAttribute("formatRegEndDateTime"))%>">
-	            	<span class="error">${errorMsgs.get("EventRegEndTimeIsNull")} ${errorMsgs.get("EventRegEndTimeNotConform")} ${errorMsgs.get("RegEndMustAfterRegStart") }</span>
+	            	<span class="error">${errorMsgs.get("EventRegEndTimeIsNull")} ${errorMsgs.get("EventRegEndTimeNotConform")} ${errorMsgs.get("RegEndMustAfterRegStart")}</span>
+	            </div>
+	            <div>
+	                活動開始時間:
+	                <input type="text" name="event_start" id="eventStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventStartTime()==null)?"":(pageContext.getAttribute("formatStartDateTime")) %>">
+	                <span class="error">${errorMsgs.get("EventStartTimeIsNull")} ${errorMsgs.get("EventStartTimeNotConform")} ${errorMsgs.get("StartMustAfterRegStart")}</span>
+	            </div>
+	            <div>
+	                活動結束時間:
+	                <input type="text" name="event_end" id="eventEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventEndTime()==null)?"":(pageContext.getAttribute("formatEndDateTime"))%>">
+	            	<span class="error">${errorMsgs.get("EventEndTimeIsNull")} ${errorMsgs.get("EventEndTimeNotConform")} ${errorMsgs.get("EndMustAfterStart")}</span>
 	            </div>
 	            <div>
 	                <select name="city">
@@ -196,7 +196,7 @@
 	                <%
 	            		}
 	                %>
-	                <input type="submit" name="action" value="邀請好友">
+<!-- 	                <input type="submit" name="action" value="邀請好友"> -->
 	                <input type="submit" name="action" value="取消建立">
 	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
 	            </div>
@@ -219,6 +219,7 @@
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
+	<%@ include file="/common/js/scriptFooter.page"%>
 		 $.datetimepicker.setLocale('zh'); // kr ko ja en
 	     $('#eventStart').datetimepicker({
 	        theme: '',          //theme: 'dark',
