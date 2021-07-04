@@ -27,6 +27,15 @@
 	<filter-mapping>
 		<filter-name>LoginFilter</filter-name>
 		<url-pattern>/Account/AccountInfoPage.jsp</url-pattern>
+		<!--食譜 -->
+		<url-pattern>/Recipe/updateRecipe.jsp</url-pattern>
+		<url-pattern>/Recipe/addRecipe.jsp</url-pattern>
+		<url-pattern>/Recipe/recipeFavThumb.do</url-pattern>
+		<url-pattern>/Recipe/deleteRecipeStep.do</url-pattern>
+		<url-pattern>/Recipe/recipeFavThumb.do</url-pattern>
+		<!--活動 -->
+		<url-pattern>/Event/ConfirmJoin.jsp</url-pattern>
+		<url-pattern>/Event/CreateEvent.jsp</url-pattern>
 		
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>

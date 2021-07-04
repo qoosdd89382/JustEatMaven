@@ -9,7 +9,9 @@
 <%
 FriendshipService friendshipSvc = new FriendshipService();
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
-List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountID(accountInfoVO.getAccountID());
+List<AccountInfoVO> list =  friendshipSvc.getAccountFriendByAccountID(accountInfoVO.getAccountID());
+pageContext.setAttribute("list",list);
+
 %>
 
 <!DOCTYPE html>
@@ -30,61 +32,70 @@ List<AccountInfoVO> friendshipVO =  friendshipSvc.getAccountFriendByAccountID(ac
 
 <title>AccountFriendPage</title>
 <style>
-div.container{
-margin-top:100px;
+body#body_friend{
+/* 	background: #ffe259;  */
+/* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
+/* 	background: linear-gradient(to left, #ffa751, #ffe259); */
+
+	background-image:url("./images/AccountInfoPage.jpg");
+	background-size: cover;
+/* 	background-attachment:fixed;  */
+/* 	background-repeat: no-repeat; */
 }
-div#function_select_area form,
-div#function_select_area a {
-	border:1px ridge orange;
-	font-size:25px;
-	margin:15px;
+div#main_block{
+	margin-top:150px;
+}
+
+
+div#account_friend_area{;
+	background-color: rgba(0,0,0,0.6);
+	color:white;
+	
+	width: 200px;
+	height:  expression(this.height < 200 ? "200px" : this.height "px");
+	
+ 	margin: 35px auto; 
+ 	padding: 30px; 
+	
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+ 	box-shadow:0px 1px 2px 1px #aaaaaa, 
+ 	           inset 0px 1px 1px rgba(255,255,255,0.7); 
+	border-radius: 3px solid orange;
 }
 
 </style>
 </head>
-<body>
+<body id="body_friend">
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
 	
-	<div class="container">
+	<div class="container" id="main_block">
 	
-		<div class="row">
-		
-			<div class="col-4" id="function_select_area">
-				<form method="post" action="accountInfo.do">
-					<input type="hidden" name="action" value="gotoAccountInfoPage">
-					<input type="submit" value="會員資料">
-				</form>
-				<a href='#'>我的活動</a><br>
-				<a href='#'>我的評價</a><br>
-				<form method="post" action="friendship.do">
-					<input type="hidden" name="action" value="getAccount_Friendship">
-					<input type="submit" value="我的好友">
-				</form>
-				<a href='#'>我的文章</a><br>
-				<a href='#'>我的收藏</a><br>
-				<a href='#'>我的訂單</a><br>
-				<a href='#'>成為商家(這裡記得要加判斷)</a><br>
-				<form method="post" action="notice.do">
-					<input type="hidden" name="action" value="getAccount_Notice">
-					<input type="submit" value="查看我的通知">
-				</form>
-				<form method="post" action="announce.do">
-					<input type="hidden" name="action" value="getAccount_Announce">
-					<input type="submit" value="查看我的公告">
-				</form>
-			</div>
-			
-			<div class="col">
-				<p>我是好友頁面</p>
-				<p>借我標記一下session=>${accountMail}</p>	
-				<p>我是你的好友集合${friendshipVO}</p>
-				<p>以下是你的好友</p>
+		<div class="row justify-content-center" >
 
-				<c:forEach var="accountInfoVO" items="${friendshipVO}">
-					<div>${accountInfoVO.accountNickname}</div>
-				</c:forEach>
+			<div id="account_friend_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center" >
+				
+				<table>
+					<tr>
+						<th>會員暱稱</th>
+					</tr>			
+				<%@ include file="ListTop.file"%> 
+					<c:forEach var="accountInfoVO" items="${friendshipVO}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+						<tr>
+							<td>${accountInfoVO.accountNickname}</td>
+						</tr>
+					</c:forEach>
+				</table>
+				<%@ include file="ListBottom.file" %>	
+				<br>
+				<br>
+				<br>
+				<br>
 				
 			</div>
 		</div>

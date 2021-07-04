@@ -91,6 +91,8 @@ div#account_info_area{;
 	background-color: rgba(0,0,0,0.6);
 	color:white;
 	
+	margin-top:20px;
+	
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
 	border-top-right-radius: 10px;
@@ -107,8 +109,10 @@ div#account_info_area span {
 	font-size:25px;
 	margin:30px;
 }
-div#function_select_area_button {
-   padding: 8px 16px;
+div#function_select_area_button button,
+div#function_select_area_button a {
+	margin:10px;
+   padding: 16px 24px;
    border: 1px solid #F0C21D;
    background: -webkit-gradient(linear, left top, left bottom, from(#E8CFB7), to(#FFA10A));
    background: -webkit-linear-gradient(top, #E8CFB7, #FFA10A);
@@ -133,7 +137,8 @@ div#function_select_area_button {
    -o-transition: 0.4s;
    cursor: pointer;
    }
-div#function_select_area_button:hover {
+div#function_select_area_button button:hover,
+div#function_select_area_button a:hover {
    background: none;
    background-color: #FFA10A;
    box-shadow: 0px 0px 5px 0px #AAAAAA;
@@ -142,7 +147,8 @@ div#function_select_area_button:hover {
    border: 1px solid #ffffff;
    color: #000000;
    }
-div#function_select_area_button:active {
+div#function_select_area_button button:active.   
+div#function_select_area_button a:active {
    top: 1px;
    position: relative;
    }
@@ -192,7 +198,7 @@ input#account_logout:hover {
 				<form method="post" action="accountInfo.do">
 					<input type="hidden" name="action" value="gotoAccountInfoPage">
 					<button id="btn_submit" type="submit">會員資料</button>
-				</form>			
+				</form>		
 			</div>
 			
 			<div id="function_select_area_button" class="col-6 col-md-2">
@@ -202,11 +208,11 @@ input#account_logout:hover {
 				</form>
 			</div>
 			
-			<div id="function_select_area_button" class="col-6 col-md-2">
-				<a href='<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountID%>>'>我的活動</a>
+			<div id="function_select_area_button" class="col-6 col-md-2 align-self-center">
+				<a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a>
 			</div>
 			
-			<div id="function_select_area_button" class="col-6 col-md-2">
+			<div id="function_select_area_button" class="col-6 col-md-2 align-self-center">
 				<a href='<%=request.getContextPath()%>/Recipe/recipe.do?action=myRecipe&id=<%=accountID%>'>我的食譜</a>
 			</div>
 	
@@ -214,7 +220,7 @@ input#account_logout:hover {
 			
 		<div class="row justify-content-center">
 			
-			<div id="account_info_area" class="col-10 col-sm-6 col-md-6 col-lg-6 col-xl-6" >
+			<div id="account_info_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center" >
 			
 				<div id="account_info_area_title">
 					<span style="text-align:center">用戶  ${accountInfoVOLogin.accountNickname}</span><br>
@@ -223,6 +229,7 @@ input#account_logout:hover {
 				
 				<span>用戶信箱:${accountInfoVOLogin.accountMail}</span><br>
 				<span>用戶暱稱:${accountInfoVOLogin.accountNickname}</span><br>
+				<span>用戶層級:${(accountInfoVOLogin.accountLevel==1?"一般會員":"特權會員")}</span><br>
 				<span>用戶名稱:${accountInfoVOLogin.accountName}</span><br>
 				<span>用戶性別:${(accountInfoVOLogin.accountGender==1?"男":"女")}</span><br>
 				<span>用戶生日:${accountInfoVOLogin.accountBirth}</span><br>
@@ -258,17 +265,23 @@ input#account_logout:hover {
 				</div>
 				
 				<br>
+				<div id="account_name">
 				<span>用戶註冊時間:${accountInfoVOLogin.accountRegisterTime}</span><br>
+				</div>
 				
+				<div>
 				<form method="post" action="accountInfo.do">
 					<input type="hidden" name="action" value="gotoAccountChangePage">
 					<input id="account_change_info" type="submit" value="修改我的會員資料">	
 				</form>
-				
+				</div>
+
+				<div>
 				<form method="post" action="accountInfo.do">
 					<input type="hidden" name="action" value="getAccountLogout">
 					<input id="account_logout" type="submit" value="登出帳戶">						
 				</form>
+				</div>				
 			
 			</div>
 		
