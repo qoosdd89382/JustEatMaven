@@ -115,7 +115,7 @@ textarea#textarea {
 					<span style="color:red">*</span><span>請輸入會員信箱 :</span><br>
 					<input id="input_box" type="text" name="accountMail" 
 					value="<%=(accountMail == null) ? "" : accountMail%>"
-					placeholder="如JustEat@gmail.com">
+					placeholder="如JustEat@gmail.com"><br>
 					<span style="color:red">${errorMsgs.get("accountMailError")}</span><br> 
 						
 					<input type="hidden" name="action" value="getAccountInfoForForget"> 

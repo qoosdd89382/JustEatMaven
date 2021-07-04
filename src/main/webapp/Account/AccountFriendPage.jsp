@@ -12,6 +12,9 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 List<AccountInfoVO> list =  friendshipSvc.getAccountFriendByAccountID(accountInfoVO.getAccountID());
 pageContext.setAttribute("list",list);
 
+Integer accountID = accountInfoVO.getAccountID();
+
+
 %>
 
 <!DOCTYPE html>
@@ -67,6 +70,51 @@ div#account_friend_area{;
 	border-radius: 3px solid orange;
 }
 
+div#function_select_area_button button,
+div#function_select_area_button a {
+	margin:10px;
+   padding: 16px 24px;
+   border: 1px solid #F0C21D;
+   background: -webkit-gradient(linear, left top, left bottom, from(#E8CFB7), to(#FFA10A));
+   background: -webkit-linear-gradient(top, #E8CFB7, #FFA10A);
+   background: -moz-linear-gradient(top, #E8CFB7, #FFA10A);
+   background: -ms-linear-gradient(top, #E8CFB7, #FFA10A);
+   background: -o-linear-gradient(top, #E8CFB7, #FFA10A);
+   background-color: #FFA10A;
+   box-shadow: 0px 7px 2px -5px #1A1A1A, inset 0px 0px 5px #C97C38;
+   -webkit-box-shadow: 0px 7px 2px -5px #1A1A1A, inset 0px 0px 5px #C97C38;
+   -moz-box-shadow: 0px 7px 2px -5px #1A1A1A, inset 0px 0px 5px #C97C38;
+   -webkit-border-radius: 34px;
+   -moz-border-radius: 34px;
+   border-radius: 34px;
+   text-shadow: #FFD58C 1px 1px 0px;
+   color: #000000;
+   font-size: 20px;
+   font-family: '微軟正黑體',Arial;
+   text-decoration: none;
+   font-weight: bold;
+   -webkit-transition: 0.4s;
+   -moz-transition: 0.4s;
+   -o-transition: 0.4s;
+   cursor: pointer;
+   }
+div#function_select_area_button button:hover,
+div#function_select_area_button a:hover {
+   background: none;
+   background-color: #FFA10A;
+   box-shadow: 0px 0px 5px 0px #AAAAAA;
+   -webkit-box-shadow: 0px 0px 5px 0px #AAAAAA;
+   -moz-box-shadow: 0px 0px 5px 0px #AAAAAA;
+   border: 1px solid #ffffff;
+   color: #000000;
+   }
+div#function_select_area_button button:active.   
+div#function_select_area_button a:active {
+   top: 1px;
+   position: relative;
+   }
+
+
 </style>
 </head>
 <body id="body_friend">
@@ -75,6 +123,32 @@ div#account_friend_area{;
 	</header>
 	
 	<div class="container" id="main_block">
+	
+		<div id="function_select_area" class="row justify-content-center">
+		
+			<div id="function_select_area_button" class="col-6 col-md-2">
+				<form method="post" action="accountInfo.do">
+					<input type="hidden" name="action" value="gotoAccountInfoPage">
+					<button id="btn_submit" type="submit">會員資料</button>
+				</form>		
+			</div>
+			
+			<div id="function_select_area_button" class="col-6 col-md-2">
+				<form method="post" action="friendship.do">
+					<input type="hidden" name="action" value="getAccount_Friendship">
+					<button id="btn_submit" type="submit">我的好友</button>
+				</form>
+			</div>
+			
+			<div id="function_select_area_button" class="col-6 col-md-2 align-self-center">
+				<a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a>
+			</div>
+			
+			<div id="function_select_area_button" class="col-6 col-md-2 align-self-center">
+				<a href='<%=request.getContextPath()%>/Recipe/recipe.do?action=myRecipe&id=<%=accountID%>'>我的食譜</a>
+			</div>
+	
+		</div>
 	
 		<div class="row justify-content-center" >
 

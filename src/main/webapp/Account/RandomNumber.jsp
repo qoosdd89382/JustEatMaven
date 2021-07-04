@@ -34,7 +34,7 @@
 	String randStr = String.valueOf(randNum);
 	//將驗證碼存入session
 // 	session.setAttribute("RandomNumber", randStr);
-	session.setAttribute("RandomNumber", "1111");
+	session.setAttribute("RandomNumber", randStr);
 	//將驗證碼顯示到影象中
 	Random rcolor1 = new Random();
 	Random gcolor1 = new Random();

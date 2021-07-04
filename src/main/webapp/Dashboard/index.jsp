@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
+<%@ page import="java.util.*" %>
+<%@ page import="com.recipe.model.*" %>
 <%@ page import="com.admininfo.model.*" %>
+
+<jsp:useBean id="recipeSvc" class="com.recipe.model.RecipeService" />
 <jsp:useBean id="adminSvc" class="com.admininfo.model.AdminInfoService" />
 
 <%
@@ -13,6 +18,9 @@
 		int loginAdminID = (Integer) session.getAttribute("loginAdminID");
 		AdminInfoVO adminVO = adminSvc.getOneAdmin(loginAdminID);
 // 	}
+//食譜陣列 取得最新的十個食譜
+List<RecipeVO> recipeVO = recipeSvc.getSomeNew();
+pageContext.setAttribute("recipeVO",recipeVO);
 	
 %>
 <!DOCTYPE html>
@@ -71,7 +79,7 @@
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">最近 3 筆待審核商家資料</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">最近 5 筆新增的食譜資料</h6>
                                 </div>
                                 <div class="card-body">
                                     
@@ -79,59 +87,34 @@
 		                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
 		                                    <thead class="border-bottom">
 		                                        <tr>
-		                                            <th>會員暱稱</th>
-		                                            <th>商家名稱</th>
-		                                            <th>商家資訊</th>
+		                                            <th>食譜編號</th>
+		                                            <th>食譜名稱</th>
+		                                            <th>會員名稱</th>
 		                                            <th colspan="2">審核操作</th>
 		                                        </tr>
 		                                     </thead>
+											<%@ include file="ListTop.file"%> 
 		                                    <tbody>
-		                                        <tr>
-		                                            <td>王小華</td>
-		                                            <td>華仔蔬果批發</td>
-		                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
-		                                            <td>
-														<select class="custom-select custom-select-sm">
-														  <option value="0" selected>審核中</option>
-														  <option value="1">通過</option>
-														  <option value="2">未通過</option>
-														</select>
-		                                            </td>
-		                                             <td>
-														<button type="button" class="btn btn-primary btn-sm">確定</button>
-		                                            </td>
-		                                        </tr>
-		                                        <tr>
-		                                            <td>王小華</td>
-		                                            <td>華仔蔬果批發</td>
-		                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
-		                                            <td>
-														<select class="custom-select custom-select-sm">
-														  <option value="0" selected>審核中</option>
-														  <option value="1">通過</option>
-														  <option value="2">未通過</option>
-														</select>
-		                                            </td>
-		                                             <td>
-														<button type="button" class="btn btn-primary btn-sm">確定</button>
-		                                            </td>
-		                                        </tr>
-		                                        <tr>
-		                                            <td>王小華</td>
-		                                            <td>華仔蔬果批發</td>
-		                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
-		                                            <td>
-														<select class="custom-select custom-select-sm">
-														  <option value="0" selected>審核中</option>
-														  <option value="1">通過</option>
-														  <option value="2">未通過</option>
-														</select>
-		                                            </td>
-		                                             <td>
-														<button type="button" class="btn btn-primary btn-sm">確定</button>
-		                                            </td>
-		                                        </tr>
+		                                    	<c:forEach var="recipeVO" items="${recipeVO}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">		                              
+			                                       	<tr>
+			                                            <td>${recipeVO.recipeID}</td>
+			                                            <td>${recipeVO.recipeName}</td>
+			                                            <td>${recipeVO.accountID}</td>
+			                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
+			                                            <td>
+															<select class="custom-select custom-select-sm">
+															  <option value="0" selected>審核中</option>
+															  <option value="1">通過</option>
+															  <option value="2">未通過</option>
+															</select>
+			                                            </td>
+			                                             <td>
+															<button type="button" class="btn btn-primary btn-sm">確定</button>
+			                                            </td>
+			                                        </tr> 
+		                                        </c:forEach>
 		                                    </tbody>
+		                                    <%@ include file="ListBottom.file"%> 
 		                                </table>
 	                                </div>
 	                                
@@ -173,38 +156,34 @@
 		                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
 		                                    <thead class="border-bottom">
 		                                        <tr>
-		                                            <th>會員暱稱</th>
-		                                            <th>訊息摘要</th>
-		                                            <th>發送時間</th>
-		                                            <th colspan="2">回覆操作</th>
+		                                            <th>食譜編號</th>
+		                                            <th>食譜名稱</th>
+		                                            <th>會員名稱</th>
+		                                            <th colspan="2">審核操作</th>
 		                                        </tr>
 		                                     </thead>
+<%-- 											<%@ include file="ListTop.file"%>  --%>
 		                                    <tbody>
-		                                        <tr>
-		                                            <td>王小華</td>
-		                                            <td>測試測試測試測試...</td>
-		                                            <td>6/21 18:30</td>
-		                                             <td>
-														<button type="button" class="btn btn-primary btn-sm">回覆</button>
-		                                            </td>
-		                                        </tr>
-		                                        <tr>
-		                                            <td>王小華</td>
-		                                            <td>測試測試測試測試...</td>
-		                                            <td>6/21 18:30</td>
-		                                             <td>
-														<button type="button" class="btn btn-primary btn-sm">回覆</button>
-		                                            </td>
-		                                        </tr>
-		                                        <tr>
-		                                            <td>王小華</td>
-		                                            <td>測試測試測試測試...</td>
-		                                            <td>6/21 18:30</td>
-		                                             <td>
-														<button type="button" class="btn btn-primary btn-sm">回覆</button>
-		                                            </td>
-		                                        </tr>
+		                                    	<c:forEach var="recipeVO" items="${recipeVO}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">		                              
+			                                       	<tr>
+			                                            <td>${recipeVO.recipeID}</td>
+			                                            <td>${recipeVO.recipeName}</td>
+			                                            <td>${recipeVO.accountID}</td>
+			                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
+			                                            <td>
+															<select class="custom-select custom-select-sm">
+															  <option value="0" selected>審核中</option>
+															  <option value="1">通過</option>
+															  <option value="2">未通過</option>
+															</select>
+			                                            </td>
+			                                             <td>
+															<button type="button" class="btn btn-primary btn-sm">確定</button>
+			                                            </td>
+			                                        </tr> 
+		                                        </c:forEach>
 		                                    </tbody>
+<%-- 		                                    <%@ include file="ListBottom.file"%>  --%>
 		                                </table>
 	                                </div>
 	                                
