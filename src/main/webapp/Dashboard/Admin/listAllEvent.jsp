@@ -89,6 +89,7 @@
                                             <th>活動地址</th>
                                             <th>活動時間</th>
 											<th>修改/刪除</th>
+											<th>成員列表</th>
 											<th>批次操作</th>
                                         </tr>
                                     </thead>
@@ -118,6 +119,9 @@
 													<input type="hidden" name="eventID" value="${eventInfoVO.eventID}">
 													<button type="submit" class="btn btn-secondary mt-1">刪除</button>
 												</form>
+                                            </td>
+                                            <td>
+	                                            <button type="button" class="btn btn-secondary mt-1 memberList">成員列表</button>
                                             </td>
                                             <td>
                                             	<label><input type="checkbox" value="${eventInfoVO.eventID}" name="eventID">選取</label>
@@ -205,8 +209,10 @@
     		});
     		
     	});    	
-    	
-    	
+    });
+    
+    $(".memberList").on("click",function(){
+    	location.href = "<%=request.getContextPath()%>/Dashboard/Admin/EventMember.jsp?eventID=<%=request.getParameter("eventID")%>";
     });
     </script>
 </body>

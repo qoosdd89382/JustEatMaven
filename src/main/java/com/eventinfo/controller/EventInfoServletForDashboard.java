@@ -75,12 +75,12 @@ public class EventInfoServletForDashboard extends HttpServlet {
 
 				EventInfoService eventInfoSvc = new EventInfoService();
 				eventInfoSvc.deleteEventInfo(eventID);
-				RequestDispatcher successView = request.getRequestDispatcher("/Dashboard/Admin/eventInfo.jsp");
+				RequestDispatcher successView = request.getRequestDispatcher("/Dashboard/Admin/listAllEvent.jsp");
 				successView.forward(request, response);
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的活動編號不存在！");
 				e.printStackTrace();
-				RequestDispatcher failureView = request.getRequestDispatcher("/Dashboard/Admin/eventInfo.jsp");
+				RequestDispatcher failureView = request.getRequestDispatcher("/Dashboard/Admin/listAllEvent.jsp");
 				failureView.forward(request, response);
 			}
 		}
@@ -288,6 +288,7 @@ public class EventInfoServletForDashboard extends HttpServlet {
 				detailView.forward(request, response);
 			}
 		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
