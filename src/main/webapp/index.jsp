@@ -114,7 +114,7 @@
         <div class="hot_events">
             <h2><i class="fas fa-pizza-slice"></i> 最新活動</h2>
             <section class="slider_box multiple-item responsive">
-            <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}" begin="1" end="6">
+            <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}" begin="0" end="5">
                 <div>
                     <div class="img_outer"><img src="<%= request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}"></div>
                     <span class="popular shadow">${eventInfoVO.eventCurrentCount} 人</span>
@@ -122,9 +122,9 @@
                     <div class="title">
                     	<a href="<%= request.getContextPath() %>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVOLogin.accountID}">${eventInfoVO.eventName}</a>
 						<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
-							<span class="badge badge-primary">等待報名</span>
+							<span class="badge badge-primary">未開始報名</span>
 						</c:if>	
-						<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventRegistartionEndTime}">
+						<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
 							<span class="badge badge-warning">報名中</span>
 						</c:if>	
 						<c:if test="${now > eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
@@ -149,7 +149,7 @@
         <div class="hot_events mt-5">
             <h2><i class="fas fa-hamburger"></i> 最新食譜</h2>
             <section class="slider_box multiple-item responsive">
-            <c:forEach var="recipeVO" items="${recipeSvc.getSomeNew()}" begin="1" end="6">
+            <c:forEach var="recipeVO" items="${recipeSvc.getSomeNew()}" begin="0" end="5">
                 <div class="recipeInfo" data-id="${recipeVO.recipeID}">
                     <div class="img_outer"><img src="<%= request.getContextPath() %>/Recipe/Pic/Top/${recipeVO.recipeID}"></div>
                     <span class="popular shadow">
@@ -265,7 +265,7 @@
 				
 				$.ajax({
 					type : 'POST',
-					url : 'recipeFavThumb.do',
+					url : '<c:url value="/Recipe/recipeFavThumb.do"/>',
 					data : {
 						'action': "insertFavoriteRecipe",
 						'accountID': accountID,

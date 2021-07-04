@@ -13,6 +13,7 @@ public class AnnounceVO implements Serializable {
 	private Integer announceID;
 	private String announceText;
 	private Timestamp announceTime;
+	private Integer announceState;
 	
 	public AnnounceVO () {
 		super();
@@ -35,5 +36,13 @@ public class AnnounceVO implements Serializable {
 	}
 	public void setAnnounceTime(Timestamp announceTime) {
 		this.announceTime = announceTime;
+	}
+
+	public Integer getAnnounceState() {
+		return announceState;
+	}
+
+	public void setAnnounceState(Integer announceState) {
+		this.announceState = announceState;
 	}
 }
