@@ -58,7 +58,7 @@
 	<h2>參加/結束的活動</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="%=request.getContextPath()%>/index.jsp" >首頁</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp" >首頁</a></li>
 			<li class="breadcrumb-item"><a href="">參加/結束的活動</a></li>
 			
 			
