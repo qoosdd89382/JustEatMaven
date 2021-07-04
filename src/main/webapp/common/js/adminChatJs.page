@@ -15,12 +15,13 @@
     $(document).on("click", "span.text", function () {
         $(this).parent().next().toggleClass("none");
     });
-
+	
+        <!--    connect(); -->
 
     $(document).on("click", "#startChat", function () {
         $("#chatbox").removeClass("none");
         $(this).addClass("none");
-            connect();
+		connect();
     });
     
     

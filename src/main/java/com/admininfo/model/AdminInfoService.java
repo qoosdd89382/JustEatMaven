@@ -67,10 +67,13 @@ public class AdminInfoService {
 		return dao.updateState(vo);		
 	}
 	
-//	public int updateAdmin(String adminMail, String adminNickname,
-//								String adminPassword, byte[] adminPic) {
-//		
-//	}
+	public int resetAuthCode(int adminID, String adminPassword) {
+		AdminInfoVO vo = new AdminInfoVO();
+		vo.setAdminPassword(adminPassword);
+		vo.setAdminID(adminID);
+		
+		return dao.resetAuthCode(vo);		
+	}
 
 	
 	

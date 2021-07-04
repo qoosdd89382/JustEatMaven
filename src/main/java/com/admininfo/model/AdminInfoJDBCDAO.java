@@ -28,8 +28,9 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 	// 順序看要寫死還是後端判斷
 	private static final String SELECT_ONE = "SELECT * FROM AdminInfo WHERE admin_id = ?";
 	private static final String SELECT_ALL = "SELECT * FROM AdminInfo";
-	private static final String UPDATE_PW_PIC = "UPDATE AdminInfo SET admin_password = ?, admin_pic = ?, admin_state = 1 WHERE admin_id = ?";
+	private static final String UPDATE_PW_PIC = "UPDATE AdminInfo SET admin_password = ?, admin_pic = ?, admin_state = 2 WHERE admin_id = ?";
 	private static final String UPDATE = "UPDATE AdminInfo SET admin_nickname = ?, admin_password = ?, admin_pic = ? WHERE admin_id = ?";
+	private static final String RESET_AUTHCODE = "UPDATE AdminInfo SET admin_password = ? WHERE admin_id = ?";
 	private static final String UPDATE_STATE = "UPDATE AdminInfo SET admin_state = ? WHERE admin_id = ? ";
 	private static final String UPDATE_NICKNAME = "UPDATE AdminInfo SET admin_nickname = ? WHERE admin_id = ?";
 	private static final String SELECT_ONE_BY_NAME = "SELECT * FROM AdminInfo WHERE admin_nickname = ?";
@@ -540,6 +541,44 @@ public class AdminInfoJDBCDAO implements AdminInfoDAOInterface {
 			pstmt = con.prepareStatement(UPDATE_NICKNAME);
 			
 			pstmt.setString(1, adminInfo.getAdminNickname());
+			pstmt.setInt(2, adminInfo.getAdminID());
+
+			updateRow = pstmt.executeUpdate();
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return updateRow;
+	}
+
+	@Override
+	public int resetAuthCode(AdminInfoVO adminInfo) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int updateRow = 0;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(RESET_AUTHCODE);
+			
+			pstmt.setString(1, adminInfo.getAdminPassword());
 			pstmt.setInt(2, adminInfo.getAdminID());
 
 			updateRow = pstmt.executeUpdate();

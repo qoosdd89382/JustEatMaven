@@ -30,8 +30,9 @@ public class AuditPassServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		int eventID = new Integer(req.getParameter("eventID"));
 		int accountID = new Integer(req.getParameter("accountID"));
-	
-	
+			
+		
+		
 			System.out.println("action" + action);
 			System.out.println("accountID" + accountID);
 			System.out.println("eventID" + eventID);

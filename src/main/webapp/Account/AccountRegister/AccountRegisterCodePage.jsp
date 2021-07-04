@@ -8,15 +8,15 @@
 <!DOCTYPE html>
 
 <%
+//在SESSION中取得 信箱 驗證碼的資訊
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVO"); 
+//如果沒有  利用信箱內的參數ID將那些值儲存到SESSION中
 if(accountInfoVO==null){
 	//假設使用者關掉瀏覽器，從信箱進入
 	Integer accountID = Integer.parseInt(request.getParameter("accountID"));
 	accountInfoVO = accountInfoSvc.selectOneAccountInfo(accountID);
 	session.setAttribute("accountInfoVO",accountInfoVO);
 }
-
-
 
 %>
 
@@ -34,18 +34,20 @@ if(accountInfoVO==null){
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
 
-<title>揪食-會員註冊</title>
+<title>揪食-會員驗證碼註冊</title>
 
 <style>
 body#body_register{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
-	background-repeat: no-repeat;
+	background-attachment:scroll; 
+	background-repeat: repeat;
 }
 
 /*整個區塊 */
 div#main_area{
 	margin-top:80px;
+	margin-bottom:150px;
 }
 div#register_area{
 	text-align:center;
@@ -120,7 +122,7 @@ textarea#textarea {
 	
 		<div id="main_area" class="row">
 		
-			<div id="register_area" class="col-sm-6 align-self-center">
+			<div id="register_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center">
 			<div id="register_area_title">
 			<Strong>您好!您所輸入的信箱可以使用</Strong><br>
 			<strong>請至您的信箱查看驗證碼</strong>
@@ -135,6 +137,8 @@ textarea#textarea {
 					<span style="color:red">${errorMsgs.get("accountCodeError")}</span><br> 
 
 					<a href="<%=request.getContextPath()%>/Account/AccountRegister/AccountRegisterPage.jsp">(如無收到驗證碼請點我返回前一頁面重新申請)</a><br>					
+					
+					<input type="hidden" name="accountID" value="<%=accountInfoVO%>">
 					<input type="hidden" name="action" value="getAccountCode"> 
 					<input id="register_submit_btn" type="submit" value="開始填寫我的詳細資料"> 
 					
@@ -143,8 +147,6 @@ textarea#textarea {
 			</div>
 		</div>
 	</div>
-
-	<h3><a id="AccountLogin" href='AccountPage.jsp'>回到會員中心</a></h3>
 
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

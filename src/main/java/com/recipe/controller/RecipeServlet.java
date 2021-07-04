@@ -55,8 +55,11 @@ public class RecipeServlet extends HttpServlet {
 			
 			try {
 				String accountID = req.getParameter("id");
-				if (accountID == null) {
+				if (accountID == null || accountID.trim().length() == 0) {
 					throw new Exception();
+//					req.getSession().setAttribute("location", "/Recipe/listAllRecipe.jsp");
+//					RequestDispatcher loginView = req.getRequestDispatcher("/Account/AccountLoginPage.jsp");
+//					loginView.forward(req, res);
 				}
 				
 				RecipeService recipeSvc = new RecipeService();
@@ -93,8 +96,15 @@ public class RecipeServlet extends HttpServlet {
 			
 			try {
 				String accountID = req.getParameter("id");
-				if (accountID == null) {
+				if (accountID == null || accountID.trim().length() == 0) {
 					throw new Exception();
+					
+//					res.sendRedirect(req.getContextPath() + "/Account/AccountLoginPage.jsp");
+//					return;
+					
+//					req.getSession().setAttribute("location", "/Recipe/listAllRecipe.jsp");
+//					RequestDispatcher loginView = req.getRequestDispatcher("/Account/AccountLoginPage.jsp");
+//					loginView.forward(req, res);
 				}
 				
 				FavoriteRecipeService favRecipeSvc = new FavoriteRecipeService();

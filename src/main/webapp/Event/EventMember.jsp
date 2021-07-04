@@ -16,7 +16,7 @@
 	String eventID = request.getParameter("eventID");
 	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(new Integer(eventID));
 	pageContext.setAttribute("list", list);
-
+	AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
 // 	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
 // 	pageContext.setAttribute("eventID", 300002);
 // 	pageContext.setAttribute("list", list);
@@ -45,7 +45,7 @@
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
-			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/myevent.jsp">參加/結束的活動</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a></li>
 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=<%=request.getParameter("eventID")%>">活動詳情</a></li>
 			<li class="breadcrumb-item active" aria-current="page">成員列表</li>
 		</ol>
@@ -90,7 +90,7 @@
 	</table>
 	  <div class="btn_margin" align="right"  >
 	  
-	         <a href="<%= request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventID}">返回活動詳情</a>   
+	         <a href="<%= request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${param.eventID}">返回活動詳情</a>   
 	  </div>
 			
 	<footer>

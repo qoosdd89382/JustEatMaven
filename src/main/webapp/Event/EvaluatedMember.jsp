@@ -30,6 +30,7 @@
 		list = evaluatedmemberSvc.getAllByEventID(new Integer(eventID));
 	}
 	pageContext.setAttribute("list", list);
+	AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
 
@@ -68,7 +69,7 @@
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
-			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/myevent.jsp">參加/結束的活動</a></li>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a></li>
 			<li class="breadcrumb-item"><a href=" # ">評鑑頁面</a></li>
 			
 		</ol>

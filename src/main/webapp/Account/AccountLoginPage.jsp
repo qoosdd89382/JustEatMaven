@@ -33,7 +33,7 @@ String accountPassword = request.getParameter("accountPassword");
 <style>
 /* 背景 */
 body#Body_Login{
-	background-image:url("images/LoginBackGround.jpg");
+	background-image:url("./images/LoginBackGround.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;
 }
@@ -134,7 +134,7 @@ input#account_reset_btn:hover {
 				
 				<div id="login_area_input"></div>
 				
-					<form method="post" action="accountInfo.do" name="LoginInfo">
+					<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" name="LoginInfo">
 						<span id="text">會員信箱 </span><br>
 						<input id="account_mail_input" type="text" name="accountMail" 
 							value="<%=(accountMail == null) ? "" : accountMail%>"
