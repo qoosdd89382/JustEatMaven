@@ -35,7 +35,7 @@
 
         #chatPage {
             width: 100%;
-            background: #eee;
+            background: #fff;
             overflow: hidden;
         }
 
@@ -141,7 +141,9 @@
         .-none {
             display: none !important;
         }
-        
+        .-invisible {
+        	visibility: hidden !important;
+        }
         .message-area {
             resize: none;
             overflow: auto;
@@ -199,7 +201,7 @@
                   
                   
 <section id="chatPage" class="row rounded-lg border shadow">
-	<div class="friendList col-sm-4 border-right">
+	<div class="friendList col-md-4 border-right">
 	</div>
 	<div class="chatBody col-sm-8 p-0">
 		<div id="statusOutput" class="statusOutput p-0">
@@ -337,7 +339,7 @@ $(function(){
 				messagesArea.scrollTop = messagesArea.scrollHeight;
 				
 			} else if ("chat" === jsonObj.type) {
-				if ( (statusOutput.textContent == jsonObj.sender) || jsonObj.sender == self) {
+				if ( ($(".statusOutput").find(".friendName").attr("id") == jsonObj.sender) || jsonObj.sender == self) {
 					var li = document.createElement('li');
 					jsonObj.sender === self ? li.className += 'me' : li.className += 'friend';
 // 					li.innerHTML = jsonObj.message;
@@ -407,12 +409,12 @@ $(function(){
 									'<div class="friendImg rounded-circle border">' + 
 									'<img class="border" src="/justeat-maven/Account/Pic/Pic/' + '<c:url value="/Account/Pic/Pic" />' + "/" + obj.accountID + '" alt="">' + 
 				                '</div>' + 
-				                '<div class="name ml-2">' + obj.accountName + '</div>' +
+				                '<div class="name ml-2">' + obj.accountNickname + '</div>' +
 					            '</div>'
 					            + row.innerHTML
 					            ;
 							$(".statusOutput").find("img").attr("src", '<c:url value="/Account/Pic/Pic" />' + "/" + obj.accountID);
-				            $(".statusOutput").find(".name").text(obj.accountName);
+				            $(".statusOutput").find(".name").text(obj.accountNickname);
 				            $(".statusOutput").find(".friendName").attr("id", obj.accountID);
 						}
 					}
@@ -431,10 +433,12 @@ $(function(){
 
 		console.log(friends.length);
 		if ( friends.length > 1 ) {
-			$(".statusOutput").removeClass("-none");
+// 			$(".statusOutput").removeClass("-invisible");
+			$("#chatPage").removeClass("-none");
 			$("#waitingForConnection").remove();
 		} else if (friends.length == 1) {
-			$(".statusOutput").addClass("-none");
+// 			$(".statusOutput").addClass("-invisible");
+			$("#chatPage").addClass("-none");
 			$("h1").append(
 				'<button id="waitingForConnection" class="btn btn-primary ml-2" type="button" disabled>' + 
 					'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + 
@@ -445,19 +449,6 @@ $(function(){
 // 			$(".statusOutput").find("friendImg").attr("src", "");
 			$("#messagesArea").html("");
 		}
-// 		if ( document.querySelectorAll(".friendName").length > 1 ) {
-// 		if ( document.querySelector(".friendList").childElementCount > 0 ) {
-// 			$(".statusOutput").removeClass("-none");
-// 			$("#waitingForConnection").remove();
-// 		} else if ( document.querySelector(".friendList").childElementCount == 0 ) {
-// 			$(".statusOutput").addClass("-none");
-// 			$("h1").append(
-// 				'<button id="waitingForConnection" class="btn btn-primary ml-2" type="button" disabled>' + 
-// 					'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + 
-// 				  '目前未有使用者連線，等待中' + 
-// 				'</button>'
-// 			);
-// 		}
 		addListener();
 	}
 	// 註冊列表點擊事件並抓取好友名字以取得歷史訊息
