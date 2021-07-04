@@ -42,6 +42,8 @@
         .friendList {
             padding: 10px;
             background-color: #fff;
+		    height: 514px;
+		    overflow-y: auto;
         }
        
         .friendList .friendName {
@@ -197,13 +199,13 @@
                   
                   
 <section id="chatPage" class="row rounded-lg border shadow">
-	<div class="friendList col-lg-4 border-right">
+	<div class="friendList col-sm-4 border-right">
 	</div>
-	<div class="chatBody col-lg-8 p-0">
+	<div class="chatBody col-sm-8 p-0">
 		<div id="statusOutput" class="statusOutput p-0">
-			<div id="1" class="friendName row m-0 p-2">
+			<div id="" class="friendName row m-0 p-2">
 				<div class="friendImg rounded-circle border">
-					<img class="border" src="<%=request.getContextPath()%>/Account/Pic/Pic/" alt="">
+					<img class="border" src="" alt="">
 				</div>
 				<div class="name ml-2"></div>
 			</div>
@@ -267,6 +269,7 @@ $(window).on("unload", function(e) {
 });
 $(function(){
 
+
 	
     $(document).on("click", "span.text", function () {
         $(this).parent().next().toggleClass("-none");
@@ -282,7 +285,18 @@ $(function(){
 	var messagesArea = document.getElementById("messagesArea");
 	var self = 'admin';
 	var webSocket;
-
+	
+	console.log($(".friendList").children().length);
+// 	if ( $(".friendList").children().length == 0 ) {
+// 		$(".statusOutput").addClass("-none");
+// 		$("h1").append(
+// 			'<button id="waitingForConnection" class="btn btn-primary ml-2" type="button" disabled>' + 
+// 				'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + 
+// 			  '目前未有使用者連線，等待中' + 
+// 			'</button>'
+// 		);
+// 	}
+	
 	function connect() {
 		// create a websocket
 		webSocket = new WebSocket(endPointURL);
@@ -293,14 +307,17 @@ $(function(){
 
 		webSocket.onmessage = function(event) {
 			var jsonObj = JSON.parse(event.data);
+			
 			if ("open" === jsonObj.type) {
 				refreshFriendList(jsonObj);
+				
 			} else if ("history" === jsonObj.type) {
 				messagesArea.innerHTML = '';
 				var ul = document.createElement('ul');
 				ul.id = "area";
 				messagesArea.appendChild(ul);
 				$("ul#area").addClass("clearfix p-0");
+				
 				// 這行的jsonObj.message是從redis撈出跟好友的歷史訊息，再parse成JSON格式處理
 				var messages = JSON.parse(jsonObj.message);
 				
@@ -330,8 +347,8 @@ $(function(){
 				}
 				
 			} else if ("close" === jsonObj.type) {
+				console.log("close");
 				refreshFriendList(jsonObj);
-				
 			}
 			
 		};
@@ -358,9 +375,9 @@ $(function(){
 			var jsonObj = {
 				"type" : "chat",
 				"sender" : self,
-				"receiver" : friend,
+				"receiver" : $(".statusOutput").find(".friendName").attr("id"),
 				"time" : (new Date()).format("yyyy-MM-dd hh:mm") + "",
-				"message" : message +""
+				"message" : message
 			};
 			webSocket.send(JSON.stringify(jsonObj));
 			inputMessage.value = "";
@@ -375,21 +392,32 @@ $(function(){
 		row.innerHTML = '';
 		for (var i = 0; i < friends.length; i++) {
 			if (friends[i] === self) { continue; }
-				row.innerHTML =
-// 					'<div id=' + i + ' class="column" name="friendName" value=' + friends[i] + ' ><h2>' + friends[i] + '</h2></div>' + row.innerHTML;
-				'<div id=' + i + ' class="friendName row px-1 m-0 mb-2 border-bottom pb-2" name="friendName" value="' + friends[i] + '">' + 
-					'<div class="friendImg rounded-circle border">' + 
-					'<img class="border" src="/justeat-maven/Account/Pic/Pic/' + friends[i] + '" alt="">' + 
-                '</div>' + 
-                '<div class="name ml-2">' + friends[i] + '</div>' +
-	            '</div>'
-	            + row.innerHTML
-	            ;
-				
-	            var srcURL = $(".statusOutput").find("img").attr("src");
-	            $(".statusOutput").find("img").attr("src", srcURL + friends[i]);
-	            $(".statusOutput").find(".name").text(friends[i]);
-	            
+
+	    		$.ajax({
+					type : 'POST',
+					url: '<c:url value="/Dashboard/getAccountInfo.do" />',
+					data: {	
+						'accountID': friends[i]
+					},
+					success: function (data) {
+						var obj = JSON.parse(data);
+						if (data != "") {
+							row.innerHTML =
+								'<div id=' + obj.accountID + ' class="friendName row px-1 m-0 mb-2 border-bottom pb-2" name="friendName">' + 
+									'<div class="friendImg rounded-circle border">' + 
+									'<img class="border" src="/justeat-maven/Account/Pic/Pic/' + '<c:url value="/Account/Pic/Pic" />' + "/" + obj.accountID + '" alt="">' + 
+				                '</div>' + 
+				                '<div class="name ml-2">' + obj.accountName + '</div>' +
+					            '</div>'
+					            + row.innerHTML
+					            ;
+							$(".statusOutput").find("img").attr("src", '<c:url value="/Account/Pic/Pic" />' + "/" + obj.accountID);
+				            $(".statusOutput").find(".name").text(obj.accountName);
+				            $(".statusOutput").find(".friendName").attr("id", obj.accountID);
+						}
+					}
+				});
+    		
 					var jsonObj = {
 						"type" : "history",
 						"sender" : self,
@@ -398,26 +426,58 @@ $(function(){
 						"message" : ""
 					};
 					webSocket.send(JSON.stringify(jsonObj));
-					statusOutput.innerHTML = friends[i];
 			
 		}
-		
+
+		console.log(friends.length);
+		if ( friends.length > 1 ) {
+			$(".statusOutput").removeClass("-none");
+			$("#waitingForConnection").remove();
+		} else if (friends.length == 1) {
+			$(".statusOutput").addClass("-none");
+			$("h1").append(
+				'<button id="waitingForConnection" class="btn btn-primary ml-2" type="button" disabled>' + 
+					'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + 
+				  '目前未有使用者連線，等待中' + 
+				'</button>'
+			);
+// 			$(".statusOutput").find("name").text("");
+// 			$(".statusOutput").find("friendImg").attr("src", "");
+			$("#messagesArea").html("");
+		}
+// 		if ( document.querySelectorAll(".friendName").length > 1 ) {
+// 		if ( document.querySelector(".friendList").childElementCount > 0 ) {
+// 			$(".statusOutput").removeClass("-none");
+// 			$("#waitingForConnection").remove();
+// 		} else if ( document.querySelector(".friendList").childElementCount == 0 ) {
+// 			$(".statusOutput").addClass("-none");
+// 			$("h1").append(
+// 				'<button id="waitingForConnection" class="btn btn-primary ml-2" type="button" disabled>' + 
+// 					'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + 
+// 				  '目前未有使用者連線，等待中' + 
+// 				'</button>'
+// 			);
+// 		}
 		addListener();
 	}
 	// 註冊列表點擊事件並抓取好友名字以取得歷史訊息
 	function addListener() {
 		var container = $(".friendList")[0];
 		container.addEventListener("click", function(e) {
-			var friend = e.srcElement.textContent;
-			updateFriendName(friend);
-			var jsonObj = {
-					"type" : "history",
-					"sender" : self,
-					"receiver" : friend,
-					"time" : "", 
-					"message" : ""
-				};
-			webSocket.send(JSON.stringify(jsonObj));
+// 			e.stopPropagation();
+			if (e.srcElement.id != "") {
+				var friend = e.srcElement.textContent;
+				console.log(e.srcElement.id);
+				updateFriendName(friend, e.srcElement.id);
+				var jsonObj = {
+						"type" : "history",
+						"sender" : self,
+						"receiver" : e.srcElement.id,
+						"time" : "", 
+						"message" : ""
+					};
+				webSocket.send(JSON.stringify(jsonObj));
+			}
 		});
 	}
 	
@@ -425,8 +485,13 @@ $(function(){
 		webSocket.close();
 	}
 	
-	function updateFriendName(name) {
+	$(".friendList").on("click", ".name", function() {
+		$(this).closest(".friendName").trigger("click");
+	});
+	
+	function updateFriendName(name, id) {
 		statusOutput.innerHTML = name;
+		$(".statusOutput").find(".friendName").attr("id", id);
 	}
 
 	
