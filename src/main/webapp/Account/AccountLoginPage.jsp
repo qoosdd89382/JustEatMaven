@@ -148,7 +148,7 @@ input#account_reset_btn:hover {
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
 					    <span id="text">驗證碼</span><br>
-					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput" value="1111">
+					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput" >
 					    <span style="color:red">${errorMsgs.get("randomNumberError")}</span><br>
 					    
 					    <img id="login_area_randomnumber_pic" name="imgValidate" src="RandomNumber.jsp" onclick="refresh()"><br>
