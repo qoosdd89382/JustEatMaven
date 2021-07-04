@@ -140,7 +140,7 @@
 					<div class="head"><h3>食譜料理分類</h3></div>
 					<div class="list">
 						<c:forEach var="recipeCatVO" items="${recipeCatList}">
-							<span>${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</span>
+							<span><a href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByCategory&id=${recipeCatVO.cuisineCategoryID}">${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</a></span>
 						</c:forEach>
 					</div>
 				</div>	
@@ -150,7 +150,8 @@
 					<div class="list">
 						<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
 						<div class="data row">
-							<div class="col-6">${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</div> 
+							<div class="col-6">
+								<a class="" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${recipeIngUnitVO.ingredientID}">${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</a></div> 
 <%-- 							<div class="col-3">${recipeIngUnitVO.unitAmount} </div> --%>
 							<div class="col-3">
 								<fmt:formatNumber value="${recipeIngUnitVO.unitAmount}" type="currency" pattern="#.##"/>

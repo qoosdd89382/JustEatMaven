@@ -49,6 +49,7 @@ public class IndexSearchServlet extends HttpServlet {
 		if ("event".equals(searchFor)) {
 			forwardString = "/Event/EventInfo.do?action=searchEventName&search=" + searchString;
 		} else if ("recipe".equals(searchFor)) {
+			req.setAttribute("searchString", searchString);
 			forwardString = "/Recipe/recipe.do?action=search&recipeName=" + searchString;
 		}
 		
