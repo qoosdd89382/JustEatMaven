@@ -10,8 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.evaluatedmember.model.EvaluatedMemberService;
+import com.eventinfo.model.EventInfoService;
 import com.eventmember.model.EventMemberService;
 import com.eventmember.model.EventMemberVO;
+import com.google.gson.Gson;
+import com.notice.model.NoticeService;
+import com.notice.model.NoticeVO;
+import com.websocket.controller.WebSocketNotice;
 
 /**
  * Servlet implementation class AuditServlet
@@ -19,13 +24,15 @@ import com.eventmember.model.EventMemberVO;
 @WebServlet("/Event/audit.do")
 public class AuditServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		doPost(req, res);
 	}
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
+		
+	
 		
 		String action = req.getParameter("action");
 		int eventID = new Integer(req.getParameter("eventID"));
@@ -45,6 +52,22 @@ public class AuditServlet extends HttpServlet {
 			EventMemberService evMemberSvc = new EventMemberService();
 			EventMemberVO evVO = evMemberSvc.updateEventMember(2, eventID, accountID);
 			if (evVO != null) {
+
+				EventInfoService eventSvc = new EventInfoService();
+				Gson gson = new Gson();
+				
+				NoticeService noticeSvc = new NoticeService();
+				NoticeVO noticeVO = noticeSvc.addNotice(
+						accountID, "活動", 
+						"您已通過  <a href='" + req.getContextPath() + 
+						"/Event/EventDetailReview.jsp?eventID=" + eventID + "'>" +
+						eventSvc.getEventID(eventID).getEventName() + "</a> 的成員審核，歡迎參加！" 
+						);
+				String message = gson.toJson(noticeVO);
+				
+				WebSocketNotice noticeWS = new WebSocketNotice();
+				noticeWS.onMessage(message);
+				
 				RequestDispatcher successView = req.getRequestDispatcher("/Event/Audit.jsp?eventID=" + eventID);
 				successView.forward(req, res);
 			}
@@ -59,6 +82,20 @@ public class AuditServlet extends HttpServlet {
 
 			EventMemberService evMemberSvc = new EventMemberService();
 			evMemberSvc.deleteEventMember(eventID, accountID);
+			EventInfoService eventSvc = new EventInfoService();
+			Gson gson = new Gson();
+			
+			NoticeService noticeSvc = new NoticeService();
+			NoticeVO noticeVO = noticeSvc.addNotice(
+					accountID, "活動", 
+					"您未通過  <a href='" + req.getContextPath() + 
+					"/Event/EventDetailReview.jsp?eventID=" + eventID + "'>" +
+					eventSvc.getEventID(eventID).getEventName() + "</a> 成員審核，請參考其他活動！" 
+					);
+			String message = gson.toJson(noticeVO);
+			
+			WebSocketNotice noticeWS = new WebSocketNotice();
+			noticeWS.onMessage(message);
 			RequestDispatcher successView = req.getRequestDispatcher("/Event/Audit.jsp?eventID=" + eventID);
 			successView.forward(req, res);
 		}
