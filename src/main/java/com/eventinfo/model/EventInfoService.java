@@ -110,6 +110,40 @@ public class EventInfoService {
 		return eventInfoVO;
 	}
 	
+	public EventInfoVO updateEventInfoWithEventCuisineCat(Integer eventID, String eventName, Integer eventCurrentCount,
+			String eventDescription, Integer groupType, String groupCity, String groupAddress,
+			String eventRegistartionStartTime, String eventRegistartionEndTime, String eventStartTime,
+			String eventEndTime, Integer eventState, byte[] eventPic,List<EventCuisineCategoryVO> delCatList,List<EventCuisineCategoryVO> addCatList) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime localRegistartionStartTime = LocalDateTime.parse(eventRegistartionStartTime, formatter);
+		LocalDateTime localRegistartionEndTime = LocalDateTime.parse(eventRegistartionEndTime, formatter);
+		LocalDateTime localStartTime = LocalDateTime.parse(eventStartTime, formatter);
+		LocalDateTime localEndTime = LocalDateTime.parse(eventEndTime, formatter);
+		Timestamp timestampRegistartionStartTime = Timestamp.valueOf(localRegistartionStartTime);
+		Timestamp timestampRegistartionEndTime = Timestamp.valueOf(localRegistartionEndTime);
+		Timestamp timestampStartTime = Timestamp.valueOf(localStartTime);
+		Timestamp timestampEndTime = Timestamp.valueOf(localEndTime);
+
+		EventInfoVO eventInfoVO = new EventInfoVO();
+		eventInfoVO.setEventID(eventID);
+		eventInfoVO.setEventName(eventName);
+		eventInfoVO.setEventCurrentCount(eventCurrentCount);
+		eventInfoVO.setEventDescription(eventDescription);
+		eventInfoVO.setGroupType(groupType);
+		eventInfoVO.setGroupCity(groupCity);
+		eventInfoVO.setGroupAddress(groupAddress);
+		eventInfoVO.setEventRegistartionStartTime(timestampRegistartionStartTime);
+		eventInfoVO.setEventRegistartionEndTime(timestampRegistartionEndTime);
+		eventInfoVO.setEventStartTime(timestampStartTime);
+		eventInfoVO.setEventEndTime(timestampEndTime);
+		eventInfoVO.setEventState(eventState);
+		eventInfoVO.setEventPic(eventPic);
+		dao.updateWithCuisineCat(eventInfoVO, delCatList, addCatList);
+
+		return eventInfoVO;
+	}
+	
 	public void deleteEventInfo(Integer eventID) {
 		dao.delete(eventID);
 	}
@@ -175,7 +209,7 @@ public class EventInfoService {
 	}
 	
 	//雙重連鎖
-	public void addDishAndIngredientByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
+	public EventInfoVO addDishAndIngredientByEventInfo(String eventName, Integer eventCurrentCount, String eventDescription,
 			Integer groupType, String groupCity, String groupAddress, String eventRegistartionStartTime,
 			String eventRegistartionEndTime, String eventStartTime, String eventEndTime, Integer eventState,
 			byte[] eventPic, String[] dishNames,Integer[][] IngIDs,Integer[] cuisinecategoryID,Integer accountID) {
@@ -237,5 +271,7 @@ public class EventInfoService {
 		}
 		
 		dao.insertWithDishIngredientMember(eventInfoVO, dishList, dishAndIngredientList, eventMemberList,eventCuisineCategoryList);
+		
+		return eventInfoVO;
 	}
 }

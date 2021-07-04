@@ -195,11 +195,9 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">食譜資訊</h1>
-                    <c:if test="${not empty successMsg}">
-                    <p class="mb-4">
-						${successMsg}！
-					</p>
-					</c:if>
+<!--                     <p class="mb-4"> -->
+						
+<!-- 					</p> -->
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
@@ -328,7 +326,7 @@
 
 				<div class="form-group">
 					<label for="recipePicTop row" class="font-weight-bold text-primary">食譜完成照：</label><span class="errorSpan">${errorMsgs.get("recipePicTopErr")}</span>
-						<div id="picTopUploadBtn" class="uploadBtn btn btn-primary col-6">上傳檔案</div>
+						<div id="picTopUploadBtn" class="uploadBtn btn btn-secondary col-6">上傳檔案</div>
 						<input type="file" name="recipePicTop" class="form-control-file col-6" style="display:none">
 						<div id="picTopUploadPreview" class="preview col-6"><img id="top_img" src="<%=request.getContextPath()%>/Recipe/Pic/Top/${recipeVO.recipeID}" class="preview_img"></div>
 				</div>
@@ -351,7 +349,7 @@
 										<textarea class="form-control" name="recipeStepTexts" placeholder="請輸入步驟說明" rows="5" cols="40">${recipeStepVO.recipeStepText}</textarea>
 									</td>
 									<td class="col-12 order-4 col-lg-4 order-lg-3">
-										<div class="picStepUploadBtn uploadBtn btn btn-primary col-12">上傳圖片</div>
+										<div class="picStepUploadBtn uploadBtn btn btn-secondary col-12">上傳圖片</div>
 										<input type="file" class="form-control-file col-12" name="recipeStepPic" style="display:none" multiple="multiple">
 										<div class="picStepPreview preview col-12"><img src="<%=request.getContextPath()%>/Recipe/Pic/Step/${recipeStepVO.recipeStepID}" class="step_img preview_img"></div>
 									</td>

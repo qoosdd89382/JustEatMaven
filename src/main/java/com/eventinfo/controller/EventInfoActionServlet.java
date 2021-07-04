@@ -35,10 +35,11 @@ import com.eventcuisinecategory.model.EventCuisineCategoryVO;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
 import com.eventmember.model.EventMemberService;
-import com.eventmember.model.EventMemberVO;
-import com.ingredient.model.IngredientService;
+import com.google.gson.Gson;
 import com.ingredient.model.IngredientVO;
-import com.recipecuisinecategory.model.RecipeCuisineCategoryVO;
+import com.notice.model.NoticeService;
+import com.notice.model.NoticeVO;
+import com.websocket.controller.WebSocketNotice;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 3 * 1024 * 1024, maxRequestSize = 30 * 3 * 1024 * 1024)
 public class EventInfoActionServlet extends HttpServlet {
@@ -256,7 +257,7 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setEventName(eventName);
 			}
 
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+			if (eventMember == null || eventMember.trim().length() == 0 || eventMember.isEmpty()) {
 
 			} else if (eventMember.equals("0")) {
 
@@ -364,7 +365,7 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setEventName(eventName);
 			}
 
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+			if (eventMember == null || eventMember.trim().length() == 0 || eventMember.isEmpty()) {
 				errorMsgs.put("EventMemberIsNull", "請輸入活動人數");
 			} else if (eventMember.equals("0")) {
 				errorMsgs.put("EventMemberMustBeGreaterThanZero", "活動人數必須大於0");
@@ -524,10 +525,25 @@ public class EventInfoActionServlet extends HttpServlet {
 				notfullView.forward(request, response);
 			} else {
 				EventInfoService eventInfoSvc = new EventInfoService();
-				eventInfoSvc.addDishAndIngredientByEventInfo(eventName, Integer.parseInt(eventMember), eventDescription,
+				EventInfoVO eventInfoVORetrun = eventInfoSvc.addDishAndIngredientByEventInfo(eventName, Integer.parseInt(eventMember), eventDescription,
 						Integer.parseInt(groupType), groupCity, groupAddress, eventRegStart, eventRegEnd, eventStart,
 						eventEnd, 1, eventPicToByte, dishName, ingID, cuisineCatID,Integer.parseInt(request.getParameter("accountID")));
 				System.out.println("新增成功");
+				
+			    Gson gson = new Gson();
+			    
+			    NoticeService noticeSvc = new NoticeService();
+			    NoticeVO noticeVO = noticeSvc.addNotice(
+			    	Integer.parseInt(accountID), "活動", 
+			      "您已建立  <a href='" + request.getContextPath() + 
+			      "/Event/EventDetailReview.jsp?eventID=" + eventInfoVORetrun.getEventID() + "'>" +
+			      eventInfoSvc.getEventID(eventInfoVORetrun.getEventID()).getEventName() + "</a> 的成員審核，歡迎參加！" 
+			      );
+			    String message = gson.toJson(noticeVO);
+			    
+			    WebSocketNotice noticeWS = new WebSocketNotice();
+			    noticeWS.onMessage(message);
+				
 				RequestDispatcher successView = request.getRequestDispatcher("/Event/EventList.jsp");
 				successView.forward(request, response);
 			}
@@ -569,7 +585,7 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setEventName(eventName);
 			}
 
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+			if (eventMember == null || eventMember.trim().length() == 0 || eventMember.isEmpty()) {
 
 			} else if (eventMember.equals("0")) {
 
@@ -698,7 +714,7 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setEventName(eventName);
 			}
 
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+			if (eventMember == null || eventMember.trim().length() == 0 || eventMember.isEmpty()) {
 
 			} else if (eventMember.equals("0")) {
 
@@ -794,7 +810,7 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setEventName(eventName);
 			}
 
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+			if (eventMember == null || eventMember.trim().length() == 0 || eventMember.isEmpty()) {
 
 			} else if (eventMember.equals("0")) {
 
@@ -889,7 +905,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			} else {
 				EventMemberService eventMemberSvc = new EventMemberService();
 				eventMemberSvc.addEventMemberAndDish(Integer.parseInt(request.getParameter("eventID")),
-						Integer.parseInt(request.getParameter("accountID")), 2, false, dishName, ingID);
+						Integer.parseInt(request.getParameter("accountID")), 1, false, dishName, ingID);
 				RequestDispatcher MenuView = request.getRequestDispatcher("/Event/EventList.jsp");
 				MenuView.forward(request, response);
 			}
@@ -935,6 +951,7 @@ public class EventInfoActionServlet extends HttpServlet {
 			LocalDateTime EndDateTime = null;
 			LocalDateTime RegStartDateTime = null;
 			LocalDateTime RegEndDateTime = null;
+			
 			if (!eventStart.isEmpty()) {
 				StartDateTime = LocalDateTime.parse(eventStart, formatter);
 			}
@@ -960,7 +977,7 @@ public class EventInfoActionServlet extends HttpServlet {
 				eventInfoVO.setEventName(eventName);
 			}
 
-			if (eventMember == null || eventMember.trim().length() == 0 || eventName.isEmpty()) {
+			if (eventMember == null || eventMember.trim().length() == 0 || eventMember.isEmpty()) {
 				errorMsgs.put("EventMemberIsNull", "請輸入活動人數");
 			} else if (eventMember.equals("0")) {
 				errorMsgs.put("EventMemberMustBeGreaterThanZero", "活動人數必須大於0");
@@ -1055,24 +1072,45 @@ public class EventInfoActionServlet extends HttpServlet {
 			}
 
 			// =======================================類型============================
-			String cuisineCatJson = request.getParameter("cuisineCatJson");
+//			String cuisineCatJson = request.getParameter("cuisineCatJson");
+//			Integer[] cuisineCatID = null;
+//			if (cuisineCatJson != null) {
+//				try {
+//					JSONArray jsonArray = new JSONArray(cuisineCatJson);
+//					cuisineCatID = new Integer[jsonArray.length()];
+//					for (int i = 0; i < jsonArray.length(); i++) {
+//						JSONObject jsonObj = jsonArray.getJSONObject(i);
+//						cuisineCatID[i] = jsonObj.getJSONArray("cuisineCatID").getInt(i);
+//						System.out.println(cuisineCatID[i]);
+//					}
+////					System.out.println(Arrays.deepToString(cuisineCatID));
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					errorMsgs.put("cuisineCatError", "請至少選擇一個類型");
+//				}
+//			}
+			
+			List<CuisineCategoryVO> cuisineCategoryVOs = new ArrayList<CuisineCategoryVO>();
+			String cuisineCatIDStr = request.getParameter("cuisineCatID");
 			Integer[] cuisineCatID = null;
-			if (cuisineCatJson != null) {
-				try {
-					JSONArray jsonArray = new JSONArray(cuisineCatJson);
-					cuisineCatID = new Integer[jsonArray.length()];
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONObject jsonObj = jsonArray.getJSONObject(i);
-						cuisineCatID[i] = jsonObj.getJSONArray("cuisineCatID").getInt(i);
-						System.out.println(cuisineCatID[i]);
-					}
-//					System.out.println(Arrays.deepToString(cuisineCatID));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					errorMsgs.put("cuisineCatError", "請至少選擇一個類型");
+			
+			if (cuisineCatIDStr == null || cuisineCatIDStr.trim().length() == 0) {
+				errorMsgs.put("cuisineCatError", "請至少選取一個類型");
+			} else {
+				String[] cuisineCatIDs = cuisineCatIDStr.trim().split(" ");
+				System.out.println(cuisineCatIDs.length);
+				cuisineCatID = new Integer[cuisineCatIDs.length];
+				int i = 0;
+				for (String cuisineCategoryID : cuisineCatIDs) {
+					cuisineCatID[i] = new Integer(cuisineCategoryID);
+					CuisineCategoryVO cuisineCategoryVO = new CuisineCategoryVO();
+					cuisineCategoryVO.setCuisineCategoryID(new Integer(cuisineCategoryID));
+					cuisineCategoryVOs.add(cuisineCategoryVO);
+					i++;
 				}
 			}
-
+			
+			
 			if (!errorMsgs.isEmpty()) {
 				request.setAttribute("eventInfoVO", eventInfoVO);
 				RequestDispatcher notfullView = request.getRequestDispatcher("/Event/EventDetailEdit.jsp");
