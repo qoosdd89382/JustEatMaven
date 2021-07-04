@@ -8,6 +8,7 @@
 	});
 	
 	$(window).on("unload", function(e) {
+		disconnectForAnnounce();
 		disconnectForNotice();
 		disconnect();
 	});

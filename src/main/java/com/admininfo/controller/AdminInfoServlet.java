@@ -146,7 +146,7 @@ public class AdminInfoServlet extends HttpServlet {
 							"請點擊本連結，啟用帳號：<br>" + req.getRequestURL() + "?action=auth" + 
 							"&adminID="	+ adminVO.getAdminID() + 
 							"&authCode=" + adminPassword + 
-							"<br><br>或至" +  req.getContextPath() + "/Dashboard/adminRegisterAuth.jsp?adminID="	+ adminVO.getAdminID() + 
+							"<br><br>或至" + req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath() + "/Dashboard/adminRegisterAuth.jsp?adminID="	+ adminVO.getAdminID() + 
 							"輸入驗證碼" + adminPassword;
 
 					mailSvc.sendMail(adminMail, subject, messageText);
