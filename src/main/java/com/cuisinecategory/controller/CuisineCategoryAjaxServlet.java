@@ -33,7 +33,6 @@ public class CuisineCategoryAjaxServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = res.getWriter();
-		out.write("okkk");
 		Gson gson = new Gson();
 		CuisineCategoryService catSvc = new CuisineCategoryService();
 		RecipeCuisineCategoryService recipeCatSvc = new RecipeCuisineCategoryService();
