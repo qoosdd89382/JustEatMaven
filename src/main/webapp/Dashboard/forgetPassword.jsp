@@ -30,37 +30,22 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">後臺登入</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">忘記密碼？</h1>
+                                        <p class="mb-4">請輸入您註冊為管理員時的信箱，以便系統發送密碼重設信件。</p>
                                     </div>
-                                    <form class="user" method="post" action="<%= request.getContextPath() %>/Dashboard/AdminLoginHandler">
+                                    <form class="user" method="post" action="<%= request.getContextPath() %>/Dashboard/admin.do">
                                         <div class="form-group">
                                             <input type="email"
-                                            	class='form-control form-control-user ${errorMsgs.get("loginAllowErr") == null ? "": "border-danger"}'
+                                            	class='form-control form-control-user ${errorMsgs.get("forgetPasswordErr") == null ? "": "border-danger"}'
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder='${errorMsgs.get("loginAllowErr") == null ? "請輸入e-mail": errorMsgs.get("loginAllowErr")}'
+                                                placeholder='${errorMsgs.get("forgetPasswordErr") == null ? "請輸入e-mail": errorMsgs.get("forgetPasswordErr")}'
                                                 name="adminMail" value="${adminMail}">
                                         </div>
-                                        <div class="form-group">
-                                            <input type="password" class='form-control form-control-user ${errorMsgs.get("loginAllowErr") == null ? "": "border-danger"}'
-                                                id="exampleInputPassword"
-                                                placeholder='${errorMsgs.get("loginAllowErr") == null ? "請輸入密碼": errorMsgs.get("loginAllowErr")}'
-                                                name="adminPassword">
-                                        </div>
-<!--                                         <div class="form-group"> -->
-<!--                                             <div class="custom-control custom-checkbox small"> -->
-<!--                                                 <input type="checkbox" class="custom-control-input" id="customCheck"> -->
-<!--                                                 <label class="custom-control-label" for="customCheck">Remember -->
-<!--                                                     Me</label> -->
-<!--                                             </div> -->
-<!--                                         </div> -->
+                                        <input type="hidden" name="action" value="sendAuthAgain">
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
+                                           	 補發認證信
                                         </button>
                                     </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="${pageContext.request.contextPath}/Dashboard/forgetPassword.jsp">Forgot Password?</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
