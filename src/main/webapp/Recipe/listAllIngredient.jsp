@@ -56,8 +56,18 @@ div#catList_length {
 ul.pagination {
     display: none;
 }
-
-
+.fontColorWhite {
+	color: white;
+}
+.aIng {
+    position: relative;
+}
+.ingInnerTag {
+    font-size: 14px;
+    color: black;
+    padding: 3px 5px;
+    background: #FFAE82;
+}
 </style>
 <title>食譜列表 | 食材 | Just Eat 揪食</title>
 	
@@ -95,12 +105,18 @@ ul.pagination {
 						<thead>
 							<tr>
 								<th>分類名稱</th>
+								<th style="visibility: visible">查詢次數</th>
 							</tr>
 						</thead>
 						<tbody>
 				<c:forEach var="ingredientVO" items="${list}" varStatus="status">
-						<tr data-id="${ingredientVO.ingredientID}">
-						<td><a class="btn btn-primary m-1" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a></td>
+						<tr data-id="${ingredientVO.ingredientID}" class="aIng">
+							<td class="ingName p-0">
+								<a class="fontColorWhite btn btn-primary m-1 " href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}
+									<span class="ingInnerTag"><i class="fas fa-search"></i> 被查找 ${ingredientVO.ingredientSearchCount} 次</span>
+								</a>
+							</td>
+							<td class="ingSearchCount"><span style="font-size: 0;">${ingredientVO.ingredientSearchCount}</span></td>
 						</tr>
 				</c:forEach>
 						</tbody>
@@ -140,8 +156,8 @@ ul.pagination {
 	<script>
 
 	$(function(){
-
 			$("#catList").DataTable({
+	  		 	"order": [[ 1, 'desc' ]],
 			    "searching": true, //搜尋功能, 預設是開啟
 			    "paging": true, //分頁功能, 預設是開啟
 			    "ordering": true, //排序功能, 預設是開啟

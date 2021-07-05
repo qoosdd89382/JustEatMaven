@@ -666,11 +666,14 @@ public class RecipeServlet extends HttpServlet {
 				Integer recipeID = new Integer(req.getParameter("recipeID"));
 				
 				RecipeService recipeSvc = new RecipeService();
-				recipeSvc.deleteRecipe(recipeID);
-				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
-				successView.forward(req, res);
+//				recipeSvc.deleteRecipe(recipeID);
+				String locationBeforeRecipeDelete = (String) req.getParameter("locationBeforeRecipeDelete");
+				System.out.println(locationBeforeRecipeDelete);
+//				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+				RequestDispatcher successView = req.getRequestDispatcher(locationBeforeRecipeDelete);
+//				successView.forward(req, res);
 			} catch (Exception e) {
-				errorMsgs.put("UnknowErr", "發生錯誤，或您輸入的食譜編號不存在！");
+				errorMsgs.put("UnknowErr", "發生錯誤，或您刪除的食譜編號不存在！");
 				e.printStackTrace();
 				RequestDispatcher failureView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				failureView.forward(req, res);
