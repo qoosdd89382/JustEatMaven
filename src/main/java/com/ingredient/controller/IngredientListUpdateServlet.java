@@ -38,6 +38,7 @@ public class IngredientListUpdateServlet extends HttpServlet {
 		String modifyname = req.getParameter("modifyname");
 		Integer test=  new Integer( (String) req.getParameter("ingredientid"));
 		IngredientService isvc = new IngredientService();
+		PrintWriter out = res.getWriter();
 		
 		System.out.println(test+modifyname);
 		
@@ -46,7 +47,6 @@ public class IngredientListUpdateServlet extends HttpServlet {
 		Pattern p=Pattern.compile(regEx);
 		Matcher m=p.matcher(modifyname);
 		if(!m.matches()) {
-			PrintWriter out = res.getWriter();
 			IngredientVO currentvo = isvc.getOneIngredient(test);
 //			CuisineCategoryVO currentvo= ccsve.getOneCategory(test);
 			String st= currentvo.getIngredientName();
@@ -57,6 +57,7 @@ public class IngredientListUpdateServlet extends HttpServlet {
 		}else {
 			isvc.updateIngredient(test, modifyname);
 			System.out.println("沒有特殊字符");
+			out.print("success");
 		}
 		
 		

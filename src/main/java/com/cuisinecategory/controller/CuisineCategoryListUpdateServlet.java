@@ -33,13 +33,13 @@ public class CuisineCategoryListUpdateServlet extends HttpServlet  {
 		String modifyname = req.getParameter("modifyname");
 		Integer test=  new Integer( (String) req.getParameter("categoryid"));
 		CuisineCategoryService ccsve = new CuisineCategoryService();
+		PrintWriter out = res.getWriter();
 		 
 		
 			String regEx="^[A-z\\u4e00-\\u9fa5]*$";
 			Pattern p=Pattern.compile(regEx);
 			Matcher m=p.matcher(modifyname);
 			if(!m.matches()) {
-				PrintWriter out = res.getWriter();
 				CuisineCategoryVO currentvo= ccsve.getOneCategory(test);
 				String st= currentvo.getCuisineCategoryName();
 				out.print("更新失敗,不得含有特殊字符或數字@"+st);
@@ -49,6 +49,7 @@ public class CuisineCategoryListUpdateServlet extends HttpServlet  {
 			}else {
 				ccsve.updateCategory(test, modifyname);
 				System.out.println("沒有特殊字符");
+				out.print("success");
 			}
 	
 		 
