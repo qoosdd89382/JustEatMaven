@@ -10,6 +10,8 @@
 		list = (List<RecipeVO>) request.getAttribute("list");
 	}
 	pageContext.setAttribute("list", list);
+	
+// 	request.setAttribute("locationBeforeRecipeDelete", request.getServletPath().toString());	
 %>
 
 
@@ -151,6 +153,7 @@ td > span {
 									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 										<input type="hidden" name="action" value="delete">
 										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<input type="hidden" name="locationBeforeRecipeDelete"  value="${pageContext.request.servletPath}">
 										<button class="btn btn-primary" type="submit">刪除</button>
 									</form>
 								</div>
@@ -206,6 +209,7 @@ td > span {
 
 	$(function(){
 		$("#myRecipeList").DataTable({
+  		 	"order": [[ 3, 'desc' ]],
 		    "searching": true, //搜尋功能, 預設是開啟
 		    "paging": true, //分頁功能, 預設是開啟
 		    "ordering": true, //排序功能, 預設是開啟

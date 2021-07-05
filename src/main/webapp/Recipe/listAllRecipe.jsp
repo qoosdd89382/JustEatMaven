@@ -10,6 +10,8 @@
 		list = (List<RecipeVO>) request.getAttribute("list");
 	}
 	pageContext.setAttribute("list", list);
+// 	System.out.println(request.getServletPath());
+// 	request.setAttribute("locationBeforeRecipeDelete", request.getServletPath().toString());	
 %>
 
 
@@ -111,6 +113,7 @@
 									<form class="delete" method="post" action="<%=request.getContextPath()%>/Recipe/recipe.do">
 										<input type="hidden" name="action" value="delete">
 										<input type="hidden" name="recipeID"  value="${recipeVO.recipeID}">
+										<input type="hidden" name="locationBeforeRecipeDelete"  value="${pageContext.request.servletPath}">
 										<button class="btn btn-primary" type="submit">刪除</button>
 									</form>
 								</div>
