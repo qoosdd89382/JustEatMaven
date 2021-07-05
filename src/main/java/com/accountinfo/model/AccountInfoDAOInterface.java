@@ -10,6 +10,7 @@ public interface AccountInfoDAOInterface {
     public void delete(Integer accountID);
     public AccountInfoVO selectOneAccountInfo(Integer accountID);
     public List<AccountInfoVO> selectAllAccountInfo();
+    
     //停權
     public void freezeAccountInfo(Integer accountID);
     public void activeAccountInfo(Integer accountID);
@@ -40,7 +41,8 @@ public interface AccountInfoDAOInterface {
     public void setLevelOneAccountInfoFromRegister(AccountInfoVO accountInfoVO);
     //更改驗證碼用
 	public void updateBlankAccountCodeFromRegister(AccountInfoVO accountInfoVO);
-
+	//查看最新註冊會員
+	public List<AccountInfoVO> getRecentAccountInfoRegister();
     
     //暫時沒用===
     public void setLevelTwoAccountInfoFromRegister(

@@ -3,9 +3,11 @@
 
 
 <%@ page import="java.util.*" %>
+<%@ page import="com.accountinfo.model.*" %>
 <%@ page import="com.recipe.model.*" %>
 <%@ page import="com.admininfo.model.*" %>
 
+<jsp:useBean id="accountInfoSvc" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="recipeSvc" class="com.recipe.model.RecipeService" />
 <jsp:useBean id="adminSvc" class="com.admininfo.model.AdminInfoService" />
 
@@ -21,7 +23,9 @@
 //食譜陣列 取得最新的十個食譜
 List<RecipeVO> recipeVO = recipeSvc.getSomeNew();
 pageContext.setAttribute("recipeVO",recipeVO);
-	
+//會員列表
+List<AccountInfoVO> accountInfoVO = accountInfoSvc.getRecentAccountInfoRegister();
+pageContext.setAttribute("accountInfoVO",accountInfoVO);
 %>
 <!DOCTYPE html>
 <html>
@@ -74,137 +78,152 @@ pageContext.setAttribute("recipeVO",recipeVO);
                     <div class="row">
 
                         <!-- Content Column -->
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-12 col-lg-12 mb-4">
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">最近 5 筆新增的食譜資料</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">最近新增的食譜資料</h6>
                                 </div>
                                 <div class="card-body">
                                     
 		                            <div class="table-responsive">
+		                            
+		                            <%@ include file="ListTopRecipe.file"%> 
+		                            
 		                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
 		                                    <thead class="border-bottom">
 		                                        <tr>
 		                                            <th>食譜編號</th>
 		                                            <th>食譜名稱</th>
 		                                            <th>會員名稱</th>
-		                                            <th colspan="2">審核操作</th>
+		                                            <th colspan="2">修改</th>
 		                                        </tr>
 		                                     </thead>
-											<%@ include file="ListTop.file"%> 
 		                                    <tbody>
 		                                    	<c:forEach var="recipeVO" items="${recipeVO}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">		                              
 			                                       	<tr>
 			                                            <td>${recipeVO.recipeID}</td>
 			                                            <td>${recipeVO.recipeName}</td>
 			                                            <td>${recipeVO.accountID}</td>
-			                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
 			                                            <td>
-															<select class="custom-select custom-select-sm">
-															  <option value="0" selected>審核中</option>
-															  <option value="1">通過</option>
-															  <option value="2">未通過</option>
-															</select>
+			                                           		<a href="<%=request.getContextPath()%>/Dashboard/Recipe/recipe.do?action=getOneForUpdate&recipeID=${recipeVO.recipeID}">
+			                                           		點此
+			                                           		</a>
 			                                            </td>
-			                                             <td>
-															<button type="button" class="btn btn-primary btn-sm">確定</button>
-			                                            </td>
+<!-- 			                                            <td> -->
+<!-- 															<select class="custom-select custom-select-sm"> -->
+<!-- 															  <option value="0" selected>審核中</option> -->
+<!-- 															  <option value="1">通過</option> -->
+<!-- 															  <option value="2">未通過</option> -->
+<!-- 															</select> -->
+<!-- 			                                            </td> -->
+<!-- 			                                             <td> -->
+<!-- 															<button type="button" class="btn btn-primary btn-sm">確定</button> -->
+<!-- 			                                            </td> -->
 			                                        </tr> 
 		                                        </c:forEach>
 		                                    </tbody>
-		                                    <%@ include file="ListBottom.file"%> 
 		                                </table>
+		                                <%@ include file="ListBottomRecipe.file"%> 					
 	                                </div>
 	                                
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">更多審核資料 &rarr;</a>
+<!--                                     <a target="_blank" rel="nofollow" href="https://undraw.co/">更多審核資料 &rarr;</a> -->
 	                            </div>
                             </div>
 
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="img/undraw_posting_photo.svg" alt="...">
-                                    </div>
-                                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                        constantly updated collection of beautiful svg images that you can use
-                                        completely free and without attribution!</p>
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                        unDraw &rarr;</a>
-                                </div>
-                            </div>
+                            <!-- Illustrations head -->
+<!--                             <div class="card shadow mb-4"> -->
+<!--                                 <div class="card-header py-3"> -->
+<!--                                     <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6> -->
+<!--                                 </div> -->
+<!--                                 <div class="card-body"> -->
+<!--                                     <div class="text-center"> -->
+<!--                                         <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" -->
+<!--                                             src="img/undraw_posting_photo.svg" alt="..."> -->
+<!--                                     </div> -->
+<!--                                     <p>Add some quality, svg illustrations to your project courtesy of <a -->
+<!--                                             target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a -->
+<!--                                         constantly updated collection of beautiful svg images that you can use -->
+<!--                                         completely free and without attribution!</p> -->
+<!--                                     <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on -->
+<!--                                         unDraw &rarr;</a> -->
+<!--                                 </div> -->
+<!--                             </div> -->
+                            <!-- Illustrations bottom -->
+                            
 
                         </div>
 
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-12 col-lg-12 mb-4">
 
-                            <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">最近 3 筆待回覆訊息</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">最近新增會員審核請求</h6>
                                 </div>
                                 <div class="card-body">
                                     
 		                            <div class="table-responsive">
+		                            
+		                          	<%@ include file="ListTopAccount.file"%>
+		                            
 		                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
 		                                    <thead class="border-bottom">
 		                                        <tr>
-		                                            <th>食譜編號</th>
-		                                            <th>食譜名稱</th>
+		                                            <th>會員編號</th>
 		                                            <th>會員名稱</th>
+		                                            <th>會員註冊時間</th>
 		                                            <th colspan="2">審核操作</th>
 		                                        </tr>
 		                                     </thead>
-<%-- 											<%@ include file="ListTop.file"%>  --%>
+		                                
 		                                    <tbody>
-		                                    	<c:forEach var="recipeVO" items="${recipeVO}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">		                              
+		                                    	<c:forEach var="accountInfoVO" items="${accountInfoVO}" begin="<%=pageIndexAccount%>" end="<%=pageIndexAccount+rowsPerPageAccount-1%>">		                              
 			                                       	<tr>
-			                                            <td>${recipeVO.recipeID}</td>
-			                                            <td>${recipeVO.recipeName}</td>
-			                                            <td>${recipeVO.accountID}</td>
-			                                            <td><button type="button" class="btn btn-outline-secondary btn-sm">點此</button></td>
+			                                            <td>${accountInfoVO.accountID}</td>
+			                                            <td>${accountInfoVO.accountName}</td>
+			                                            <td>${accountInfoVO.accountRegisterTime}</td>
 			                                            <td>
-															<select class="custom-select custom-select-sm">
-															  <option value="0" selected>審核中</option>
-															  <option value="1">通過</option>
-															  <option value="2">未通過</option>
-															</select>
+															<a href="<%=request.getContextPath()%>/Dashboard/Account/dashboard.do?action=gotoUpdateAccountInfo&accountID=${accountInfoVO.accountID}">
+															點此
+															</a>
 			                                            </td>
-			                                             <td>
-															<button type="button" class="btn btn-primary btn-sm">確定</button>
-			                                            </td>
+<!-- 			                                            <td> -->
+<!-- 															<select class="custom-select custom-select-sm"> -->
+<!-- 															  <option value="0" selected>審核中</option> -->
+<!-- 															  <option value="1">通過</option> -->
+<!-- 															  <option value="2">未通過</option> -->
+<!-- 															</select> -->
+<!-- 			                                            </td> -->
+<!-- 			                                             <td> -->
+<!-- 															<button type="button" class="btn btn-primary btn-sm">確定</button> -->
+<!-- 			                                            </td> -->
 			                                        </tr> 
 		                                        </c:forEach>
 		                                    </tbody>
-<%-- 		                                    <%@ include file="ListBottom.file"%>  --%>
 		                                </table>
+		                                
+		                            <%@ include file="ListBottomAccount.file"%> 					
 	                                </div>
 	                                
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">進入客服聊天室 &rarr;</a>
+<!--                                     <a target="_blank" rel="nofollow" href="https://undraw.co/">進入客服聊天室 &rarr;</a> -->
 	                            </div>
                             </div>
                             
                             
                             <!-- Approach -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                                        custom components and custom utility classes.</p>
-                                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                                        Bootstrap framework, especially the utility classes.</p>
-                                </div>
-                            </div>
+<!--                             <div class="card shadow mb-4"> -->
+<!--                                 <div class="card-header py-3"> -->
+<!--                                     <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6> -->
+<!--                                 </div> -->
+<!--                                 <div class="card-body"> -->
+<!--                                     <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce -->
+<!--                                         CSS bloat and poor page performance. Custom CSS classes are used to create -->
+<!--                                         custom components and custom utility classes.</p> -->
+<!--                                     <p class="mb-0">Before working with this theme, you should become familiar with the -->
+<!--                                         Bootstrap framework, especially the utility classes.</p> -->
+<!--                                 </div> -->
+<!--                             </div> -->
 
                         </div>
                     </div>
