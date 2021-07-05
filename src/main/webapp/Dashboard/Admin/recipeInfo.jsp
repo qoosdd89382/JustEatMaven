@@ -195,9 +195,9 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">食譜資訊</h1>
-<!--                     <p class="mb-4"> -->
-						
-<!-- 					</p> -->
+                    <p class="mb-4">
+						${successMsg}
+					</p>
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
@@ -496,8 +496,10 @@
 								$(element).val(index + 1);
 							});
 							if ($("table").find("tr.recipe").length == 1) {
-								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
-								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+// 								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
+// 								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+								var lastStepOrderDel = $("table").find("tr").find("td").last();
+								$(lastStepOrderDel).html("<font color='lightgray'><i class='fas fa-times'></i></font>");
 							}
 						  },
 						});

@@ -367,8 +367,10 @@
 								$(element).val(index + 1);
 							});
 							if ($("table").find("tr.recipe").length == 1) {
-								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
-								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+// 								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
+// 								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+								var lastStepOrderDel = $("table").find("tr").find("td").last();
+								$(lastStepOrderDel).html("<font color='gray'><i class='fas fa-times'></i></font>");
 							}
 						  },
 						});

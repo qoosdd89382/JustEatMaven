@@ -387,8 +387,8 @@ div.temp_loading{
 //								$(element).attr('name', "recipeStepPic");
 //							});
 							if ($("table").find("tr.recipe").length == 1) {
-								var lastStepOrderDel = $("table").find("tr").find("td").find("svg").first().closest("td");
-								lastStepOrderDel.html("<font color='gray'><i class='fas fa-times'></i></font>");
+								var lastStepOrderDel = $("table").find("tr").find("td").last();
+								$(lastStepOrderDel).html("<font color='gray'><i class='fas fa-times'></i></font>");
 							}
 						  },
 // 						  complete: function(xhr){      // request 完成之後執行(在 success / error 事件之後執行)

@@ -160,6 +160,7 @@ public class RecipeServlet extends HttpServlet {
 				}
 				
 				req.setAttribute("list", list);
+				ingSvc.updateSearchCount(new Integer(ingredientID));
 				
 				String successMsg = "";
 				if (list.size() > 0) {
