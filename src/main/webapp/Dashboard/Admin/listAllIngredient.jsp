@@ -209,10 +209,10 @@
 						success: function(data){
 							if (data != "success") {
 								$("#error").html("<font color='red'>" + data + "</font>");
-								return;
+							} else {
+								$("#successModal").modal();
+								$(that).closest("tr").remove();
 							}
-							$("#successModal").modal();
-							$(that).closest("tr").remove();
 						},
 						
 		    		});
@@ -237,10 +237,10 @@
 					console.log(data)
 					if (data != "success") {
 						$("#error").html("<font color='red'>" + data + "</font>");
-						return;
+					} else {
+						$("#successModal").modal();
+						$(that).closest("tr").remove();
 					}
-					$("#successModal").modal();
-					$(that).closest("tr").remove();
 				}
     		});
     	});
@@ -256,12 +256,13 @@
     			},
 				success: function(data){
 					if (data != "success") {
-					console.log(data);
+						console.log(data);
 						$("#insertErr").html("<font color='red'>" + data + "</font>");
 						return;
+					} else {
+	// 					$("#successModal").modal();
+						location.reload();
 					}
-// 					$("#successModal").modal();
-					location.reload();
 				},
 				
     		});
@@ -302,7 +303,10 @@
 					$('#error').html(aa[0]);
 					$(that).parents("td").prev().html(aa[1]);
 					console.log(result);
-					$("#successModal").modal();
+					if (result == "success") {
+						 $('#error').html("");
+						$("#successModal").modal();
+					}
 				}
 
     		});

@@ -309,7 +309,10 @@
     					$('#error').html(aa[0]);
     					$(that).parents("td").prev().html(aa[1]);
     					console.log(result);
-						$("#successModal").modal();
+    					if (result == "success") {
+	   						$('#error').html("");
+	   						$("#successModal").modal();
+   						}	
     				}
     			});
     	});
