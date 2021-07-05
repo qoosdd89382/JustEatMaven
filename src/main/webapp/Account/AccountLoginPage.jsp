@@ -147,7 +147,7 @@ input#account_reset_btn:hover {
 							placeholder="請輸入...">
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
-					    <span id="text">驗證碼</span><br>
+					    <span id="text">驗證碼(點擊圖片可更新)</span><br>
 					    <input id="account_randomnumber_input" type="text" name="RandomNumberInput" >
 					    <span style="color:red">${errorMsgs.get("randomNumberError")}</span><br>
 					    

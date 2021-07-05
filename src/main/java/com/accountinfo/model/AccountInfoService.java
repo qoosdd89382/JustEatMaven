@@ -30,6 +30,11 @@ public class AccountInfoService {
 	public List<AccountInfoVO> selectAllAccountInfo(){
 		return dao.selectAllAccountInfo();
 	}
+	public List<AccountInfoVO> getRecentAccountInfoRegister(){
+		return dao.getRecentAccountInfoRegister();
+	}
+	
+	
 	//暫時用不到
 	public void deleteAccountInfo(Integer accountID) {
 		dao.delete(accountID);

@@ -45,6 +45,11 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static final String Delete_Stmt = "Delete From AccountInfo Where account_id=?";
 	private static final String Select_Key_Stmt = "Select * From JustEat.AccountInfo Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.AccountInfo";
+	//取得最近十個未審核的會員層級二 給後臺首頁顯示
+	private static final String Select_Ten_Account_ForAuth = "Select * FROM JustEat.AccountInfo "
+			+ "where account_level=2 "
+			+ "order by account_register_time desc "
+			+ "limit 3";
 	
 	//停權帳號
 	private static final String Update_FreezeAccountInfo_Stmt = "Update JustEat.AccountInfo set "
@@ -342,6 +347,77 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	}
 //後臺用 selectAllAccountInfo
 	@Override
+	public List<AccountInfoVO> getRecentAccountInfoRegister() {
+		List<AccountInfoVO> list = new ArrayList<AccountInfoVO>();
+		AccountInfoVO accountInfoVO = null;
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(Select_Ten_Account_ForAuth);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				accountInfoVO = new AccountInfoVO();
+				accountInfoVO.setAccountID(rs.getInt("account_id"));
+				
+				accountInfoVO.setAccountMail(rs.getString("account_mail"));
+				accountInfoVO.setAccountNickname(rs.getString("account_nickname"));
+				accountInfoVO.setAccountPassword(rs.getString("account_password"));
+				accountInfoVO.setAccountState(rs.getBoolean("account_state"));
+				accountInfoVO.setAccountLevel(rs.getInt("account_level"));
+				
+				accountInfoVO.setAccountName(rs.getString("account_name"));
+				accountInfoVO.setAccountGender(rs.getInt("account_gender"));
+				accountInfoVO.setAccountBirth(rs.getDate("account_birth"));
+				accountInfoVO.setAccountPhone(rs.getString("account_phone"));
+				accountInfoVO.setAccountPic(rs.getBytes("account_pic"));
+				
+				accountInfoVO.setAccountIDcardFront(rs.getBytes("account_idcard_front"));
+				accountInfoVO.setAccountIDcardBack(rs.getBytes("account_idcard_back"));
+				accountInfoVO.setAccountText(rs.getString("account_text"));
+				accountInfoVO.setAccountRegisterTime(rs.getTimestamp("account_register_time"));
+				accountInfoVO.setAccountCode(rs.getString("account_code"));
+				
+				list.add(accountInfoVO);
+			}
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+ e.getMessage());
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return list;
+	}
+//後臺用 selectAllAccountInfo
+	@Override
 	public List<AccountInfoVO> selectAllAccountInfo() {
 		List<AccountInfoVO> list = new ArrayList<AccountInfoVO>();
 		AccountInfoVO accountInfoVO = null;
@@ -411,6 +487,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 		}
 		return list;
 	}
+	
+	
 //後台用 停權
 	public void freezeAccountInfo(Integer accountID) {
 		Connection con = null;
@@ -1155,7 +1233,8 @@ public void activeAccountInfo(Integer accountID) {
 			pstmt = con.prepareStatement(Update_LevelThree_Account_From_Register);
 			
 			pstmt.setString(1,accountInfoVO.getAccountPhone());
-			pstmt.setInt(2,new Integer(1));
+			//有申請就進到狀態二
+			pstmt.setInt(2,new Integer(2));
 			
 			pstmt.setBytes(3, accountInfoVO.getAccountPic());
 			pstmt.setBytes(4, accountInfoVO.getAccountIDcardFront());

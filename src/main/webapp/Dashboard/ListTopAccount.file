@@ -1,0 +1,39 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%  int rowsPerPageAccount = 5;  //每頁的筆數    
+    int rowNumberAccount=0;      //總筆數
+    int pageNumberAccount=0;     //總頁數      
+    int whichPageAccount=1;      //第幾頁
+    int pageIndexArrayAccount[]=null;
+    int pageIndexAccount=0; 
+%>
+
+<%  
+    rowNumberAccount=accountInfoVO.size();
+    if (rowNumberAccount%rowsPerPageAccount !=0)
+         pageNumberAccount=rowNumberAccount/rowsPerPageAccount + 1;
+    else pageNumberAccount=rowNumberAccount/rowsPerPageAccount;    
+
+    pageIndexArrayAccount=new int[pageNumberAccount]; 
+    for (int i=1 ; i<=pageIndexArrayAccount.length ; i++)
+         pageIndexArrayAccount[i-1]=i*rowsPerPageAccount-rowsPerPageAccount;
+%>
+
+<%  try {
+       whichPageAccount = Integer.parseInt(request.getParameter("whichPageAccount"));
+       pageIndexAccount=pageIndexArrayAccount[whichPageAccount-1];
+    } catch (NumberFormatException e) { //第一次執行的時候
+       whichPageAccount=1;
+       pageIndexAccount=0;
+    } catch (ArrayIndexOutOfBoundsException e) { //總頁數之外的錯誤頁數
+         if (pageNumberAccount>0){
+              whichPageAccount=pageNumberAccount;
+              pageIndexAccount=pageIndexArrayAccount[pageNumberAccount-1];
+         }
+    } 
+%>
+
+<%if (pageNumberAccount>0){%>
+  <b><font color=red>第<%=whichPageAccount%>/<%=pageNumberAccount%>頁</font></b>
+<%}%>
+
+<b>●提 出 申 請 如 下 所 示: 共<font color=red><%=rowNumberAccount%></font>筆</b>
