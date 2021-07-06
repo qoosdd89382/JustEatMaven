@@ -97,7 +97,7 @@
 				</table>
 				<div class="menuBtn">
 					<input type="submit" name="action" value="返回活動詳情" class="btn btn-secondary">
-					<input type="submit" name="action" value="返回活動列表" class="btn btn-secondary">
+					<input type="submit" name="action" value="返回活動列表" class="btn btn-secondary	">
 				</div>
 			</div>
 		</main>

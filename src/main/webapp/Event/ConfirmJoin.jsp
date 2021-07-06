@@ -95,18 +95,18 @@
 	            	<%
 	            		if(dishAndIngJson==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){ 
 	            	%>
-	               			<input type="submit" name="actionJoin" value="新增菜色">
+	               			<input type="submit" name="actionJoin" value="新增菜色" class="btn btn-secondary">
 	                <%
 	            		}else{
 	                %>	
-	                		<input type="submit" name="actionJoin" value="重新新增菜色">
+	                		<input type="submit" name="actionJoin" value="重新新增菜色" class="btn btn-secondary">
 	                <%
 	            		}
 	                %>
 	            </div>
 	            <div>
-	                <input type="button" value="取消參加" class="returnList">
-	                <input type="submit" name="action" value="確定參加" class="joinEvent">
+	                <input type="button" value="取消參加" class="returnList btn btn-secondary">
+	                <input type="submit" name="action" value="確定參加" class="joinEvent btn btn-secondary">
 	            </div>
 	            <div id="preview_img">
 	            	<img src="<%=request.getContextPath()%>/Event/EventInfoForOnePic?eventID=${param.eventID}">

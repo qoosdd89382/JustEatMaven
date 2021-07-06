@@ -141,7 +141,7 @@
 		            		<% 
 		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime()) && timestampNow.after(eventInfoVO.getEventRegistartionStartTime())){
 		            		%>
-		                		<input type="submit" name="action" value="加入活動" class="joinEvent" class="btn btn-secondary">
+		                		<input type="submit" name="action" value="加入活動" class="joinEvent btn btn-secondary">
 		            		<%
 		            			}
 		            		%>
