@@ -26,7 +26,7 @@
 
 	EventInfoVO event = eventSvc.getEventID(new Integer(eventID));
 	Timestamp now = new Timestamp(System.currentTimeMillis());
-	if (now.after(event.getEventRegistartionEndTime())) {
+	if (now.after(event.getEventStartTime())) {
 		System.out.println("out");
 		for (EventMemberVO vo : list) {
 			if (vo.getParticipationState() == 1) {
