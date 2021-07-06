@@ -1,8 +1,18 @@
+<%@page import="org.json.JSONObject"%>
+<%@page import="org.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
 <%
 	String dishAndIngJson = request.getParameter("dishAndIngJson");
+	JSONObject jsonObject =null;
+	JSONArray  jsonArray = null;
+	if(dishAndIngJson ==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){
+		
+	}else{
+		jsonArray = new JSONArray(dishAndIngJson);
+		jsonObject = jsonArray.getJSONObject(0);
+	}
 	String replaceDishAndIngJson = null;
 	if(dishAndIngJson!=null){
 		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
@@ -91,6 +101,20 @@
 	                其他人菜色:
 	                <span class="dish_name"></span>
 	            </div>
+	            <%
+			    	if(dishAndIngJson==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){
+			    		
+			    	}else {
+			    		if(jsonObject!=null){
+			    %>
+				<div>
+			    	我的菜色:
+			    	<span class="border"><%=jsonObject.getString("dishName") %></span>
+			    </div>
+			    <%
+			    		}
+			    	}
+			    %>
 	            <div>
 	            	<%
 	            		if(dishAndIngJson==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){ 

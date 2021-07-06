@@ -77,6 +77,10 @@ public class EventMemberService {
 	public List<EventMemberVO> getAuditPassbyeventID(Integer eventID) {
 		return dao.getAuditPassbyeventID( eventID);
 	}
+	
+	public int getMemberCount(Integer eventID) {
+		return dao.getCountMemberbyEvent(eventID);
+	}
 
 	
 	public void addEventMemberAndDish(int eventID , int accountID,int participationState,boolean isHostIdentifier ,String[] dishNames,Integer[][] IngIDs) {

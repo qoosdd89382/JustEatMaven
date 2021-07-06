@@ -45,7 +45,7 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 	
 
 	private static final String Select_EventID_And_MemberID_Stmt = "Select * From EventMember Where event_id = ? And account_id = ?";
-
+	private static final String Select_Count_Member_By_EventID = "Select count(event_id) from EventMember Where event_id = ?";
 
 	static {
 		try {
@@ -724,6 +724,52 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 		return list;
 	}
 	
+	@Override
+	public int getCountMemberbyEvent(Integer eventID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(Select_Count_Member_By_EventID);
+			pstmt.setInt(1, eventID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return 0;
+	}
+	
 	//被活動資訊 連鎖
 	@Override
 	public void insertByEventInfo(EventMemberVO eventMemberVO, Connection con) {
@@ -851,5 +897,4 @@ public class EventMemberJDBCDAO implements EventMemberDAOInterface {
 		
 		
 	}
-
 }

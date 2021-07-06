@@ -21,6 +21,9 @@
 	EventInfoVO eventInfoVO =  eventInfoSvc.getEventID(Integer.parseInt(request.getParameter("eventID")));
 	eventInfoSvc.updateEventViewCount(Integer.parseInt(request.getParameter("eventID")));
 	Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
+	
+	int currentMember = eventMemberSvc.getMemberCount(Integer.parseInt(request.getParameter("eventID")));
+	int maxMember = eventInfoVO.getEventCurrentCount();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -139,10 +142,12 @@
 	            		<c:otherwise>
 		            		<input type="button" value="回到活動列表" class="return btn btn-secondary">
 		            		<% 
-		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime()) && timestampNow.after(eventInfoVO.getEventRegistartionStartTime())){
+		            			if(currentMember < maxMember){
+		            				if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime()) && timestampNow.after(eventInfoVO.getEventRegistartionStartTime())){
 		            		%>
 		                		<input type="submit" name="action" value="加入活動" class="joinEvent btn btn-secondary">
 		            		<%
+		            				}
 		            			}
 		            		%>
 	            		</c:otherwise>
@@ -190,7 +195,7 @@
 				var regEndTime = new Date(""+data.eventRegEnd).format("yyyy-MM-dd hh:mm");
 				
 				$(".event_name").html(data.eventName);
-				$(".current_people").html(data.eventMember);
+				$(".current_people").html(data.currentMemberCount+"/"+data.eventMember);
 				$(".event_reg_start").html(regStartTime);
 				$(".event_reg_end").html(regEndTime);
 				$(".event_start").html(startTime);

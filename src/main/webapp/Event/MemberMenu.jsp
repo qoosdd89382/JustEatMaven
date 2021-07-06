@@ -67,7 +67,7 @@
 	    </div>
 	    <main  class="memberMenu col-lg-12 col-12 row">
 			<div class="col-lg-12 col-12">
-				<table class="borderforMenu">
+				<table class="table table-bordered">
 					<thead>
 						<tr class="">
 							<th class="">名字</th>

@@ -15,6 +15,7 @@ public interface EventMemberDAOInterface {
 	public List<EventMemberVO> getAllByMemberID(Integer accountID);
 	public List<EventMemberVO> getAllByEventID(Integer eventID);
 	public List<EventMemberVO> getAllByAccount(Integer accountID);
+	public int getCountMemberbyEvent(Integer eventID);
 	public int getAvgScoreByAccountID(Integer accountID);
 	public int getTotalEventByAccountID(Integer accountID);
 	public int getTotalAttendanceByAccountID(Integer accountID);

@@ -44,7 +44,14 @@
 	request.getAttribute("errorMsgs");
 	
 	String dishAndIngJson = request.getParameter("dishAndIngJson");
-	System.out.println(dishAndIngJson);
+	JSONObject jsonObject =null;
+	JSONArray  jsonArray = null;
+	if(dishAndIngJson ==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){
+		
+	}else{
+		jsonArray = new JSONArray(dishAndIngJson);
+		jsonObject = jsonArray.getJSONObject(0);
+	}
 	String replaceDishAndIngJson = null;
 	if(dishAndIngJson!=null){
 		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
@@ -104,7 +111,9 @@
 					<span class="error">${errorMsgs.get("GroupTypeIsNull")}</span>
 	            </div>
 	            <div class="form-group">
+		活動名稱:
 	                <input type="text" name="event_name" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventName()==null)?"":(eventInfoVO.getEventName()) %>" placeholder="請輸入活動名稱" class="form-control">
+	                活動人數:
 	                <input type="number" name="event_member" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventCurrentCount()==null)?"":(eventInfoVO.getEventCurrentCount()) %>" placeholder="請輸入活動人數" class="form-control">
 	            	<div>
 	            	<span class="error">${errorMsgs.get("EventNameIsNull")}</span><pre></pre><span class="error">${errorMsgs.get("EventMemberIsNull")}${errorMsgs.get("EventMemberMustBeGreaterThanZero")}</span>
@@ -131,6 +140,7 @@
 	            	<span class="error">${errorMsgs.get("EventEndTimeIsNull")} ${errorMsgs.get("EventEndTimeNotConform")} ${errorMsgs.get("EndMustAfterStart")}</span>
 	            </div>
 	            <div class="form-group">
+	            地址:
 	                <select name="city" class="form-control">
 	                <!--北台灣-->
 	                <option value="基隆市" <%= (eventInfoVO==null)?"":eventInfoVO.getGroupCity().equals("基隆市")?"selected":"" %>>基隆市</option>
@@ -180,6 +190,20 @@
 			                </ul>
 			          		<input class="cuisineCatAutoInput" type="hidden" name="cuisineCatID" value="<%= (cuisineCatID==null)?"":cuisineCatID %>">
 			    </div>
+			    <%
+			    	if(dishAndIngJson==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){
+			    		
+			    	}else {
+			    		if(jsonObject!=null){
+			    %>
+				<div>
+			    	我的菜色:
+			    	<span class="border"><%=jsonObject.getString("dishName") %></span>
+			    </div>
+			    <%
+			    		}
+			    	}
+			    %>
 	            <div class="form-group">
 	            	上傳活動圖片:<input type="file" name="eventPic" id="uploadEventImg" class="form-control-file">
 	            </div>

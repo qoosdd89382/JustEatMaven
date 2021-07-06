@@ -26,6 +26,7 @@ import com.eventcuisinecategory.model.EventCuisineCategoryService;
 import com.eventcuisinecategory.model.EventCuisineCategoryVO;
 import com.eventinfo.model.EventInfoService;
 import com.eventinfo.model.EventInfoVO;
+import com.eventmember.model.EventMemberService;
 
 
 @WebServlet("/Event/EventInfoAJAXServlet.do")
@@ -51,6 +52,8 @@ public class EventInfoAJAXServlet extends HttpServlet {
 		EventCuisineCategoryService eventCuisineCategoryService = new EventCuisineCategoryService();
 		List<EventCuisineCategoryVO> eventCuisineCategoryList = eventCuisineCategoryService.getAllByEventID(Integer.parseInt(eventID));
 		CuisineCategoryService categoryService = new CuisineCategoryService();
+		EventMemberService eventMemberSvc = new EventMemberService();
+		int currentMember = eventMemberSvc.getMemberCount(Integer.parseInt(eventID));
 		JSONObject jsonData = new JSONObject();
 		JSONArray dishArray = new JSONArray();
 		JSONArray cuisineCatArray = new JSONArray();
@@ -60,6 +63,7 @@ public class EventInfoAJAXServlet extends HttpServlet {
 			jsonData.put("groupType", eventInfoVO.getGroupType());
 			jsonData.put("eventName",eventInfoVO.getEventName());
 			jsonData.put("eventMember", eventInfoVO.getEventCurrentCount());
+			jsonData.put("currentMemberCount", currentMember);
 			jsonData.put("eventRegStart", eventInfoVO.getEventRegistartionStartTime());
 			jsonData.put("eventRegEnd", eventInfoVO.getEventRegistartionEndTime());
 			jsonData.put("eventStart", eventInfoVO.getEventStartTime());
