@@ -3,7 +3,7 @@
 	$(function(){
 
 			<%@ include file="/common/js/adminChatJs.page"%>
-			<%@ include file="/common/js/noticeWebSocketJs.page"%>
+			<%@ include file="/common/js/noticeWebSocketJsOrg.page"%>
 		
 	});
 	

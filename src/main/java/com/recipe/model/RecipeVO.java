@@ -82,10 +82,10 @@ public class RecipeVO implements Serializable {
 	public void setRecipeTime(Timestamp recipeTime) {
 		this.recipeTime = recipeTime;
 	}
-	public Integer getRecipeViewCount() {
+	public synchronized Integer getRecipeViewCount() {
 		return recipeViewCount;
 	}
-	public void setRecipeViewCount(Integer recipeViewCount) {
+	public synchronized void setRecipeViewCount(Integer recipeViewCount) {
 		this.recipeViewCount = recipeViewCount;
 	}
 //	public Integer getRecipeLikeCount() {

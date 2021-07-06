@@ -135,6 +135,9 @@ ul.pagination {
 		</div>	
     </main>
 	
+	<%-- include chatbox --%>
+	<%@ include file="/common/adminChat.page"%>
+	
 	<%-- include footer --%>
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
@@ -154,6 +157,7 @@ ul.pagination {
 <script src="<%=request.getContextPath()%>/vendors/datatables/jquery.dataTables.min.js"></script>
 <script src="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 	<script>
+	<%@ include file="/common/js/scriptFooter.page"%>
 
 	$(function(){
 			$("#catList").DataTable({

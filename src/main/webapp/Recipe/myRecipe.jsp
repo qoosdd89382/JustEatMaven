@@ -186,6 +186,9 @@ td > span {
 			<%@ include file="/Recipe/recipeSidebar.page"%>
 		</div>	
     </main>
+    
+	<%-- include chatbox --%>
+	<%@ include file="/common/adminChat.page"%>
 	
 	<%-- include footer --%>
 	<footer>
@@ -206,6 +209,7 @@ td > span {
 <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath()%>/vendors/datatables/jquery.dataTables.min.js"></script>
 <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath()%>/vendors/datatables/dataTables.bootstrap4.min.js"></script>
 	<script>
+	<%@ include file="/common/js/scriptFooter.page"%>
 
 	$(function(){
 		$("#myRecipeList").DataTable({

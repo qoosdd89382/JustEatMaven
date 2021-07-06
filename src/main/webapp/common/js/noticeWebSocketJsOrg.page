@@ -6,7 +6,6 @@
 		$("#msgRedDot").addClass("-none");
 		$("#msgRedDotSmall").addClass("-none");
 		$(".msgOne").each(function(ele, idx){
-			console.log(ele);
 			if ($(ele).hasClass("-unread")) {
 				console.log($(ele));
 			}			

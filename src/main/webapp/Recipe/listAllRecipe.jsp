@@ -142,6 +142,9 @@
 		</div>	
     </main>
 	
+	<%-- include chatbox --%>
+	<%@ include file="/common/adminChat.page"%>
+	
 	<%-- include footer --%>
 	<footer>
 		<%@ include file="/common/footer.jsp"%>

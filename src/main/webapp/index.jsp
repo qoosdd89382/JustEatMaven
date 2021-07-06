@@ -39,7 +39,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/header.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/common/css/footer.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/common/css/adminChat.css">
+<%-- <link rel="stylesheet" href="<%= request.getContextPath() %>/common/css/adminChat.css"> --%>
 <title>Just Eat 揪食 - 揪團共享美食</title>
 <style>
 
