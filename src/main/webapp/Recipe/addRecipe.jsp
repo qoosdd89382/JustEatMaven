@@ -305,6 +305,9 @@ div.temp_loading{
 		</div>
 	</main>
 
+	<%-- include chatbox --%>
+	<%@ include file="/common/adminChat.page"%>
+	
 	<%-- include footer --%>
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
@@ -322,6 +325,7 @@ div.temp_loading{
 	<script src="<%=request.getContextPath()%>/common/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/common/js/footer.js"></script>
 	<script>
+	<%@ include file="/common/js/scriptFooter.page"%>
 		$(function() {
 			<%@ include file="/Recipe/autoComplCat.file"%>
 			<%@ include file="/Recipe/autoComplIng.file"%>

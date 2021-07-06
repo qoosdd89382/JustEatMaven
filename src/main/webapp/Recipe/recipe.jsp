@@ -186,6 +186,9 @@
 		</div>	
     </main>
 	
+	<%-- include chatbox --%>
+	<%@ include file="/common/adminChat.page"%>
+	
 	<%-- include footer --%>
 	<footer>
 		<%@ include file="/common/footer.jsp"%>
@@ -204,6 +207,7 @@
 <%-- 	<script src="<%=request.getContextPath()%>/Recipe/js/listAllRecipe.js"></script> --%>
 
 	<script>
+	<%@ include file="/common/js/scriptFooter.page"%>
 
 	$(function(){
 
