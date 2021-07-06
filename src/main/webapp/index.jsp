@@ -115,32 +115,34 @@
             <h2><i class="fas fa-pizza-slice"></i> 最新活動</h2>
             <section class="slider_box multiple-item responsive">
             <c:forEach var="eventInfoVO" items="${eventInfoSvc.getSomeNew()}" begin="0" end="5">
-                <div>
-                    <div class="img_outer"><img src="<%= request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}"></div>
-                    <span class="popular shadow">${eventInfoVO.eventCurrentCount} 人</span>
-                    <span class="place shadow">${eventInfoVO.groupCity}</span>
-                    <div class="title">
-                    	<a href="<%= request.getContextPath() %>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVOLogin.accountID}">${eventInfoVO.eventName}</a>
-						<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
-							<span class="badge badge-primary">未開始報名</span>
-						</c:if>	
-						<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
-							<span class="badge badge-warning">報名中</span>
-						</c:if>	
-						<c:if test="${now > eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
-							<span class="badge badge-info">等待進行</span>
-						</c:if>	
-						<c:if test="${now > eventInfoVO.eventStartTime && now < eventInfoVO.eventEndTime}">
-							<span class="badge badge-success">進行中</span>
-						</c:if>	
-                    	<c:if test="${now > eventInfoVO.eventEndTime}">
-							<span class="badge badge-secondary">已結束</span>
-						</c:if>
-                    </div>
-                    <div class="datetime">
-                    	<span class="date"><fmt:formatDate value="${eventInfoVO.eventStartTime}" pattern="yyyy/MM/dd KK:mm"/></span>
-                    </div>
-                </div>
+            	<c:if test="${eventInfoVO.eventState ==1}">
+	                <div>
+	                    <div class="img_outer"><img src="<%= request.getContextPath() %>/Event/EventInfoForOnePic?eventID=${eventInfoVO.eventID}"></div>
+	                    <span class="popular shadow">${eventInfoVO.eventCurrentCount} 人</span>
+	                    <span class="place shadow">${eventInfoVO.groupCity}</span>
+	                    <div class="title">
+	                    	<a href="<%= request.getContextPath() %>/Event/EventDetailReview.jsp?eventID=${eventInfoVO.eventID}&accountID=${accountInfoVOLogin.accountID}">${eventInfoVO.eventName}</a>
+							<c:if test="${now < eventInfoVO.eventRegistartionStartTime}">
+								<span class="badge badge-primary">未開始報名</span>
+							</c:if>	
+							<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
+								<span class="badge badge-warning">報名中</span>
+							</c:if>	
+							<c:if test="${now > eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
+								<span class="badge badge-info">等待進行</span>
+							</c:if>	
+							<c:if test="${now > eventInfoVO.eventStartTime && now < eventInfoVO.eventEndTime}">
+								<span class="badge badge-success">進行中</span>
+							</c:if>	
+	                    	<c:if test="${now > eventInfoVO.eventEndTime}">
+								<span class="badge badge-secondary">已結束</span>
+							</c:if>
+	                    </div>
+	                    <div class="datetime">
+	                    	<span class="date"><fmt:formatDate value="${eventInfoVO.eventStartTime}" pattern="yyyy/MM/dd KK:mm"/></span>
+	                    </div>
+	                </div>
+                </c:if>
             </c:forEach>
             </section>
         </div>
