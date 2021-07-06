@@ -55,7 +55,6 @@
 <section class="sidebar-block">
 	<div class="sidebar-title">
 		<h4>本週熱門收藏</h4>
-		<a class="more" href="<%=request.getContextPath()%>/Recipe/listAllIngredient.jsp">更多 <i class="fas fa-angle-double-right"></i></a>
 	</div>
 	<div class="sidebar">
 			<c:forEach var="favRecipeVO" items="${favListForSidebar}">
@@ -71,7 +70,6 @@
 <section class="sidebar-block">
 	<div class="sidebar-title">
 		<h4>本週最讚</h4>
-		<a class="more" href="<%=request.getContextPath()%>/Recipe/listAllIngredient.jsp">更多 <i class="fas fa-angle-double-right"></i></a>
 	</div>
 	<div class="sidebar">
 			<c:forEach var="thmupRecipeVO" items="${thmupListForSidebar}">

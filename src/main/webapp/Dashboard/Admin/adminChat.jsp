@@ -50,6 +50,7 @@
             font-size: 24px;
             cursor: pointer;
             background-color: #fff;
+            position: relative;
         }
         .friendList .friendName .friendImg {
             width: 40px;
@@ -155,7 +156,16 @@
         #message {
             padding: 10px;
         }
-
+.redDot {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: red;
+    z-index: 12;
+}
 </style>
 </head>
 <body id="page-top">
@@ -347,7 +357,10 @@ $(function(){
 					document.getElementById("area").appendChild(li);
 					messagesArea.scrollTop = messagesArea.scrollHeight;
 				}
-				
+				if (jsonObj.sender != self || $(".statusOutput").find(".friendName").attr("id") != jsonObj.sender) {
+	console.log(jsonObj.sender);
+						$("div#" + jsonObj.sender).find(".redDot").removeClass("-none");
+				}
 			} else if ("close" === jsonObj.type) {
 				console.log("close");
 				refreshFriendList(jsonObj);
@@ -406,6 +419,7 @@ $(function(){
 						if (data != "") {
 							row.innerHTML =
 								'<div id=' + obj.accountID + ' class="friendName row px-1 m-0 mb-2 border-bottom pb-2" name="friendName">' + 
+									'<div class="redDot -none"></div>' + 
 									'<div class="friendImg rounded-circle border">' + 
 									'<img class="border" src="/justeat-maven/Account/Pic/Pic/' + '<c:url value="/Account/Pic/Pic" />' + "/" + obj.accountID + '" alt="">' + 
 				                '</div>' + 
@@ -468,6 +482,9 @@ $(function(){
 						"message" : ""
 					};
 				webSocket.send(JSON.stringify(jsonObj));
+
+				$(".statusOutput").find("img").attr("src", '<c:url value="/Account/Pic/Pic" />' + "/" + e.srcElement.id);
+				$("div#" + e.srcElement.id).find(".redDot").addClass("-none");
 			}
 		});
 	}
