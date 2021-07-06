@@ -121,7 +121,7 @@
 												</form>
                                             </td>
                                             <td>
-	                                            <button type="button" class="btn btn-secondary mt-1 memberList">成員列表</button>
+	                                            <button type="button" class="btn btn-secondary mt-1 memberList" onclick='location.href = "<%=request.getContextPath()%>/Dashboard/Admin/EventMember.jsp?eventID=${eventInfoVO.eventID}"'>成員列表</button>
                                             </td>
                                             <td>
                                             	<label><input type="checkbox" value="${eventInfoVO.eventID}" name="eventID">選取</label>
@@ -211,9 +211,6 @@
     	});    	
     });
     
-    $(".memberList").on("click",function(){
-    	location.href = "<%=request.getContextPath()%>/Dashboard/Admin/EventMember.jsp?eventID=<%=request.getParameter("eventID")%>";
-    });
     </script>
 </body>
 </html>
