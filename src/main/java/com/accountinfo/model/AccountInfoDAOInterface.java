@@ -28,6 +28,8 @@ public interface AccountInfoDAOInterface {
     public AccountInfoVO getAccountLevelByAccountMail(String accountMail);
     public AccountInfoVO getAccountPasswordByAccountMail(String accountMail);
 	public AccountInfoVO getAccountCodeByAccountMail(String accountMail);
+    //用ID找這個會員參加過幾次活動
+    public Integer getParticipationByAccountID(Integer accountID);
 
     
 //會員修改資料用
@@ -52,5 +54,4 @@ public interface AccountInfoDAOInterface {
     		);
     //設定進階會員
     public void setLevelThreeAccountInfoFromRegister(AccountInfoVO accountInfoVO);
-    
 }

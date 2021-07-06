@@ -438,6 +438,8 @@ public class AccountInfoServlet extends HttpServlet {
 			//接收頁面使用者輸入的參數
 				//基本認證
 				String accountPasswordInput = req.getParameter("accountPassword");
+				String accountPasswordRepeatInput = req.getParameter("accountPasswordRepeat");
+				
 //看要不要重新認證密碼輸入
 				String accountNameInput = req.getParameter("accountName");
 				String accountGenderInput = req.getParameter("accountGender");
@@ -456,6 +458,8 @@ public class AccountInfoServlet extends HttpServlet {
 						errorMsgs.put("accountPasswordError","請輸入會員密碼");
 					}else if(!accountPasswordMatcher.matches()){
 						errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
+					}else if (!(accountPasswordInput.equals(accountPasswordRepeatInput))) {
+						errorMsgs.put("accountPasswordRepeatError","與上面密碼不符合");
 					}else {
 						accountPassword = new String(accountPasswordInput);
 					}
@@ -804,6 +808,8 @@ public class AccountInfoServlet extends HttpServlet {
 				String accountNicknameInput = req.getParameter("accountNickname");
 				
 				String accountPasswordInput = req.getParameter("accountPassword");
+				String accountPasswordRepeatInput = req.getParameter("accountPasswordRepeat");
+				
 				String accountNameInput = req.getParameter("accountName");
 				String accountGenderInput = req.getParameter("accountGender");
 				String accountBirthInput = req.getParameter("accountBirth");
@@ -838,6 +844,8 @@ public class AccountInfoServlet extends HttpServlet {
 						errorMsgs.put("accountPasswordError","請輸入會員密碼");
 					}else if(!accountPasswordMatcher.matches()){
 						errorMsgs.put("accountPasswordError","會員密碼格式錯誤");
+					}else if(!(accountPasswordInput.equals(accountPasswordRepeatInput))) {
+						errorMsgs.put("accountPasswordRepeatError","與上面輸入密碼不符合");
 					}else {
 						accountPassword = new String(accountPasswordInput);
 					}

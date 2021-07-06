@@ -154,6 +154,9 @@ public class AccountInfoService {
 	public AccountInfoVO getAccountCodeByAccountMail(String accountMail){
 		return dao.getAccountCodeByAccountMail(accountMail);
 	}
+	public Integer getParticipationByAccountID(Integer accountID){
+		return dao.getParticipationByAccountID(accountID);
+	}
 	
 //review
 //會員修改資料用

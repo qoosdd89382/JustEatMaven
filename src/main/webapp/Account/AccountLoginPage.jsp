@@ -142,7 +142,7 @@ input#account_reset_btn:hover {
 						<span style="color:red">${errorMsgs.get("accountMailError")}</span><br>
 						
 						<span id="text">會員密碼 </span><br>
-						<input id="account_password_input" type="text" name="accountPassword"
+						<input id="account_password_input" type="password" name="accountPassword"
 							value="<%=(accountPassword == null) ? "" : accountPassword%>"
 							placeholder="請輸入...">
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>

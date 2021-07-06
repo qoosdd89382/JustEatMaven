@@ -19,4 +19,12 @@ public class FriendshipService {
 		return dao.getAccountFriendByAccountID(accountID);
 	}
 	
+	public void removeAccountFriendByAccountID(Integer accountID,Integer friendID) {
+		FriendshipVO friendshipVO = new FriendshipVO();
+		friendshipVO.setAccountID(accountID);		
+		friendshipVO.setFriendID(friendID);
+		friendshipVO.setFriendshipState(0);
+		dao.update(friendshipVO);
+	}
+	
 }
