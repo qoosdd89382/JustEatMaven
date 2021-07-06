@@ -107,8 +107,8 @@
 		        	</div>
 	            </div>
 	            <div class="btn_margin">
-	                <input type="button" class="dishInsert" name="" value="菜色新增">
-	                <input type="submit" name="actionInsert" value="菜色確認" class="dishConfirm">
+	                <input type="button" class="dishInsert btn btn-secondary" name="" value="菜色新增">
+	                <input type="submit" name="actionInsert" value="菜色確認" class="dishConfirm btn btn-secondary">
 	            </div>
 	        </div>
 	        <div class="insert_content_right col-6 col-lg-6">

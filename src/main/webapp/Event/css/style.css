@@ -184,10 +184,15 @@ textarea {
     box-sizing: border-box;
 }
 .borderforMenu{
- margin:5px;
+ margin:5px auto;
 }
 
 .borderforMenu th,td{
  border:1px solid black;
  border-collapse: collapse;
+ width:200px;
+}
+.menuBtn{
+	position:absolute;
+	right:0px;
 }

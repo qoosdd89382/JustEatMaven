@@ -44,6 +44,7 @@
 	request.getAttribute("errorMsgs");
 	
 	String dishAndIngJson = request.getParameter("dishAndIngJson");
+	System.out.println(dishAndIngJson);
 	String replaceDishAndIngJson = null;
 	if(dishAndIngJson!=null){
 		replaceDishAndIngJson = dishAndIngJson.replaceAll("\"","&quot;");
@@ -180,25 +181,25 @@
 			          		<input class="cuisineCatAutoInput" type="hidden" name="cuisineCatID" value="<%= (cuisineCatID==null)?"":cuisineCatID %>">
 			    </div>
 	            <div>
-	            	上傳活動圖片:<input type="file" name="eventPic" id="uploadEventImg">
+	            	上傳活動圖片:<input type="file" name="eventPic" id="uploadEventImg" class="">
 	            </div>
 	            <div id="preview_img">
 	            </div>
 	            <div>
 	            	<%
-	            		if(dishAndIngJson==null || dishAndIngJson.length()==2){ 
+	            		if(dishAndIngJson==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){ 
 	            	%>
-	               			<input type="submit" name="action" value="新增菜色" class="insertDish">
+	               			<input type="submit" name="action" value="新增菜色" class="insertDish btn btn-secondary">
 	                <%
 	            		}else{
 	                %>	
-	                		<input type="submit" name="action" value="重新新增菜色" class="insertDish">
+	                		<input type="submit" name="action" value="重新新增菜色" class="insertDish btn btn-secondary">
 	                <%
 	            		}
 	                %>
 <!-- 	                <input type="submit" name="action" value="邀請好友"> -->
-	                <input type="submit" name="action" value="取消建立">
-	                <input type="submit" name="action" value="確定建立" class="confirmCreate">
+	                <input type="submit" name="action" value="取消建立 " class="btn btn-secondary">
+	                <input type="submit" name="action" value="確定建立" class="confirmCreate btn btn-secondary">
 	            </div>
 	        </div>
 		    <div class="info col-6 col-lg-6">

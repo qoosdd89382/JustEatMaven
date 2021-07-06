@@ -93,7 +93,7 @@
 	            </div>
 	            <div>
 	            	<%
-	            		if(dishAndIngJson==null || dishAndIngJson.length()==2){ 
+	            		if(dishAndIngJson==null || dishAndIngJson.length()==2 || dishAndIngJson.isEmpty()){ 
 	            	%>
 	               			<input type="submit" name="actionJoin" value="新增菜色">
 	                <%
