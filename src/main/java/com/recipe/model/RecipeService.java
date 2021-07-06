@@ -99,9 +99,13 @@ public class RecipeService {
 //	public InputStream getOneTopPic(int recipeID) {
 //		return recipeDAO.getOnePicByPK(recipeID);
 //	}
-	
+
 	public List<RecipeVO> getAll() {
 		return recipeDAO.getAll();
+	}
+
+	public List<RecipeVO> getAll(String sqlStatement) {
+		return recipeDAO.getAll(sqlStatement);
 	}
 	
 

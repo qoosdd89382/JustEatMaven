@@ -2,6 +2,9 @@ package com.favoriterecipe.model;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+
+import com.recipe.model.RecipeVO;
 
 public interface FavoriteRecipeDAOInterface {
 
@@ -20,5 +23,6 @@ public interface FavoriteRecipeDAOInterface {
 	public List<FavoriteRecipeVO> getAllByAccount(int accountID);
 	public List<FavoriteRecipeVO> getAllByRecipe(int favRecipeID);
 	public int countAllByRecipe(int favRecipeID);
+	public List<FavoriteRecipeVO> getAllByCountInDays(int days, int limit);
 
 }

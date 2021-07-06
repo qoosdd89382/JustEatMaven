@@ -30,6 +30,7 @@ public interface RecipeDAOInterface {
 	// 刪除食譜的料理分類、食材標籤會在關聯處理(join表controller做)
 	
 	public List<RecipeVO> getAll();
+	public List<RecipeVO> getAll(String sqlStatement);
 	public List<RecipeVO> getAll(Map<String, String[]> map);
 
 	public List<RecipeVO> getSomeNew();

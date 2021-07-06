@@ -34,7 +34,13 @@ public class FavoriteRecipeJDBCDAO implements FavoriteRecipeDAOInterface {
 	private static final String SELECT_ALL_BY_ACCOUNT = "SELECT * FROM FavoriteRecipe WHERE account_id = ? ORDER BY fav_time DESC";
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM FavoriteRecipe WHERE fav_recipe_id = ? ORDER BY fav_time DESC";
 	private static final String COUNT_ALL_BY_RECIPE = "SELECT COUNT(*) FROM FavoriteRecipe WHERE fav_recipe_id = ?";
-
+	private static final String SELECT_ALL_IN_TIME = 
+			"SELECT fav_recipe_id, COUNT(*) as count " + 
+			"FROM JustEat.FavoriteRecipe " + 
+			"WHERE TO_DAYS(NOW()) - TO_DAYS(fav_time) <= ? " + 
+			"GROUP BY fav_recipe_id " + 
+			"ORDER BY count DESC LIMIT ?";
+	
 	@Override
 	public int insert(FavoriteRecipeVO favoriteRecipe) {
 		Connection con = null;
@@ -426,6 +432,58 @@ public class FavoriteRecipeJDBCDAO implements FavoriteRecipeDAOInterface {
 
 		}
 		return count;
+	}
+
+	@Override
+	public List<FavoriteRecipeVO> getAllByCountInDays(int days, int limit){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<FavoriteRecipeVO> allFavoriteRecipe = new ArrayList<FavoriteRecipeVO>();
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(SELECT_ALL_IN_TIME);
+
+			pstmt.setInt(1, days);
+			pstmt.setInt(2, limit);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				FavoriteRecipeVO favoriteRecipe = new FavoriteRecipeVO();
+				favoriteRecipe.setFavRecipeID(rs.getInt("fav_recipe_id"));
+				favoriteRecipe.setTempCount(rs.getInt("count"));
+				allFavoriteRecipe.add(favoriteRecipe);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return allFavoriteRecipe;
 	}
 
 }
