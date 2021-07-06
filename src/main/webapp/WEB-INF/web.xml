@@ -36,7 +36,7 @@
 		<!--活動 -->
 		<url-pattern>/Event/ConfirmJoin.jsp</url-pattern>
 		<url-pattern>/Event/CreateEvent.jsp</url-pattern>
-		
+		<url-pattern>/Event/MyEvent.jsp</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
@@ -53,7 +53,7 @@
 		<!--活動 -->
 		<url-pattern>/Event/ConfirmJoin.jsp</url-pattern>
 		<url-pattern>/Event/CreateEvent.jsp</url-pattern>
-		
+		<url-pattern>/Event/MyEvent.jsp</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
