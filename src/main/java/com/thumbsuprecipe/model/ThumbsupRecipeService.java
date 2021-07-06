@@ -45,4 +45,9 @@ public class ThumbsupRecipeService {
 	public int countAllByRecipe(int thmupRecipeID) {
 		return dao.countAllByRecipe(thmupRecipeID);
 	}
+	
+	public List<ThumbsupRecipeVO> getAllByCountInDays(int days, int limit) {
+		return dao.getAllByCountInDays(days, limit);
+	}
+	
 }

@@ -42,17 +42,39 @@
 .sidebar-block a.more:hover {
 	color: #2F2F2F;
 }
-
-sidebar-list > ol{
+}
+.sidebar-list > ol {
 	list-style-type: decimal!important;
 }
-
-
 
 .sidebar {
 	padding: 0!important;
 	
 }
-.mostFavRecipe {
+.mostFavRecipe span {
+	display:inline-block;
+}
+a.mostFavRecipe {
 	display: block;
+}
+
+a.mostFavRecipe:hover {
+	background: #fffce8;
+	color: #222;
+}
+
+.favRecipe {
+	font-size: 20px;
+}
+.favRecipeCount {
+    width: 24px;
+    color: white;
+    height: 24px;
+    background: #FFAE82;
+    text-align: center;
+    border-radius: 50%;
+	color: #333;
+}
+.favRecipeAuthor {
+	color: #666;
 }
