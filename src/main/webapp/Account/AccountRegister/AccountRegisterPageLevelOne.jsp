@@ -145,12 +145,19 @@ textarea#textarea {
 					
 					
 					<span style="color:red">*</span><span>請輸入會員密碼:</span><br>
-					<input id="input_box" type="text" name="accountPassword" 
+					<input id="input_box" type="password" name="accountPassword" 
 					class='${errorMsgs.get("accountPasswordError") == null ? "": "border-danger"}'
 					value="<%=(accountInfoVO.getAccountPassword() == null) ? "" : accountInfoVO.getAccountPassword()%>"
 					placeholder="至少8~16碼任意大小寫英文數字"><br>
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 
+					<span style="color:red">*</span><span>請再次輸入會員密碼:</span><br>
+					<input id="input_box" type="password" name="accountPasswordRepeat" 
+					class='${errorMsgs.get("accountPasswordRepeatError") == null ? "": "border-danger"}'
+					value="<%=(accountInfoVO.getAccountPassword() == null) ? "" : accountInfoVO.getAccountPassword()%>"
+					placeholder="至少8~16碼任意大小寫英文數字"><br>
+					<span style="color:red">${errorMsgs.get("accountPasswordRepeatError")}</span><br>
+					
 					<span style="color:red">*</span><span>請輸入會員姓名:</span><br> 
 					<input id="input_box" type="text" name="accountName" 
 					class='${errorMsgs.get("accountNameError") == null ? "": "border-danger"}'

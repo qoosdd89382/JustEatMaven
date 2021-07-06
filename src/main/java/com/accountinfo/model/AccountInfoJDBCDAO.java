@@ -72,6 +72,8 @@ public class AccountInfoJDBCDAO implements AccountInfoDAOInterface {
 	private static final String Select_Account_Level_By_AccountMail = "Select account_level From JustEat.AccountInfo Where account_mail=?";
 	private static final String Select_Account_Password_By_AccoutMail = "Select account_password From JustEat.AccountInfo Where account_mail=?";
 	private static final String select_Account_Code_By_AccountMail = "Select account_code From JustEat.AccountInfo Where account_mail=?";
+    //用ID找這個會員參加過幾次活動
+	private static final String select_Event_Participation_By_AccountID = "SELECT count(*) FROM JustEat.EventMember where account_id=?";
 	
 	//會員修改資料用
 	private static final String Update_Account_Info_From_Change = "Update JustEat.AccountInfo set "
@@ -930,6 +932,54 @@ public void activeAccountInfo(Integer accountID) {
 			}
 		}
 		return accountInfoVO;
+	}	
+	
+	@Override
+	//輸入 信箱值 回傳 含密碼 的 VO物件 = 資料庫有該會員，用來確認輸入密碼是否符合資料庫
+	public Integer getParticipationByAccountID(Integer accountID) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AccountInfoVO accountInfoVO = null;
+		Integer count = 0;
+		
+		try {
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(select_Event_Participation_By_AccountID);
+			
+			pstmt.setInt(1, accountID);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				count++;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();					
+				}catch(Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return count;
 	}
 	
 	@Override

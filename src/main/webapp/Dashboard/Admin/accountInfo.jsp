@@ -168,6 +168,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) request.getAttribute("accountInfoV
      </label>
     <select name="accountLevel" class="custom-select">
 	    <option value='3' ${accountInfoVO.accountLevel == 3 ? "selected":""}>特權會員</option>
+	   	<option value='2' ${accountInfoVO.accountLevel == 2 ? "selected":""}>一般會員(待審核)</option>
 	    <option value='1' ${accountInfoVO.accountLevel == 1 ? "selected":""}>一般會員</option>
     </select>
    </div>

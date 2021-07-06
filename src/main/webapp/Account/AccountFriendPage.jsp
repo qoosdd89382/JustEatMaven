@@ -4,15 +4,21 @@
 
 <%@ page import="java.util.*"%>
 <%@ page import="com.accountinfo.model.*"%>
+<%@ page import="com.recipe.model.*"%>
 <%@ page import="com.friendship.model.*"%>
 
+<jsp:useBean id="recipeSvc" scope="page" class= "com.recipe.model.RecipeService"/>
+<jsp:useBean id="accountInfoSvc" scope="page" class= "com.accountinfo.model.AccountInfoService"/>
+<jsp:useBean id="friendshipSvc" scope="page" class= "com.friendship.model.FriendshipService"/>
+
 <%
-FriendshipService friendshipSvc = new FriendshipService();
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin");
 List<AccountInfoVO> list =  friendshipSvc.getAccountFriendByAccountID(accountInfoVO.getAccountID());
 pageContext.setAttribute("list",list);
 
 Integer accountID = accountInfoVO.getAccountID();
+
+List<RecipeVO> listRecipe = recipeSvc.getAllByWriter(accountInfoVO.getAccountID());
 
 
 %>
@@ -48,7 +54,22 @@ body#body_friend{
 div#main_block{
 	margin-top:150px;
 }
-
+div#account_friend_area table{
+	text-align:center;
+	border:2px solid white;
+}
+div#account_friend_area table tbody th{
+	text-align:center;
+	padding:15px;
+	font-size:15px;
+	
+}
+div#account_friend_area table tbody tr{
+	text-align:center;
+	border:1px solid white;
+	padding:20px;
+	font-size:20px;
+}
 
 div#account_friend_area{;
 	background-color: rgba(0,0,0,0.6);
@@ -114,6 +135,23 @@ div#function_select_area_button a:active {
    position: relative;
    }
 
+button#friend_delete_btn{
+	margin:5px;
+	border:none;
+	-webkit-border-radius: 20;
+	-moz-border-radius: 20;
+	border-radius: 20px;
+	color: #ffffff;
+	font-size: 15px;
+	background: 	#FF8800;
+	padding: 5px 15px 5px 15px;
+	text-decoration: none;
+}
+button#friend_delete_btn:hover{
+	background:#FFAA33;
+	text-decoration: none;
+}
+
 
 </style>
 </head>
@@ -157,11 +195,24 @@ div#function_select_area_button a:active {
 				<table>
 					<tr>
 						<th>會員暱稱</th>
+						<th>會員食譜發布數</th>
+						<th>會員活動參加數</th>
 					</tr>			
+					
 				<%@ include file="ListTop.file"%> 
-					<c:forEach var="accountInfoVO" items="${friendshipVO}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+					<c:forEach var="accountInfoVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 						<tr>
 							<td>${accountInfoVO.accountNickname}</td>
+							<td>${recipeSvc.getAllByWriter(accountInfoVO.accountID).size()}</td>
+							<td>${accountInfoSvc.getParticipationByAccountID(accountInfoVO.accountID)}</td>
+							<td>
+							<form method="post" action="<%=request.getContextPath()%>/Account/friendship.do" style="margin-bottom: 0px;">
+							     <input type="hidden" name="accountID"  value="<%=accountInfoVO.getAccountID()%>">
+							     <input type="hidden" name="friendID"  value="${accountInfoVO.accountID}">
+							     <input type="hidden" name="action" value="removeFriendship">
+							     <button id="friend_delete_btn" type="submit">刪除</button>
+							</form>
+							</td>
 						</tr>
 					</c:forEach>
 				</table>

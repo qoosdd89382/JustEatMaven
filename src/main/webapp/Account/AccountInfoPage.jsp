@@ -75,7 +75,7 @@ div#account_welcom{
 }
 /* 用戶名稱 */
 div#account_info_area_title{
-	margin:5px;
+	margin:20px;
 	text-align:center;
 }
 /* 按鈕位置 */
@@ -153,8 +153,8 @@ div#function_select_area_button a:active {
    position: relative;
    }
 /* 修改資料 登出按鈕 */
-input#account_change_info,
-input#account_logout {
+button#account_change_info,
+button#account_logout {
 	margin:5px;
 	border:none;
 	-webkit-border-radius: 20;
@@ -166,10 +166,39 @@ input#account_logout {
 	padding: 5px 15px 5px 15px;
 	text-decoration: none;
 }
-input#account_change_info:hover,
-input#account_logout:hover {
+button#account_change_info:hover,
+button#account_logout:hover {
 	background:#FFAA33;
 	text-decoration: none;
+}
+div#account_food_area{
+	text-align:center;
+	
+	margin:20px; 
+	
+	border:1px solid orange;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+span#text_title_main{
+	color: 	#FF8800;
+	font-size:40px !important;
+}
+span#text_title{
+	color: 	#FF8800;
+	font-size:25px;
+	margin:15px;
+	margin-left:100px !important;
+}
+span#text_content{
+	font-size:25px;
+	margin:5px !important;
+}
+span#text_title_2{
+	color: 	#FF8800 ;
+	font-size:25px;
 }
 
 </style>
@@ -220,68 +249,77 @@ input#account_logout:hover {
 			
 		<div class="row justify-content-center">
 			
-			<div id="account_info_area" class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6 align-self-center" >
+			<div id="account_info_area" class="col-10 col-sm-10 col-md-8 col-lg-8 col-xl-8 align-self-center" >
 			
 				<div id="account_info_area_title">
-					<span style="text-align:center">用戶  ${accountInfoVOLogin.accountNickname}</span><br>
+					<span style="text-align:center">用戶</span><span id="text_title_main">${accountInfoVOLogin.accountNickname}</span>
 					<span style="text-align:center">以下是您的資料</span><br>				
 				</div>
 				
-				<span>用戶信箱:${accountInfoVOLogin.accountMail}</span><br>
-				<span>用戶暱稱:${accountInfoVOLogin.accountNickname}</span><br>
-				<span>用戶層級:${(accountInfoVOLogin.accountLevel==1?"一般會員":"特權會員")}</span><br>
-				<span>用戶名稱:${accountInfoVOLogin.accountName}</span><br>
-				<span>用戶性別:${(accountInfoVOLogin.accountGender==1?"男":"女")}</span><br>
-				<span>用戶生日:${accountInfoVOLogin.accountBirth}</span><br>
-				<span>用戶電話:${accountInfoVOLogin.accountPhone}</span><br>
+				<span id="text_title">用戶信箱:</span><span id="text_content">${accountInfoVOLogin.accountMail}</span><br>
+				<span id="text_title">用戶暱稱:</span><span id="text_content">${accountInfoVOLogin.accountNickname}</span><br>
+				
+				<c:if test="${accountInfoVOLogin.accountLevel==1}">
+					<span id="text_title">用戶層級:</span><span id="text_content">一般會員</span><br>				
+				</c:if>
+				<c:if test="${accountInfoVOLogin.accountLevel==2}">
+					<span id="text_title">用戶層級:</span><span id="text_content">一般會員(待審核)</span><br>				
+				</c:if>
+				<c:if test="${accountInfoVOLogin.accountLevel==3}">
+					<span id="text_title">用戶層級:</span><span id="text_content">特權會員</span><br>				
+				</c:if>
+				
+				<span id="text_title">用戶名稱:</span><span id="text_content">${accountInfoVOLogin.accountName}</span><br>
+				<span id="text_title">用戶性別:</span><span id="text_content">${(accountInfoVOLogin.accountGender==1?"男":"女")}</span><br>
+				<span id="text_title">用戶生日:</span><span id="text_content">${accountInfoVOLogin.accountBirth}</span><br>
+				<span id="text_title">用戶電話:</span><span id="text_content">${accountInfoVOLogin.accountPhone}</span><br>
+				
+				<br>
 				
 				<div id="account_picture">
-					<span>用戶照片:</span><br>					
+					<span id="text_title_2">用戶照片:</span><br>					
 					<img src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
 						
-					<span>用戶身分證正面:</span><br>
+					<span id="text_title_2">用戶身分證正面:</span><br>
 					<img src="<%=request.getContextPath()%>/Account/Pic/Front/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
 					
-					<span>用戶身分證背面:</span><br>
+					<span id="text_title_2">用戶身分證背面:</span><br>
 					<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
 				</div>
 				
-				<div id="account_name">
-				<span>用戶喜歡的食材</span>
+				<div id="account_food_area">
+				<span id="text_title_2">用戶喜歡的食材</span>
 					<c:forEach var="LikeIngredientVO" items="${likeIngredientVOs}">
-						<div>${ingredientSvc.getOneIngredient(LikeIngredientVO.likeIngredientID).ingredientName}</div>
+						<div id="account_food">${ingredientSvc.getOneIngredient(LikeIngredientVO.likeIngredientID).ingredientName}</div>
 					</c:forEach>
 				</div>
 				
-				<div id="account_name">
-				<span>用戶討厭的食材</span>
+				<div id="account_food_area">
+				<span id="text_title_2">用戶討厭的食材</span>
 					<c:forEach var="DislikeIngredientVO" items="${dislikeIngredientVOs}">
-						<div>${ingredientSvc.getOneIngredient(DislikeIngredientVO.dislikeIngredientID).ingredientName}</div>
+						<div id="account_food">${ingredientSvc.getOneIngredient(DislikeIngredientVO.dislikeIngredientID).ingredientName}</div>
 					</c:forEach>
 				</div>
 							
-				<div id="account_name">
-					<span>用戶自我介紹:<br>${accountInfoVOLogin.accountText}</span><br>
+				<div id="account_food_area">
+					<span id="text_title_2">用戶自我介紹:<br></span>${accountInfoVOLogin.accountText}<br>
 				</div>
 				
-				<br>
-				<div id="account_name">
-				<span>用戶註冊時間:${accountInfoVOLogin.accountRegisterTime}</span><br>
+				<div id="account_food_area">
+				<span id="text_title_2">用戶註冊時間:</span><br>${accountInfoVOLogin.accountRegisterTime}<br>
 				</div>
 				
-				<div>
+			<div id="accountInfo_btn" style="text-align:center;">
 				<form method="post" action="accountInfo.do">
 					<input type="hidden" name="action" value="gotoAccountChangePage">
-					<input id="account_change_info" type="submit" value="修改我的會員資料">	
+					<button id="account_change_info" type="submit">修改我的會員資料</button>	
 				</form>
-				</div>
 
-				<div>
-				<form method="post" action="accountInfo.do">
+				<form method="post" action="accountInfo.do" >
 					<input type="hidden" name="action" value="getAccountLogout">
-					<input id="account_logout" type="submit" value="登出帳戶">						
+					<button id="account_logout" type="submit">登出帳戶</button>						
 				</form>
-				</div>				
+			</div>				
 			
 			</div>
 		

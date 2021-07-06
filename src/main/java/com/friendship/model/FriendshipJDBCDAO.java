@@ -20,8 +20,8 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 			+ "Values(?,?,?)";
 
 	private static final String Update_Stmt = "Update Friendship set "
-			+ "friendship_state=?"
-			+ "Where account_id=? && friend_id=?";
+			+ "friendship_state=? Where account_id=? && friend_id=?";
+
 	private static final String Delete_Stmt = "Delete From Friendship Where account_id=? && friend_id=?";
 	private static final String Select_Key_Stmt = "Select * From JustEat.Friendship Where account_id=?";
 	private static final String Select_All_Stmt = "Select * From JustEat.Friendship";
@@ -31,7 +31,7 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 	
 	//透過session裡面的accountmail找他相關的好友暱稱
 	private static final String Select_Account_Friendship_By_AccountID = 
-			"Select account_nickname From JustEat.AccountInfo where "//用ID找暱稱
+			"Select * From JustEat.AccountInfo where "//用ID找暱稱
 			+ "account_id in (SELECT friend_id From JustEat.Friendship where "//找那些符合條件FriendID
 			+ "account_id = (select account_id From JustEat.AccountInfo where "//找那些跟session的accountmail有好友關係的friendID
 			+ "account_id=?) && friendship_state=1);";
@@ -316,6 +316,7 @@ public class FriendshipJDBCDAO implements FriendshipDAOInterface {
 			while (rs.next()) {
 				friendshipVO = new AccountInfoVO();
 				friendshipVO.setAccountNickname(rs.getString("account_nickname"));
+				friendshipVO.setAccountID(rs.getInt("account_id"));
 				
 				list.add(friendshipVO);
 			}

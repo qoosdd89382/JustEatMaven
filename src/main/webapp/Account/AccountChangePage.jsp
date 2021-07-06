@@ -44,7 +44,7 @@ body#body_change{
 
 /*整個區塊 */
 div#main_area{
-	margin-top:80px;
+	margin-top:100px;
 }
 div#change_area{
 	text-align:center;
@@ -158,7 +158,7 @@ div#account_idcardback_preview img.preview_img
 		<%@ include file="/common/header.jsp"%>
 	</header>
 
-	<div class="container">
+	<div id="main_area" class="container">
 	
 		<div class="row justify-content-center">
 		
@@ -175,8 +175,12 @@ div#account_idcardback_preview img.preview_img
 					<br>
 					
 					<span id="text_title">會員密碼:</span><br> 
-					<input type="text" name="accountPassword" value="${accountInfoVOLogin.accountPassword}"><br>
+					<input type="password" name="accountPassword" value="${accountInfoVOLogin.accountPassword}"><br>
 					<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
+
+					<span id="text_title">請再次確認會員密碼:</span><br> 
+					<input type="password" name="accountPasswordRepeat" value="${accountInfoVOLogin.accountPassword}"><br>
+					<span style="color:red">${errorMsgs.get("accountPasswordRepeatError")}</span><br>
 
 					<span id="text_title">會員姓名:</span><br>
 					<input type="text" name="accountName" value="${accountInfoVOLogin.accountName}"><br>
