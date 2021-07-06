@@ -39,7 +39,7 @@
 
 	Timestamp now = new Timestamp(System.currentTimeMillis());
 	for (EventMemberVO vo : eventMemberList) {
-		if (now.after( eventInfoSvc.getEventID(vo.getEventID()).getEventRegistartionEndTime() )
+		if ( now.after(eventInfoSvc.getEventID(vo.getEventID()).getEventStartTime())
 				&& vo.getParticipationState() == 1) {
 			eventMemberSvc.deleteEventMember(vo.getEventID(), vo.getAccountID());
 		}
