@@ -44,6 +44,22 @@
 		<dispatcher>ASYNC</dispatcher>
 	</filter-mapping>
 	
+	<filter>
+		<filter-name>AccountLevelFilter</filter-name>
+		<filter-class>com.filter.controller.AccountLevelFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AccountLevelFilter</filter-name>
+		<!--活動 -->
+		<url-pattern>/Event/ConfirmJoin.jsp</url-pattern>
+		<url-pattern>/Event/CreateEvent.jsp</url-pattern>
+		
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+		<dispatcher>ASYNC</dispatcher>
+	</filter-mapping>
 	
 	<servlet>
 		<servlet-name>DashboardServlet</servlet-name>

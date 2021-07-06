@@ -268,6 +268,7 @@ span#text_title_2{
 				<c:if test="${accountInfoVOLogin.accountLevel==3}">
 					<span id="text_title">用戶層級:</span><span id="text_content">特權會員</span><br>				
 				</c:if>
+				<span id="text_title" style="color:red">${errorMsgs.get("accountLevelFromEventError")}</span><br>
 				
 				<span id="text_title">用戶名稱:</span><span id="text_content">${accountInfoVOLogin.accountName}</span><br>
 				<span id="text_title">用戶性別:</span><span id="text_content">${(accountInfoVOLogin.accountGender==1?"男":"女")}</span><br>
