@@ -1049,6 +1049,62 @@ public class RecipeJDBCDAO implements RecipeDAOInterface {
 				+ " UNION SELECT * FROM Recipe "
 				+ whereCondition2.toString();
 	}
+
+	@Override
+	public List<RecipeVO> getAll(String sqlStatement) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<RecipeVO> allRecipe = new ArrayList<RecipeVO>();
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(SELECT_ALL + sqlStatement);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				RecipeVO recipe = new RecipeVO();
+				recipe.setRecipeID(rs.getInt("recipe_id"));
+				recipe.setRecipeName(rs.getString("recipe_name"));
+				recipe.setRecipeIntroduction(rs.getString("recipe_introduction"));
+				recipe.setRecipePicTop(rs.getBytes("recipe_pic_top"));
+				recipe.setRecipeServe(rs.getInt("recipe_serve"));
+				recipe.setRecipeTime(rs.getTimestamp("recipe_time"));
+				recipe.setRecipeViewCount(rs.getInt("recipe_view_count"));
+				recipe.setAccountID(rs.getInt("account_id"));
+				allRecipe.add(recipe);
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return allRecipe;
+	}
 	
 	
 	

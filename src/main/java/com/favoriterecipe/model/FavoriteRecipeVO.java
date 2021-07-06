@@ -9,10 +9,19 @@ public class FavoriteRecipeVO implements Serializable {
 	private Integer accountID;
 	private Integer favRecipeID;
 	private Timestamp favTime;
+	private Integer tempCount;
 	// 是否有必要新增 "加入時間"
 
 	public FavoriteRecipeVO() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getTempCount() {
+		return tempCount;
+	}
+
+	public void setTempCount(Integer tempCount) {
+		this.tempCount = tempCount;
 	}
 
 	public Integer getAccountID() {

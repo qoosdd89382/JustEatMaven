@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-.sidebar {
+.sidebar.row {
 	padding: 0 15px !important;
 }
 
@@ -45,4 +45,14 @@
 
 sidebar-list > ol{
 	list-style-type: decimal!important;
+}
+
+
+
+.sidebar {
+	padding: 0!important;
+	
+}
+.mostFavRecipe {
+	display: block;
 }
