@@ -202,7 +202,9 @@ button#friend_delete_btn:hover{
 				<%@ include file="ListTop.file"%> 
 					<c:forEach var="accountInfoVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 						<tr>
-							<td>${accountInfoVO.accountNickname}</td>
+							<td>
+								<a href="${pageContext.request.contextPath}/Recipe/recipe.do?action=myRecipe&id=${accountInfoVO.accountID}">${accountInfoVO.accountNickname}</a>
+							</td>
 							<td>${recipeSvc.getAllByWriter(accountInfoVO.accountID).size()}</td>
 							<td>${accountInfoSvc.getParticipationByAccountID(accountInfoVO.accountID)}</td>
 							<td>
