@@ -130,7 +130,7 @@
 				
 				<div class="info col-12 col-lg-8 margin-top">
 					<div class="head"><h3>食譜介紹</h3></div>
-					<div class="intro">
+					<div  class="rounded intro">
 						<div class="intro-text">${recipeVO.recipeIntroduction}</div>
 					</div>
 				</div>
@@ -138,9 +138,9 @@
 				
 				<div class="category col-12 col-lg-4 margin-top">
 					<div class="head"><h3>食譜料理分類</h3></div>
-					<div class="list">
+					<div  class="rounded list">
 						<c:forEach var="recipeCatVO" items="${recipeCatList}">
-							<span><a href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByCategory&id=${recipeCatVO.cuisineCategoryID}">${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</a></span>
+							<span class="rounded"><a href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByCategory&id=${recipeCatVO.cuisineCategoryID}">${categorySvc.getOneCategory(recipeCatVO.cuisineCategoryID).cuisineCategoryName}</a></span>
 						</c:forEach>
 					</div>
 				</div>	
@@ -149,7 +149,7 @@
 					<div class="head"><h3>食譜食材</h3>本食譜可供 <span> ${recipeVO.recipeServe} </span> 人享用</div>
 					<div class="list">
 						<c:forEach var="recipeIngUnitVO" items="${recipeIngUnitList}">
-						<div class="data row">
+						<div class="data row rounded">
 							<div class="col-6">
 								<a class="" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${recipeIngUnitVO.ingredientID}">${ingredientSvc.getOneIngredient(recipeIngUnitVO.ingredientID).ingredientName}</a></div> 
 <%-- 							<div class="col-3">${recipeIngUnitVO.unitAmount} </div> --%>
@@ -165,7 +165,7 @@
 				<div class="step col-12 margin-top">
 					<div class="head"><h3>食譜製作步驟</h3></div>
 					<c:forEach var="RecipeStepVO" items="${RecipeStepList}">
-						<div class="recipe row" data-id="${RecipeStepVO.recipeStepID}">
+						<div class="recipe row mr-1" data-id="${RecipeStepVO.recipeStepID}">
 							<div class="order col-3 col-xl-2 vertical-container"><span>${RecipeStepVO.recipeStepOrder}</span></div>
 <%-- 							<div class="text col-9 col-xl-4 vertical-container">${RecipeStepVO.recipeStepText}</div> --%>
 							<div class="text col-9 col-xl-4 border rounded m-0 p-2">${RecipeStepVO.recipeStepText}</div>

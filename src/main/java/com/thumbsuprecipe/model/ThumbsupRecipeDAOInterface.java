@@ -3,6 +3,8 @@ package com.thumbsuprecipe.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.favoriterecipe.model.FavoriteRecipeVO;
+
 
 public interface ThumbsupRecipeDAOInterface {
 	
@@ -14,4 +16,5 @@ public interface ThumbsupRecipeDAOInterface {
 	public List<ThumbsupRecipeVO> getAllByAccount(int accountID);
 	public List<ThumbsupRecipeVO> getAllByRecipe(int thmupRecipeID);
 	public int countAllByRecipe(int thmupRecipeID);
+	public List<ThumbsupRecipeVO> getAllByCountInDays(int days, int limit);
 }

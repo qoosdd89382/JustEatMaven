@@ -9,6 +9,7 @@ public class ThumbsupRecipeVO implements Serializable {
 	private Integer accountID;
 	private Integer thmupRecipeID;
 	private Timestamp thmupTime;
+	private Integer tempCount;
 	
 	public Integer getAccountID() {
 		return accountID;
@@ -36,6 +37,14 @@ public class ThumbsupRecipeVO implements Serializable {
 
 	public ThumbsupRecipeVO() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getTempCount() {
+		return tempCount;
+	}
+
+	public void setTempCount(Integer tempCount) {
+		this.tempCount = tempCount;
 	}
 
 }

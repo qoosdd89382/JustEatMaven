@@ -33,13 +33,15 @@ div {
 .recipe-block {
     position: relative;
 	margin: 0 8px 60px 7px;
-    box-shadow: 0 0 5px rgba(252, 146, 76, 0.6);
-/*     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(252, 146, 76, 0.6); */
+/*     box-shadow: 0 0 5px rgba(252, 146, 76, 0.6); */
 	font-size: 20px;
+	border: 1px solid #dee2e6!important;
+	border-radius: 7px;
 }
 
 .mouseenter {
-    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.01), 0 0 8px rgba(252, 146, 76, 0.8)!important;
+/*     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.01), 0 0 8px rgba(252, 146, 76, 0.8)!important; */
+	border: 1px solid #ffccb0!important;
 }
 
 /* div.recipe-block a { */

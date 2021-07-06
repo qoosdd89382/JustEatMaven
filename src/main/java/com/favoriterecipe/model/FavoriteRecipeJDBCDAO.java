@@ -36,7 +36,7 @@ public class FavoriteRecipeJDBCDAO implements FavoriteRecipeDAOInterface {
 	private static final String COUNT_ALL_BY_RECIPE = "SELECT COUNT(*) FROM FavoriteRecipe WHERE fav_recipe_id = ?";
 	private static final String SELECT_ALL_IN_TIME = 
 			"SELECT fav_recipe_id, COUNT(*) as count " + 
-			"FROM JustEat.FavoriteRecipe " + 
+			"FROM FavoriteRecipe " + 
 			"WHERE TO_DAYS(NOW()) - TO_DAYS(fav_time) <= ? " + 
 			"GROUP BY fav_recipe_id " + 
 			"ORDER BY count DESC LIMIT ?";

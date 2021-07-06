@@ -33,6 +33,12 @@ public class ThumbsupRecipeJDBCDAO implements ThumbsupRecipeDAOInterface {
 	private static final String SELECT_ALL_BY_ACCOUNT = "SELECT * FROM ThumbsupRecipe WHERE account_id = ? ORDER BY thmup_time DESC";
 	private static final String SELECT_ALL_BY_RECIPE = "SELECT * FROM ThumbsupRecipe WHERE thmup_recipe_id = ? ORDER BY thmup_time DESC";
 	private static final String COUNT_ALL_BY_RECIPE = "SELECT COUNT(*) FROM ThumbsupRecipe WHERE thmup_recipe_id = ?";
+	private static final String SELECT_ALL_IN_TIME = 
+			"SELECT thmup_recipe_id, COUNT(*) as count " + 
+			"FROM ThumbsupRecipe " + 
+			"WHERE TO_DAYS(NOW()) - TO_DAYS(thmup_time) <= ? " + 
+			"GROUP BY thmup_recipe_id " + 
+			"ORDER BY count DESC LIMIT ?";
 	
 	@Override
 	public int insert(ThumbsupRecipeVO thumbsupRecipe) {
@@ -387,5 +393,59 @@ public class ThumbsupRecipeJDBCDAO implements ThumbsupRecipeDAOInterface {
 
 		}
 		return count;
+	}
+
+
+
+	@Override
+	public List<ThumbsupRecipeVO> getAllByCountInDays(int days, int limit) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ThumbsupRecipeVO> allThumbsupRecipe = new ArrayList<ThumbsupRecipeVO>();
+
+		try {
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(SELECT_ALL_IN_TIME);
+
+			pstmt.setInt(1, days);
+			pstmt.setInt(2, limit);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ThumbsupRecipeVO thumbsupRecipe = new ThumbsupRecipeVO();
+				thumbsupRecipe.setThmupRecipeID(rs.getInt("thmup_recipe_id"));
+				thumbsupRecipe.setTempCount(rs.getInt("count"));
+				allThumbsupRecipe.add(thumbsupRecipe);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+
+		}
+		return allThumbsupRecipe;
 	}
 }

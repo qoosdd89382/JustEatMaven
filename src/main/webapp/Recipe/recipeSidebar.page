@@ -9,6 +9,9 @@
 	
 	List<FavoriteRecipeVO> favListForSidebar = favRecipeSvc.getAllByCountInDays(7, 5);
 	pageContext.setAttribute("favListForSidebar", favListForSidebar);
+	
+	List<ThumbsupRecipeVO> thmupListForSidebar = thmupRecipeSvc.getAllByCountInDays(7, 5);
+	pageContext.setAttribute("thmupListForSidebar", thmupListForSidebar);
 %>
 
 <section class="sidebar-block">
@@ -18,7 +21,7 @@
 	</div>
 	<div class="sidebar-list">
 		<c:forEach var="categoryVO" items="${categoryListForSidebar}">
-			<a class="btn btn-primary" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByCategory&id=${categoryVO.cuisineCategoryID}" role="button">${categoryVO.cuisineCategoryName}</a>
+			<a class="btn btn-primary" style="font-size: 18px;" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByCategory&id=${categoryVO.cuisineCategoryID}" role="button">${categoryVO.cuisineCategoryName}</a>
 		</c:forEach>
 	</div>
 </section>
@@ -29,17 +32,17 @@
 		<h4>熱門食材</h4>
 		<a class="more" href="<%=request.getContextPath()%>/Recipe/listAllIngredient.jsp">更多 <i class="fas fa-angle-double-right"></i></a>
 	</div>
-	<div class="sidebar row">
+	<div class="sidebar row m-0">
 		<ol class="col-6">
 			<c:forEach var="ingredientVO" items="${ingredientListForSidebar}" begin="0" end="4">
-				<li>
+				<li style="font-size: 20px;">
 					<a class="" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a>
 				</li>
 			</c:forEach>
 		</ol>
 		<ol class="col-6" start="6">
 			<c:forEach var="ingredientVO" items="${ingredientListForSidebar}" begin="5" end="9">
-				<li>
+				<li style="font-size: 20px;">
 					<a class="" href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${ingredientVO.ingredientID}" role="button">${ingredientVO.ingredientName}</a>
 				</li>
 			</c:forEach>
@@ -51,15 +54,31 @@
 
 <section class="sidebar-block">
 	<div class="sidebar-title">
-		<h4>最多人收藏</h4>
+		<h4>本週熱門收藏</h4>
 		<a class="more" href="<%=request.getContextPath()%>/Recipe/listAllIngredient.jsp">更多 <i class="fas fa-angle-double-right"></i></a>
 	</div>
 	<div class="sidebar">
 			<c:forEach var="favRecipeVO" items="${favListForSidebar}">
 				<a class="mostFavRecipe rounded-lg border p-2 mb-2" href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${favRecipeVO.favRecipeID}">
 					<span class="favRecipe">${recipeSvc.getOneRecipe(favRecipeVO.favRecipeID).recipeName}</span>
-					<span class="favCount">${favRecipeVO.tempCount}</span><br>
-					<span class="favCount">${recipeSvc.getOneRecipe(favRecipeVO.favRecipeID).accountID}</span>
+					<span class="favRecipeCount">${favRecipeVO.tempCount}</span><br>
+					<span class="favRecipeAuthor">${accountSvc.selectOneAccountInfo(recipeSvc.getOneRecipe(favRecipeVO.favRecipeID).accountID).accountNickname}</span>
+				</a>
+			</c:forEach>
+	</div>
+</section>
+
+<section class="sidebar-block">
+	<div class="sidebar-title">
+		<h4>本週最讚</h4>
+		<a class="more" href="<%=request.getContextPath()%>/Recipe/listAllIngredient.jsp">更多 <i class="fas fa-angle-double-right"></i></a>
+	</div>
+	<div class="sidebar">
+			<c:forEach var="thmupRecipeVO" items="${thmupListForSidebar}">
+				<a class="mostFavRecipe rounded-lg border p-2 mb-2" href="<%= request.getContextPath() %>/Recipe/recipe.jsp?id=${thmupRecipeVO.thmupRecipeID}">
+					<span class="favRecipe">${recipeSvc.getOneRecipe(thmupRecipeVO.thmupRecipeID).recipeName}</span>
+					<span class="favRecipeCount">${thmupRecipeVO.tempCount}</span><br>
+					<span class="favRecipeAuthor">${accountSvc.selectOneAccountInfo(recipeSvc.getOneRecipe(thmupRecipeVO.thmupRecipeID).accountID).accountNickname}</span>
 				</a>
 			</c:forEach>
 	</div>
