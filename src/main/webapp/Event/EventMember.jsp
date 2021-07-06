@@ -1,3 +1,4 @@
+<%@page import="com.eventinfo.model.EventInfoVO"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.time.LocalDateTime"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
@@ -11,17 +12,30 @@
 
 <jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="eventMemberSvc" scope="page" class="com.eventmember.model.EventMemberService" />
+<jsp:useBean id="eventSvc" scope="page" class="com.eventinfo.model.EventInfoService" />
 
 <%
 	String eventID = request.getParameter("eventID");
 	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(new Integer(eventID));
-	pageContext.setAttribute("list", list);
-	AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
+// 	AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
 // 	List<EventMemberVO> list = eventMemberSvc.getAllByEventID(300002);
 // 	pageContext.setAttribute("eventID", 300002);
 // 	pageContext.setAttribute("list", list);
 // 	int accountAvgScore = eventMemberSvc.getAvgScoreByAccountID(100001);
 // 	pageContext.setAttribute("accountAvgScore", accountAvgScore);
+
+	EventInfoVO event = eventSvc.getEventID(new Integer(eventID));
+	Timestamp now = new Timestamp(System.currentTimeMillis());
+	if (now.after(event.getEventRegistartionEndTime())) {
+		System.out.println("out");
+		for (EventMemberVO vo : list) {
+			if (vo.getParticipationState() == 1) {
+				eventMemberSvc.deleteEventMember(new Integer(eventID), vo.getAccountID());
+			}
+		}
+		list = eventMemberSvc.getAllByEventID(new Integer(eventID));
+	}
+	pageContext.setAttribute("list", list);
 
 %>
 <!DOCTYPE html>
@@ -45,7 +59,8 @@
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp">首頁</a></li>
-			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a></li>
+<%-- 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a></li> --%>
+			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=${accountInfoVOLogin.accountID}">我的活動</a></li>
 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=<%=request.getParameter("eventID")%>">活動詳情</a></li>
 			<li class="breadcrumb-item active" aria-current="page">成員列表</li>
 		</ol>
@@ -66,7 +81,7 @@
 	</tr>
 		<c:forEach var="eventMemberVO" items="${list}" >
 			<tr> 
-				<td>${eventMemberVO.accountID}</td> 
+				<td>${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountNickname}</td> 
 				<td>
 					<c:if test="${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountGender == 1}">男</c:if>
 					<c:if test="${accountSvc.selectOneAccountInfo(eventMemberVO.accountID).accountGender == 2}">女</c:if>

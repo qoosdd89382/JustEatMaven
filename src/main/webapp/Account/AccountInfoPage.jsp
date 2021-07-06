@@ -8,6 +8,7 @@
 <%@ page import="com.likeingredient.model.*"%>
 <%@ page import="com.dislikeingredient.model.*"%>
 
+<jsp:useBean id="accountSvc" scope="page" class="com.accountinfo.model.AccountInfoService" />
 <jsp:useBean id="visitSvc" scope="page" class="com.visit.model.VisitService" />
 <jsp:useBean id="ingredientSvc" scope="page" class="com.ingredient.model.IngredientService" />
 <jsp:useBean id="likeIngredientSvc" scope="page" class="com.likeingredient.model.LikeIngredientService" />
@@ -17,6 +18,9 @@
 //儲存所有資料的accountInfoVO
 AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoVOLogin"); 
 Integer accountID = accountInfoVO.getAccountID();
+
+pageContext.setAttribute("nowAccount", accountSvc.selectOneAccountInfo(accountID));
+
 
 //會員瀏覽紀錄
 //上一次瀏覽紀錄
@@ -252,40 +256,40 @@ span#text_title_2{
 			<div id="account_info_area" class="col-10 col-sm-10 col-md-8 col-lg-8 col-xl-8 align-self-center" >
 			
 				<div id="account_info_area_title">
-					<span style="text-align:center">用戶</span><span id="text_title_main">${accountInfoVOLogin.accountNickname}</span>
+					<span style="text-align:center">用戶</span><span id="text_title_main">${nowAccount.accountNickname}</span>
 					<span style="text-align:center">以下是您的資料</span><br>				
 				</div>
 				
-				<span id="text_title">用戶信箱:</span><span id="text_content">${accountInfoVOLogin.accountMail}</span><br>
-				<span id="text_title">用戶暱稱:</span><span id="text_content">${accountInfoVOLogin.accountNickname}</span><br>
+				<span id="text_title">用戶信箱:</span><span id="text_content">${nowAccount.accountMail}</span><br>
+				<span id="text_title">用戶暱稱:</span><span id="text_content">${nowAccount.accountNickname}</span><br>
 				
-				<c:if test="${accountInfoVOLogin.accountLevel==1}">
+				<c:if test="${nowAccount.accountLevel==1}">
 					<span id="text_title">用戶層級:</span><span id="text_content">一般會員</span><br>				
 				</c:if>
-				<c:if test="${accountInfoVOLogin.accountLevel==2}">
+				<c:if test="${nowAccount.accountLevel==2}">
 					<span id="text_title">用戶層級:</span><span id="text_content">一般會員(待審核)</span><br>				
 				</c:if>
-				<c:if test="${accountInfoVOLogin.accountLevel==3}">
+				<c:if test="${nowAccount.accountLevel==3}">
 					<span id="text_title">用戶層級:</span><span id="text_content">特權會員</span><br>				
 				</c:if>
 				<span id="text_title" style="color:red">${errorMsgs.get("accountLevelFromEventError")}</span><br>
 				
-				<span id="text_title">用戶名稱:</span><span id="text_content">${accountInfoVOLogin.accountName}</span><br>
-				<span id="text_title">用戶性別:</span><span id="text_content">${(accountInfoVOLogin.accountGender==1?"男":"女")}</span><br>
-				<span id="text_title">用戶生日:</span><span id="text_content">${accountInfoVOLogin.accountBirth}</span><br>
-				<span id="text_title">用戶電話:</span><span id="text_content">${accountInfoVOLogin.accountPhone}</span><br>
+				<span id="text_title">用戶名稱:</span><span id="text_content">${nowAccount.accountName}</span><br>
+				<span id="text_title">用戶性別:</span><span id="text_content">${(nowAccount.accountGender==1?"男":"女")}</span><br>
+				<span id="text_title">用戶生日:</span><span id="text_content">${nowAccount.accountBirth}</span><br>
+				<span id="text_title">用戶電話:</span><span id="text_content">${nowAccount.accountPhone}</span><br>
 				
 				<br>
 				
 				<div id="account_picture">
 					<span id="text_title_2">用戶照片:</span><br>					
-					<img src="<%=request.getContextPath()%>/Account/Pic/Pic/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
+					<img src="<%=request.getContextPath()%>/Account/Pic/Pic/${nowAccount.accountID}" width="300px" height="150px"><br>
 						
 					<span id="text_title_2">用戶身分證正面:</span><br>
-					<img src="<%=request.getContextPath()%>/Account/Pic/Front/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
+					<img src="<%=request.getContextPath()%>/Account/Pic/Front/${nowAccount.accountID}" width="300px" height="150px"><br>
 					
 					<span id="text_title_2">用戶身分證背面:</span><br>
-					<img src="<%=request.getContextPath()%>/Account/Pic/Back/${accountInfoVOLogin.accountID}" width="300px" height="150px"><br>
+					<img src="<%=request.getContextPath()%>/Account/Pic/Back/${nowAccount.accountID}" width="300px" height="150px"><br>
 				</div>
 				
 				<div id="account_food_area">
@@ -303,11 +307,11 @@ span#text_title_2{
 				</div>
 							
 				<div id="account_food_area">
-					<span id="text_title_2">用戶自我介紹:<br></span>${accountInfoVOLogin.accountText}<br>
+					<span id="text_title_2">用戶自我介紹:<br></span>${nowAccount.accountText}<br>
 				</div>
 				
 				<div id="account_food_area">
-				<span id="text_title_2">用戶註冊時間:</span><br>${accountInfoVOLogin.accountRegisterTime}<br>
+				<span id="text_title_2">用戶註冊時間:</span><br>${nowAccount.accountRegisterTime}<br>
 				</div>
 				
 			<div id="accountInfo_btn" style="text-align:center;">

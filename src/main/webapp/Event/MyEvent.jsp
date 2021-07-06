@@ -35,6 +35,17 @@
 // 			list.add(eventInfoVOtemp);
 // 			}
 // 		}
+
+
+	Timestamp now = new Timestamp(System.currentTimeMillis());
+	for (EventMemberVO vo : eventMemberList) {
+		if (now.after( eventInfoSvc.getEventID(vo.getEventID()).getEventRegistartionEndTime() )
+				&& vo.getParticipationState() == 1) {
+			eventMemberSvc.deleteEventMember(vo.getEventID(), vo.getAccountID());
+		}
+	}
+	eventMemberList = eventMemberSvc.getAllByAccount(new Integer(accountID));
+	pageContext.setAttribute("eventMemberList", eventMemberList);
 		
 %>
 
@@ -85,24 +96,21 @@
 		<tr>
 			<td>${eventMemberVO.eventID}</td>
 			<td> <a href="<%= request.getContextPath()%>/Event/EventDetailReview.jsp?eventID=${eventMemberVO.eventID}&accountID=100001">${eventInfoSvc.getEventID(eventMemberVO.eventID).eventName}</a> </td>
-			<td>${accountSvc.selectOneAccountInfo(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountNickname}</td>
+			<td>${accountSvc.selectOneAccountInfo(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountNickname} ${accountSvc.selectOneAccountInfo(eventMemberSvc.getOneByEventAndHost(eventMemberVO.eventID)).accountID == accountInfoVOLogin.accountID ? "(我)" : ""}</td>
 <%-- 			<td>${accountSvc.getOneAccount(eventMemberSvc.getOneByEventAndHost(eventInfoSvc.getEventID(eventMemberVO.eventID).eventID)).accountNickname}</td> --%>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).groupCity}</td>
 			<td>${eventInfoSvc.getEventID(eventMemberVO.eventID).eventCurrentCount}</td>
 			<td><fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventStartTime}" pattern="yyyy-MM-dd hh:mm"/></td> 
 			<td><fmt:formatDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" pattern="yyyy-MM-dd hh:mm"/></td> 
 			<td>
-				
-			
-			
 				<fmt:parseDate value="${eventInfoSvc.getEventID(eventMemberVO.eventID).eventEndTime}" pattern="yyyy-MM-dd HH:mm" var="endDate"/>
 				
 				<% Date nowDate = new Date(); request.setAttribute("nowDate", nowDate); %>
 				<c:if test="${nowDate > endDate}">
-				    <font class="">已結束</font>
+				 已結束
 				</c:if>
- 					<c:if test="${nowDate < endDate}">
-					  <font class="">進行中</font>
+				<c:if test="${nowDate < endDate}">
+					進行中
 				</c:if>
 
 <%-- 				<fmt:formatDate value="${now}" type="both" dateStyle="long" pattern="yyyy-MM-dd " var="nowDate"/>  --%>
@@ -130,11 +138,11 @@
 				
 				<% Date nowDate1 = new Date(); request.setAttribute("nowDate", nowDate); %>
 				<c:if test="${nowDate < endDate}">
-				
-					  <font class="">未評鑑</font>
+
+					<font class="">未評鑑</font>
 				
 				</c:if>
- 					<c:if test="${nowDate > endDate}">
+					<c:if test="${nowDate > endDate}">
 					<a href="<%= request.getContextPath()%>/Event/EvaluatedMember.jsp?eventID=${eventMemberVO.eventID}">評鑑</a>   	
 			</c:if>
 			</td>
