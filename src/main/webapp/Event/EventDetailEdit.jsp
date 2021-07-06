@@ -100,7 +100,7 @@
 	    <div class="event_content col-12 col-lg-12 row">
 	        <div class="info col-6 col-lg-6">
 	        <span class="error">${errorMsgs.get("dishAndIngredientIsNull")}</span>
-	            <div class="title_separate">
+	            <div class="title_separate form-group">
 	                請選擇揪團類型
 	                <label>
 	                    <input type="radio" name="choose_type" value="1" <%= (eventInfoVO==null)?"":(eventInfoVO.getGroupType()==null)?"":(eventInfoVO.getGroupType()==1)?"checked":"" %>>一人一菜
@@ -108,34 +108,36 @@
 	                </label>
 					<span class="error">${errorMsgs.get("GroupTypeIsNull")}</span>
 	            </div>
-	            <div>
-	                <input type="text" name="event_name" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventName()==null)?"":(eventInfoVO.getEventName()) %>" placeholder="請輸入活動名稱">
-	                <input type="number" name="event_member" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventCurrentCount()==null)?"":(eventInfoVO.getEventCurrentCount()) %>" placeholder="請輸入活動人數">
+	            <div class="form-group">
+	            活動名稱:
+	                <input type="text" name="event_name" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventName()==null)?"":(eventInfoVO.getEventName()) %>" placeholder="請輸入活動名稱" class="form-control">
+		  活動人數:
+	                <input type="number" name="event_member" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventCurrentCount()==null)?"":(eventInfoVO.getEventCurrentCount()) %>" placeholder="請輸入活動人數" class="form-control">
 	            	<div>
 	            	<span class="error">${errorMsgs.get("EventNameIsNull")}</span><pre></pre><span class="error">${errorMsgs.get("EventMemberIsNull")}${errorMsgs.get("EventMemberMustBeGreaterThanZero")}</span>
 	            	</div>
 	            </div>
-	            <div>
+	            <div class="form-group">
 	                活動報名開始時間:
-	                <input type="text" name="event_reg_start" id="eventRegStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionStartTime()==null)?"":(pageContext.getAttribute("formatRegStartDateTime"))%>">
+	                <input type="text" name="event_reg_start" id="eventRegStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionStartTime()==null)?"":(pageContext.getAttribute("formatRegStartDateTime"))%>" class="form-control">
 	            	<span class="error">${errorMsgs.get("EventRegStartTimeIsNull")} ${errorMsgs.get("EventRegStartTimeNotConform")}</span>
 	            </div>
-	            <div>
+	            <div class="form-group">
 	                活動報名結束時間:
-	                <input type="text" name="event_reg_end" id="eventRegEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionEndTime()==null)?"":(pageContext.getAttribute("formatRegEndDateTime"))%>">
+	                <input type="text" name="event_reg_end" id="eventRegEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventRegistartionEndTime()==null)?"":(pageContext.getAttribute("formatRegEndDateTime"))%>" class="form-control">
 	            	<span class="error">${errorMsgs.get("EventRegEndTimeIsNull")} ${errorMsgs.get("EventRegEndTimeNotConform")} ${errorMsgs.get("RegEndMustAfterRegStart")}</span>
 	            </div>
-	            <div>
+	            <div class="form-group">
 	                活動開始時間:
-	                <input type="text" name="event_start" id="eventStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventStartTime()==null)?"":(pageContext.getAttribute("formatStartDateTime")) %>">
+	                <input type="text" name="event_start" id="eventStart" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventStartTime()==null)?"":(pageContext.getAttribute("formatStartDateTime")) %>" class="form-control">
 	                <span class="error">${errorMsgs.get("EventStartTimeIsNull")} ${errorMsgs.get("EventStartTimeNotConform")} ${errorMsgs.get("StartMustAfterRegStart")}</span>
 	            </div>
-	            <div>
+	            <div class="form-group">
 	                活動結束時間:
-	                <input type="text" name="event_end" id="eventEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventEndTime()==null)?"":(pageContext.getAttribute("formatEndDateTime"))%>">
+	                <input type="text" name="event_end" id="eventEnd" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getEventEndTime()==null)?"":(pageContext.getAttribute("formatEndDateTime"))%>" class="form-control">
 	            	<span class="error">${errorMsgs.get("EventEndTimeIsNull")} ${errorMsgs.get("EventEndTimeNotConform")} ${errorMsgs.get("EndMustAfterStart")}</span>
 	            </div>
-	       		<div>
+	       		<div class="form-group">
 	                類型:
 	                <span class="cuisineCat border">
 	               	<%
@@ -147,8 +149,9 @@
 	               	%>
 	               	</span>
 	            </div>
-	            <div>
-	                <select name="city">
+	            <div class="form-group">
+	            地址:
+	                <select name="city" class="form-control">
 	                <!--北台灣-->
 	                <option value="基隆市" <%= (eventInfoVO==null)?"":eventInfoVO.getGroupCity().equals("基隆市")?"selected":"" %>>基隆市</option>
 	                <option value="新北市" <%= (eventInfoVO==null)?"":eventInfoVO.getGroupCity().equals("新北市")?"selected":"" %>>新北市</option>
@@ -177,22 +180,22 @@
 	                <option value="金門縣" <%= (eventInfoVO==null)?"":eventInfoVO.getGroupCity().equals("金門縣")?"selected":"" %>>金門縣</option>
 	                <option value="連江縣" <%= (eventInfoVO==null)?"":eventInfoVO.getGroupCity().equals("連江縣")?"selected":"" %>>連江縣</option>
 	            </select>
-	            <input type="text" name="address" placeholder="請輸入地址" class="inputAddress" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getGroupAddress()==null)?"":(eventInfoVO.getGroupAddress()) %>">
+	            <input type="text" name="address" placeholder="請輸入地址" class="inputAddress form-control" value="<%=(eventInfoVO==null)?"":(eventInfoVO.getGroupAddress()==null)?"":(eventInfoVO.getGroupAddress()) %>">
 	            <span class="error">${errorMsgs.get("GroupAddressIsNull")}</span>
 	            </div>
-	            <div>
+	            <div class="form-group">
 	            	上傳活動圖片:<input type="file" name="eventPic" id="uploadEventImg">
 	            </div>
 	            <div id="preview_img">
 	            </div>
 	            <div>
-	                <input type="button" name="" value="上一頁" class="return">
-	                <input type="submit" name="action" value="儲存" class="saveEvent">
+	                <input type="button" name="" value="上一頁" class="return btn btn-secondary">
+	                <input type="submit" name="action" value="儲存" class="saveEvent btn btn-secondary">
 	            </div>
 	        </div>
 		    <div class="info col-6 col-lg-6">
 		        <div class="event_description">
-		            <textarea name="" id="description" cols="60" rows="20" placeholder="活動說明">${eventInfoVO.eventDescription}</textarea>
+		            <textarea name="" id="description" cols="60" rows="20" placeholder="活動說明" class="form-control">${eventInfoVO.eventDescription}</textarea>
 		            <input type="hidden" name="event_description" value="${eventInfoVO.eventDescription}"/>
 		        </div>
 		    </div>
@@ -243,6 +246,12 @@
 	     $(".return").on("click",function(){
 				history.go(-1);
 		 });
+	     
+	     $(".saveEvent").on("click",function(){
+	    	 var content = $("#description").val();
+	    	 console.log(content);
+	    	 $("input[name=event_description]").val(content);
+	     });
 	     
 	     //=================圖片預覽==========================
 	     $("#uploadEventImg").on("change", function() {
