@@ -37,7 +37,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活動詳情</title>
+    <title>成員菜單</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/jquery-ui/css/jquery-ui.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/Event/css/style.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/vendors/bootstrap/css/bootstrap.min.css">
@@ -70,7 +70,7 @@
 				<table class="borderforMenu">
 					<thead>
 						<tr class="">
-							<th class="">帳號</th>
+							<th class="">名字</th>
 							<th class="">菜名</th>
 							<th class="">食材</th>
 							<th class="">狀態</th>
@@ -80,7 +80,7 @@
 						<tbody>
 							<tr class="">
 								<td class="" rowspan=${fn:length(dishSvc.getAccountID(eventMemberVO.accountID))}>
-								${accountInfoSvc.selectOneAccountInfo(eventMemberVO.accountID).accountMail}
+								${accountInfoSvc.selectOneAccountInfo(eventMemberVO.accountID).accountNickname}
 								</td>
 									<c:forEach var="dishVO" items="${dishSvc.getAccountIDAndEventID(eventMemberVO.accountID,param.eventID)}">
 										<td class="">${dishVO.dishName}</td>
@@ -90,14 +90,14 @@
 										</c:forEach>
 										</td>
 										<td>已確認</td></tr><tr>		
-								</c:forEach>
+									</c:forEach>
 							</tr>
 						</tbody>						
 					</c:forEach>
 				</table>
-				<div class="">
-					<input type="submit" name="action" value="返回活動詳情">
-					<input type="submit" name="action" value="返回活動列表">
+				<div class="menuBtn">
+					<input type="submit" name="action" value="返回活動詳情" class="btn btn-secondary">
+					<input type="submit" name="action" value="返回活動列表" class="btn btn-secondary">
 				</div>
 			</div>
 		</main>

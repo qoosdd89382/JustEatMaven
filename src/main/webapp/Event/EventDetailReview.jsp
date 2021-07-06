@@ -94,56 +94,54 @@
 	                <span class="dish_name"></span>
 	            </div>
 	            <div>
-	                <input type="submit" name="action" value="成員菜單">
-	                <input type="button" name="action" value="成員列表" class="memberList">
+	                <input type="submit" name="action" value="成員菜單" class="btn btn-secondary">
+	                <input type="button" name="action" value="成員列表" class="memberList btn btn-secondary">
 	            </div>
 	            <div>	            	
 	            	<c:choose>
 	            		<c:when test="${eventMemberVO.hostIdentifier == true}">
-	            			<input type="button" value="回到活動列表" class="return">
+	            			<input type="button" value="回到活動列表" class="return btn btn-secondary">
 	            			<%
 	            				if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
 	            			%>
-	                		<input type="submit" name="action" value="活動編輯" class="">
+	                		<input type="submit" name="action" value="活動編輯" class="btn btn-secondary">
 	               			<% 	
 	            				}
 		            			if(timestampNow.before(eventInfoVO.getEventEndTime())){
 		            		%>
-	                		<input type="submit" name="action" value="活動聊天室" class="eventCharRoom">
+	                		<input type="submit" name="action" value="活動聊天室" class="eventCharRoom btn btn-secondary">
 	                		<% 
 		            			}
 		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
 		            		%>
-	                		<input type="button" value="成員審核" class="memberCheck">
-	                		<input type="submit" name="action" value="取消活動" class="">
+	                		<input type="button" value="成員審核" class="memberCheck btn btn-secondary">
+	                		<input type="submit" name="action" value="取消活動" class="btn btn-secondary">
 	                		<%
 		            			}
 		            		%>
 	            		</c:when>
 	            		<c:when test="${eventMemberVO.hostIdentifier == false}">
-	            			<input type="button" value="回到活動列表" class="return">
+	            			<input type="button" value="回到活動列表" class="return btn btn-secondary">
 	            			<% 
 		            			if(timestampNow.before(eventInfoVO.getEventEndTime())){
 		            		%>
-	            			<input type="submit" name="action" value="活動聊天室" class="eventCharRoom">
+	            			<input type="submit" name="action" value="活動聊天室" class="eventCharRoom btn btn-secondary">
 	                    	<%
 		            			}
 	            			
 	            				if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
 		            		%>
-	                		<input type="submit" name="action" value="退出活動" class="">
+	                		<input type="submit" name="action" value="退出活動" class="btn btn-secondary">
 	                		<%
 		            			}
 		            		%>
 	            		</c:when>
 	            		<c:otherwise>
-		            		<input type="button" value="回到活動列表" class="return">
+		            		<input type="button" value="回到活動列表" class="return btn btn-secondary">
 		            		<% 
-		            		System.out.println(timestampNow.before(eventInfoVO.getEventRegistartionStartTime())+"123");
-		            		System.out.println(timestampNow.before(eventInfoVO.getEventRegistartionStartTime())+"123");
 		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime()) && timestampNow.after(eventInfoVO.getEventRegistartionStartTime())){
 		            		%>
-		                		<input type="submit" name="action" value="加入活動" class="joinEvent">
+		                		<input type="submit" name="action" value="加入活動" class="joinEvent" class="btn btn-secondary">
 		            		<%
 		            			}
 		            		%>

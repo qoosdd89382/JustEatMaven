@@ -70,7 +70,7 @@
 
 	<div class="add_Event">
 		<div class="Create_or_Join_Event col-10">
-			<button type="submit" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent">建立活動</button>
+			<button type="submit" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent btn btn-secondary">建立活動</button>
 			<span class="error"></span>
 		</div>
 	</div>
@@ -152,7 +152,7 @@
 										</c:if>
 										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
 										<td class="col-sm-2 col-2"><fmt:formatDate type="date" value="${eventInfoVO.eventStartTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-										<td class="col-sm-2 col-2">${eventInfoVO.groupCity}</td>
+										<td class="col-sm-2 col-2">${eventInfoVO.eventViewCount}</td>
 									</tr>
 							</c:if>
 						</c:forEach>
