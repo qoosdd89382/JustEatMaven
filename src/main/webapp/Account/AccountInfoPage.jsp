@@ -20,8 +20,7 @@ AccountInfoVO accountInfoVO = (AccountInfoVO) session.getAttribute("accountInfoV
 Integer accountID = accountInfoVO.getAccountID();
 
 pageContext.setAttribute("nowAccount", accountSvc.selectOneAccountInfo(accountID));
-
-
+session.setAttribute("nowAccount",  accountSvc.selectOneAccountInfo(accountID));
 //會員瀏覽紀錄
 //上一次瀏覽紀錄
 VisitVO lastVisitRecord = visitSvc.getLastVisitRecordByAccountID(accountID);
@@ -62,7 +61,7 @@ body#body_accountInfo{
 /* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
 /* 	background: linear-gradient(to left, #ffa751, #ffe259); */
 
-	background-image:url("./images/AccountInfoPage.jpg");
+	background-image:url("<c:url value="/Account/images/AccountInfoPage.jpg" />");
 	background-size: cover;
 /* 	background-attachment:fixed;  */
 /* 	background-repeat: no-repeat; */
@@ -228,25 +227,25 @@ span#text_title_2{
 		<div id="function_select_area" class="row justify-content-center">
 		
 			<div id="function_select_area_button" class="col-6 col-md-2">
-				<form method="post" action="accountInfo.do">
+				<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 					<input type="hidden" name="action" value="gotoAccountInfoPage">
 					<button id="btn_submit" type="submit">會員資料</button>
 				</form>		
 			</div>
 			
 			<div id="function_select_area_button" class="col-6 col-md-2">
-				<form method="post" action="friendship.do">
+				<form method="post" action="<%=request.getContextPath()%>/Account/friendship.do">
 					<input type="hidden" name="action" value="getAccount_Friendship">
 					<button id="btn_submit" type="submit">我的好友</button>
 				</form>
 			</div>
 			
 			<div id="function_select_area_button" class="col-6 col-md-2 align-self-center">
-				<a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=<%=accountInfoVO.getAccountID()%>">我的活動</a>
+				<a href="<%=request.getContextPath()%>/Event/MyEvent.jsp?accountID=${nowAccount.accountID}">我的活動</a>
 			</div>
 			
 			<div id="function_select_area_button" class="col-6 col-md-2 align-self-center">
-				<a href='<%=request.getContextPath()%>/Recipe/recipe.do?action=myRecipe&id=<%=accountID%>'>我的食譜</a>
+				<a href='<%=request.getContextPath()%>/Recipe/recipe.do?action=myRecipe&id=${nowAccount.accountID}'>我的食譜</a>
 			</div>
 	
 		</div>
@@ -272,8 +271,11 @@ span#text_title_2{
 				<c:if test="${nowAccount.accountLevel==3}">
 					<span id="text_title">用戶層級:</span><span id="text_content">特權會員</span><br>				
 				</c:if>
-				<span id="text_title" style="color:red">${errorMsgs.get("accountLevelFromEventError")}</span><br>
+				<c:if test="${nowAccount.accountLevel<3}">
+					<span id="text_title" style="color:red">${errorMsgsLevel.get("accountLevelFromEventError")}</span><br>
+				</c:if>
 				
+				<br>				
 				<span id="text_title">用戶名稱:</span><span id="text_content">${nowAccount.accountName}</span><br>
 				<span id="text_title">用戶性別:</span><span id="text_content">${(nowAccount.accountGender==1?"男":"女")}</span><br>
 				<span id="text_title">用戶生日:</span><span id="text_content">${nowAccount.accountBirth}</span><br>
