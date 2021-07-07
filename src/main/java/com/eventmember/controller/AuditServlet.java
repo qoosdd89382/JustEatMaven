@@ -38,6 +38,7 @@ public class AuditServlet extends HttpServlet {
 		int eventID = new Integer(req.getParameter("eventID"));
 		int accountID = new Integer(req.getParameter("accountID"));
 		
+		
 		if ("pass".equals(action)) {
 //			int participationState = new Integer(req.getParameter("participationState"));
 //			boolean isHostIdentifier = new boolean(req.getParameter("isHostIdentifier"));
@@ -97,6 +98,17 @@ public class AuditServlet extends HttpServlet {
 			WebSocketNotice noticeWS = new WebSocketNotice();
 			noticeWS.onMessage(message);
 			RequestDispatcher successView = req.getRequestDispatcher("/Event/Audit.jsp?eventID=" + eventID);
+			successView.forward(req, res);
+		}
+		if ("delete".equals(action)) {
+			
+			System.out.println("action" + action);
+			System.out.println("accountID" + accountID);
+			System.out.println("eventID" + eventID);
+
+			EventMemberService evMemberSvc = new EventMemberService();
+			evMemberSvc.deleteEventMember(eventID, accountID);
+			RequestDispatcher successView = req.getRequestDispatcher("/Dashboard/Admin/EventMember.jsp?eventID=" + eventID);
 			successView.forward(req, res);
 		}
 	}

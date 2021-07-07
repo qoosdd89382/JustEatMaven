@@ -100,7 +100,7 @@
 				<td>	
 				     <c:if test="${eventMemberSvc.getEventStatusByAccountID(eventMemberVO.accountID, eventMemberVO.eventID) == 1}">審核中</c:if>
 				     <c:if test="${eventMemberSvc.getEventStatusByAccountID(eventMemberVO.accountID, eventMemberVO.eventID) == 2}">參與中</c:if>
-				     
+				      <c:if test="${eventMemberSvc.getEventStatusByAccountID(eventMemberVO.accountID, eventMemberVO.eventID) == 3}">已出席</c:if>
 				</td>
 		
 			    
