@@ -666,11 +666,11 @@ public class RecipeServlet extends HttpServlet {
 				Integer recipeID = new Integer(req.getParameter("recipeID"));
 				
 				RecipeService recipeSvc = new RecipeService();
-//				recipeSvc.deleteRecipe(recipeID);
+				recipeSvc.deleteRecipe(recipeID);
 				String locationBeforeRecipeDelete = (String) req.getParameter("locationBeforeRecipeDelete");
 				System.out.println(locationBeforeRecipeDelete);
-//				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
-				RequestDispatcher successView = req.getRequestDispatcher(locationBeforeRecipeDelete);
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+//				RequestDispatcher successView = req.getRequestDispatcher(locationBeforeRecipeDelete);
 				successView.forward(req, res);
 				return;
 			} catch (Exception e) {
