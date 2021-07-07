@@ -16,9 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.cuisinecategory.model.CuisineCategoryService;
+import com.dishandingredient.model.DishandingredientService;
 import com.eventcuisinecategory.model.EventCuisineCategoryService;
 import com.google.gson.Gson;
 import com.ingredient.model.IngredientService;
+import com.likeingredient.model.LikeIngredientService;
 import com.recipecuisinecategory.model.RecipeCuisineCategoryService;
 import com.recipeingredientunit.model.RecipeIngredientUnitService;
 
@@ -39,15 +41,22 @@ public class IngredientAjaxServlet extends HttpServlet {
 		Gson gson = new Gson();
 		RecipeIngredientUnitService recipeIngSvc = new RecipeIngredientUnitService();
 		IngredientService ingSvc = new IngredientService();
+		DishandingredientService dishSvc = new DishandingredientService();
+		LikeIngredientService likeSvc = new LikeIngredientService();
+		DishandingredientService dislikeSvc = new DishandingredientService();
 		
 		String action = req.getParameter("action");
 
 		if ("delete".equals(action)) {
 			String ingredientID = req.getParameter("ingredientID");
 System.out.println(ingredientID);
-			if (recipeIngSvc.getAllByIngredient(new Integer(ingredientID)).size() != 0) {
-				out.print("此食材有食譜使用，不可刪除");
-				System.out.println("此分類有食譜使用，不可刪除");
+			if (recipeIngSvc.getAllByIngredient(new Integer(ingredientID)).size() != 0
+					|| dishSvc.getALLByIngredientID(new Integer(ingredientID)).size() != 0
+					|| dishSvc.getALLByIngredientID(new Integer(ingredientID)).size() != 0
+					|| dislikeSvc.getALLByIngredientID(new Integer(ingredientID)).size() != 0
+					) {
+				out.print("此食材有食譜、菜色或會員使用，不可刪除");
+				System.out.println("此分類有食譜、菜色或會員使用，不可刪除");
 				return;
 			}
 
