@@ -222,7 +222,7 @@
 	            		}
 	                %>
 <!-- 	                <input type="submit" name="action" value="邀請好友"> -->
-	                <input type="submit" name="action" value="取消建立 " class="btn btn-secondary">
+	                <input type="submit" name="action" value="取消建立" class="btn btn-secondary">
 	                <input type="submit" name="action" value="確定建立" class="confirmCreate btn btn-secondary">
 	            </div>
 	        </div>
