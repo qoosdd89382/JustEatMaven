@@ -185,6 +185,18 @@ div#account_food_area{
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
+div#account_food{
+	font-size:20px;
+}
+div#account_food a{
+	font-size:20px;
+	color:white;
+}
+div#account_food a:hover{
+	font-size:20px;
+	transition: 0.2s;
+    color: #F3722C;
+}
 span#text_title_main{
 	color: 	#FF8800;
 	font-size:40px !important;
@@ -295,16 +307,24 @@ span#text_title_2{
 				</div>
 				
 				<div id="account_food_area">
-				<span id="text_title_2">用戶喜歡的食材</span>
-					<c:forEach var="LikeIngredientVO" items="${likeIngredientVOs}">
-						<div id="account_food">${ingredientSvc.getOneIngredient(LikeIngredientVO.likeIngredientID).ingredientName}</div>
+				<span id="text_title_2">請點選您喜歡的食材</span>
+					<c:forEach var="likeIngredientVO" items="${likeIngredientVOs}">
+						<div id="account_food">
+						<a href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${likeIngredientVO.likeIngredientID}">
+						${ingredientSvc.getOneIngredient(likeIngredientVO.likeIngredientID).ingredientName}
+						</a>
+						</div>
 					</c:forEach>
 				</div>
 				
 				<div id="account_food_area">
-				<span id="text_title_2">用戶討厭的食材</span>
-					<c:forEach var="DislikeIngredientVO" items="${dislikeIngredientVOs}">
-						<div id="account_food">${ingredientSvc.getOneIngredient(DislikeIngredientVO.dislikeIngredientID).ingredientName}</div>
+				<span id="text_title_2">以下是您討厭的食材</span>
+					<c:forEach var="dislikeIngredientVO" items="${dislikeIngredientVOs}">
+						<div id="account_food">
+						<a href="<%= request.getContextPath() %>/Recipe/recipe.do?action=listAllByIngredient&id=${dislikeIngredientVO.dislikeIngredientID}">
+						${ingredientSvc.getOneIngredient(dislikeIngredientVO.dislikeIngredientID).ingredientName}
+						</a>
+						</div>
 					</c:forEach>
 				</div>
 							
