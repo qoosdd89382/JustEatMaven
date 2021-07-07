@@ -1,3 +1,4 @@
+<%@page import="com.accountinfo.model.AccountInfoService"%>
 <%@page import="com.accountinfo.model.AccountInfoVO"%>
 <%@page import="com.eventcuisinecategory.model.EventCuisineCategoryVO"%>
 <%@page import="com.eventcuisinecategory.model.EventCuisineCategoryService"%>
@@ -35,12 +36,14 @@
 	List<CuisineCategoryVO> cuisineCatList = (List<CuisineCategoryVO>) request.getAttribute("cuisineCatList");
 	
 	AccountInfoVO accountInfoVO = (AccountInfoVO)session.getAttribute("accountInfoVOLogin");
+	AccountInfoService accountInfoSvc = new AccountInfoService(); 
 	pageContext.setAttribute("accountInfoVO", accountInfoVO);
 
 	EventCuisineCategoryService eventCuisineCategorySvc = new EventCuisineCategoryService();
 	
 	Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
 	pageContext.setAttribute("now", timestampNow);
+	
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,8 +73,8 @@
 
 	<div class="add_Event">
 		<div class="Create_or_Join_Event col-10">
-			<button type="submit" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent btn btn-secondary">建立活動</button>
-			<span class="error"></span>
+				<button type="button" name="" class="col-12 col-sm-3 col-md-2 col-lg-1 createEvent btn btn-secondary">建立活動</button>
+				<span class="error"></span>
 		</div>
 	</div>
 	<div class="event_list_content row">
@@ -226,7 +229,7 @@
 		});
 		
 		$(".createEvent").on("click",function(){
-			location.href= "<%=request.getContextPath()%>/Event/CreateEvent.jsp?accountID=${accountInfoVO.accountID}";
+			location.href = "<%=request.getContextPath()%>/Event/CreateEvent.jsp?accountID=${accountInfoVO.accountID}";
 		});
 		
 		$(function(){

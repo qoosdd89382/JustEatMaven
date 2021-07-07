@@ -20,12 +20,15 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.accountinfo.model.AccountInfoService;
+import com.accountinfo.model.AccountInfoVO;
 import com.cuisinecategory.model.CuisineCategoryService;
 import com.cuisinecategory.model.CuisineCategoryVO;
 import com.dish.model.DishService;
@@ -231,6 +234,7 @@ public class EventInfoActionServlet extends HttpServlet {
 		}
 
 //========================================建立活動相關===============================
+		
 		if ("新增菜色".equals(action) || "重新新增菜色".equals(action)) {
 			EventInfoVO eventInfoVO = new EventInfoVO();
 			String groupType = request.getParameter("choose_type");
