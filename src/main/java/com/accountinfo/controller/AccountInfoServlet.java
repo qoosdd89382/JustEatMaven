@@ -199,6 +199,7 @@ public class AccountInfoServlet extends HttpServlet {
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				//session的accountInfoVO有該會員的全部資料
 				session.setAttribute("accountInfoVOLogin", accountInfoVO); 
+
 								
 				//成功準備轉交
 //				String url = "/Account/AccountInfoPage.jsp";

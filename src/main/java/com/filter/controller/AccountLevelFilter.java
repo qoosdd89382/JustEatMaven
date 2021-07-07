@@ -37,24 +37,30 @@ public class AccountLevelFilter implements Filter {
 		// 【取得 session】
 		HttpSession session = req.getSession();
 		// 【從 session 判斷此user是否登入過】
-		AccountInfoVO isLogin = (AccountInfoVO)session.getAttribute("accountInfoVOLogin");
+		AccountInfoVO isLogin = (AccountInfoVO)session.getAttribute("nowAccount");
 		Integer accountLevel = isLogin.getAccountLevel();
 		//過濾會員的層級
 		if (accountLevel < 3) {
+			System.out.println(accountLevel);
+			System.out.println("層級不符合");
 			
 			Map<String, String> errorMsgs = new HashMap<String, String>();
-			errorMsgs.put("accountLevelFromEventError","(請向管理員申請將帳號升級為特權會員)");
-			req.setAttribute("errorMsgs", errorMsgs);
+			errorMsgs.put("accountLevelFromEventError","(如需參加活動請向管理員申請將帳號升級為特權會員)");
+			session.setAttribute("errorMsgsLevel", errorMsgs);
 			
 			//記錄前一個頁面的網址
 			session.setAttribute("location",req.getServletPath());
 			
 			//轉接到登入頁面
-			RequestDispatcher failureView = req
-					.getRequestDispatcher("/Account/AccountInfoPage.jsp");
-			failureView.forward(req, res);
+//			RequestDispatcher failureView = req
+//					.getRequestDispatcher("/Account/AccountInfoPage.jsp");
+//			failureView.forward(req, res);
+			res.sendRedirect(req.getContextPath() + "/Account/AccountInfoPage.jsp");
+
 			return;
 		} else {
+			System.out.println(accountLevel);
+			System.out.println("層級符合");
 			chain.doFilter(request, response);
 		}
 	}
