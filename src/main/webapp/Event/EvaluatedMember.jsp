@@ -146,7 +146,8 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script>
-	
+	<%@ include file="/common/js/scriptFooter.page"%>
+
 			    $(function(){
 			        $("div.star_block").on("click", "span.star", function () {
 			            var star_count = $(this).attr("data-star");
