@@ -337,12 +337,12 @@ span#text_title_2{
 				</div>
 				
 			<div id="accountInfo_btn" style="text-align:center;">
-				<form method="post" action="accountInfo.do">
+				<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 					<input type="hidden" name="action" value="gotoAccountChangePage">
 					<button id="account_change_info" type="submit">修改我的會員資料</button>	
 				</form>
 
-				<form method="post" action="accountInfo.do" >
+				<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do" >
 					<input type="hidden" name="action" value="getAccountLogout">
 					<button id="account_logout" type="submit">登出帳戶</button>						
 				</form>
