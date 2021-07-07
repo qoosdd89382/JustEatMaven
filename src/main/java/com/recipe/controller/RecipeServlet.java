@@ -66,7 +66,7 @@ public class RecipeServlet extends HttpServlet {
 				AccountInfoService accountSvc = new AccountInfoService();
 				
 				List<RecipeVO> list = recipeSvc.getAllByWriter(new Integer(accountID));
-				String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountName();
+				String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountNickname();
 				req.setAttribute("list", list);
 				
 				String successMsg = "";
