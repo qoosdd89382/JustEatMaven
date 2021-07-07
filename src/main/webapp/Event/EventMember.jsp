@@ -27,10 +27,16 @@
 	EventInfoVO event = eventSvc.getEventID(new Integer(eventID));
 	Timestamp now = new Timestamp(System.currentTimeMillis());
 	if (now.after(event.getEventStartTime())) {
-		System.out.println("out");
 		for (EventMemberVO vo : list) {
 			if (vo.getParticipationState() == 1) {
 				eventMemberSvc.deleteEventMember(new Integer(eventID), vo.getAccountID());
+			}
+		}
+		list = eventMemberSvc.getAllByEventID(new Integer(eventID));
+	} else if (now.after(event.getEventEndTime())) {
+		for (EventMemberVO vo : list) {
+			if (vo.getParticipationState() >= 2) {
+				eventMemberSvc.updateEventMember(3, new Integer(eventID), vo.getAccountID());
 			}
 		}
 		list = eventMemberSvc.getAllByEventID(new Integer(eventID));
@@ -114,9 +120,11 @@
 	<script src="<%=request.getContextPath()%>/vendors/jquery/jquery-3.6.0.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/popper/popper.min.js"></script>
 	<script src="<%=request.getContextPath()%>/vendors/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 	<script src="<%=request.getContextPath()%>/js/header.js"></script>
 	<script src="<%=request.getContextPath()%>/js/footer.js"></script>
 	<script>
+	<%@ include file="/common/js/scriptFooter.page"%>
 		$(function() {
 			$(".header").load("header.html");
 			$(".footer").load("footer.html");
