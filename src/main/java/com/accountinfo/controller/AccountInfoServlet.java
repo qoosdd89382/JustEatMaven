@@ -199,6 +199,8 @@ public class AccountInfoServlet extends HttpServlet {
 				// 資料庫取出的accountVO物件,存入req，登入成功進入會員中心看自己資料
 				//session的accountInfoVO有該會員的全部資料
 				session.setAttribute("accountInfoVOLogin", accountInfoVO); 
+				session.setAttribute("nowAccount", accountInfoVO); 
+
 
 								
 				//成功準備轉交
@@ -610,6 +612,8 @@ public class AccountInfoServlet extends HttpServlet {
 			HttpSession session = req.getSession();
 			//把所有的資料清除
 			session.removeAttribute("accountInfoVOLogin");
+			session.removeAttribute("nowAccount"); 
+
 			//回到登入頁面
 			String url = "/Account/AccountLoginPage.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);

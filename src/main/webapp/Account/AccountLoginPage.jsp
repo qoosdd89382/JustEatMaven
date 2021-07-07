@@ -138,13 +138,13 @@ input#account_reset_btn:hover {
 						<span id="text">會員信箱 </span><br>
 						<input id="account_mail_input" type="text" name="accountMail" 
 							value="<%=(accountMail == null) ? "" : accountMail%>"
-							placeholder="請輸入...">
+							placeholder="請輸入..."><br>
 						<span style="color:red">${errorMsgs.get("accountMailError")}</span><br>
 						
 						<span id="text">會員密碼 </span><br>
 						<input id="account_password_input" type="password" name="accountPassword"
 <%-- 							value="<%=(accountPassword == null) ? "" : accountPassword%>" --%>
-							placeholder="請輸入...">
+							placeholder="請輸入..."><br>
 						<span style="color:red">${errorMsgs.get("accountPasswordError")}</span><br>
 			
 					    <span id="text">驗證碼(點擊圖片可更新)</span><br>

@@ -50,12 +50,12 @@ public class AccountLevelFilter implements Filter {
 			
 			//記錄前一個頁面的網址
 			session.setAttribute("location",req.getServletPath());
-			
+			System.out.println("第二支濾器="+req.getServletPath());
 			//轉接到登入頁面
-//			RequestDispatcher failureView = req
-//					.getRequestDispatcher("/Account/AccountInfoPage.jsp");
-//			failureView.forward(req, res);
-			res.sendRedirect(req.getContextPath() + "/Account/AccountInfoPage.jsp");
+			RequestDispatcher failureView = req
+					.getRequestDispatcher("/Account/AccountInfoPage.jsp");
+			failureView.forward(req, res);
+//			res.sendRedirect(req.getContextPath() + "/Account/AccountInfoPage.jsp");
 
 			return;
 		} else {

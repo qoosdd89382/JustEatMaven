@@ -34,9 +34,14 @@ public class LoginFilter implements Filter {
 		HttpSession session = req.getSession();
 		// 【從 session 判斷此user是否登入過】
 		Object isLogin = session.getAttribute("accountInfoVOLogin");
+//		Object isLogin = session.getAttribute("nowAccount");
+
 		if (isLogin == null) {
+			System.out.println("第一層驗證");
 			//記錄前一個頁面的網址
 			session.setAttribute("location",req.getServletPath());
+			System.out.println("第一支濾器="+req.getServletPath());
+
 			//轉接到登入頁面
 			res.sendRedirect(req.getContextPath() + "/Account/AccountLoginPage.jsp");
 			

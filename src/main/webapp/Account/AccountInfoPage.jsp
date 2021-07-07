@@ -61,7 +61,7 @@ body#body_accountInfo{
 /* 	background: -webkit-linear-gradient(to left, #ffa751, #ffe259);  */
 /* 	background: linear-gradient(to left, #ffa751, #ffe259); */
 
-	background-image:url("./images/AccountInfoPage.jpg");
+	background-image:url("<c:url value="/Account/images/AccountInfoPage.jpg" />");
 	background-size: cover;
 /* 	background-attachment:fixed;  */
 /* 	background-repeat: no-repeat; */
@@ -227,14 +227,14 @@ span#text_title_2{
 		<div id="function_select_area" class="row justify-content-center">
 		
 			<div id="function_select_area_button" class="col-6 col-md-2">
-				<form method="post" action="accountInfo.do">
+				<form method="post" action="<%=request.getContextPath()%>/Account/accountInfo.do">
 					<input type="hidden" name="action" value="gotoAccountInfoPage">
 					<button id="btn_submit" type="submit">會員資料</button>
 				</form>		
 			</div>
 			
 			<div id="function_select_area_button" class="col-6 col-md-2">
-				<form method="post" action="friendship.do">
+				<form method="post" action="<%=request.getContextPath()%>/Account/friendship.do">
 					<input type="hidden" name="action" value="getAccount_Friendship">
 					<button id="btn_submit" type="submit">我的好友</button>
 				</form>
