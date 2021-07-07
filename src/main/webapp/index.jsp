@@ -128,7 +128,7 @@
 							<c:if test="${now > eventInfoVO.eventRegistartionStartTime && now < eventInfoVO.eventRegistartionEndTime}">
 								<span class="badge badge-warning">報名中</span>
 							</c:if>	
-							<c:if test="${now > eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
+							<c:if test="${now > eventInfoVO.eventRegistartionEndTime && now < eventInfoVO.eventStartTime}">
 								<span class="badge badge-info">等待進行</span>
 							</c:if>	
 							<c:if test="${now > eventInfoVO.eventStartTime && now < eventInfoVO.eventEndTime}">
