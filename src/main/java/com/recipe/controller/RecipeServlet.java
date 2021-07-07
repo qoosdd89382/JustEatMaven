@@ -671,7 +671,8 @@ public class RecipeServlet extends HttpServlet {
 				System.out.println(locationBeforeRecipeDelete);
 //				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
 				RequestDispatcher successView = req.getRequestDispatcher(locationBeforeRecipeDelete);
-//				successView.forward(req, res);
+				successView.forward(req, res);
+				return;
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "發生錯誤，或您刪除的食譜編號不存在！");
 				e.printStackTrace();
