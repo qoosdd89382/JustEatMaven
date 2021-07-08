@@ -117,9 +117,13 @@
 		            			}
 		            			if(timestampNow.before(eventInfoVO.getEventRegistartionEndTime())){
 		            		%>
-	                		<input type="button" value="成員審核" class="memberCheck btn btn-secondary">
 	                		<input type="submit" name="action" value="取消活動" class="btn btn-secondary">
 	                		<%
+		            			}
+		            			if(timestampNow.before(eventInfoVO.getEventStartTime())){
+		            		%>
+		            			<input type="button" value="成員審核" class="memberCheck btn btn-secondary">
+		            		<%
 		            			}
 		            		%>
 	            		</c:when>

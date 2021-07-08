@@ -102,9 +102,9 @@ td > span {
                        	 本列表共有 ${fn:length(list)} 則食譜。
                         	<div class="editBtn row">
 		                        <select name="action" class="custom-select col-lg-1 col-md-2 col-3 ml-auto mb-2">
-		                        	<option value="delete">刪除</option>
+		                        	<option value="deleteForAjax">刪除</option>
 		                       	</select>
-		                        <button type="button" class="btn btn-primary col- lg-1 col-md-2 col-3 ml-2 mb-2" id="categoryAction">批次操作</button>
+		                        <button type="button" class="btn btn-primary col- lg-1 col-md-2 col-3 ml-2 mb-2" id="recipeAction">批次操作</button>
 							</div>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -237,6 +237,37 @@ td > span {
     		
     	});
 
+    	$(document).on("click", "#recipeAction", function () {
+    		// 刪除多筆
+    		var action = $('select[name="action"]').find("option:selected").val();
+    		$("input[name='recipeID']").each(function(index, element) {
+    			if ($(element).is(":checked")) {
+    				var that = element;
+					$.ajax({
+						type : 'POST',
+		    			url: '<c:url value="/Dashboard/Recipe/recipeAjax.do" />',
+		    			data : {
+		    				'action': action,
+		    				'recipeID': $(that).val()
+		    			},
+						success: function(data){
+							if (data != "success") {
+								$("#error").html("<font color='red'>" + data + "</font>");
+								return;
+							} else {
+								$("#successModal").modal();
+								$(that).closest("tr").remove();
+							}
+						},
+						
+		    		});
+    			}
+    		});
+    		
+    	});    	
+    	
+    	
+    	
     });
     </script>
 </body>

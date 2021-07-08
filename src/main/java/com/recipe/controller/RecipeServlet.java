@@ -66,7 +66,7 @@ public class RecipeServlet extends HttpServlet {
 				AccountInfoService accountSvc = new AccountInfoService();
 				
 				List<RecipeVO> list = recipeSvc.getAllByWriter(new Integer(accountID));
-				String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountName();
+				String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountNickname();
 				req.setAttribute("list", list);
 				
 				String successMsg = "";
@@ -666,12 +666,13 @@ public class RecipeServlet extends HttpServlet {
 				Integer recipeID = new Integer(req.getParameter("recipeID"));
 				
 				RecipeService recipeSvc = new RecipeService();
-//				recipeSvc.deleteRecipe(recipeID);
+				recipeSvc.deleteRecipe(recipeID);
 				String locationBeforeRecipeDelete = (String) req.getParameter("locationBeforeRecipeDelete");
 				System.out.println(locationBeforeRecipeDelete);
-//				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
-				RequestDispatcher successView = req.getRequestDispatcher(locationBeforeRecipeDelete);
-//				successView.forward(req, res);
+				RequestDispatcher successView = req.getRequestDispatcher("/Recipe/listAllRecipe.jsp");
+//				RequestDispatcher successView = req.getRequestDispatcher(locationBeforeRecipeDelete);
+				successView.forward(req, res);
+				return;
 			} catch (Exception e) {
 				errorMsgs.put("UnknowErr", "發生錯誤，或您刪除的食譜編號不存在！");
 				e.printStackTrace();

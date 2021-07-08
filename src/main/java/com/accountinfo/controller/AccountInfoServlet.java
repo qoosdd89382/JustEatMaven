@@ -608,11 +608,13 @@ public class AccountInfoServlet extends HttpServlet {
 //在AccountInfoPage.jsp收到登出的請求 review06261600
 		//會員登出 清除所有在SESSIO的登入資料
 		if("getAccountLogout".equals(action)) {
+			System.out.println("收到 登出 請求");
 			//清除在SESSION中的帳號資料
 			HttpSession session = req.getSession();
 			//把所有的資料清除
 			session.removeAttribute("accountInfoVOLogin");
 			session.removeAttribute("nowAccount"); 
+			session.removeAttribute("location");
 
 			//回到登入頁面
 			String url = "/Account/AccountLoginPage.jsp";

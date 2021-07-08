@@ -101,8 +101,8 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                           <th>料理分類</th>
-											<th>料理分類名稱</th>
+                                           <th>食材編號</th>
+											<th>食材名稱</th>
 											<th>修改</th>
 											<th>刪除</th>
 											<th>批次操作</th>

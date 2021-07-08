@@ -70,7 +70,7 @@ public class recipeFavThumbAjaxServlet extends HttpServlet {
 
 						int authorID = recipeSvc.getOneRecipe(new Integer(recipeID)).getAccountID();
 						String recipeName = recipeSvc.getOneRecipe(new Integer(recipeID)).getRecipeName();
-						String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountName();
+						String accountName = accountSvc.selectOneAccountInfo(new Integer(accountID)).getAccountNickname();
 						
 						NoticeVO noticeVO = noticeSvc.addNotice(authorID, "食譜", 
 								"<a href='" + req.getContextPath() + "/Recipe/recipe.do?action=myRecipe&id="+ accountID + "'>"
