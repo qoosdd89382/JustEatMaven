@@ -41,7 +41,7 @@ public class EvaluatedMemberServlet extends HttpServlet {
 			EvaluatedMemberService evMemberSvc = new EvaluatedMemberService();
 			evMemberSvc.updateEvaluatedMember(accepterID, giverID, eventID, giverScore);
 			
-			RequestDispatcher successView = req.getRequestDispatcher("/Event/EventMember.jsp?eventID=" + eventID);
+			RequestDispatcher successView = req.getRequestDispatcher("/Event/EvaluatedMember.jsp?eventID=" + eventID);
 			successView.forward(req, res);
 		
 		
