@@ -50,7 +50,7 @@
 	<header>
 		<%@ include file="/common/header.jsp"%>
 	</header>
-	<h2>成員未審核</h2>
+	<h2>成員審核</h2>
 	<nav aria-label="breadcrumb" style="-bs-breadcrumb-divider: '&gt;';">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/index.jsp ">首頁</a></li>
